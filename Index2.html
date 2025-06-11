@@ -88,6 +88,7 @@
       padding: 20px;
     }
 
+
     .ny-container {
       margin-top: 100px;
       margin-left: -20px;
@@ -99,6 +100,20 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.6);
     }  
    
+    .top-container {
+      display: flex;
+      justify-content: center; 
+      align-items: center;     
+      text-align: center;
+      height: 20px;
+      width: 400px;
+      padding: 20px;
+      background: linear-gradient(to right, #1e3a5f, #326fa8);
+      border-radius: 40px;
+      color: white;
+     
+    }
+
 
 
     .hoyre-container {
@@ -108,6 +123,7 @@
       border-radius: 40px;
       box-shadow: 0 0 10px rgba(0,0,0,0.6);
       padding: 20px;
+      margin-top: 20px;
     }
 
     .venstre-container button,
@@ -160,6 +176,8 @@
       <button>Slop chest</button>
       <button>Disposal</button>
 
+      
+
      <div class="ny-container">
       <button>Orders</button>
       <button>Participants</button>
@@ -173,15 +191,20 @@
     <img id="visningsbilde" src="Images/Office.PNG" alt="Aktivt bilde">
     <div class="overlay"></div>
   </div>
-    
-  <div class="hoyre-container">
-      <button>Information <i class="icon fas fa fa-solid fa-info"></i></button>
-      <button>Documents <i class="icon fas fa fa-solid fa-folder"></i></button>
-      <button>Settings <i class="icon fas fa fa-solid fa-gear"></i></button>
-      <button>Sign out </button> 
-      
-    </div>
+
+<div class="hoyre-kolonne">
+  <div class="top-container">
+    <p>Vessels name and call sign</p>
   </div>
+
+  <div class="hoyre-container">
+    <button>Information <i class="icon fas fa fa-solid fa-info"></i></button>
+    <button>Documents <i class="icon fas fa fa-solid fa-folder"></i></button>
+    <button>Settings <i class="icon fas fa fa-solid fa-gear"></i></button>
+    <button>Sign out</button>
+  </div>
+</div>
+
 
     <script>
     function endreBilde(bildefil) {

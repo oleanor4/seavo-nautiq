@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Seavo Nautiq</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    body {
+      background-color: #12315c;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .toppbilde-container {
+      position: relative; 
+      width: 100%;
+    }
+
+    .toppbilde {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+ 
+    .topptekst {
+      position: absolute;
+      top: 9%; 
+      left: 21%; 
+      color: rgb(0, 0, 0);
+      font-size: 1.3em;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(74, 187, 252, 0.7); 
+    }
+
+    .gradient-overgang {
+      height: 10px;
+      background: linear-gradient(to left, #6297e7, #001125);
+    }
+
+ .bildevindu {
+      width: 800px;
+      height: 800px;
+      margin: 150px;
+      border: 0px solid rgb(0, 0, 0);
+      background-color: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 0 50px rgba(0, 0, 0, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+.overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(
+      circle,
+      transparent 55%,
+      rgba(10, 54, 104, 0.5) 100%
+      );
+      pointer-events: none;
+    }
+
+
+    .bildevindu img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 1;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    .container-wrapper {
+      display: flex;
+      justify-content: space-between;
+      padding: 30px;
+    }
+
+    .venstre-container {
+      width: 400px;
+      height: 610px;
+      background: linear-gradient(to left, #12315c, #215db1);
+      border-radius: 40px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+      padding: 20px;
+    }
+
+    .ny-container {
+      margin-top: 100px;
+      margin-left: -20px;
+      width: 400px;
+      height: 260px;
+      padding: 20px;
+      background: linear-gradient(to left, #12315c, #215db1); 
+      border-radius: 40px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.6);
+    }  
+   
+
+
+    .hoyre-container {
+      width: 400px;
+      height: 400px;
+      background: linear-gradient(to left, #12315c, #215db1);
+      border-radius: 40px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.6);
+      padding: 20px;
+    }
+
+    .venstre-container button,
+    .hoyre-container button {
+      background: linear-gradient(to left, #7396c7, #173c70);
+      color: #000000;
+      border: none;
+      border-radius: 12px;
+      width: 400px;
+      height: 50px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+      transition: background-color 0.3s ease;
+      margin-bottom: 18px; 
+      position: relative;
+    }
+
+    .icon{
+      margin-left: 50px;
+    }
+
+    .venstre-container button:hover,
+    .hoyre-container button:hover {
+      background: #8db0d3;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="images/header.jpg.jpg" alt="Toppbilde" class="toppbilde">
+    <div class="topptekst">Vessel Inventory Management</div> 
+       <div class="gradient-overgang"></div>
+  </header>
+
+
+
+  <div class="container-wrapper">
+    <div class="venstre-container">
+
+      <button onclick="endreBilde('Images/Office.PNG')">Office</button>
+      <button onclick="endreBilde('Images/Equipment.PNG')">Equipment</button>
+      <button onclick="endreBilde('Images/Parts and tools.PNG')">Parts and tools</button>
+      <button onclick="endreBilde('Images/Provisions.PNG')">Provisions</button>
+      <button onclick="endreBilde('Images/Medicine chest.PNG')">Medicine chest</button>
+      <button onclick="endreBilde('Images/Safety.PNG')">Safety</button>
+      <button>Slop chest</button>
+      <button>Disposal</button>
+
+     <div class="ny-container">
+      <button>Orders</button>
+      <button>Participants</button>
+      <button>Voyages</button>
+      <button>Fleet</button>
+ 
+  </div>   
+    </div> 
+      
+       <div class="bildevindu">
+    <img id="visningsbilde" src="Images/Office.PNG" alt="Aktivt bilde">
+    <div class="overlay"></div>
+  </div>
+    
+  <div class="hoyre-container">
+      <button>Information</button>
+      <button>Documents</button>
+      <button>Settings<i class="icon fas fa fa-solid fa-gear"></i></button>
+      <button>Sign out </button> 
+      
+    </div>
+  </div>
+
+    <script>
+    function endreBilde(bildefil) {
+      document.getElementById('visningsbilde').src = bildefil;
+    }
+  </script>
+
+</body>
+</html>

@@ -150,8 +150,17 @@
 
     .venstre-container button:hover,
     .hoyre-container button:hover {
-      background: #8db0d3;
+      background: #97b4d3;
     }
+
+    .aktiv-knapp {
+    background-color: #3168a0;  /* Valgfri farge for aktiv knapp */
+    color: white;
+    font-weight: bold;
+    border: 2px solid white;
+    border-radius: 5px;
+  }
+
   </style>
 </head>
 <body>
@@ -192,10 +201,42 @@
   <div class="overlay"></div>
 </div>
 
-<!-- Flytt dette UTENFOR bildevindu -->
-<div id="info-text-utenfor" style="display: none; padding: 20px; color: white; font-size: 18px;">
-  <h2>Information</h2>
-  <p>Welcome to Seavo Nautiq vessel inventory management</p>
+
+<div id="info-text-utenfor" 
+     style="display: none; 
+            padding: 50px; 
+            margin: 20px 1; 
+            margin-left: 10px; 
+            margin-top: -40px;
+            color: rgb(255, 255, 255); 
+            font-size: 18px;">
+
+  <h2>Welcome to Seavo Nautiq</h2>
+
+  <p style="margin-bottom: 50px;"></p>
+
+  <p>This is a platform for managing vessel inventory efficiently. <p> 
+   </p>Although the platform was initially intended as a tailor-made digital solution for the fishing fleet, the inventory management offers </p>
+   <p>flexible solutions for other types of vessels with extensive quantities of items on board.</p>
+
+    <p style="margin-bottom: 50px;"></p>
+    
+<p>The platform allows you to register, track, and update equipment, provisions, tools, and safety items with ease.</p>
+<p>Users can quickly generate inventory reports, export them to PDF or Excel, and share them with other users or vessels when needed.</p>
+<p>Multiple user roles ensure structured access — for example, officers can manage full inventory control, while crew members can register consumption and updates.</p>
+
+<p style="margin-bottom: 50px;"></p>
+
+<p>Additional modules include voyage planning, order tracking, fleet overview, and integration with safety and compliance routines.</p>
+<p>Expiration dates for critical items like medicine, rescue equipment, and batteries can be monitored to help ensure regulatory compliance.</p>
+<p>The system is designed to work both online and offline, making it a reliable tool even when there is limited internet coverage at sea.</p>
+
+<p style="margin-bottom: 50px;"></p>
+
+<p>If you are new to the platform, we recommend starting with the "Office" or "Equipment" section to familiarize yourself with how categories are structured.</p>
+<p>Should you require assistance or custom features, please contact your system administrator or the Seavo Nautiq support team.</p>
+    
+   <p>
 </div>
 
 
@@ -207,9 +248,9 @@
   </div>
 
   <div class="hoyre-container">
-    <button onclick="visInfoTekst()">
-      
-    <img src="Icon/info.png" alt="Info" style="height: 32px; vertical-align: middle;">
+
+    <button  id="infoBtn" onclick="visInfoTekst()">
+  <img src="Icon/info.png" alt="Info" style="height: 32px; vertical-align: middle;">
   Information</button>
     <button>  <img src="icon/Doc.png" alt="Info" style="height: 32px; vertical-align: middle;">
   Documents </button>
@@ -230,20 +271,23 @@
 
     <script>
       function visInfoTekst() {
-    // Skjul bildevisningen
-    document.getElementById("bildevisning").style.display = "none";
-    // Vis tekstområdet
-    document.getElementById("info-text-utenfor").style.display = "block";
-  }
+  // Skjul bildevindu, vis tekst
+  document.getElementById("bildevisning").style.display = "none";
+  document.getElementById("info-text-utenfor").style.display = "block";
 
-  function endreBilde(bildefil) {
-    // Vis bildevindu igjen
-    document.getElementById("bildevisning").style.display = "block";
-    document.getElementById("info-text-utenfor").style.display = "none";
+  // Marker knappen som aktiv
+  document.getElementById("infoBtn").classList.add("aktiv-knapp");
+}
 
-    // Oppdater bildet
-    document.getElementById('visningsbilde').src = bildefil;
-  }
+function endreBilde(bildefil) {
+  document.getElementById("bildevisning").style.display = "block";
+  document.getElementById("info-text-utenfor").style.display = "none";
+
+  document.getElementById('visningsbilde').src = bildefil;
+
+  // Fjern "aktiv-knapp" fra Information-knappen
+  document.getElementById("infoBtn").classList.remove("aktiv-knapp");
+}
 
   // 🚀 Kjør visInfoTekst() automatisk når siden åpnes
   window.onload = function() {

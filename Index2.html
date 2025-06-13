@@ -194,8 +194,8 @@
 
 <!-- Flytt dette UTENFOR bildevindu -->
 <div id="info-text-utenfor" style="display: none; padding: 20px; color: white; font-size: 18px;">
-  <h2>Informasjon</h2>
-  <p>Her er innholdet som vises når du trykker på Information. Du kan legge til mer tekst, lenker eller annen info.</p>
+  <h2>Information</h2>
+  <p>Welcome to Seavo Nautiq vessel inventory management</p>
 </div>
 
 
@@ -223,13 +223,13 @@
   <img src="icon/Notebok.png" alt="Calculator"style="height: 70px;">
 
     <div id="info-tekst" style="display: none; margin-top: 10px; color: rgb(0, 0, 0);">
-    Her er informasjonsteksten som vises når du klikker på knappen.
+    
   </div>
 </div>
 
 
     <script>
-     function visInfoTekst() {
+      function visInfoTekst() {
     // Skjul bildevisningen
     document.getElementById("bildevisning").style.display = "none";
     // Vis tekstområdet
@@ -244,6 +244,11 @@
     // Oppdater bildet
     document.getElementById('visningsbilde').src = bildefil;
   }
+
+  // 🚀 Kjør visInfoTekst() automatisk når siden åpnes
+  window.onload = function() {
+    visInfoTekst();
+  };
 
   </script>
 

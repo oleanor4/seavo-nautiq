@@ -187,10 +187,15 @@
   </div>   
     </div> 
       
-       <div class="bildevindu">
-    <img id="visningsbilde" src="Images/Office.PNG" alt="Aktivt bilde">
-    <div class="overlay"></div>
+      <div class="bildevindu">
+  <img id="visningsbilde" src="Images/Office.PNG" alt="Aktivt bilde">
+  <div id="info-text-bildevisning" style="display: none; padding: 20px; color: black; font-size: 18px;">
+    <h2>Informasjon</h2>
+    <p>Welcome to Seavo Nautiq vessel inventory management</p>
   </div>
+  <div class="overlay"></div>
+</div>
+
 
 <div class="hoyre-kolonne">
   <div class="top-container">
@@ -199,7 +204,9 @@
   </div>
 
   <div class="hoyre-container">
-    <button> <img src="Icon/info.png" alt="Info" style="height: 32px; vertical-align: middle;">
+    <button onclick="visInfoTekst()">
+      
+    <img src="Icon/info.png" alt="Info" style="height: 32px; vertical-align: middle;">
   Information</button>
     <button>  <img src="icon/Doc.png" alt="Info" style="height: 32px; vertical-align: middle;">
   Documents </button>
@@ -211,14 +218,33 @@
   Sign out</button>
   <img src="icon/Calculator.png" alt="Calculator"style="height: 70px;">
   <img src="icon/Notebok.png" alt="Calculator"style="height: 70px;">
+
+    <div id="info-tekst" style="display: none; margin-top: 10px; color: rgb(0, 0, 0);">
+    Her er informasjonsteksten som vises når du klikker på knappen.
   </div>
 </div>
 
 
     <script>
-    function endreBilde(bildefil) {
-      document.getElementById('visningsbilde').src = bildefil;
-    }
+   function endreBilde(bildefil) {
+  const bilde = document.getElementById("visningsbilde");
+  const infoTekst = document.getElementById("info-text-bildevisning");
+
+  bilde.src = bildefil;
+  bilde.style.display = "block";        // Vis bildet
+  infoTekst.style.display = "none";     // Skjul tekst
+}
+
+
+    function visInfoTekst() {
+  const bilde = document.getElementById("visningsbilde");
+  const infoTekst = document.getElementById("info-text-bildevisning");
+
+  // Skjul bildet og vis teksten
+  bilde.style.display = "none";
+  infoTekst.style.display = "block";
+}
+
   </script>
 
 </body>

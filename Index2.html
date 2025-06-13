@@ -187,14 +187,17 @@
   </div>   
     </div> 
       
-      <div class="bildevindu">
+      <div class="bildevindu" id="bildevisning">
   <img id="visningsbilde" src="Images/Office.PNG" alt="Aktivt bilde">
-  <div id="info-text-bildevisning" style="display: none; padding: 20px; color: black; font-size: 18px;">
-    <h2>Informasjon</h2>
-    <p>Welcome to Seavo Nautiq vessel inventory management</p>
-  </div>
   <div class="overlay"></div>
 </div>
+
+<!-- Flytt dette UTENFOR bildevindu -->
+<div id="info-text-utenfor" style="display: none; padding: 20px; color: white; font-size: 18px;">
+  <h2>Informasjon</h2>
+  <p>Her er innholdet som vises når du trykker på Information. Du kan legge til mer tekst, lenker eller annen info.</p>
+</div>
+
 
 
 <div class="hoyre-kolonne">
@@ -226,24 +229,21 @@
 
 
     <script>
-   function endreBilde(bildefil) {
-  const bilde = document.getElementById("visningsbilde");
-  const infoTekst = document.getElementById("info-text-bildevisning");
+     function visInfoTekst() {
+    // Skjul bildevisningen
+    document.getElementById("bildevisning").style.display = "none";
+    // Vis tekstområdet
+    document.getElementById("info-text-utenfor").style.display = "block";
+  }
 
-  bilde.src = bildefil;
-  bilde.style.display = "block";        // Vis bildet
-  infoTekst.style.display = "none";     // Skjul tekst
-}
+  function endreBilde(bildefil) {
+    // Vis bildevindu igjen
+    document.getElementById("bildevisning").style.display = "block";
+    document.getElementById("info-text-utenfor").style.display = "none";
 
-
-    function visInfoTekst() {
-  const bilde = document.getElementById("visningsbilde");
-  const infoTekst = document.getElementById("info-text-bildevisning");
-
-  // Skjul bildet og vis teksten
-  bilde.style.display = "none";
-  infoTekst.style.display = "block";
-}
+    // Oppdater bildet
+    document.getElementById('visningsbilde').src = bildefil;
+  }
 
   </script>
 

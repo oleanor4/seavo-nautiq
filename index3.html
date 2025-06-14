@@ -54,6 +54,8 @@
       background-color: #0a2c77;
       transform: scale(0.97);
     }
+
+
   </style>
 </head>
 <body>
@@ -84,8 +86,10 @@
         <button onclick="appendValue('.')">.</button>
         <button onclick="beregn()">=</button>
         <button onclick="appendValue('+')">+</button>
+    
+        <button onclick="prosent()">%</button>
+        <button style="width: 211px;" onclick="slett()">C</button>
 
-        <button onclick="slett()">C</button>
       </div>
     </div>
   </div>
@@ -110,6 +114,21 @@
         document.getElementById("display").value = 'Error';
       }
     }
+
+    function prosent() {
+  try {
+    let display = document.getElementById("display");
+    let value = parseFloat(display.value);
+    if (!isNaN(value)) {
+      display.value = value / 100;
+    } else {
+      display.value = 'Error';
+    }
+  } catch {
+    document.getElementById("display").value = 'Error';
+  }
+}
+
 
     // Gjør kalkulatoren flyttbar
     dragElement(document.getElementById("draggable"));

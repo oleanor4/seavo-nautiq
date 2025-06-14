@@ -50,6 +50,7 @@
       overflow: hidden;
     }
 
+
 .overlay {
       position: absolute;
       top: 0;
@@ -151,7 +152,7 @@
     }
 
     .aktiv-knapp {
-    background-color: #3168a0;  /* Valgfri farge for aktiv knapp */
+    background-color: #3168a0;  
     color: white;
     font-weight: bold;
     border: 2px solid white;
@@ -197,6 +198,7 @@
   <img id="visningsbilde" src="Images/Office.PNG" alt="Aktivt bilde">
   <div class="overlay"></div>
 </div>
+
 
 
 <div id="info-text-utenfor" 
@@ -246,6 +248,21 @@
   </div>
 
   <div class="hoyre-container">
+
+    <div>
+  <img src="images/Picture_collection.png" alt="forsidebilde" id="forsidebilde">
+  <style>
+    #forsidebilde {
+      width: 10%;
+      height: auto;
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+      margin-left: -400px;
+      margin-top: -100px;
+      position: absolute;
+    }
+  </style>
+</div>
 
     <button  id="infoBtn" onclick="visInfoTekst()">
   <img src="Icon/info.png" alt="Info" style="height: 32px; vertical-align: middle;">

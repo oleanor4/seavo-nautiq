@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <title>Lagerstyring – Seavo Nautiq</title>
+  <style>
+    body {
+      background-color: #12315c;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      color: white;
+    }
+
+    .kategori-slider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #1e3a5f;
+      padding: 10px;
+      overflow-x: auto;
+    }
+
+    .kategori-item {
+      display: flex;
+      align-items: center;
+      margin: 0 5px;
+    }
+
+    .kategori-knapp, .legg-til-kategori {
+      padding: 10px 15px;
+      background-color: #2c7edb;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .kategori-knapp.aktiv {
+      background-color: #00b7ff;
+      font-weight: bold;
+    }
+
+    .slett-kategori {
+      color: red;
+      font-size: 16px;
+      margin-left: 5px;
+      cursor: pointer;
+    }
+
+    .pil {
+      font-size: 20px;
+      padding: 5px 10px;
+      background-color: #0e2646;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    #innhold {
+      padding: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      color: black;
+      margin-bottom: 15px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #00b7ff;
+      color: white;
+    }
+
+    td.min-col input {
+      width: 60px;
+    }
+
+    .rød-advarsel {
+      background-color: #ffcccc;
+    }
+
+    .legg-til {
+      padding: 8px 16px;
+      margin: 5px 10px 20px 0;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .overskrift-rad td {
+      background-color: #e3f2fd;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    .overskrift-rad td span {
+      display: inline-block;
+      width: 90%;
+    }
+
+    .slett-knapp {
+      color: red;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .global-knapp {
+      background-color: #00b7ff;
+      border: none;
+      color: white;
+      padding: 10px 15px;
+      font-size: 14px;
+      cursor: pointer;
+      margin: 10px 20px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="kategori-slider">
+  <button class="pil" onclick="scrollSlider(-100)">⟵</button>
+  <div id="kategori-container" style="display: flex; overflow-x: auto; max-width: 70%; scroll-behavior: smooth;">
+    <div id="kategorier" style="display: flex; gap: 8px;"></div>
+  </div>
+  <button class="pil" onclick="scrollSlider(100)">⟶</button>
+  <button class="legg-til-kategori" onclick="leggTilKategori()">+ Kategori</button>
+</div>
+
+
+<div id="innhold"></div>
+
+<button class="global-knapp" onclick="visGlobalOversikt()">📋 Oversikt over hele lageret</button>
+
+<script>
+let data = JSON.parse(localStorage.getItem("lagerDataV3")) || {};
+let aktivKategori = Object.keys(data)[0] || "Standard";
+
+function lagre() {
+  localStorage.setItem("lagerDataV3", JSON.stringify(data));
+}
+
+function scrollSlider(offset) {
+  document.getElementById("kategori-container").scrollLeft += offset;
+}
+
+
+function oppdaterKategorier() {
+  const container = document.getElementById("kategorier");
+  container.innerHTML = "";
+
+  Object.keys(data).forEach(navn => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "kategori-item";
+    wrapper.style.display = "flex";
+    wrapper.style.alignItems = "center";
+
+    const btn = document.createElement("button");
+    btn.className = "kategori-knapp";
+    btn.textContent = navn;
+    if (navn === aktivKategori) btn.classList.add("aktiv");
+    btn.onclick = () => {
+      aktivKategori = navn;
+      visKategori();
+      oppdaterKategorier();
+    };
+
+    const slett = document.createElement("span");
+    slett.className = "slett-kategori";
+    slett.textContent = "🗑️";
+    slett.onclick = () => {
+      if (confirm(`Vil du slette kategorien "${navn}"?`)) {
+        delete data[navn];
+        aktivKategori = Object.keys(data)[0] || null;
+        lagre();
+        oppdaterKategorier();
+        visKategori();
+      }
+    };
+
+    wrapper.appendChild(btn);
+    wrapper.appendChild(slett);
+    container.appendChild(wrapper);
+  });
+}
+
+
+function leggTilKategori() {
+  const navn = prompt("Ny kategori:");
+  if (navn && !data[navn]) {
+    data[navn] = [];
+    aktivKategori = navn;
+    lagre();
+    oppdaterKategorier();
+    visKategori();
+  }
+}
+
+function visKategori() {
+  const innhold = document.getElementById("innhold");
+  innhold.innerHTML = "";
+
+  if (!aktivKategori || !data[aktivKategori]) return;
+
+  const table = document.createElement("table");
+  table.innerHTML = `
+    <thead>
+      <tr>
+        <th>Produkt/Type</th><th>Beh. Start</th><th>Forbruk</th><th>Beh. Slutt</th>
+        <th>Min. Satt</th><th>Kommentarer</th><th>Bestilling</th><th>Slett</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  `;
+  const tbody = table.querySelector("tbody");
+
+  data[aktivKategori].forEach((rad, i) => {
+    const tr = document.createElement("tr");
+
+    if (rad.type === "overskrift") {
+      tr.className = "overskrift-rad";
+      const td = document.createElement("td");
+      td.colSpan = 7;
+      const span = document.createElement("span");
+      span.contentEditable = true;
+      span.textContent = rad.tekst || "Skille / Overskrift";
+      span.oninput = () => {
+        rad.tekst = span.textContent;
+        lagre();
+      };
+      td.appendChild(span);
+      tr.appendChild(td);
+
+      const slett = document.createElement("td");
+      slett.innerHTML = `<span class="slett-knapp" onclick="slettRad(${i})">🗑️</span>`;
+      tr.appendChild(slett);
+      tbody.appendChild(tr);
+      return;
+    }
+
+    const felter = ['produkt', 'start', 'forbruk', 'slutt', 'min', 'kommentar', 'bestill'];
+    felter.forEach((key) => {
+      const td = document.createElement("td");
+      if (key === "min") td.className = "min-col";
+      const input = document.createElement("input");
+      input.type = key === "produkt" || key === "kommentar" ? "text" : "number";
+      input.value = rad[key] || "";
+      input.style.width = "100%";
+      input.oninput = () => {
+        rad[key] = input.value;
+        lagre();
+      };
+      td.appendChild(input);
+      tr.appendChild(td);
+    });
+
+    const tdSlett = document.createElement("td");
+    tdSlett.innerHTML = `<span class="slett-knapp" onclick="slettRad(${i})">🗑️</span>`;
+    tr.appendChild(tdSlett);
+
+    tbody.appendChild(tr);
+  });
+
+  innhold.appendChild(table);
+
+  const leggTil = document.createElement("button");
+  leggTil.className = "legg-til";
+  leggTil.textContent = "+ Legg til linje";
+  leggTil.onclick = () => {
+    data[aktivKategori].push({
+      type: "linje", produkt: "", start: 0, forbruk: 0,
+      kommentar: "", min: 0, bestill: 0, slutt: 0
+    });
+    lagre();
+    visKategori();
+  };
+
+  const leggOverskrift = document.createElement("button");
+  leggOverskrift.className = "legg-til";
+  leggOverskrift.textContent = "+ Legg til overskrift/skille";
+  leggOverskrift.onclick = () => {
+    data[aktivKategori].push({ type: "overskrift", tekst: "Ny overskrift" });
+    lagre();
+    visKategori();
+  };
+
+  innhold.appendChild(leggTil);
+  innhold.appendChild(leggOverskrift);
+}
+
+function slettRad(index) {
+  data[aktivKategori].splice(index, 1);
+  lagre();
+  visKategori();
+}
+
+function visGlobalOversikt() {
+  const innhold = document.getElementById("innhold");
+  innhold.innerHTML = "<h2>Global oversikt over hele lageret</h2>";
+
+  const table = document.createElement("table");
+  table.innerHTML = `
+    <thead>
+      <tr><th>Kategori</th><th>Produkt</th><th>Start</th><th>Forbruk</th><th>Slutt</th><th>Min</th><th>Kommentar</th><th>Bestilling</th></tr>
+    </thead>
+    <tbody></tbody>
+  `;
+  const tbody = table.querySelector("tbody");
+
+  Object.entries(data).forEach(([kategori, rader]) => {
+    rader.forEach(rad => {
+      if (rad.type === "overskrift") return;
+      const tr = document.createElement("tr");
+      const start = parseInt(rad.start) || 0;
+      const forbruk = parseInt(rad.forbruk) || 0;
+      const slutt = rad.slutt ?? (start - forbruk);
+      const min = parseInt(rad.min) || 0;
+
+      const verdier = [
+        kategori,
+        rad.produkt || "",
+        start,
+        forbruk,
+        slutt,
+        min,
+        rad.kommentar || "",
+        rad.bestill || ""
+      ];
+
+      verdier.forEach((val, i) => {
+        const td = document.createElement("td");
+        td.textContent = val;
+        if (i === 4 && slutt <= min) td.classList.add("rød-advarsel");
+        tr.appendChild(td);
+      });
+
+      tbody.appendChild(tr);
+    });
+  });
+
+  innhold.appendChild(table);
+}
+
+// Init
+if (!data[aktivKategori]) {
+  data[aktivKategori] = [];
+  lagre();
+}
+oppdaterKategorier();
+visKategori();
+</script>
+
+</body>
+</html>

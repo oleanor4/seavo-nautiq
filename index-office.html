@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="no">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Lagerstyring – Seavo Nautiq</title>
+  <title>Inventory Management – Seavo Nautiq</title>
   <style>
     body {
       background-color: #12315c;
@@ -11,7 +11,7 @@
       color: white;
     }
 
-    .kategori-slider {
+    .category-slider {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -20,13 +20,13 @@
       overflow-x: auto;
     }
 
-    .kategori-item {
+    .category-item {
       display: flex;
       align-items: center;
       margin: 0 5px;
     }
 
-    .kategori-knapp, .legg-til-kategori {
+    .category-button, .add-category {
       padding: 10px 15px;
       background-color: #2c7edb;
       color: white;
@@ -36,19 +36,19 @@
       font-size: 14px;
     }
 
-    .kategori-knapp.aktiv {
+    .category-button.active {
       background-color: #00b7ff;
       font-weight: bold;
     }
 
-    .slett-kategori {
-      color: red;
+    .delete-category {
+      color: rgb(255, 0, 0);
       font-size: 16px;
       margin-left: 5px;
       cursor: pointer;
     }
 
-    .pil {
+    .arrow {
       font-size: 20px;
       padding: 5px 10px;
       background-color: #0e2646;
@@ -57,7 +57,7 @@
       cursor: pointer;
     }
 
-    #innhold {
+    #content {
       padding: 20px;
     }
 
@@ -84,35 +84,35 @@
       width: 60px;
     }
 
-    .rød-advarsel {
-      background-color: #ffcccc;
+    .red-warning {
+      background-color: #cc3333;
     }
 
-    .legg-til {
+    .add-line {
       padding: 8px 16px;
       margin: 5px 10px 20px 0;
       font-size: 15px;
       cursor: pointer;
     }
 
-    .overskrift-rad td {
-      background-color: #e3f2fd;
+    .header-row td {
+      background: linear-gradient(to left, #12315c, #6e9ad8);
       font-weight: bold;
       text-align: left;
     }
 
-    .overskrift-rad td span {
+    .header-row td span {
       display: inline-block;
       width: 90%;
     }
 
-    .slett-knapp {
+    .delete-button {
       color: red;
       cursor: pointer;
       font-size: 18px;
     }
 
-    .global-knapp {
+    .global-button {
       background-color: #00b7ff;
       border: none;
       color: white;
@@ -126,232 +126,230 @@
 </head>
 <body>
 
-<div class="kategori-slider">
-  <button class="pil" onclick="scrollSlider(-100)">⭥</button>
-  <div id="kategori-container" style="display: flex; overflow-x: auto; max-width: 70%; scroll-behavior: smooth;">
-    <div id="kategorier" style="display: flex; gap: 8px;"></div>
+<div class="category-slider">
+  <button class="arrow" onclick="scrollSlider(-100)">⭥</button>
+  <div id="category-container" style="display: flex; overflow-x: auto; max-width: 70%; scroll-behavior: smooth;">
+    <div id="categories" style="display: flex; gap: 8px;"></div>
   </div>
-  <button class="pil" onclick="scrollSlider(100)">⭧</button>
-  <button class="legg-til-kategori" onclick="leggTilKategori()">+ Kategori</button>
+  <button class="arrow" onclick="scrollSlider(100)">⭧</button>
+  <button class="add-category" onclick="addCategory()">+ Category</button>
 </div>
 
-<div id="innhold"></div>
+<div id="content"></div>
 
-<button class="global-knapp" onclick="visGlobalOversikt()">📋 Oversikt over hele lageret</button>
+<button class="global-button" onclick="showGlobalOverview()">📋 Global Overview</button>
 
 <script>
 let data = JSON.parse(localStorage.getItem("lagerDataV3")) || {};
-let aktivKategori = Object.keys(data)[0] || "Standard";
+let activeCategory = Object.keys(data)[0] || "Standard";
 
-function lagre() {
+function save() {
   localStorage.setItem("lagerDataV3", JSON.stringify(data));
 }
 
 function scrollSlider(offset) {
-  document.getElementById("kategori-container").scrollLeft += offset;
+  document.getElementById("category-container").scrollLeft += offset;
 }
 
-function oppdaterKategorier() {
-  const container = document.getElementById("kategorier");
+function updateCategories() {
+  const container = document.getElementById("categories");
   container.innerHTML = "";
 
-  Object.keys(data).forEach(navn => {
+  Object.keys(data).forEach(name => {
     const wrapper = document.createElement("div");
-    wrapper.className = "kategori-item";
+    wrapper.className = "category-item";
     wrapper.style.display = "flex";
     wrapper.style.alignItems = "center";
 
     const btn = document.createElement("button");
-    btn.className = "kategori-knapp";
-    btn.textContent = navn;
-    if (navn === aktivKategori) btn.classList.add("aktiv");
+    btn.className = "category-button";
+    btn.textContent = name;
+    if (name === activeCategory) btn.classList.add("active");
     btn.onclick = () => {
-      aktivKategori = navn;
-      visKategori();
-      oppdaterKategorier();
+      activeCategory = name;
+      showCategory();
+      updateCategories();
     };
 
-    const slett = document.createElement("span");
-    slett.className = "slett-kategori";
-    slett.textContent = "🗑️";
-    slett.onclick = () => {
-      if (confirm(`Vil du slette kategorien "${navn}"?`)) {
-        delete data[navn];
-        aktivKategori = Object.keys(data)[0] || null;
-        lagre();
-        oppdaterKategorier();
-        visKategori();
+    const del = document.createElement("span");
+    del.className = "delete-category";
+    del.textContent = "🗑️";
+    del.onclick = () => {
+      if (confirm(`Do you want to delete the category "${name}"?`)) {
+        delete data[name];
+        activeCategory = Object.keys(data)[0] || null;
+        save();
+        updateCategories();
+        showCategory();
       }
     };
 
     wrapper.appendChild(btn);
-    wrapper.appendChild(slett);
+    wrapper.appendChild(del);
     container.appendChild(wrapper);
   });
 }
 
-function leggTilKategori() {
-  const navn = prompt("Ny kategori:");
-  if (navn && !data[navn]) {
-    data[navn] = [];
-    aktivKategori = navn;
-    lagre();
-    oppdaterKategorier();
-    visKategori();
+function addCategory() {
+  const name = prompt("New category:");
+  if (name && !data[name]) {
+    data[name] = [];
+    activeCategory = name;
+    save();
+    updateCategories();
+    showCategory();
   }
 }
 
-function visKategori() {
-  const innhold = document.getElementById("innhold");
-  innhold.innerHTML = "";
+function showCategory() {
+  const content = document.getElementById("content");
+  content.innerHTML = "";
 
-  if (!aktivKategori || !data[aktivKategori]) return;
+  if (!activeCategory || !data[activeCategory]) return;
 
   const table = document.createElement("table");
   table.innerHTML = `
     <thead>
       <tr>
-        <th>Produkt/Type</th><th>Beh. Start</th><th>Forbruk</th><th>Beh. Slutt</th>
-        <th>Min. Satt</th><th>Kommentarer</th><th>Bestilling</th><th>Slett</th>
+        <th>Product/Type</th><th>Start Qty</th><th>Used</th><th>End Qty</th>
+        <th>Min Set</th><th>Comments</th><th>Order</th><th>Delete</th>
       </tr>
     </thead>
     <tbody></tbody>
   `;
   const tbody = table.querySelector("tbody");
 
-  data[aktivKategori].forEach((rad, i) => {
+  data[activeCategory].forEach((row, i) => {
     const tr = document.createElement("tr");
 
-    if (rad.type === "overskrift") {
-      tr.className = "overskrift-rad";
+    if (row.type === "header") {
+      tr.className = "header-row";
       const td = document.createElement("td");
       td.colSpan = 7;
       const span = document.createElement("span");
       span.contentEditable = true;
-      span.textContent = rad.tekst || "Skille / Overskrift";
+      span.textContent = row.text || "Section / Header";
       span.oninput = () => {
-        rad.tekst = span.textContent;
-        lagre();
+        row.text = span.textContent;
+        save();
       };
       td.appendChild(span);
       tr.appendChild(td);
 
-      const slett = document.createElement("td");
-      slett.innerHTML = `<span class="slett-knapp" onclick="slettRad(${i})">🗑️</span>`;
-      tr.appendChild(slett);
+      const del = document.createElement("td");
+      del.innerHTML = `<span class="delete-button" onclick="deleteRow(${i})">🗑️</span>`;
+      tr.appendChild(del);
       tbody.appendChild(tr);
       return;
     }
 
-    const felter = ['produkt', 'start', 'forbruk', 'slutt', 'min', 'kommentar', 'bestill'];
+    const fields = ['product', 'start', 'used', 'end', 'min', 'comment', 'order'];
     const inputs = {};
 
-    felter.forEach((key) => {
+    fields.forEach((key) => {
       const td = document.createElement("td");
       if (key === "min") td.className = "min-col";
       const input = document.createElement("input");
-      input.type = key === "produkt" || key === "kommentar" ? "text" : "number";
-      input.value = rad[key] || "";
+      input.type = key === "product" || key === "comment" ? "text" : "number";
+      input.value = row[key] || "";
       input.style.width = "100%";
       input.oninput = () => {
-        rad[key] = input.value;
+        row[key] = input.value;
 
-        // Kalkuler beholdning slutt
-        rad.slutt = (parseFloat(rad.start) || 0) - (parseFloat(rad.forbruk) || 0);
-        inputs['slutt'].value = rad.slutt;
+        row.end = (parseFloat(row.start) || 0) - (parseFloat(row.used) || 0);
+        inputs['end'].value = row.end;
 
-        // Rød bakgrunn hvis under minimum
-        const sluttVerdi = parseFloat(rad.slutt);
-        const minVerdi = parseFloat(rad.min);
-        if (!isNaN(sluttVerdi) && !isNaN(minVerdi) && sluttVerdi <= minVerdi) {
-          inputs['min'].classList.add("rød-advarsel");
+        const endVal = parseFloat(row.end);
+        const minVal = parseFloat(row.min);
+        if (!isNaN(endVal) && !isNaN(minVal) && endVal <= minVal) {
+          inputs['min'].classList.add("red-warning");
         } else {
-          inputs['min'].classList.remove("rød-advarsel");
+          inputs['min'].classList.remove("red-warning");
         }
 
-        lagre();
+        save();
       };
       inputs[key] = input;
       td.appendChild(input);
       tr.appendChild(td);
     });
 
-    const tdSlett = document.createElement("td");
-    tdSlett.innerHTML = `<span class="slett-knapp" onclick="slettRad(${i})">🗑️</span>`;
-    tr.appendChild(tdSlett);
+    const tdDel = document.createElement("td");
+    tdDel.innerHTML = `<span class="delete-button" onclick="deleteRow(${i})">🗑️</span>`;
+    tr.appendChild(tdDel);
 
     tbody.appendChild(tr);
   });
 
-  innhold.appendChild(table);
+  content.appendChild(table);
 
-  const leggTil = document.createElement("button");
-  leggTil.className = "legg-til";
-  leggTil.textContent = "+ Legg til linje";
-  leggTil.onclick = () => {
-    data[aktivKategori].push({
-      type: "linje", produkt: "", start: 0, forbruk: 0,
-      kommentar: "", min: 0, bestill: 0, slutt: 0
+  const addLine = document.createElement("button");
+  addLine.className = "add-line";
+  addLine.textContent = "+ Add line";
+  addLine.onclick = () => {
+    data[activeCategory].push({
+      type: "line", product: "", start: 0, used: 0,
+      comment: "", min: 0, order: 0, end: 0
     });
-    lagre();
-    visKategori();
+    save();
+    showCategory();
   };
 
-  const leggOverskrift = document.createElement("button");
-  leggOverskrift.className = "legg-til";
-  leggOverskrift.textContent = "+ Legg til overskrift/skille";
-  leggOverskrift.onclick = () => {
-    data[aktivKategori].push({ type: "overskrift", tekst: "Ny overskrift" });
-    lagre();
-    visKategori();
+  const addHeader = document.createElement("button");
+  addHeader.className = "add-line";
+  addHeader.textContent = "+ Add header/section";
+  addHeader.onclick = () => {
+    data[activeCategory].push({ type: "header", text: "New Header" });
+    save();
+    showCategory();
   };
 
-  innhold.appendChild(leggTil);
-  innhold.appendChild(leggOverskrift);
+  content.appendChild(addLine);
+  content.appendChild(addHeader);
 }
 
-function slettRad(index) {
-  data[aktivKategori].splice(index, 1);
-  lagre();
-  visKategori();
+function deleteRow(index) {
+  data[activeCategory].splice(index, 1);
+  save();
+  showCategory();
 }
 
-function visGlobalOversikt() {
-  const innhold = document.getElementById("innhold");
-  innhold.innerHTML = "<h2>Global oversikt over hele lageret</h2>";
+function showGlobalOverview() {
+  const content = document.getElementById("content");
+  content.innerHTML = "<h2>Global overview of the entire inventory</h2>";
   const table = document.createElement("table");
   table.innerHTML = `
     <thead>
-      <tr><th>Kategori</th><th>Produkt</th><th>Start</th><th>Forbruk</th><th>Slutt</th><th>Min</th><th>Kommentar</th><th>Bestilling</th></tr>
+      <tr><th>Category</th><th>Product</th><th>Start</th><th>Used</th><th>End</th><th>Min</th><th>Comment</th><th>Order</th></tr>
     </thead>
     <tbody></tbody>
   `;
   const tbody = table.querySelector("tbody");
 
-  Object.entries(data).forEach(([kategori, rader]) => {
-    rader.forEach(rad => {
-      if (rad.type === "overskrift") return;
+  Object.entries(data).forEach(([category, rows]) => {
+    rows.forEach(row => {
+      if (row.type === "header") return;
       const tr = document.createElement("tr");
-      const start = parseInt(rad.start) || 0;
-      const forbruk = parseInt(rad.forbruk) || 0;
-      const slutt = rad.slutt ?? (start - forbruk);
-      const min = parseInt(rad.min) || 0;
+      const start = parseInt(row.start) || 0;
+      const used = parseInt(row.used) || 0;
+      const end = row.end ?? (start - used);
+      const min = parseInt(row.min) || 0;
 
-      const verdier = [
-        kategori,
-        rad.produkt || "",
+      const values = [
+        category,
+        row.product || "",
         start,
-        forbruk,
-        slutt,
+        used,
+        end,
         min,
-        rad.kommentar || "",
-        rad.bestill || ""
+        row.comment || "",
+        row.order || ""
       ];
 
-      verdier.forEach((val, i) => {
+      values.forEach((val, i) => {
         const td = document.createElement("td");
         td.textContent = val;
-        if (i === 4 && slutt <= min) td.classList.add("rød-advarsel");
+        if (i === 4 && end <= min) td.classList.add("red-warning");
         tr.appendChild(td);
       });
 
@@ -359,15 +357,15 @@ function visGlobalOversikt() {
     });
   });
 
-  innhold.appendChild(table);
+  content.appendChild(table);
 }
 
-if (!data[aktivKategori]) {
-  data[aktivKategori] = [];
-  lagre();
+if (!data[activeCategory]) {
+  data[activeCategory] = [];
+  save();
 }
-oppdaterKategorier();
-visKategori();
+updateCategories();
+showCategory();
 </script>
 </body>
 </html>

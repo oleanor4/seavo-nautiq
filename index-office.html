@@ -65,8 +65,8 @@
       width: 100%;
       border-collapse: collapse;
       background-color: white;
-      color: black;
-      margin-bottom: 15px;
+      color: rgb(0, 0, 0);
+      margin-bottom: 20px;
     }
 
     th, td {
@@ -77,7 +77,7 @@
 
     th {
       background-color: #00b7ff;
-      color: white;
+      color: rgb(0, 0, 0);
     }
 
     td.min-col input {
@@ -85,7 +85,7 @@
     }
 
     .red-warning {
-      background-color: #cc3333;
+      background: linear-gradient(to right, #ffffff, #ff0000);
     }
 
     .add-line {
@@ -112,6 +112,13 @@
       font-size: 18px;
     }
 
+      button img {
+      width: 60px;
+      height: 60px;
+      padding-left: 10px;
+      margin-top: 20px;
+    }
+
     .global-button {
       background-color: #00b7ff;
       border: none;
@@ -122,6 +129,8 @@
       margin: 10px 20px;
       border-radius: 6px;
     }
+
+  
   </style>
 </head>
 <body>
@@ -135,9 +144,21 @@
   <button class="add-category" onclick="addCategory()">+ Category</button>
 </div>
 
+
+
 <div id="content"></div>
 
+
 <button class="global-button" onclick="showGlobalOverview()">📋 Global Overview</button>
+
+<div>
+  <button style="background-color: transparent; border: none; padding: 0;">
+    <img src="icon/Doc.png" alt="" style="background-color: transparent;">
+    <img src="icon/Paper-clip.png" alt="" style="background-color: transparent;">
+     <img src="icon/Share.png" alt="" style="background-color: transparent;">
+     <img src="icon/Order.png" alt="" style="background-color: transparent;">
+  </button>
+</div>
 
 <script>
 let data = JSON.parse(localStorage.getItem("lagerDataV3")) || {};

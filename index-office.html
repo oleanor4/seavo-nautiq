@@ -127,14 +127,13 @@
 <body>
 
 <div class="kategori-slider">
-  <button class="pil" onclick="scrollSlider(-100)">⟵</button>
+  <button class="pil" onclick="scrollSlider(-100)">⭥</button>
   <div id="kategori-container" style="display: flex; overflow-x: auto; max-width: 70%; scroll-behavior: smooth;">
     <div id="kategorier" style="display: flex; gap: 8px;"></div>
   </div>
-  <button class="pil" onclick="scrollSlider(100)">⟶</button>
+  <button class="pil" onclick="scrollSlider(100)">⭧</button>
   <button class="legg-til-kategori" onclick="leggTilKategori()">+ Kategori</button>
 </div>
-
 
 <div id="innhold"></div>
 
@@ -151,7 +150,6 @@ function lagre() {
 function scrollSlider(offset) {
   document.getElementById("kategori-container").scrollLeft += offset;
 }
-
 
 function oppdaterKategorier() {
   const container = document.getElementById("kategorier");
@@ -191,7 +189,6 @@ function oppdaterKategorier() {
     container.appendChild(wrapper);
   });
 }
-
 
 function leggTilKategori() {
   const navn = prompt("Ny kategori:");
@@ -247,6 +244,8 @@ function visKategori() {
     }
 
     const felter = ['produkt', 'start', 'forbruk', 'slutt', 'min', 'kommentar', 'bestill'];
+    const inputs = {};
+
     felter.forEach((key) => {
       const td = document.createElement("td");
       if (key === "min") td.className = "min-col";
@@ -256,8 +255,23 @@ function visKategori() {
       input.style.width = "100%";
       input.oninput = () => {
         rad[key] = input.value;
+
+        // Kalkuler beholdning slutt
+        rad.slutt = (parseFloat(rad.start) || 0) - (parseFloat(rad.forbruk) || 0);
+        inputs['slutt'].value = rad.slutt;
+
+        // Rød bakgrunn hvis under minimum
+        const sluttVerdi = parseFloat(rad.slutt);
+        const minVerdi = parseFloat(rad.min);
+        if (!isNaN(sluttVerdi) && !isNaN(minVerdi) && sluttVerdi <= minVerdi) {
+          inputs['min'].classList.add("rød-advarsel");
+        } else {
+          inputs['min'].classList.remove("rød-advarsel");
+        }
+
         lagre();
       };
+      inputs[key] = input;
       td.appendChild(input);
       tr.appendChild(td);
     });
@@ -305,7 +319,6 @@ function slettRad(index) {
 function visGlobalOversikt() {
   const innhold = document.getElementById("innhold");
   innhold.innerHTML = "<h2>Global oversikt over hele lageret</h2>";
-
   const table = document.createElement("table");
   table.innerHTML = `
     <thead>
@@ -349,7 +362,6 @@ function visGlobalOversikt() {
   innhold.appendChild(table);
 }
 
-// Init
 if (!data[aktivKategori]) {
   data[aktivKategori] = [];
   lagre();
@@ -357,6 +369,5 @@ if (!data[aktivKategori]) {
 oppdaterKategorier();
 visKategori();
 </script>
-
 </body>
 </html>

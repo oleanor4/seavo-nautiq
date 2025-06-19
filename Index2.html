@@ -176,7 +176,8 @@
       <button>Slop chest</button>
       <button>Disposal</button>
 
-      
+
+  
 
      <div class="ny-container">
       <button> <img src="icon/Order-black.png" alt="Info" style="height: 32px; vertical-align: middle;">Orders</button>
@@ -278,13 +279,16 @@
 </div>
 
 
+
+
+
     <script>
       function visInfoTekst() {
-  // Skjul bildevindu, vis tekst
+
   document.getElementById("bildevisning").style.display = "none";
   document.getElementById("info-text-utenfor").style.display = "block";
 
-  // Marker knappen som aktiv
+  
   document.getElementById("infoBtn").classList.add("aktiv-knapp");
 }
 
@@ -294,14 +298,18 @@ function endreBilde(bildefil) {
 
   document.getElementById('visningsbilde').src = bildefil;
 
-  // Fjern "aktiv-knapp" fra Information-knappen
+ 
   document.getElementById("infoBtn").classList.remove("aktiv-knapp");
 }
 
-  // 🚀 Kjør visInfoTekst() automatisk når siden åpnes
+  
   window.onload = function() {
     visInfoTekst();
   };
+
+
+
+  
 
   </script>
 

@@ -15,7 +15,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: #1e3a5f;
+      background: linear-gradient(to right, #041425, #3b7fbe);
       padding: 30px;
       overflow-x: auto;
     }
@@ -23,17 +23,16 @@
     .category-item {
       display: flex;
       align-items: center;
-      margin: 0 5px;
+      margin: 0 6px;
     }
 
     .category-button, .add-category {
-      padding: 10px 15px;
+      padding: 10px 30px;
       background: linear-gradient(to right, #00b7ff, #326fa8);
-      color: white;
-      border: none;
+      color: rgb(255, 255, 255);
       border-radius: 6px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 16px;  
     }
 
     .category-button.active {
@@ -55,16 +54,43 @@
 
     .arrow {
       font-size: 20px;
+      font-weight: bold;
       padding: 5px 10px;
-      background-color: #0e2646;
+      background: transparent;
       color: rgb(255, 255, 255);
-      border: none;
+      border-radius: 6px;
       cursor: pointer;
+      width: 60px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
     }
 
     #content {
       padding: 60px;
     }
+
+    .logo {
+      width: 200px;
+      height: 40px;
+      display:  block;
+      margin: 0 auto;
+      margin-bottom: -30px;
+      border-radius: 6px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+      margin-top: 30px;
+    }
+
+    #searchBox {
+      width: 200px;
+      padding: 10px;
+      border-radius: 6px;
+      border:  1px solid #000000;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+      margin-left: 60px;
+      font-weight: bold;
+      
+
+    }
+
 
     table { 
       width: 100%;
@@ -72,20 +98,30 @@
       background-color: rgb(63, 92, 136);
       color: rgb(0, 0, 0);
       margin-bottom: 20px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
     }
+
 
     .large-bold-input {
       font-weight: bold;
-      font-size: 17px;
+      font-size: 16px;
     }
+
+    .cell-min {
+      width: 45px;
+    }
+
+    .cell-order {
+      width: 40px;
+    }
+
+
 
     th, td {
       border: 1px solid #1f3c68;
       padding: 8px;
       text-align: center;
       font-size: 18px;
-      
-     
     }
 
     th {
@@ -99,7 +135,7 @@
     }
 
     .red-warning {
-      background: linear-gradient(to right, #ffffff, #eec249);
+      background: linear-gradient(to right, #ffffff, #e6380d);
     }
 
     .add-line {
@@ -110,18 +146,20 @@
       border-radius: 10px;
       background: linear-gradient(to right, #00b7ff, #326fa8);
       cursor: pointer;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
     }
 
     .header-row td {
-      background: linear-gradient(to left, #12315c, #94bdf7);
-      font-weight: bold;
+      background: linear-gradient(to left, #12315c, #79acee);
+      font-weight: bold;;
       text-align: left;
       border-radius: 5px;
+      border-color: black;
     }
 
     .header-row td span {
       display: inline-block;
-      width: 90%;
+      width: 100%;
     }
 
     .delete-button {
@@ -134,16 +172,13 @@
     .delete-button:hover {
       background-color: rgba(0, 0, 0, 0.3); 
       border-radius: 50px; 
-      padding: 5px 10px;
+      padding:0px 5px;
     }
 
     td:last-child {
       width: 50px; 
       background: linear-gradient(to right, #4e9bce, #1b3863);
- 
-
     }
-
 
 
       button img {
@@ -156,23 +191,23 @@
 
     .global-button {
       background: linear-gradient(to right, #00b7ff, #326fa8);
-      border: none;
-      color: white;
+      color: rgb(255, 255, 255);
       padding: 20px 15px;
       font-size: 15px;
       font-weight: bold;
       cursor: pointer;
       margin: 10px 60px;
-      border-radius: 6px;
+      border-radius: 16px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
     }
 
 
     .cell-product {
-  width: 220px;
+  width: 200px;
 }
 
 .cell-comment {
-  width: 260px;
+  width: 240px;
 }
 
 .cell-small {
@@ -187,15 +222,36 @@
 
 <body>
 
+  
+
 <div class="category-slider">
-  <button class="arrow" onclick="scrollSlider(-100)">⭥</button>
+  <button class="arrow" onclick="scrollSlider(-100)">←</button>
   <div id="category-container" style="display: flex; overflow-x: auto; max-width: 70%; scroll-behavior: smooth;">
     <div id="categories" style="display: flex; gap: 8px;"></div>
   </div>
-  <button class="arrow" onclick="scrollSlider(100)">⭧</button>
+  <button class="arrow" onclick="scrollSlider(100)">→</button>
   <button class="add-category" onclick="addCategory()">+ Category</button>
 </div>
 
+<div>
+  <img src="images/Seavo nautiq logo.png" alt="logo" class="logo">
+
+  <input type="text" id="searchBox" placeholder="Search inventory..." oninput="searchInPage()">
+
+<style>
+.highlight {
+  background-color: rgb(52, 131, 221);
+  font-weight: bold;
+}
+
+.highlight-input {
+  background-color: rgb(241, 241, 31);
+  font-weight: bold;
+}
+</style>
+
+
+</div>
 
 
 <div id="content"></div>
@@ -211,6 +267,63 @@
     <img src="icon/Doc.png" alt="" style="background-color: transparent;">
 </button>
 </div>
+
+
+<script>
+function searchInPage() {
+  const term = document.getElementById("searchBox").value.trim().toLowerCase();
+  removeHighlights();
+  if (term === "") return;
+
+  let firstMatch = null;
+
+  // 1. Søk i headers (span-elementer)
+  document.querySelectorAll("td span").forEach(span => {
+    const content = span.textContent.toLowerCase();
+    if (content.includes(term)) {
+      const index = content.indexOf(term);
+      const original = span.textContent;
+      const before = original.slice(0, index);
+      const match = original.slice(index, index + term.length);
+      const after = original.slice(index + term.length);
+      span.innerHTML = `${before}<span class="highlight">${match}</span>${after}`;
+      if (!firstMatch) firstMatch = span;
+    }
+  });
+
+  // 2. Søk i input-feltene
+  document.querySelectorAll("input").forEach(input => {
+    if (input.value.toLowerCase().includes(term)) {
+      input.classList.add("highlight-input");
+      if (!firstMatch) firstMatch = input;
+    }
+  });
+
+  // Scroll til første treff
+  if (firstMatch) {
+    setTimeout(() => {
+      firstMatch.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 100); // vent litt så tabellen rekker å tegne seg
+  }
+}
+
+function removeHighlights() {
+  // Fjern <span class="highlight"> fra header
+  document.querySelectorAll("span .highlight").forEach(el => {
+    const parent = el.parentNode;
+    parent.replaceChild(document.createTextNode(el.textContent), el);
+    parent.normalize();
+  });
+
+  // Fjern gul markering fra input
+  document.querySelectorAll(".highlight-input").forEach(input => {
+    input.classList.remove("highlight-input");
+  });
+}
+
+
+</script>
+
 
 
 
@@ -287,7 +400,7 @@ function showCategory() {
     <thead>
       <tr>
         <th>Product/Type</th><th>Start Qty</th><th>Used</th><th>End Qty</th>
-        <th>Min Set</th><th>Comments</th><th>Order</th><th>Delete</th>
+        <th>MIN</th><th>Comments</th><th>Order</th><th>Delete</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -326,6 +439,8 @@ function showCategory() {
       
       if (key === "product") td.classList.add("cell-product");
       else if (key === "comment") td.classList.add("cell-comment");
+      else if (key === "min") td.classList.add("cell-min");
+      else if (key === "order") td.classList.add("cell-order");
       else td.classList.add("cell-small");
 
 
@@ -363,9 +478,8 @@ function showCategory() {
     });
 
     const tdDel = document.createElement("td");
-    tdDel.innerHTML = `<span class="delete-button" onclick="deleteRow(${i})">🗑️</span>`;
+    tdDel.innerHTML = `<span class="delete-button" onclick="deleteRow(${i})">🗑️</span>`
     tr.appendChild(tdDel);
-
     tbody.appendChild(tr);
   });
 
@@ -394,6 +508,8 @@ function showCategory() {
 
   content.appendChild(addLine);
   content.appendChild(addHeader);
+  searchInPage(); // kjør søket igjen etter innhold er bygd opp
+
 }
 
 function deleteRow(index) {

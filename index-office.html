@@ -8,7 +8,7 @@
       background-color: #12315c;
       font-family: Arial, sans-serif;
       margin: 0;
-      color: white;
+      color: rgb(255, 255, 255);
     }
 
     .category-slider {
@@ -16,7 +16,7 @@
       align-items: center;
       justify-content: center;
       background-color: #1e3a5f;
-      padding: 10px;
+      padding: 30px;
       overflow-x: auto;
     }
 
@@ -37,14 +37,19 @@
     }
 
     .category-button.active {
-      background: #76bdff;
+      background: #9ccdfa;
       font-weight: bold;
+    }
+    
+    .category-button:hover, .add-category:hover {
+      background: #56bafd;
+      color: white;
     }
 
     .delete-category {
       color: rgb(255, 0, 0);
-      font-size: 16px;
-      margin-left: 5px;
+      font-size:20px;
+      margin-left: 20px;
       cursor: pointer;
     }
 
@@ -52,32 +57,41 @@
       font-size: 20px;
       padding: 5px 10px;
       background-color: #0e2646;
-      color: white;
+      color: rgb(255, 255, 255);
       border: none;
       cursor: pointer;
     }
 
     #content {
-      padding: 20px;
+      padding: 60px;
     }
 
-    table {
+    table { 
       width: 100%;
       border-collapse: collapse;
-      background-color: white;
+      background-color: rgb(63, 92, 136);
       color: rgb(0, 0, 0);
       margin-bottom: 20px;
     }
 
+    .large-bold-input {
+      font-weight: bold;
+      font-size: 17px;
+    }
+
     th, td {
-      border: 1px solid #ccc;
+      border: 1px solid #1f3c68;
       padding: 8px;
       text-align: center;
+      font-size: 18px;
+      
+     
     }
 
     th {
-      background-color: #00b7ff;
+      background-color:  #0eb2f3;
       color: rgb(0, 0, 0);
+      border-radius: 5px;
     }
 
     td.min-col input {
@@ -85,7 +99,7 @@
     }
 
     .red-warning {
-      background: linear-gradient(to right, #ffffff, #ff0000);
+      background: linear-gradient(to right, #ffffff, #eec249);
     }
 
     .add-line {
@@ -99,9 +113,10 @@
     }
 
     .header-row td {
-      background: linear-gradient(to left, #12315c, #6e9ad8);
+      background: linear-gradient(to left, #12315c, #94bdf7);
       font-weight: bold;
       text-align: left;
+      border-radius: 5px;
     }
 
     .header-row td span {
@@ -110,33 +125,66 @@
     }
 
     .delete-button {
-      color: red;
+      color: rgb(0, 0, 0);
       cursor: pointer;
-      font-size: 18px;
+      font-size: 20px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
     }
+
+    .delete-button:hover {
+      background-color: rgba(0, 0, 0, 0.3); 
+      border-radius: 50px; 
+      padding: 5px 10px;
+    }
+
+    td:last-child {
+      width: 50px; 
+      background: linear-gradient(to right, #4e9bce, #1b3863);
+ 
+
+    }
+
+
 
       button img {
       width: 40px;
       height: 40px;
-      padding-left: 15px;
+      padding-left: 55px;
       margin-top: 20px;
     }
+
 
     .global-button {
       background: linear-gradient(to right, #00b7ff, #326fa8);
       border: none;
       color: white;
-      padding: 10px 15px;
+      padding: 20px 15px;
       font-size: 15px;
       font-weight: bold;
       cursor: pointer;
-      margin: 10px 20px;
+      margin: 10px 60px;
       border-radius: 6px;
     }
+
+
+    .cell-product {
+  width: 220px;
+}
+
+.cell-comment {
+  width: 260px;
+}
+
+.cell-small {
+  width: 80px;
+}
+
 
   
   </style>
 </head>
+
+
 <body>
 
 <div class="category-slider">
@@ -157,12 +205,14 @@
 
 <div>
   <button style="background-color: transparent; border: none; padding: 0;">
-    <img src="icon/Doc.png" alt="" style="background-color: transparent;">
+
     <img src="icon/Paper-clip.png" alt="" style="background-color: transparent;">
-     <img src="icon/Share.png" alt="" style="background-color: transparent;">
-     <img src="icon/Order.png" alt="" style="background-color: transparent;">
-  </button>
+    <img src="icon/Share.png" alt="" style="background-color: transparent;">
+    <img src="icon/Doc.png" alt="" style="background-color: transparent;">
+</button>
 </div>
+
+
 
 <script>
 let data = JSON.parse(localStorage.getItem("lagerDataV3")) || {};
@@ -273,11 +323,24 @@ function showCategory() {
 
     fields.forEach((key) => {
       const td = document.createElement("td");
-      if (key === "min") td.className = "min-col";
+      
+      if (key === "product") td.classList.add("cell-product");
+      else if (key === "comment") td.classList.add("cell-comment");
+      else td.classList.add("cell-small");
+
+
       const input = document.createElement("input");
       input.type = key === "product" || key === "comment" ? "text" : "number";
       input.value = row[key] || "";
-      input.style.width = "100%";
+      input.style.width = "90%";
+      input.style.padding = "5px";
+      input.style.borderRadius = "5px";
+      input.placeholder = key.charAt(0).toUpperCase() + key.slice(1);
+      if (["product", "comment", "start", "used", "end", "min", "order"].includes(key)) {
+     input.classList.add("large-bold-input");
+     }
+
+
       input.oninput = () => {
         row[key] = input.value;
 
@@ -391,6 +454,8 @@ if (!data[activeCategory]) {
 }
 updateCategories();
 showCategory();
+
+
 </script>
 </body>
 </html>

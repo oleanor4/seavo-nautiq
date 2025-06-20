@@ -67,7 +67,7 @@
     }
 
     input[type="text"], input[type="date"] {
-      width: 100%;
+      width: 90%;
       padding: 4px;
       border-radius: 4px;
       border: none;
@@ -75,14 +75,24 @@
     }
 
     .alert-yellow {
-      background-color: #ffcc00;
+      background: linear-gradient(to right, #ffffff, #ffcc00);
       color: black;
     }
 
     .alert-red {
-      background-color: #ff4444;
-      color: white;
+      background: linear-gradient(to right, #ffffff, #f05c5c);
+      color: rgb(0, 0, 0);
     }
+
+    .alarm-blink {
+      animation: blink 1.5s infinite;
+    }
+
+    @keyframes blink {
+    0%, 50%, 100% { opacity: 1; }
+    25%, 75% { opacity: 0.4; }
+  }
+
 
     .number-control {
       display: flex;
@@ -123,12 +133,14 @@
           color: rgb(0, 0, 0);
           margin-top: 20px;
           margin-left: auto;
-          background-color: #ffd000;
+          background: linear-gradient(to right, #ffffff, #ffcc00);
           border-radius: 15px;
           border: 2px solid #12315c;
           font-size: 12px;
           font-weight: bold;
         }
+
+        
       </style>
       <tr>
         <td>Expires in 90 days</td> 
@@ -140,18 +152,20 @@
       <style>
         #expiryTable2 {
           width: 8%;
-          color: rgb(255, 255, 255);
+          color: rgb(0, 0, 0);
           margin-top: 2px;
           margin-left: auto;
-          background-color: #fc3a3a;
+          background: linear-gradient(to right, #ffffff, #ff0000);
           border-radius: 15px;
           border: 2px solid #12315c;
           font-size: 12px;
           font-weight: bold;
         }
+
       </style>
       <tr>
         <td>Expires in 45 days</td> 
+
       </tr>
     </table>
     <div>
@@ -177,7 +191,7 @@
 
 
   <div>
-    <p>Notice!</p>
+    <p>Notice❗</p>
     <p>This list is not ment as guidance on 
     <p>routine checks or function tests. 
     <p> Please refer to platforms approved 
@@ -199,7 +213,7 @@
 
   <script>
     const yellowDays = 90;
-    const redDays = 45;
+    const redDays = 45; 
 
     function addRow(data = {}) {
       const table = document.getElementById('safetyTable');
@@ -216,7 +230,29 @@
 
       row.insertCell(2).innerHTML = `<input type="date" value="${data.registered || ''}">`;
 
-      row.insertCell(3).innerHTML = `<input type="date" onchange="checkExpiry(this)" value="${data.expiry || ''}">`;
+      const expiryCell = row.insertCell(3);
+      expiryCell.style.position = "relative";
+
+      const alarmIcon = document.createElement("span");
+      alarmIcon.textContent = "🚨"; // eller ⚠️
+      alarmIcon.className = "alarm-blink";
+      alarmIcon.style.position = "absolute";
+      alarmIcon.style.left = "100px";
+      alarmIcon.style.top = "18px";
+      alarmIcon.style.fontSize = "13px";
+      alarmIcon.style.display = "none"; // skjult til det trengs
+
+      const expiryInput = document.createElement("input");
+      expiryInput.type = "date";
+      expiryInput.value = data.expiry || "";
+      
+      expiryInput.onchange = function () {
+      checkExpiry(expiryInput, alarmIcon);
+    };
+
+     expiryCell.appendChild(alarmIcon);
+     expiryCell.appendChild(expiryInput);
+
 
       row.insertCell(4).innerHTML = `<input type="text" value="${data.comments || ''}" placeholder="Optional comments">`;
 
@@ -268,19 +304,23 @@
       saveTable();
     }
 
-    function checkExpiry(input) {
-      const date = new Date(input.value);
-      const today = new Date();
-      const diffDays = Math.floor((date - today) / (1000 * 60 * 60 * 24));
+    function checkExpiry(input, icon) {
+  const date = new Date(input.value);
+  const today = new Date();
+  const diffDays = Math.floor((date - today) / (1000 * 60 * 60 * 24));
 
-      input.classList.remove('alert-yellow', 'alert-red');
-      if (diffDays <= redDays) {
-        input.classList.add('alert-red');
-      } else if (diffDays <= yellowDays) {
-        input.classList.add('alert-yellow');
-      }
-      saveTable();
-    }
+  input.classList.remove('alert-yellow', 'alert-red');
+  icon.style.display = "none";
+
+  if (diffDays <= redDays) {
+    input.classList.add('alert-red');
+    icon.style.display = "inline";
+  } else if (diffDays <= yellowDays) {
+    input.classList.add('alert-yellow');
+  }
+  saveTable();
+}
+
 
     function moveRow(btn, direction) {
       const row = btn.closest('tr');

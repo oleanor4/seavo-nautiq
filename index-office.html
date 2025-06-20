@@ -95,7 +95,7 @@
     table { 
       width: 100%;
       border-collapse: collapse;
-      background-color: rgb(40, 72, 121);
+      background-color: rgb(31, 59, 102);
       color: rgb(0, 0, 0);
       margin-bottom: 20px;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
@@ -104,7 +104,7 @@
 
     .large-bold-input {
       font-weight: bold;
-      font-size: 16px;
+      font-size: 14px;
     }
 
     .cell-min {
@@ -118,8 +118,8 @@
 
 
     th, td {
-      border: 1px solid #1f3c68;
-      padding: 8px;
+      border: 1px solid #112036;
+      padding: 5px;
       text-align: center;
       font-size: 18px;
     }
@@ -135,7 +135,7 @@
     }
 
     .red-warning {
-      background: linear-gradient(to right, #ffffff, #ff9f31);
+      background: linear-gradient(to right, #ffffff, #fcc101);
     }
 
     .add-line {
@@ -148,6 +148,34 @@
       cursor: pointer;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
     }
+
+    .color-btn.limegreen { background-color: #36d131; }   
+    .color-btn.gold { background-color: #ffd036; }  
+    .color-btn.mediumturquoise { background-color: #40e0d0; }
+    .color-btn.white { background-color: #ffffff; }
+
+    .color-btn {
+      width: 10px;      
+      height: 10px;
+      border-radius: 30%;
+      cursor: pointer;
+    }
+
+    .color-btn:hover {
+      outline: 1px solid #fff;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+    }
+
+
+    .color-buttons {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 1px;
+      margin-left: 2px;
+      vertical-align: middle;
+      transform: translateY( 0px); 
+    }
+
 
     .header-row td {
       background: linear-gradient(to left, #12315c, #79acee);
@@ -202,17 +230,18 @@
     }
 
 
+
     .cell-product {
-  width: 200px;
-}
+      width: 190px;
+    }
 
-.cell-comment {
-  width: 240px;
-}
+    .cell-comment {
+     width: 240px;
+   }
 
-.cell-small {
-  width: 80px;
-}
+   .cell-small {
+   width: 80px;
+   }
 
 
   
@@ -240,12 +269,12 @@
 
 <style>
 .highlight {
-  background-color: rgb(52, 131, 221);
+  background-color: rgb(240, 138, 42);
   font-weight: bold;
 }
 
 .highlight-input {
-  background-color: rgb(241, 241, 31);
+  background-color: yellow;
   font-weight: bold;
 }
 </style>
@@ -400,15 +429,18 @@ function showCategory() {
     <thead>
       <tr>
         <th>Product/Type</th><th>Start Qty</th><th>Used</th><th>End Qty</th>
-        <th>MIN</th><th>Comments</th><th>Order</th><th>Delete</th>
+        <th>MIN🔔</th><th>Comments</th><th>Order</th><th>Delete</th>
       </tr>
     </thead>
     <tbody></tbody>
   `;
+
   const tbody = table.querySelector("tbody");
 
   data[activeCategory].forEach((row, i) => {
     const tr = document.createElement("tr");
+
+    
 
     if (row.type === "header") {
       tr.className = "header-row";
@@ -440,6 +472,7 @@ function showCategory() {
       const td = document.createElement("td");
       
       if (key === "product") td.classList.add("cell-product");
+      
       else if (key === "comment") td.classList.add("cell-comment");
       else if (key === "min") td.classList.add("cell-min");
       else if (key === "order") td.classList.add("cell-order");
@@ -450,7 +483,7 @@ function showCategory() {
       input.type = key === "product" || key === "comment" ? "text" : "number";
       input.value = row[key] || "";
       input.style.width = "90%";
-      input.style.padding = "5px";
+      input.style.padding = "4px";
       input.style.borderRadius = "5px";
       input.placeholder = key.charAt(0).toUpperCase() + key.slice(1);
       if (["product", "comment", "start", "used", "end", "min", "order"].includes(key)) {
@@ -476,6 +509,33 @@ function showCategory() {
       };
       inputs[key] = input;
       td.appendChild(input);
+      if (key === "product") {
+  // 1. Lag fargeknappene
+  const colorContainer = document.createElement("div");
+  colorContainer.className = "color-buttons";
+
+  const colors = ["limegreen", "gold", "mediumturquoise", "white"];
+  colors.forEach(color => {
+    const btn = document.createElement("button");
+    btn.className = `color-btn ${color}`;
+    btn.title = `Make ${color}`;
+    btn.onclick = (e) => {
+      e.preventDefault();
+      row.productColor = color === "white" ? null : color;
+      input.style.backgroundColor = row.productColor || "";
+      save();
+    };
+    colorContainer.appendChild(btn);
+  });
+
+  td.appendChild(colorContainer);
+
+  // 2. Bruk lagret farge når cellen bygges
+  if (row.productColor) {
+    input.style.backgroundColor = row.productColor || "";
+
+  }
+}
       tr.appendChild(td);
     });
 
@@ -484,6 +544,7 @@ function showCategory() {
     
     tr.appendChild(tdDel);
     tbody.appendChild(tr);
+    
   });
 
   content.appendChild(table);
@@ -493,9 +554,10 @@ function showCategory() {
   addLine.textContent = "+ Add line";
   addLine.onclick = () => {
     data[activeCategory].push({
-      type: "line", product: "", start: 0, used: 0,
-      comment: "", min: 0, order: 0, end: 0
-    });
+    type: "line", product: "", start: 0, used: 0,
+    comment: "", min: 0, order: 0, end: 0, productColor: null
+  });
+
     save();
     showCategory();
   };

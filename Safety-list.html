@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Inventory Management – Seavo Nautiq</title>
+  <style>
+    body {
+      background-color: #12315c;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      color: white;
+      padding: 20px;
+    }
+
+    .logo {
+      width: 200px;
+      height: auto;
+      display: block;
+      margin: 0 auto 20px;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+    }
+
+    .Safety {
+      width: 10%;
+      height: auto;;
+      margin: 60px auto;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+      display: block;
+      border: 2px solid #000000;
+    }
+
+
+    .table-container {
+      width: 100%;
+      max-width: 1200px;
+      margin: auto;
+      margin-bottom: 50px;
+    }
+
+    .controls {
+      margin-bottom: 20px;
+    }
+    
+    button {
+      background: linear-gradient(to right, #4bc8ee, #246fd1);
+      color: white;
+      padding: 8px 12px;
+      margin-right: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+    }
+
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 50px;
+    }
+    th, td {
+      border: 1px solid #cccccc44;
+      padding: 8px;
+      text-align: center;
+    }
+    input[type="text"], input[type="date"] {
+      width: 100%;
+      padding: 4px;
+      border-radius: 4px;
+      border: none;
+      font-weight: bold;
+    }
+    .alert-yellow {
+      background-color: #ffcc00;
+      color: black;
+    }
+    .alert-red {
+      background-color: #ff4444;
+      color: white;
+    }
+    .number-control {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .number-control button {
+      padding: 5px;
+      font-size: 16px;
+    }
+    .header-row {
+      background: linear-gradient(to right, #74bae2, #13599b);
+      font-weight: bold;
+      text-align: left;
+    }
+    
+    .row-controls {
+      display: flex;
+      gap: 5px;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div>
+    <img src="images/Seavo nautiq logo.png" alt="logo" class="logo">
+  </div>
+
+  <div class="table-container">
+    <div class="controls">
+      <button onclick="addRow()">+ Add Line</button>
+      <button onclick="addHeader()">+ Add Header Section</button>
+    </div>
+    <table id="safetyTable">
+      <tr>
+        <th>Safety Equipment</th>
+        <th>Number</th>
+        <th>Date of Registration</th>
+        <th>Expiry Date</th>
+        <th>Comments</th>
+        <th>Order</th>
+        <th>Delete</th>
+      </tr>
+    </table>
+  </div>
+
+
+  <div>
+    <p>Notice!</p>
+    <p>This list is not ment as guidance on 
+    <p>routine checks or function tests. 
+    <p> Please refer to platforms approved 
+    <p> by your maritime authority and radio provider.</p>
+
+    <style>
+      p {
+        text-align: center;
+        font-size: 1.2em;
+        color: #ffffff;
+      }
+    </style>
+  </div>
+
+    <div>
+    <img src="images/Safety.JPG" alt="Safety" class="Safety"> 
+  </div>
+
+
+  <script>
+    const yellowDays = 60;
+    const redDays = 30;
+
+    function addRow(data = {}) {
+      const table = document.getElementById('safetyTable');
+      const row = table.insertRow(-1);
+
+      row.insertCell(0).innerHTML = `<input type="text" value="${data.equipment || ''}" placeholder="e.g. Life Jacket">`;
+
+      row.insertCell(1).innerHTML = `
+        <div class="number-control">
+          <button onclick="changeNumber(this, -1)">-</button>
+          <input type="text" value="${data.number || 0}" readonly style="width:40px; text-align:center;">
+          <button onclick="changeNumber(this, 1)">+</button>
+        </div>`;
+
+      row.insertCell(2).innerHTML = `<input type="date" value="${data.registered || ''}">`;
+
+      row.insertCell(3).innerHTML = `<input type="date" onchange="checkExpiry(this)" value="${data.expiry || ''}">`;
+
+      row.insertCell(4).innerHTML = `<input type="text" value="${data.comments || ''}" placeholder="Optional comments">`;
+
+      row.insertCell(5).innerHTML = `
+        <div class="number-control">
+          <button onclick="changeNumber(this, -1)">-</button>
+          <input type="text" value="${data.order || 0}" readonly style="width:40px; text-align:center;">
+          <button onclick="changeNumber(this, 1)">+</button>
+        </div>`;
+
+      row.insertCell(6).innerHTML = `
+        <div class="row-controls">
+          <button onclick="moveRow(this, -1)">⬆️</button>
+          <button onclick="moveRow(this, 1)">⬇️</button>
+          <button onclick="deleteRow(this)">🗑️</button>
+        </div>`;
+
+      saveTable();
+    }
+
+    function addHeader(text = '') {
+      const table = document.getElementById('safetyTable');
+      const row = table.insertRow(-1);
+      row.className = 'header-row';
+
+      const cell = row.insertCell(0);
+      cell.colSpan = 6;
+      cell.innerHTML = `<input type="text" value="${text}" placeholder="New Section Title" style="width:100%; font-weight:bold;">`;
+
+      const del = row.insertCell(1);
+      del.innerHTML = `<button onclick="deleteRow(this)">🗑️</button>`;
+
+      saveTable();
+    }
+
+    function deleteRow(btn) {
+      const row = btn.closest('tr');
+      row.remove();
+      saveTable();
+    }
+
+    function changeNumber(button, delta) {
+      const input = button.parentElement.querySelector('input');
+      let value = parseInt(input.value);
+      if (!isNaN(value)) {
+        value += delta;
+        input.value = value < 0 ? 0 : value;
+      }
+      saveTable();
+    }
+
+    function checkExpiry(input) {
+      const date = new Date(input.value);
+      const today = new Date();
+      const diffDays = Math.floor((date - today) / (1000 * 60 * 60 * 24));
+
+      input.classList.remove('alert-yellow', 'alert-red');
+      if (diffDays <= redDays) {
+        input.classList.add('alert-red');
+      } else if (diffDays <= yellowDays) {
+        input.classList.add('alert-yellow');
+      }
+      saveTable();
+    }
+
+    function moveRow(btn, direction) {
+      const row = btn.closest('tr');
+      const table = document.getElementById('safetyTable');
+      const index = row.rowIndex;
+      const targetIndex = index + direction;
+
+      if (targetIndex > 0 && targetIndex < table.rows.length) {
+        const refRow = table.rows[targetIndex];
+        if (direction > 0) {
+          refRow.after(row);
+        } else {
+          refRow.before(row);
+        }
+        saveTable();
+      }
+    }
+
+    function saveTable() {
+      const table = document.getElementById('safetyTable');
+      const rows = Array.from(table.rows).slice(1); // skip header
+
+      const data = rows.map(row => {
+        if (row.className === 'header-row') {
+          return { type: 'header', text: row.cells[0].querySelector('input').value };
+        } else {
+          return {
+            type: 'row',
+            equipment: row.cells[0].querySelector('input').value,
+            number: row.cells[1].querySelector('input').value,
+            registered: row.cells[2].querySelector('input').value,
+            expiry: row.cells[3].querySelector('input').value,
+            comments: row.cells[4].querySelector('input').value,
+            order: row.cells[5].querySelector('input').value
+          };
+        }
+      });
+
+      localStorage.setItem('safetyTable', JSON.stringify(data));
+    }
+
+    function loadTable() {
+      const data = JSON.parse(localStorage.getItem('safetyTable') || '[]');
+      data.forEach(item => {
+        if (item.type === 'row') {
+          addRow(item);
+        } else if (item.type === 'header') {
+          addHeader(item.text);
+        }
+      });
+    }
+
+    window.onload = loadTable;
+  </script>
+</body>
+</html>

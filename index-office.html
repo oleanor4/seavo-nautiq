@@ -135,7 +135,7 @@
     }
 
     .red-warning {
-      background: linear-gradient(to right, #ffffff, #e6380d);
+      background: linear-gradient(to right, #ffffff, #ff9f31);
     }
 
     .add-line {
@@ -425,7 +425,9 @@ function showCategory() {
       tr.appendChild(td);
 
       const del = document.createElement("td");
-      del.innerHTML = `<span class="delete-button" onclick="deleteRow(${i})">🗑️</span>`;
+      del.style.textAlign = "center";
+      del.innerHTML = `<span class="delete-button" onclick="deleteRow(${i})" style="cursor:pointer;">🗑️</span>`;
+
       tr.appendChild(del);
       tbody.appendChild(tr);
       return;
@@ -479,6 +481,7 @@ function showCategory() {
 
     const tdDel = document.createElement("td");
     tdDel.innerHTML = `<span class="delete-button" onclick="deleteRow(${i})">🗑️</span>`
+    
     tr.appendChild(tdDel);
     tbody.appendChild(tr);
   });

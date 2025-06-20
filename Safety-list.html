@@ -22,25 +22,25 @@
     }
 
     .Safety {
-      width: 10%;
-      height: auto;;
-      margin: 60px auto;
+      width: 30%; 
+      margin: 20px  auto;
+      margin-top: 60px;
       border-radius: 6px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
-      display: block;
       border: 2px solid #000000;
+      box-shadow: #000000 0px 0px 20px;
     }
+
 
 
     .table-container {
       width: 100%;
       max-width: 1200px;
-      margin: auto;
+      margin-top: 30px;
       margin-bottom: 50px;
     }
 
     .controls {
-      margin-bottom: 20px;
+      margin-bottom: 40px;
     }
     
     button {
@@ -50,20 +50,22 @@
       margin-right: 10px;
       border-radius: 5px;
       cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);;
     }
 
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 50px;
+      margin-top: 30px;
     }
+
     th, td {
       border: 1px solid #cccccc44;
       padding: 8px;
       text-align: center;
     }
+
     input[type="text"], input[type="date"] {
       width: 100%;
       padding: 4px;
@@ -71,23 +73,28 @@
       border: none;
       font-weight: bold;
     }
+
     .alert-yellow {
       background-color: #ffcc00;
       color: black;
     }
+
     .alert-red {
       background-color: #ff4444;
       color: white;
     }
+
     .number-control {
       display: flex;
       justify-content: center;
       align-items: center;
     }
+
     .number-control button {
       padding: 5px;
       font-size: 16px;
     }
+
     .header-row {
       background: linear-gradient(to right, #74bae2, #13599b);
       font-weight: bold;
@@ -107,11 +114,48 @@
     <img src="images/Seavo nautiq logo.png" alt="logo" class="logo">
   </div>
 
-  <div class="table-container">
-    <div class="controls">
-      <button onclick="addRow()">+ Add Line</button>
-      <button onclick="addHeader()">+ Add Header Section</button>
-    </div>
+
+
+    <div><table id="expiryTable"> 
+      <style>
+        #expiryTable {
+          width: 8%;
+          color: rgb(0, 0, 0);
+          margin-top: 20px;
+          margin-left: auto;
+          background-color: #ffd000;
+          border-radius: 15px;
+          border: 2px solid #12315c;
+          font-size: 12px;
+          font-weight: bold;
+        }
+      </style>
+      <tr>
+        <td>Expires in 90 days</td> 
+      </tr>
+    </table>
+    <div>
+
+      <div><table id="expiryTable2"> 
+      <style>
+        #expiryTable2 {
+          width: 8%;
+          color: rgb(255, 255, 255);
+          margin-top: 2px;
+          margin-left: auto;
+          background-color: #fc3a3a;
+          border-radius: 15px;
+          border: 2px solid #12315c;
+          font-size: 12px;
+          font-weight: bold;
+        }
+      </style>
+      <tr>
+        <td>Expires in 45 days</td> 
+      </tr>
+    </table>
+    <div>
+
     <table id="safetyTable">
       <tr>
         <th>Safety Equipment</th>
@@ -120,10 +164,16 @@
         <th>Expiry Date</th>
         <th>Comments</th>
         <th>Order</th>
-        <th>Delete</th>
+        <th>Move/Delete</th>
       </tr>
     </table>
   </div>
+
+    <div class="table-container">
+    <div class="controls">
+      <button onclick="addRow()">+ Add Line</button>
+      <button onclick="addHeader()">+ Add Header Section</button>
+    </div>
 
 
   <div>
@@ -135,9 +185,9 @@
 
     <style>
       p {
-        text-align: center;
+        margin: 14px;
         font-size: 1.2em;
-        color: #ffffff;
+        color: #ffffff
       }
     </style>
   </div>
@@ -148,14 +198,14 @@
 
 
   <script>
-    const yellowDays = 60;
-    const redDays = 30;
+    const yellowDays = 90;
+    const redDays = 45;
 
     function addRow(data = {}) {
       const table = document.getElementById('safetyTable');
       const row = table.insertRow(-1);
 
-      row.insertCell(0).innerHTML = `<input type="text" value="${data.equipment || ''}" placeholder="e.g. Life Jacket">`;
+      row.insertCell(0).innerHTML = `<input type="text" value="${data.equipment || ''}" placeholder="Safety Equipment">`;
 
       row.insertCell(1).innerHTML = `
         <div class="number-control">

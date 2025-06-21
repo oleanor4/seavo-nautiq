@@ -251,6 +251,9 @@
   </style>
 </head>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 
 <body>
 
@@ -292,12 +295,11 @@
 <button class="global-button" onclick="showGlobalOverview()">📋 Global Overview</button>
 
 <div>
-  <button style="background-color: transparent; border: none; padding: 0;">
 
-    <img src="icon/Paper-clip.png" alt="" style="background-color: transparent;">
-    <img src="icon/Share.png" alt="" style="background-color: transparent;">
-    <img src="icon/Doc.png" alt="" style="background-color: transparent;">
+
 </button>
+<button class="global-button" onclick="generatePDF()">📄 Generate PDF</button>
+
 </div>
 
 
@@ -663,6 +665,33 @@ if (!data[activeCategory]) {
 }
 updateCategories();
 showCategory();
+
+async function generatePDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('p', 'mm', 'a4');
+
+  
+  const logoImg = new Image();
+  logoImg.src = "images/Logo Seavo Nautiq.png"; 
+  await new Promise(resolve => { logoImg.onload = resolve; });
+
+  doc.addImage(logoImg, 'PNG', 10, 10, 60, 35); // (x, y, width, height)
+
+  // Ta skjermbilde av innhold
+  const content = document.getElementById("content");
+
+  await html2canvas(content, {
+    backgroundColor: "#ffffff"
+  }).then(canvas => {
+    const imgData = canvas.toDataURL('image/png');
+    const imgProps = doc.getImageProperties(imgData);
+    const pdfWidth = doc.internal.pageSize.getWidth() - 20;
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+    doc.addImage(imgData, 'PNG', 13, 35, pdfWidth, pdfHeight);
+    doc.save("SeavoNautiq_Inventory.pdf");
+  });
+}
 
 
 </script>

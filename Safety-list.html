@@ -74,6 +74,12 @@
       font-weight: bold;
     }
 
+    .alert-green {
+      background: linear-gradient(to right, #ffffff, #4CAF50); 
+      color: black;
+    }
+
+
     .alert-yellow {
       background: linear-gradient(to right, #ffffff, #ffcc00);
       color: black;
@@ -309,7 +315,7 @@
   const today = new Date();
   const diffDays = Math.floor((date - today) / (1000 * 60 * 60 * 24));
 
-  input.classList.remove('alert-yellow', 'alert-red');
+  input.classList.remove('alert-yellow', 'alert-red', 'alert-green');
   icon.style.display = "none";
 
   if (diffDays <= redDays) {
@@ -317,6 +323,8 @@
     icon.style.display = "inline";
   } else if (diffDays <= yellowDays) {
     input.classList.add('alert-yellow');
+    } else if (!isNaN(diffDays)) {
+    input.classList.add('alert-green');
   }
   saveTable();
 }

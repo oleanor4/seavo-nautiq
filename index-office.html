@@ -115,6 +115,9 @@
       width: 40px;
     }
 
+    .cell-move {
+      width: 60px;
+    }
 
 
     th, td {
@@ -417,7 +420,6 @@ function addCategory() {
     showCategory();
   }
 }
-
 function showCategory() {
   const content = document.getElementById("content");
   content.innerHTML = "";
@@ -429,7 +431,7 @@ function showCategory() {
     <thead>
       <tr>
         <th>Product/Type</th><th>Start Qty</th><th>Used</th><th>End Qty</th>
-        <th>MIN🔔</th><th>Comments</th><th>Order</th><th>Delete</th>
+        <th>MIN🔔</th><th>Comments</th><th>Order</th><th>Move</th><th>Delete</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -445,7 +447,7 @@ function showCategory() {
     if (row.type === "header") {
       tr.className = "header-row";
       const td = document.createElement("td");
-      td.colSpan = 7;
+      td.colSpan = 8;
       const span = document.createElement("span");
       span.contentEditable = true;
       span.textContent = row.text || "Section / Header";
@@ -539,9 +541,18 @@ function showCategory() {
       tr.appendChild(td);
     });
 
+    const tdMove = document.createElement("td");
+    tdMove.classList.add("cell-move");
+    tdMove.innerHTML = `
+     <button onclick="moveRow(${i}, -1)">⬆️</button>
+     <button onclick="moveRow(${i}, 1)">⬇️</button>
+    `;
+
     const tdDel = document.createElement("td");
     tdDel.innerHTML = `<span class="delete-button" onclick="deleteRow(${i})">🗑️</span>`
-    
+
+
+    tr.appendChild(tdMove);  
     tr.appendChild(tdDel);
     tbody.appendChild(tr);
     
@@ -582,6 +593,23 @@ function deleteRow(index) {
   save();
   showCategory();
 }
+
+function moveRow(index, direction) {
+  const list = data[activeCategory];
+  const newIndex = index + direction;
+
+  // Hindrer at den flyttes utenfor grensene
+  if (newIndex < 0 || newIndex >= list.length) return;
+
+  // Bytter plass på radene
+  const temp = list[index];
+  list[index] = list[newIndex];
+  list[newIndex] = temp;
+
+  save();
+  showCategory(); // Tegner tabellen på nytt
+}
+
 
 function showGlobalOverview() {
   const content = document.getElementById("content");

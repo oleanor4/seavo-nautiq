@@ -11,13 +11,16 @@
       color: rgb(255, 255, 255);
     }
 
+  
+
     .category-slider {
       display: flex;
       align-items: center;
       justify-content: center;
       background: linear-gradient(to right, #041425, #3b7fbe);
-      padding: 30px;
+      padding: 20px;
       overflow-x: auto;
+      margin-bottom: -10px;
     }
 
     .category-item {
@@ -71,12 +74,14 @@
     .logo {
       width: 200px;
       height: 40px;
-      display:  block;
       margin: 0 auto;
-      margin-bottom: -30px;
+      margin-bottom: 0px;
+      display: block;
+      position: absolute;
       border-radius: 6px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-      margin-top: 30px;
+      margin-top: 5px;
+      margin-left: 20px;
     }
 
     #searchBox {
@@ -86,6 +91,8 @@
       border:  1px solid #000000;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
       margin-left: 60px;
+      margin-top: 50px;
+      margin-bottom: -20px;
       font-weight: bold;
       
 
@@ -257,11 +264,22 @@
 
 <body>
 
-  
+<header>
+  <h1 style="text-align: center; color:
+   rgb(218, 215, 215);
+    margin-top: 20px;
+    font-size: 36px;
+    font-weight: bold;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);" >
+   
+    <img src="images/Seavo nautiq logo.png" alt="logo" class="logo">
+  Office</h1>
+
+</header>
 
 <div class="category-slider">
   <button class="arrow" onclick="scrollSlider(-100)">←</button>
-  <div id="category-container" style="display: flex; overflow-x: auto; max-width: 70%; scroll-behavior: smooth;">
+  <div id="category-container" style="display: flex; overflow-x: auto; max-width: 50%; scroll-behavior: smooth;">
     <div id="categories" style="display: flex; gap: 8px;"></div>
   </div>
   <button class="arrow" onclick="scrollSlider(100)">→</button>
@@ -269,7 +287,7 @@
 </div>
 
 <div>
-  <img src="images/Seavo nautiq logo.png" alt="logo" class="logo">
+  
 
   <input type="text" id="searchBox" placeholder="Search inventory..." oninput="searchInPage()">
 

@@ -273,7 +273,7 @@
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);" >
    
     <img src="images/Seavo nautiq logo.png" alt="logo" class="logo">
-  Office</h1>
+  Provisions</h1>
 
 </header>
 
@@ -487,13 +487,13 @@ function showCategory() {
       return;
     }
 
-    const fields = ['pen, paper, binder etc.', 'start', 'used', 'end', 'min', 'comment', 'order'];
+    const fields = ['Provisions', 'start', 'used', 'end', 'min', 'comment', 'order'];
     const inputs = {};
 
     fields.forEach((key) => {
       const td = document.createElement("td");
       
-      if (key === "pen, paper, binder etc.") td.classList.add("cell-product");
+      if (key === "Provisions") td.classList.add("cell-product");
       
       else if (key === "comment") td.classList.add("cell-comment");
       else if (key === "min") td.classList.add("cell-min");
@@ -502,13 +502,13 @@ function showCategory() {
 
 
       const input = document.createElement("input");
-      input.type = key === "pen, paper, binder etc." || key === "comment" ? "text" : "number";
+      input.type = key === "Provisions" || key === "comment" ? "text" : "number";
       input.value = row[key] || "";
       input.style.width = "90%";
       input.style.padding = "4px";
       input.style.borderRadius = "5px";
       input.placeholder = key.charAt(0).toUpperCase() + key.slice(1);
-      if (["pen, paper, binder etc.", "comment", "start", "used", "end", "min", "order"].includes(key)) {
+      if (["Provisions", "comment", "start", "used", "end", "min", "order"].includes(key)) {
      input.classList.add("large-bold-input");
      }
 

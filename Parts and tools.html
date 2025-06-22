@@ -135,7 +135,7 @@
     }
 
     th {
-      background-color:  #13a2e4;
+      background-color:  #14a8ec;
       color: rgb(0, 0, 0);
       border-radius: 5px;
     }
@@ -531,7 +531,7 @@ function showCategory() {
       };
       inputs[key] = input;
       td.appendChild(input);
-      if (key === "product") {
+      if (key === "Parts and tools") {
   // 1. Lag fargeknappene
   const colorContainer = document.createElement("div");
   colorContainer.className = "color-buttons";
@@ -690,10 +690,15 @@ async function generatePDF() {
 
   
   const logoImg = new Image();
-  logoImg.src = "images/Logo Seavo Nautiq.png"; 
+  logoImg.src = "images/Logo Seavo Nautiq.png";
   await new Promise(resolve => { logoImg.onload = resolve; });
 
   doc.addImage(logoImg, 'PNG', 10, 10, 60, 35); // (x, y, width, height)
+
+  Headers.forEach((header, index) => {
+    doc.setFontSize(16);
+    doc.text(header, 10, 50 + (index * 10));
+  });
 
   // Ta skjermbilde av innhold
   const content = document.getElementById("content");

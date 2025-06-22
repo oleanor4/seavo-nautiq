@@ -246,12 +246,35 @@
     }
 
     .cell-comment {
-     width: 240px;
+     width: 120px;
    }
 
    .cell-small {
    width: 80px;
    }
+
+
+   .expiry-green {
+  background: linear-gradient(to right, #fcfcfc, #39e99f);
+  color: #000;
+  font-weight: bold;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+}
+
+.expiry-yellow {
+  background: linear-gradient(to right, #ffffff, #ffda47);
+  color: #000;
+  font-weight: bold;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+}
+
+.expiry-red {
+  background: linear-gradient(to right, #ffffff, #d12e2e);
+  color: #000000;
+  font-weight: bold;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+}
+
 
 
   
@@ -451,7 +474,8 @@ function showCategory() {
     <thead>
       <tr>
         <th>Product/Type</th><th>Start Qty</th><th>Used</th><th>End Qty</th>
-        <th>MIN🔔</th><th>Comments</th><th>Order</th><th>Move</th><th>Delete</th>
+        <th>MIN🔔</th><th>Expiry Date</th><th>Comments</th>
+        <th>Order</th><th>Move</th><th>Delete</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -487,13 +511,13 @@ function showCategory() {
       return;
     }
 
-    const fields = ['Provisions', 'start', 'used', 'end', 'min', 'comment', 'order'];
+    const fields = ['provisions', 'start', 'used', 'end', 'min', 'expiry', 'comment', 'order'];
     const inputs = {};
 
     fields.forEach((key) => {
       const td = document.createElement("td");
       
-      if (key === "Provisions") td.classList.add("cell-product");
+      if (key === "provisions") td.classList.add("cell-product");
       
       else if (key === "comment") td.classList.add("cell-comment");
       else if (key === "min") td.classList.add("cell-min");
@@ -502,13 +526,13 @@ function showCategory() {
 
 
       const input = document.createElement("input");
-      input.type = key === "Provisions" || key === "comment" ? "text" : "number";
+      input.type = key === "provisions" || key === "comment" ? "text" : "number";
       input.value = row[key] || "";
       input.style.width = "90%";
       input.style.padding = "4px";
       input.style.borderRadius = "5px";
       input.placeholder = key.charAt(0).toUpperCase() + key.slice(1);
-      if (["Provisions", "comment", "start", "used", "end", "min", "order"].includes(key)) {
+      if (["provisions", "comment", "start", "used", "end", "min", "order"].includes(key)) {
      input.classList.add("large-bold-input");
      }
 
@@ -531,7 +555,7 @@ function showCategory() {
       };
       inputs[key] = input;
       td.appendChild(input);
-      if (key === "pen, paper, binder etc.") {
+      if (key === "provisions") {
   // 1. Lag fargeknappene
   const colorContainer = document.createElement("div");
   colorContainer.className = "color-buttons";
@@ -559,6 +583,41 @@ function showCategory() {
   }
 }
       tr.appendChild(td);
+
+   if (key === "expiry") {
+  input.type = "date";
+
+  const updateExpiryClass = () => {
+    input.classList.remove("expiry-green", "expiry-yellow", "expiry-red");
+
+    if (!input.value) return;
+
+    const today = new Date();
+    const expiryDate = new Date(input.value);
+    const diffTime = expiryDate - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) {
+      input.classList.add("expiry-red");
+    } else if (diffDays <= 7) {
+      input.classList.add("expiry-yellow");
+    } else {
+      input.classList.add("expiry-green");
+    }
+  };
+
+  input.oninput = () => {
+    row[key] = input.value;
+    updateExpiryClass();
+    save();
+  };
+
+  // Sett farge ved lasting
+   updateExpiryClass();
+  }
+
+
+
     });
 
     const tdMove = document.createElement("td");
@@ -586,7 +645,7 @@ function showCategory() {
   addLine.onclick = () => {
     data[activeCategory].push({
     type: "line", product: "", start: 0, used: 0,
-    comment: "", min: 0, order: 0, end: 0, productColor: null
+    comment: "", min: 0, expiry: "", order: 0, end: 0, productColor: null
   });
 
     save();

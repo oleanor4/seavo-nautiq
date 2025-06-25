@@ -411,6 +411,57 @@
 }
 
 
+#notisblokk {
+  position: absolute;
+  display: none;
+  top: 100px;
+  left: 100px;
+  width: 300px;
+  height: 256px;
+  background: linear-gradient(to left, #6ca9f8, #fcfcfc);
+  border: 2px solid #333;
+  border-radius: 20px;
+  padding: 10px;
+  box-shadow: 2px 2px 10px rgba(0,0,0,0.7);
+  font-family: Arial, sans-serif;
+  z-index: 1000;
+}
+
+#notis-header {
+  background: linear-gradient(to left, #fafafa, #01b1f7);
+  padding: 5px;
+  cursor: move;
+  font-weight: bold;
+  border-bottom: 1px solid #000000;
+  border-radius: 15px 15px 0 0;
+}
+
+#notis-tekst {
+  width: 100%;
+  height: 180px;
+  margin-top: 10px;
+  border: none;
+  background: transparent;
+  resize: none;
+  font-size: 18px;
+}
+
+.slett-knapp {
+  margin-top: 5px;
+  padding: 5px;
+  width: 30%;
+  margin-left: 200px;
+  background-color: #af2d2d;
+  color: white;
+ 
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.slett-knapp:hover {
+  background-color: #fa1a1a;
+}
+
 
   
   </style>
@@ -424,7 +475,13 @@
 
 <body>
 
+  <div id="notisblokk">
+  <div id="notis-header">📝 Notepad</div>
+  <textarea id="notis-tekst" placeholder="Write a note..."></textarea>
+  <button class="slett-knapp" onclick="slettNotis()">Delete</button>
   
+</div>
+
 
 <!-- Modal container -->
 <div id="calculatorModal" class="modal">
@@ -520,13 +577,10 @@
 
  <div>
   <button class="activate-calculator" onclick="document.getElementById('calculatorModal').style.display='block'">🧮 Calculator</button>
-  
   </div>
 
+ <button class="activate-calculator" onclick="toggleNotisblokk()">📝 Notepad</button>
 
-
-
- 
 
 <div class="container">
   <span class="info-badge">Expires in 10 days </span>
@@ -1127,6 +1181,69 @@ function closeCalculator() {
   document.getElementById("calculatorModal").style.display = "none";
 }
 
+
+const notis = document.getElementById("notisblokk");
+const header = document.getElementById("notis-header");
+const tekstfelt = document.getElementById("notis-tekst");
+
+// Last lagret tekst og posisjon
+window.addEventListener("load", () => {
+  const lagretTekst = localStorage.getItem("notisTekst");
+  const posX = localStorage.getItem("notisPosX");
+  const posY = localStorage.getItem("notisPosY");
+
+  if (lagretTekst) tekstfelt.value = lagretTekst;
+  if (posX && posY) {
+    notis.style.left = posX + "px";
+    notis.style.top = posY + "px";
+  }
+});
+
+// Toggle notisblokk
+function toggleNotisblokk() {
+  notis.style.display = (notis.style.display === "block") ? "none" : "block";
+}
+
+// Slett notat
+function slettNotis() {
+  tekstfelt.value = "";
+  notis.style.left = "100px";
+  notis.style.top = "100px";
+  localStorage.removeItem("notisTekst");
+  localStorage.removeItem("notisPosX");
+  localStorage.removeItem("notisPosY");
+}
+
+// Lagre tekst automatisk
+tekstfelt.addEventListener("input", () => {
+  localStorage.setItem("notisTekst", tekstfelt.value);
+});
+
+// Dra-funksjon med posisjonslagring
+let isDraggingNotis = false, offsetXNotis = 0, offsetYNotis = 0;
+
+header.addEventListener("mousedown", (e) => {
+  isDraggingNotis = true;
+  offsetXNotis = e.clientX - notis.offsetLeft;
+  offsetYNotis = e.clientY - notis.offsetTop;
+});
+
+document.addEventListener("mousemove", (e) => {
+  if (isDraggingNotis) {
+    notis.style.left = `${e.clientX - offsetXNotis}px`;
+    notis.style.top = `${e.clientY - offsetYNotis}px`;
+  }
+});
+
+document.addEventListener("mouseup", () => {
+  if (isDraggingNotis) {
+    localStorage.setItem("notisPosX", parseInt(notis.style.left));
+    localStorage.setItem("notisPosY", parseInt(notis.style.top));
+  }
+  isDraggingNotis = false;
+
+
+});
 
 
 

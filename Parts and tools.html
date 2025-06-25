@@ -92,7 +92,7 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
       margin-left: 60px;
       margin-top: 50px;
-      margin-bottom: -20px;
+      margin-bottom: 20px;
       font-weight: bold;
     }
 
@@ -284,7 +284,23 @@
     <img src="images/Seavo nautiq logo.png" alt="logo" class="logo">
   Parts and tools</h1>
 
+
 </header>
+  <input type="text" id="searchBox" placeholder="Search inventory..." oninput="searchInPage()">
+
+
+<style>
+.highlight {
+  background-color: rgb(240, 138, 42);
+  font-weight: bold;
+}
+
+.highlight-input {
+  background-color: yellow;
+  font-weight: bold;
+}
+</style>
+
 
 <div class="category-slider-parts">
   <button class="arrow" onclick="scrollSlider(-100)">←</button>
@@ -300,19 +316,7 @@
 <div>
   
 
-  <input type="text" id="searchBox" placeholder="Search inventory..." oninput="searchInPage()">
 
-<style>
-.highlight {
-  background-color: rgb(240, 138, 42);
-  font-weight: bold;
-}
-
-.highlight-input {
-  background-color: yellow;
-  font-weight: bold;
-}
-</style>
 
 
 </div>

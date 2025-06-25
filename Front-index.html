@@ -25,56 +25,84 @@
       display: block;
     }
  
-    .topptekst {
-      position: absolute;
-      top: 9%; 
-      left: 21%; 
-      color: rgb(0, 0, 0);
-      font-size: 1.3em;
-      font-weight: bold;
-      text-shadow: 2px 2px 4px rgba(74, 187, 252, 0.7); 
+    .toppbilde-container {
+  position: relative; /* Viktig! */
+  width: 100%;
+  }
+
+
+      .language-selector {
+      background-color: transparent;
+      font-family: Arial, sans-serif;
+      padding: 0px;
+      color: rgb(201, 188, 188);
+      float: right;
+      margin-right: 38px;
+      margin-top: -59px;
     }
+
+    .language-selector {
+      position: relative;
+      display: inline-block;
+    }
+
+    .language-button {
+      background: linear-gradient(to right, #1e3a5f, #326fa8);
+      color: rgb(255, 255, 255);
+      padding: 10px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .language-button:hover {
+      background: #4984dd;
+    }
+
+    .flag {
+      width: 24px;
+      height: 16px;
+      object-fit: cover;
+      border-radius: 3px;
+    }
+
+    .language-dropdown {
+      display: none;
+      position: absolute;
+      right: 170px;
+      background: linear-gradient(to right, #3a5d8a, #5799d6);
+      min-width: 160px;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.6);
+      border-radius: 6px;
+      z-index: 1;
+      top: 100px;
+    }
+
+    .language-dropdown div {
+      color: rgb(0, 0, 0);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .language-dropdown div:hover {
+      background-color: #e6e6e6;
+    }
+
+
 
     .gradient-overgang {
       height: 10px;
       background: linear-gradient(to left, #6297e7, #001125);
     }
 
- .bildevindu {
-      width: 800px;
-      height: 800px;
-      margin: 150px;
-      border: 2px solid rgb(0, 0, 0);
-      background-color: #ffffff;
-      border-radius: 20px;
-      box-shadow: 0 0 80px rgba(0, 0, 0, 1);
-      position: relative;
-      overflow: hidden;
-    }
 
-
-.overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(
-      circle,
-      transparent 55%,
-      rgba(10, 54, 104, 0.5) 100%
-      );
-      pointer-events: none;
-    }
-
-
-    .bildevindu img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 1;
-      transition: opacity 0.5s ease-in-out;
-    }
 
     .container-wrapper {
       display: flex;
@@ -83,19 +111,20 @@
     }
 
     .venstre-container {
-      width: 400px;
-      height: 610px;
+      width: 250px;
+      height: 450px;
       background: linear-gradient(to left, #12315c, #215db1);
       border-radius: 40px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
       padding: 20px;
+      margin-top: 30px;
     }
 
 
     .ny-container {
-      margin-top: 100px;
+      margin-top: 40px;
       margin-left: -20px;
-      width: 400px;
+      width: 250px;
       height: 260px;
       padding: 20px;
       background: linear-gradient(to left, #12315c, #215db1); 
@@ -109,7 +138,7 @@
       align-items: center;     
       text-align: center;
       height: 20px;
-      width: 400px;
+      width: 250px;
       padding: 20px;
       background: linear-gradient(to right, #1e3a5f, #326fa8);
       border-radius: 40px;
@@ -118,8 +147,8 @@
 
     
     .hoyre-container {
-      width: 400px;
-      height: 400px;
+      width: 250px;
+      height: 350px;
       background: linear-gradient(to left, #12315c, #215db1);
       border-radius: 40px;
       box-shadow: 0 0 10px rgba(0,0,0,0.6);
@@ -134,9 +163,9 @@
       color: #000000;
       border: none;
       border-radius: 12px;
-      width: 400px;
-      height: 50px;
-      font-size: 28px;
+      width: 250px;
+      height: 40px;
+      font-size: 24px;
       font-weight: bold;
       cursor: pointer;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
@@ -157,9 +186,32 @@
 <body>
 
   <header>
+      
     <img src="images/header.jpg.jpg" alt="Toppbilde" class="toppbilde">
-    <div class="topptekst">Vessel Inventory Management</div> 
-       <div class="gradient-overgang"></div>
+    <div class="gradient-overgang"></div>
+
+
+  <div class="language-selector">
+  <button class="language-button" onclick="toggleDropdown()">
+    <img src="https://flagcdn.com/w40/gb.png" class="flag" id="selected-flag">
+    English
+  </button>
+</div>
+
+  <div class="language-dropdown" id="language-dropdown">
+    <div onclick="selectLanguage('English', 'gb')"><img src="https://flagcdn.com/w40/gb.png" class="flag"> English</div>
+    <div onclick="selectLanguage('Русский', 'ru')"><img src="https://flagcdn.com/w40/ru.png" class="flag"> Русский</div>
+    <div onclick="selectLanguage('中文', 'cn')"><img src="https://flagcdn.com/w40/cn.png" class="flag"> 中文</div>
+    <div onclick="selectLanguage('Español', 'es')"><img src="https://flagcdn.com/w40/es.png" class="flag"> Español</div>
+    <div onclick="selectLanguage('Português', 'pt')"><img src="https://flagcdn.com/w40/pt.png" class="flag"> Português</div>
+    <div onclick="selectLanguage('Norsk', 'no')"><img src="https://flagcdn.com/w40/no.png" class="flag"> Norsk</div>
+  </div>
+</div>
+    
+
+</div>
+
+     
   </header>
 
 
@@ -167,12 +219,12 @@
   <div class="container-wrapper">
     <div class="venstre-container">
 
-      <button onclick="endreBilde('Images/Office.PNG')">Office</button>
-      <button onclick="endreBilde('Images/Equipment.PNG')">Equipment</button>
-      <button onclick="endreBilde('Images/Parts and tools.PNG')">Parts and tools</button>
-      <button onclick="endreBilde('Images/Provisions.PNG')">Provisions</button>
-      <button onclick="endreBilde('Images/Medicine chest.PNG')">Medicine chest</button>
-      <button onclick="endreBilde('Images/Safety.jpg')">Safety</button>
+      <button>Office</button>
+      <button>Equipment</button>
+      <button>Parts and tools</button>
+      <button>Provisions</button>
+      <button>Medicine chest</button>
+      <button>Safety</button>
       <button>Slop chest</button>
       <button>Disposal</button>
 
@@ -205,10 +257,23 @@
             font-size: 18px;">
           
 
-  <h2>Welcome to Seavo Nautiq</h2>
+ 
 
-  <p style="margin-bottom: 70px;"></p>
+  <p style="margin-bottom: 40px;"></p>
+<p>Welcome to the Seavo Nautiq platform!</p>
+  <img src="images/Picture_collection.png" alt="forsidebilde" id="forsidebilde">
+  <style>
+   #forsidebilde {
+      width: 60%;
+      height: auto;
+      border-radius: 20px;
+      margin-top: 30px;
+      box-shadow: #000000 0px 0px 10px 3px;
+    }
+</style>
 
+
+   <p style="margin-bottom: 50px;"></p>
   <p>This is a platform for managing vessel inventory efficiently. <p> 
    </p>Although the platform was initially intended as a tailor-made digital solution for the fishing fleet, the inventory management offers </p>
    <p>flexible solutions for other types of vessels with extensive quantities of items on board.</p>
@@ -228,10 +293,10 @@
 <p style="margin-bottom: 50px;"></p>
 
 <p>If you are new to the platform, we recommend starting with the "Office" or "Equipment" section to familiarize yourself with how categories are structured.</p>
-<p>Should you require assistance or custom features, please contact your system administrator or the Seavo Nautiq support team.</p>
-    
+
    <p>
 </div>
+
 
 
 
@@ -244,18 +309,8 @@
   <div class="hoyre-container">
 
     <div>
-  <img src="images/Picture_collection.png" alt="forsidebilde" id="forsidebilde">
-  <style>
-    #forsidebilde {
-      width: 10%;
-      height: auto;
-      border-radius: 20px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
-      margin-left: -400px;
-      margin-top: -100px;
-      position: absolute;
-    }
-  </style>
+  
+  
 </div>
 
     <button  id="infoBtn" onclick="visInfoTekst()">
@@ -269,14 +324,16 @@
   Settings </button>
     <button>  <img src="icon/Sign out.png" alt="Info" style="height: 32px; vertical-align: middle;">
   Sign out</button>
-  <img src="icon/Calculator.png" alt="Calculator"style="height: 70px;">
-  <img src="icon/Notebook.png" alt="Notebook"style="height: 70px;">
+  <div>
 
 
     <div id="info-tekst" style="display: none; margin-top: 10px; color: rgb(0, 0, 0);">
-    
+
+   
+    ◀
   </div>
 </div>
+
 
 
 
@@ -308,7 +365,23 @@ function endreBilde(bildefil) {
   };
 
 
+  function toggleDropdown() {
+    const dropdown = document.getElementById('language-dropdown');
+    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+  }
 
+  function selectLanguage(language, countryCode) {
+    document.querySelector('.language-button').innerHTML =
+      `<img src="https://flagcdn.com/w40/${countryCode}.png" class="flag" id="selected-flag"> ${language}`;
+    toggleDropdown();
+  }
+
+  // Klikk utenfor menyen lukker dropdown
+  window.onclick = function(event) {
+    if (!event.target.closest('.language-selector')) {
+      document.getElementById('language-dropdown').style.display = 'none';
+    }
+  }
   
 
   </script>

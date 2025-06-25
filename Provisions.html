@@ -11,7 +11,7 @@
       color: rgb(255, 255, 255);
     }
 
-  
+ 
 
     .category-slider {
       display: flex;
@@ -20,10 +20,12 @@
       background: linear-gradient(to right, #041425, #3b7fbe);
       padding: 16px;
       overflow-x: auto;
-      margin-bottom: -30px;
+      margin-bottom: 5px;
       border-radius: 10px;
       width: 92%;
       margin-left: 58px;
+      margin-top: 10px;
+      box-shadow: #000000 0px 0px 8px;
     }
 
     .category-item {
@@ -99,11 +101,21 @@
       border:  1px solid #000000;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
       margin-left: 60px;
-      margin-top: 50px;
+      margin-top: 0px;
       margin-bottom: -20px;
       font-weight: bold;
     }
 
+  .provisions {
+     width: 100%;
+     height: 100%;
+     position: absolute;
+     top: 0;
+     left: 0;
+     z-index: -1;
+     opacity: 0.1;
+     pointer-events: none;
+  }
 
     .container {
      display: flex;
@@ -116,29 +128,29 @@
   }
 
     .info-badge {
-     padding: 6px 18px;
+     padding: 6px 14px;
      font-size: 14px;
      font-weight: bold;
      color: rgb(0, 0, 0);
      background: linear-gradient(to right, #ffffff, #ffda47);
      border-radius: 10px;
-     margin-right: 58px;
+     margin-right: 5px;
      margin-top: 0px;
      box-shadow: #000000 0px 0px 2px;;
-     margin-right: -160px;
+    
   }
 
   .info-badge2 {
-     padding: 8px 54px;
+     padding: 6px 50px;
      font-size: 14px;
      font-weight: bold;
      color: rgb(0, 0, 0);
      background: linear-gradient(to right, #ffffff, #ee1919);
      border-radius: 10px;
-     margin-right: 58px;
-     margin-top: 42px;
+     margin-right: 62px;
+     margin-top: px;
      box-shadow: #000000 0px 0px 3px;
-    margin-bottom: -42px;
+    margin-bottom: 0px;
     
   }
 
@@ -151,6 +163,7 @@
       margin-bottom: 20px;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
     }
+
 
 
     .large-bold-input {
@@ -410,6 +423,23 @@
   box-shadow: none;
 }
 
+.activate-notepad {
+  margin-left: 60px;
+  margin-top: 5px;
+  background: linear-gradient(to right, #00b7ff, #326fa8);
+  color: rgb(0, 0, 0);
+  padding: 6px 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+}
+
+.activate-notepad:hover {
+  background: linear-gradient(to right, #56bafd, #1b3863);
+  color: white;
+}
 
 #notisblokk {
   position: absolute;
@@ -474,6 +504,10 @@
 
 
 <body>
+
+
+  
+
 
   <div id="notisblokk">
   <div id="notis-header">📝 Notepad</div>
@@ -555,11 +589,21 @@
    
     <img src="images/Seavo nautiq logo.png" alt="logo" class="logo">
   Provisions</h1>
-
-
-
 </header>
 
+
+
+
+  <input type="text" id="searchBox" placeholder="Search inventory..." oninput="searchInPage()">
+
+ <div>
+  <button class="activate-calculator" onclick="document.getElementById('calculatorModal').style.display='block'">🧮 Calculator</button>
+  </div>
+
+ <button class="activate-notepad" onclick="toggleNotisblokk()">📝 Notepad</button>
+
+
+<img src="images/Provisions.PNG" alt="provisions" class="provisions">
 
 
 <div class="category-slider">
@@ -570,23 +614,11 @@
   <button class="arrow" onclick="scrollSlider(100)">→</button>
   <button class="add-category" onclick="addCategory()">+ Category</button>
 </div>
- 
-
-
-  <input type="text" id="searchBox" placeholder="Search inventory..." oninput="searchInPage()">
-
- <div>
-  <button class="activate-calculator" onclick="document.getElementById('calculatorModal').style.display='block'">🧮 Calculator</button>
-  </div>
-
- <button class="activate-calculator" onclick="toggleNotisblokk()">📝 Notepad</button>
-
 
 <div class="container">
   <span class="info-badge">Expires in 10 days </span>
   <span class="info-badge2">Expired </span>
 </div>
-
 
 <style>
 .highlight {

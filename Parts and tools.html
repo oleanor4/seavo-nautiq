@@ -13,7 +13,7 @@
 
   
 
-    .category-slider {
+    .category-slider-parts {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -94,8 +94,17 @@
       margin-top: 50px;
       margin-bottom: -20px;
       font-weight: bold;
-      
+    }
 
+    .parts-and-tools {
+       width: 100%;
+     height: 100%;
+     position: absolute;
+     top: 0;
+     left: 0;
+     z-index: -1;
+     opacity: 0.1;
+     pointer-events: none;
     }
 
 
@@ -145,7 +154,7 @@
     }
 
     .red-warning {
-      background: linear-gradient(to right, #ffffff, #fcc101);
+      background: linear-gradient(to right, #ffffff, #fcac01);
     }
 
     .add-line {
@@ -197,7 +206,7 @@
 
     .header-row td span {
       display: inline-block;
-      width: 100%;
+      width: 60%;
     }
 
     .delete-button {
@@ -210,7 +219,7 @@
     .delete-button:hover {
       background-color: rgba(0, 0, 0, 0.3); 
       border-radius: 50px; 
-      padding:0px 5px;
+      padding:0px 4px;
     }
 
     td:last-child {
@@ -277,7 +286,7 @@
 
 </header>
 
-<div class="category-slider">
+<div class="category-slider-parts">
   <button class="arrow" onclick="scrollSlider(-100)">←</button>
   <div id="category-container" style="display: flex; overflow-x: auto; max-width: 50%; scroll-behavior: smooth;">
     <div id="categories" style="display: flex; gap: 8px;"></div>
@@ -285,6 +294,8 @@
   <button class="arrow" onclick="scrollSlider(100)">→</button>
   <button class="add-category" onclick="addCategory()">+ Category</button>
 </div>
+
+<img src="images/Parts and tools.PNG" alt="parts and tools" class="parts-and-tools">
 
 <div>
   

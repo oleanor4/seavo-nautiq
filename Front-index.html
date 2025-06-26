@@ -31,11 +31,41 @@
   }
 
   #forsidebilde {
-      width: 60%;
+      width: 40%;
       height: auto;
       border-radius: 20px;
       margin-top: 30px;
       box-shadow: #000000 0px 0px 10px 4px;
+    }
+
+    #mobilpicture {
+      width: 13%;
+      height: auto;
+      border-radius: 20px;
+      margin-top: 35px;
+      box-shadow: #000000 0px 0px 10px 3px;
+      margin-left: 445px;
+      position: absolute;
+    }
+
+    #infobubble {
+      width: 21%;
+      height: auto;
+      margin-top: 90px;
+      margin-left: 46px;
+      position: absolute;
+      
+    }
+
+  .forsidebilde2 {
+     width: 130%;
+     height: 110%;
+     position: absolute;
+     top: 0;
+     left: 0;
+     z-index: -1;
+     opacity: 0.1;
+     pointer-events: none;
     }
 
 
@@ -169,14 +199,13 @@
     .hoyre-container button {
       background: linear-gradient(to left, #7396c7, #173c70);
       color: #000000;
-      border: none;
       border-radius: 12px;
       width: 250px;
       height: 40px;
       font-size: 24px;
       font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
       transition: background-color 0.3s ease;
       margin-bottom: 18px; 
       position: relative;
@@ -269,7 +298,12 @@
 
   <p style="margin-bottom: 40px;"></p>
 <p>Welcome to the Seavo Nautiq platform!</p>
-  <img src="images/Picture_collection.png" alt="forsidebilde" id="forsidebilde">
+  <img src="images/Animert.gif" alt="forsidebilde" id="forsidebilde">
+
+  <img src="images/mobile.png" alt="mobilpicture" id="mobilpicture">
+  <img src="images/Infobubble.png" alt="infobubble" id="infobubble">
+  <img src="images/Picture_collection.png" class="forsidebilde2" alt="forsidebilde2">
+  
   
 
 
@@ -282,7 +316,7 @@
     
 <p>The platform allows you to register, track, and update equipment, provisions, tools, and safety items with ease.</p>
 <p>Users can quickly generate inventory reports, export them to PDF or Excel, and share them with other users or vessels when needed.</p>
-<p>Multiple user roles ensure structured access — for example, officers can manage full inventory control, while crew members can register consumption and updates.</p>
+<p>Multiple user roles ensure structured access — for example, officers can manage full inventory control, while crew members can register consumption and updates by using the limited appversion, Seavo Nautiq mobile.</p>
 
 <p style="margin-bottom: 50px;"></p>
 

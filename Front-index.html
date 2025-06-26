@@ -44,7 +44,7 @@
       border-radius: 20px;
       margin-top: 35px;
       box-shadow: #000000 0px 0px 10px 3px;
-      margin-left: 445px;
+      margin-left: 400px;
       position: absolute;
     }
 
@@ -58,7 +58,7 @@
     }
 
   .forsidebilde2 {
-     width: 130%;
+     width: 100%;
      height: 110%;
      position: absolute;
      top: 0;
@@ -217,10 +217,21 @@
       background: #97b4d3;
     }
 
+
+  @media (max-width: 768px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+}
+
  
   </style>
 </head>
 <body>
+  
+<audio id="sonar" src="Sound/Sonar.mp3"></audio>
+
+
 
   <header>
       
@@ -297,14 +308,26 @@
  
 
   <p style="margin-bottom: 40px;"></p>
-<p>Welcome to the Seavo Nautiq platform!</p>
-  <img src="images/Animert.gif" alt="forsidebilde" id="forsidebilde">
+  <h1 style="color: rgb(255, 255, 255);">Welcome to Seavo Nautiq</h1>
+
+  <img src="images/Animasjon.gif" alt="forsidebilde" id="forsidebilde">
 
   <img src="images/mobile.png" alt="mobilpicture" id="mobilpicture">
   <img src="images/Infobubble.png" alt="infobubble" id="infobubble">
   <img src="images/Picture_collection.png" class="forsidebilde2" alt="forsidebilde2">
   
-  
+  <audio id="sonar" src="Sound/Sonar.mp3" preload="auto"></audio>
+
+<div style="margin-top: 20px;">
+  <button onclick="toggleSonar()" id="toggleButton" style="background: linear-gradient(#173c70, #8bb7e2);">🔈 ASDIC</button>
+
+  <label for="volumeSlider">🔊 Volume:</label>
+  <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1">
+</div>
+
+
+
+
 
 
    <p style="margin-bottom: 50px;"></p>
@@ -371,6 +394,41 @@
 
 
 
+<script>
+  const sonar = document.getElementById("sonar");
+  const toggleButton = document.getElementById("toggleButton");
+  
+  const volumeSlider = document.getElementById("volumeSlider");
+
+  let sonarInterval = null;
+  let isPlaying = false;
+
+  function playSonar() {
+    sonar.currentTime = 0;
+    sonar.play();
+  }
+
+  function toggleSonar() {
+    if (isPlaying) {
+      clearInterval(sonarInterval);
+      toggleButton.textContent = "🔈 ASDIC";
+    } else {
+      playSonar(); // første ping
+      sonarInterval = setInterval(playSonar, 10000); // deretter hvert 10. sekund
+      toggleButton.textContent = "⏸️ ASDIC";
+    }
+    isPlaying = !isPlaying;
+  }
+
+  
+
+  volumeSlider.addEventListener("input", () => {
+    sonar.volume = volumeSlider.value;
+  });
+</script>
+
+
+
 
 
     <script>
@@ -409,6 +467,8 @@ function endreBilde(bildefil) {
       `<img src="https://flagcdn.com/w40/${countryCode}.png" class="flag" id="selected-flag"> ${language}`;
     toggleDropdown();
   }
+
+  
 
   // Klikk utenfor menyen lukker dropdown
   window.onclick = function(event) {

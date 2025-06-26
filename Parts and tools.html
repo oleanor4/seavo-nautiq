@@ -440,8 +440,11 @@
 }
 
 #togglePanelBtn:hover {
-  background: #1077bb;
+  background: #064b79;
 }
+
+
+
 
 
   </style>
@@ -527,7 +530,7 @@
 <div id="content"></div>
 
 
-<button class="global-button" onclick="showGlobalOverview()">📋 Global Overview</button>
+<button id="globalToggleButton" class="global-button" onclick="toggleGlobalView()">📋 Global Overview</button>
 
 <div>
 
@@ -961,6 +964,26 @@ if (!data[activeCategory]) {
   data[activeCategory] = [];
   save();
 }
+
+let isGlobalView = false;
+
+function toggleGlobalView() {
+  const button = document.getElementById("globalToggleButton");
+
+  if (!isGlobalView) {
+    // Vis global oversikt
+    showGlobalOverview();
+    button.textContent = "🔙 Back to Table";
+  } else {
+    // Gå tilbake til aktiv kategori
+    showCategory();
+    button.textContent = "📋 Global Overview";
+  }
+
+  isGlobalView = !isGlobalView;
+}
+
+
 updateCategories();
 showCategory();
 

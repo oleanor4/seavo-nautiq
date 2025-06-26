@@ -492,7 +492,22 @@
   background-color: #fa1a1a;
 }
 
-
+ .cell-move {
+      width: 60px;
+      button {
+        width: 40px;
+        height: 35px;
+        background: linear-gradient(to right, #00b7ff, #326fa8);
+        color: rgb(255, 255, 255);
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 18px;
+      }
+      button:hover {
+        background: #87cfff;
+        color: white;
+      }
+    }
   
   </style>
 </head>
@@ -804,7 +819,7 @@ function showCategory() {
     if (row.type === "header") {
       tr.className = "header-row";
       const td = document.createElement("td");
-      td.colSpan = 8;
+      td.colSpan = 9;
       const span = document.createElement("span");
       span.contentEditable = true;
       span.textContent = row.text || "Section / Header";

@@ -1066,7 +1066,7 @@ async function generatePDF() {
   logoImg.src = "images/Logo Seavo Nautiq.png";
   await new Promise(resolve => { logoImg.onload = resolve; });
 
-  doc.addImage(logoImg, 'PNG', 10, 10, 60, 35); // Logo øverst
+  doc.addImage(logoImg, 'PNG', 10, 20, 100, 20); // Logo øverst
 
   // KLONE OG RENS INNHOLDET
   const original = document.getElementById("content");

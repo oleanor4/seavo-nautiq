@@ -18,9 +18,12 @@
       align-items: center;
       justify-content: center;
       background: linear-gradient(to right, #041425, #3b7fbe);
-      padding: 20px;
+      padding: 18px;
       overflow-x: auto;
       margin-bottom: -10px;
+      width: 90%;
+      margin-left: 80px;
+      border-radius: 18px;
     }
 
     .category-item {
@@ -30,7 +33,7 @@
     }
 
     .category-button, .add-category {
-      padding: 10px 30px;
+      padding: 8px 30px;
       background: linear-gradient(to right, #00b7ff, #326fa8);
       color: rgb(255, 255, 255);
       border-radius: 6px;
@@ -52,7 +55,14 @@
       color: rgb(255, 0, 0);
       font-size:20px;
       margin-left: 20px;
+      margin-right: 40px;
       cursor: pointer;
+    }
+
+    .delete-category:hover {
+     background-color: rgba(0, 0, 0, 0.3); 
+      border-radius: 50px; 
+      padding:0px 4px;
     }
 
     .arrow {
@@ -65,6 +75,11 @@
       cursor: pointer;
       width: 60px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+    }
+
+    .arrow:hover {
+      background: #36a7f1;
+      color: white;
     }
 
     #content {
@@ -98,7 +113,7 @@
 
     .parts-and-tools {
        width: 100%;
-     height: 100%;
+     height: 140%;
      position: absolute;
      top: 0;
      left: 0;
@@ -124,15 +139,28 @@
     }
 
     .cell-min {
-      width: 45px;
+      width: 80px;
     }
 
     .cell-order {
-      width: 40px;
+      width: 100px;
     }
 
     .cell-move {
-      width: 60px;
+      width: 110px;
+      button {
+        width: 40px;
+        height: 35px;
+        background: linear-gradient(to right, #00b7ff, #326fa8);
+        color: rgb(255, 255, 255);
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 18px;
+      }
+      button:hover {
+        background: #87cfff;
+        color: white;
+      }
     }
 
 
@@ -166,6 +194,10 @@
       background: linear-gradient(to right, #00b7ff, #326fa8);
       cursor: pointer;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+    }
+    .add-line:hover {
+      background: #6eaed8;
+      color: white;
     }
 
     .color-btn.limegreen { background-color: #36d131; }   
@@ -248,20 +280,93 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
     }
 
+    .global-button:hover {
+      background: #1077bb;
+      color: white;
+    }
+
+    
+  td input[type="file"] {
+  width: 80%;
+  padding: 2px;
+}
+
+.image-upload-container {
+  display: flex;
+  align-items: center;
+  gap: 20px; 
+  justify-content: center; 
+}
+
+.image-upload-container img {
+  max-width: 50px;
+  max-height: 50px;
+  border-radius: 6px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.4);
+  inline-size: 20%;
+}
+
+
+
+.upload-btn {
+  background: linear-gradient(to right, #00b7ff, #326fa8);
+  color: white;
+  border-radius: 6px;
+  padding: 4px 6px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+  
+  position: block;
+}
+
+.upload-btn:hover {
+  background: #56bafd;
+}
 
 
     .cell-product {
-      width: 190px;
+      width: 380px;
     }
 
     .cell-comment {
-     width: 240px;
+     width: 350px;
    }
+
+
 
    .cell-small {
-   width: 80px;
+   width:130px;
    }
 
+  #image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+#modal-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  cursor: pointer;
+}
+
+#modal-image {
+  max-width: 90%;
+  max-height: 90%;
+  z-index: 1001;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.8);
+}
 
   
   </style>
@@ -272,6 +377,11 @@
 
 
 <body>
+
+  <div id="image-modal" style="display:none;">
+  <div id="modal-overlay"></div>
+  <img id="modal-image" src="">
+</div>
 
 <header>
   <h1 style="text-align: center; color:
@@ -313,13 +423,14 @@
 
 <img src="images/Parts and tools.PNG" alt="parts and tools" class="parts-and-tools">
 
-<div>
+
   
 
 
 
 
-</div>
+
+
 
 
 <div id="content"></div>
@@ -406,6 +517,8 @@ function scrollSlider(offset) {
   document.getElementById("category-container").scrollLeft += offset;
 }
 
+
+
 function updateCategories() {
   const container = document.getElementById("categories");
   container.innerHTML = "";
@@ -466,7 +579,7 @@ function showCategory() {
     <thead>
       <tr>
         <th>Product/Type</th><th>Start Qty</th><th>Used</th><th>End Qty</th>
-        <th>MIN🔔</th><th>Comments</th><th>Order</th><th>Move</th><th>Delete</th>
+        <th>MIN🔔</th><th>Image<th>Comments</th><th>Order</th><th>Move</th><th>Delete</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -482,7 +595,7 @@ function showCategory() {
     if (row.type === "header") {
       tr.className = "header-row";
       const td = document.createElement("td");
-      td.colSpan = 8;
+      td.colSpan = 9;
       const span = document.createElement("span");
       span.contentEditable = true;
       span.textContent = row.text || "Section / Header";
@@ -502,14 +615,75 @@ function showCategory() {
       return;
     }
 
-    const fields = ['Parts and tools', 'start', 'used', 'end', 'min', 'comment', 'order'];
+    const fields = ['Parts and tools', 'start', 'used', 'end', 'min', 'image', 'comment', 'order'];
     const inputs = {};
 
     fields.forEach((key) => {
       const td = document.createElement("td");
-      
+
+    if (key === "image") {
+  td.classList.add("cell-image");
+
+  // Lag input-elementet (skjult)
+  const fileInput = document.createElement("input");
+  fileInput.type = "file";
+  fileInput.accept = "image/*";
+  fileInput.style.display = "none";
+  const inputId = `file-${i}`;
+  fileInput.id = inputId;
+
+  // Lag en tilpasset knapp
+  const customButton = document.createElement("button");
+  customButton.textContent = "📷 Upload";
+  customButton.className = "upload-btn";
+  customButton.onclick = (e) => {
+    e.preventDefault();
+    document.getElementById(inputId).click();
+  };
+
+  // Lag bilde-elementet (preview)
+  const preview = document.createElement("img");
+  preview.style.maxWidth = "60px";
+  preview.style.maxHeight = "50px";
+  preview.style.display = row.image ? "block" : "none";
+  if (row.image) preview.src = row.image;
+
+  preview.style.cursor = "pointer";
+  preview.onclick = () => {
+  openImageModal(preview.src);
+ };
+
+
+  // Les bildet når valgt
+  fileInput.onchange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        row.image = event.target.result;
+        preview.src = row.image;
+        preview.style.display = "block";
+        save();
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // 📦 Legg knapp og bilde i container med flex-styling
+  const container = document.createElement("div");
+  container.className = "image-upload-container"; // CSS-klassen for side-ved-side visning
+  container.appendChild(customButton);
+  container.appendChild(preview);
+
+  // 🧩 Legg elementene til cellen
+  td.appendChild(fileInput); // skjult input
+  td.appendChild(container);
+  tr.appendChild(td);
+  return;
+}
+
+
       if (key === "Parts and tools") td.classList.add("cell-product");
-      
       else if (key === "comment") td.classList.add("cell-comment");
       else if (key === "min") td.classList.add("cell-min");
       else if (key === "order") td.classList.add("cell-order");
@@ -730,6 +904,17 @@ async function generatePDF() {
     doc.save("SeavoNautiq_Inventory.pdf");
   });
 }
+
+function openImageModal(src) {
+  const modal = document.getElementById("image-modal");
+  const modalImg = document.getElementById("modal-image");
+  modalImg.src = src;
+  modal.style.display = "flex";
+}
+
+document.getElementById("modal-overlay").onclick = () => {
+  document.getElementById("image-modal").style.display = "none";
+};
 
 
 </script>

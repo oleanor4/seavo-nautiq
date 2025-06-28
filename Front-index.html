@@ -38,6 +38,7 @@
       box-shadow: #000000 0px 0px 10px 3px;
     }
 
+
     #mobilpicture {
       width: 13%;
       height: auto;
@@ -48,18 +49,49 @@
       position: absolute;
     }
 
-    #infobubble {
-      width: 21%;
-      height: auto;
-      margin-top: 90px;
-      margin-left: 46px;
-      position: absolute;
-      
-    }
+    #mobilpicture:hover {
+      transform: scale(1.1);
+      transition: transform 0.3s ease;
+     
+  }
+
+
+
+   .infobubble-wrapper {
+     width: 15%;
+     position: absolute;
+     margin-top: -200px;
+     margin-left: 560px;
+ 
+   }
+
+  .infobubble-img {
+   width: 100%;
+   height:auto;
+   display: block;
+  }
+
+ .toggle-btn {
+  position: absolute;
+  bottom: 8px;
+  right: 6px;
+  background-color: rgba(0, 140, 255, 0.8);
+  color: rgb(255, 255, 255);
+  border: none;
+  padding: 5px 10px;
+  font-size: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.toggle-btn:hover {
+  background-color: rgba(0, 89, 255, 1);
+}
+
 
   .forsidebilde2 {
      width: 100%;
-     height: 110%;
+     height: 100%;
      position: absolute;
      top: 0;
      left: 0;
@@ -155,7 +187,7 @@
       border-radius: 40px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
       padding: 20px;
-      margin-top: 30px;
+      margin-top: 5px;
     }
 
 
@@ -262,7 +294,8 @@
      
   </header>
 
-
+ <button> <img src="icon/go-online.png" alt="Info" style="width: 20px; background: #1c5cb4;"> Go online</button>
+</div>
 
   <div class="container-wrapper">
     <div class="venstre-container">
@@ -311,19 +344,24 @@
   <h1 style="color: rgb(255, 255, 255);">Welcome to Seavo Nautiq</h1>
 
   <img src="images/Animasjon.gif" alt="forsidebilde" id="forsidebilde">
-
   <img src="images/mobile.png" alt="mobilpicture" id="mobilpicture">
-  <img src="images/Infobubble.png" alt="infobubble" id="infobubble">
+ 
+  <div id="infobubble" class="infobubble-wrapper">
+    
+  <img src="images/Infobubble.png" alt="infobubble" class="infobubble-img">
+  <button onclick="toggleInfobubble()" id="infobubbleToggleBtn" class="toggle-btn">Hide</button>
+</div>
+
+
+  
+
   <img src="images/Picture_collection.png" class="forsidebilde2" alt="forsidebilde2">
   
   <audio id="sonar" src="Sound/Sonar.mp3" preload="auto"></audio>
 
 <div style="margin-top: 20px;">
   <button onclick="toggleSonar()" id="toggleButton" style="background: linear-gradient(#173c70, #8bb7e2);">🔈 ASDIC</button>
-
-  <label for="volumeSlider">🔊 Volume:</label>
-  <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1">
-</div>
+ </div>
 
 
 
@@ -339,7 +377,7 @@
     
 <p>The platform allows you to register, track, and update equipment, provisions, tools, and safety items with ease.</p>
 <p>Users can quickly generate inventory reports, export them to PDF or Excel, and share them with other users or vessels when needed.</p>
-<p>Multiple user roles ensure structured access — for example, officers can manage full inventory control, while crew members can register consumption and updates by using the limited appversion, Seavo Nautiq mobile.</p>
+<p>Multiple user roles ensure structured access — for example, officers can manage full inventory control, while crew members can register consumption and updates by using the limited appversion Seavo Nautiq mobile.</p>
 
 <p style="margin-bottom: 50px;"></p>
 
@@ -381,15 +419,11 @@
   Settings </button>
     <button>  <img src="icon/Sign out.png" alt="Info" style="height: 32px; vertical-align: middle;">
   Sign out</button>
-   <button><img src="icon/go-online.png" alt="Info" style="height: 32px; vertical-align: middle;">
-  Go Online</button>
+
   <div>
 
-
     <div id="info-tekst" style="display: none; margin-top: 10px; color: rgb(0, 0, 0);">
-
-   
-    ◀
+    
   </div>
 </div>
 
@@ -415,22 +449,16 @@
       clearInterval(sonarInterval);
       toggleButton.textContent = "🔈 ASDIC";
     } else {
-      playSonar(); // første ping
-      sonarInterval = setInterval(playSonar, 10000); // deretter hvert 10. sekund
+      playSonar(); 
+      sonarInterval = setInterval(playSonar, 12000); // deretter hvert 12. sekund
       toggleButton.textContent = "⏸️ ASDIC";
     }
     isPlaying = !isPlaying;
+ 
   }
 
-  
 
-  volumeSlider.addEventListener("input", () => {
-    sonar.volume = volumeSlider.value;
-  });
 </script>
-
-
-
 
 
     <script>
@@ -478,6 +506,23 @@ function endreBilde(bildefil) {
       document.getElementById('language-dropdown').style.display = 'none';
     }
   }
+
+  
+  function toggleInfobubble() {
+  const wrapper = document.getElementById("infobubble");
+  const button = document.getElementById("infobubbleToggleBtn");
+
+  const image = wrapper.querySelector(".infobubble-img");
+
+  if (image.style.display === "none") {
+    image.style.display = "block";
+    button.textContent = "Hide";
+  } else {
+    image.style.display = "none";
+    button.textContent = "Show";
+  }
+}
+
   
 
   </script>

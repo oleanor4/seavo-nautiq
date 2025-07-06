@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Inventory Management – Seavo Nautiq</title>
+  <title>Equipment – Seavo Nautiq</title>
   <style>
     body {
       background-color: #12315c;
@@ -11,21 +11,19 @@
       color: rgb(255, 255, 255);
     }
 
- 
+  
 
-    .category-slider {
+    .category-slider-parts {
       display: flex;
       align-items: center;
       justify-content: center;
       background: linear-gradient(to right, #041425, #3b7fbe);
-      padding: 16px;
+      padding: 18px;
       overflow-x: auto;
-      margin-bottom: 5px;
-      border-radius: 10px;
-      width: 92%;
-      margin-left: 58px;
-      margin-top: 10px; 
-      box-shadow: #000000 0px 0px 8px;
+      margin-bottom: -10px;
+      width: 90%;
+      margin-left: 80px;
+      border-radius: 18px;
     }
 
     .category-item {
@@ -35,7 +33,7 @@
     }
 
     .category-button, .add-category {
-      padding: 10px 30px;
+      padding: 8px 30px;
       background: linear-gradient(to right, #00b7ff, #326fa8);
       color: rgb(255, 255, 255);
       border-radius: 6px;
@@ -54,11 +52,17 @@
     }
 
     .delete-category {
-      color: rgb(231, 19, 19);
-      font-size:24px;
+      color: rgb(255, 0, 0);
+      font-size:20px;
       margin-left: 20px;
-      margin-right: 30px;
+      margin-right: 40px;
       cursor: pointer;
+    }
+
+    .delete-category:hover {
+     background-color: rgba(0, 0, 0, 0.3); 
+      border-radius: 50px; 
+      padding:0px 4px;
     }
 
     .arrow {
@@ -74,7 +78,7 @@
     }
 
     .arrow:hover {
-      background: linear-gradient(to right, #00b7ff, #326fa8);
+      background: #36a7f1;
       color: white;
     }
 
@@ -88,9 +92,10 @@
       margin: 0 auto;
       margin-bottom: 0px;
       display: block;
+      position: absolute;
       border-radius: 6px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-      margin-top: -40px;
+      margin-top: 5px;
       margin-left: 20px;
     }
 
@@ -101,58 +106,21 @@
       border:  1px solid #000000;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
       margin-left: 60px;
-      margin-top: 0px;
-      margin-bottom: -20px;
+      margin-top: 50px;
+      margin-bottom: 20px;
       font-weight: bold;
     }
 
-  .provisions {
-     width: 100%;
-     height: 100%;
+    .equipment {
+       width: 100%;
+     height: 140%;
      position: absolute;
      top: 0;
      left: 0;
      z-index: -1;
      opacity: 0.1;
      pointer-events: none;
-  }
-
-    .container {
-     display: flex;
-     justify-content: flex-end; 
-  }
-
-    .container2 {
-     display: flex;
-     justify-content: flex-end; 
-  }
-
-    .info-badge {
-     padding: 6px 14px;
-     font-size: 14px;
-     font-weight: bold;
-     color: rgb(0, 0, 0);
-     background: linear-gradient(to right, #ffffff, #ffda47);
-     border-radius: 10px;
-     margin-right: 5px;
-     margin-top: 0px;
-     box-shadow: #000000 0px 0px 2px;;
-    
-  }
-
-  .info-badge2 {
-     padding: 6px 50px;
-     font-size: 14px;
-     font-weight: bold;
-     color: rgb(0, 0, 0);
-     background: linear-gradient(to right, #ffffff, #ee1919);
-     border-radius: 10px;
-     margin-right: 62px;
-     margin-top: px;
-     box-shadow: #000000 0px 0px 3px;
-    margin-bottom: 0px;
-    
-  }
+    }
 
 
     table { 
@@ -165,22 +133,34 @@
     }
 
 
-
     .large-bold-input {
       font-weight: bold;
-      font-size: 16px;
+      font-size: 14px;
     }
 
     .cell-min {
-      width: 45px;;
+      width: 80px;
     }
 
     .cell-order {
-      width: 40px;
+      width: 100px;
     }
 
     .cell-move {
-      width: 60px;
+      width: 110px;
+      button {
+        width: 40px;
+        height: 35px;
+        background: linear-gradient(to right, #00b7ff, #326fa8);
+        color: rgb(255, 255, 255);
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 18px;
+      }
+      button:hover {
+        background: #87cfff;
+        color: white;
+      }
     }
 
 
@@ -192,7 +172,7 @@
     }
 
     th {
-      background-color:  #13a2e4;
+      background-color:  #14a8ec;
       color: rgb(0, 0, 0);
       border-radius: 5px;
     }
@@ -202,7 +182,7 @@
     }
 
     .red-warning {
-      background: linear-gradient(to right, #ffffff, #fc8701);
+      background: linear-gradient(to right, #ffffff, #fcac01);
     }
 
     .add-line {
@@ -215,9 +195,8 @@
       cursor: pointer;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
     }
-
     .add-line:hover {
-      background: linear-gradient(to right, #56bafd, #1b3863);
+      background: #6eaed8;
       color: white;
     }
 
@@ -245,6 +224,7 @@
       gap: 1px;
       margin-left: 2px;
       vertical-align: middle;
+      transform: translateY( 0px); 
     }
 
 
@@ -258,13 +238,13 @@
 
     .header-row td span {
       display: inline-block;
-      width: 40%;
+      width: 60%;
     }
 
     .delete-button {
       color: rgb(0, 0, 0);
       cursor: pointer;
-      font-size: 24px;
+      font-size: 20px;
       text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
     }
 
@@ -301,214 +281,176 @@
     }
 
     .global-button:hover {
-      background: linear-gradient(to right, #56bafd, #1b3863);
+      background: #1077bb;
       color: white;
     }
 
-    .exportToExcel {
-      background: linear-gradient(to right, #00b7ff, #326fa8);
-      color: rgb(255, 255, 255);
-      padding: 20px 20px;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-      margin: 10px 60px;
-      border-radius: 16px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-    }
+    
+  td input[type="file"] {
+  width: 80%;
+  padding: 2px;
+}
 
-    .exportToExcel:hover {
-      background: linear-gradient(to right, #56bafd, #1b3863);
-      color: white;
-    }
+.image-upload-container {
+  display: flex;
+  align-items: center;
+  gap: 20px; 
+  justify-content: center; 
+}
+
+.image-upload-container img {
+  max-width: 50px;
+  max-height: 50px;
+  border-radius: 6px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.4);
+  inline-size: 20%;
+}
+
+
+
+.upload-btn {
+  background: linear-gradient(to right, #00b7ff, #326fa8);
+  color: white;
+  border-radius: 6px;
+  padding: 4px 6px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+  
+  position: block;
+}
+
+.upload-btn:hover {
+  background: #56bafd;
+}
+
 
     .cell-product {
-      width: 190px;
+      width: 380px;
     }
 
     .cell-comment {
-     width: 150px;
+     width: 350px;
    }
+
+
 
    .cell-small {
-   width: 80px;
+   width:130px;
    }
 
-   
-
-   .expiry-green {
-  background: linear-gradient(to right, #fcfcfc, #39e99f);
-  color: #000;
-  font-weight: bold;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
-}
-
-.expiry-yellow {
-  background: linear-gradient(to right, #ffffff, #ffda47);
-  color: #000;
-  font-weight: bold;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
-}
-
-.expiry-red {
-  background: linear-gradient(to right, #ffffff, #d12e2e);
-  color: #000000;
-  font-weight: bold;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
-}
-
-
-.activate-calculator {
-  margin-left: 60px;
-  margin-top: 20px;
-  background: linear-gradient(to right, #00b7ff, #326fa8);
-  color: rgb(0, 0, 0);
-  padding: 6px 12px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-}
-
-.activate-calculator:hover {
-  background: linear-gradient(to right, #56bafd, #1b3863);
-  color: white;
-}
-
-
-.modal-innhold {
-  position: absolute;
-  left: 20%;
-  top: 30%;
-  transform: translate(-50%, -50%);
-  background: linear-gradient(to right, #041425, #10395f);
-  padding: 15px;
-  width: 200px;
-  border-radius: 18px;
-  box-shadow: 0 0 12px #000;
-  text-align: center;
-}
-
-.calculator-header {
-  background: linear-gradient(to right, #104f68, #326fa8);
-  color: rgb(255, 255, 255);
-  padding: 5px;
-  cursor: move;
-  border-radius: 10px 10px 0 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-
-
-.lukk {
-  font-weight: bold;
-  font-size: 25px;
-  cursor: pointer;
-}
-
-
-
-
-/* Brukes kun på PDF-versjon */
-#pdf-content * {
-  font-size: 20px;
-  font-weight: bold;
-  padding: 0px;
-  border: 1px solid #5f5f5f; 
-  color: black;
-  background: transparent;
-  box-shadow: none;
-}
-
-.activate-notepad {
-  margin-left: 60px;
-  margin-top: 5px;
-  background: linear-gradient(to right, #00b7ff, #326fa8);
-  color: rgb(0, 0, 0);
-  padding: 6px 12px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-}
-
-.activate-notepad:hover {
-  background: linear-gradient(to right, #56bafd, #1b3863);
-  color: white;
-}
-
-#notisblokk {
-  position: absolute;
+  #image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: none;
-  top: 100px;
-  left: 100px;
-  width: 300px;
-  height: 256px;
-  background: linear-gradient(to left, #6ca9f8, #fcfcfc);
-  border: 2px solid #333;
-  border-radius: 20px;
-  padding: 10px;
-  box-shadow: 2px 2px 10px rgba(0,0,0,0.7);
-  font-family: Arial, sans-serif;
+  align-items: center;
+  justify-content: center;
   z-index: 1000;
 }
 
-#notis-header {
-  background: linear-gradient(to left, #fafafa, #01b1f7);
-  padding: 5px;
-  cursor: move;
-  font-weight: bold;
-  border-bottom: 1px solid #000000;
-  border-radius: 15px 15px 0 0;
-}
-
-#notis-tekst {
+#modal-overlay {
+  position: absolute;
   width: 100%;
-  height: 180px;
-  margin-top: 10px;
-  border: none;
-  background: transparent;
-  resize: none;
-  font-size: 18px;
-}
-
-.slett-knapp {
-  margin-top: 5px;
-  padding: 5px;
-  width: 30%;
-  margin-left: 200px;
-  background-color: #af2d2d;
-  color: white;
- 
-  border-radius: 5px;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
   cursor: pointer;
 }
 
-.slett-knapp:hover {
-  background-color: #fa1a1a;
+#modal-image {
+  max-width: 90%;
+  max-height: 90%;
+  z-index: 1001;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.8);
 }
 
- .cell-move {
-      width: 60px;
-      button {
-        width: 40px;
-        height: 35px;
-        background: linear-gradient(to right, #00b7ff, #326fa8);
-        color: rgb(255, 255, 255);
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 18px;
-      }
-      button:hover {
-        background: #87cfff;
-        color: white;
-      }
-    }
   
+#sidePanel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 180px;
+  height: 32%;
+  background: linear-gradient(to left, #072446, #306cc7);
+  color: rgb(0, 0, 0);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 10px;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
+  transition: right 0.5s ease;
+  z-index: 999;
+  border-radius: 16px;
+  border: 2px solid #3994e9;
+}
+
+#sidePanel.hidden {
+  right: -160px;
+}
+
+#sidePanel button {
+  margin: 4px 0;
+  padding: 12px 20px;
+  width: 100%;
+  background: linear-gradient(to right, #123981, #1994db);
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+#sidePanel button:hover {
+  background: #56bafd;
+}
+
+#signOutBtn {
+  margin-top: 40px;
+}
+
+#bottomButtons {
+  margin-top: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+#togglePanelBtn {
+  position: fixed;
+  top: 10%;
+  right: 150px;
+  transform: translateY(-50%);
+  background: #16a5f8;
+  color: rgb(255, 255, 255);
+  border: none;
+  border-radius: 0 10px 10px 0;
+  padding: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 35px;
+  z-index: 1000;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.3);
+}
+
+#togglePanelBtn:hover {
+  background: #064b79;
+}
+
+
+@media (max-width: 768px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+}
+
+
   </style>
 </head>
 
@@ -516,124 +458,44 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 
-
-
 <body>
 
+  <div id="sidePanel" class="hidden">
+  <button>Information</button>
+  <button>Documents</button>
+  <button>Shared Content</button>
+  <button>Settings</button>
+  <button id="signOutBtn">Sign Out</button>
 
-  
-
-
-  <div id="notisblokk">
-  <div id="notis-header">📝 Notepad</div>
-  <textarea id="notis-tekst" placeholder="Write a note..."></textarea>
-  <button class="slett-knapp" onclick="slettNotis()">Delete</button>
-  
-</div>
-
-
-<!-- Modal container -->
-<div id="calculatorModal" class="modal">
-
-  
-  <div class="modal-innhold" id="calculatorWindow">
-
-    <div class="calculator-header" onmousedown="startDrag(event)">
-      <h2 style="margin: 0; font-size: 15px;">Calculator</h2>
-      <span class="lukk" onclick="closeCalculator()">×</span>
-    </div>
-
-    
-
-    <input id="calc-display" type="text" readonly style="width: 90%; padding: 10px; font-size: 25px; text-align: right; margin-top: 10px;"><br><br>
-
-    <!-- Kalkulatorknapper -->
-    <div id="calc-buttons">
-      <button onclick="appendCalc('7')">7</button>
-      <button onclick="appendCalc('8')">8</button>
-      <button onclick="appendCalc('9')">9</button>
-      <button onclick="appendCalc('/')">÷</button><br>
-      <button onclick="appendCalc('4')">4</button>
-      <button onclick="appendCalc('5')">5</button>
-      <button onclick="appendCalc('6')">6</button>
-      <button onclick="appendCalc('*')">×</button><br>
-      <button onclick="appendCalc('1')">1</button>
-      <button onclick="appendCalc('2')">2</button>
-      <button onclick="appendCalc('3')">3</button>
-      <button onclick="appendCalc('-')">−</button><br>
-      <button onclick="appendCalc('0')">0</button>
-      <button onclick="appendCalc('.')">.</button>
-      <button onclick="calculateResult()">=</button>
-      <button onclick="appendCalc('+')">+</button><br>
-      <button onclick="appendCalc('%')">%</button>
-      <button onclick="deleteLast()" style="width: 30%;">DEL</button><br>
-      <button onclick="clearCalc()" style="width: 90%">C</button>
-      <style>
-        #calc-buttons button {
-          width: 36px;
-          height: 30px;
-          font-size: 24px;
-          margin: 3px;
-          background: linear-gradient(to right, #00b7ff, #326fa8);
-          color: rgb(255, 255, 255);
-          border: none;
-          border-radius: 6px;
-          cursor: pointer;
-        }
-
-        #calc-buttons button:hover {
-          background: linear-gradient(to right, #6bb5f1, #71b1cf);
-        }
-      </style>
-    </div>
-
+  <div id="bottomButtons">
+    <button>🧮 Calculator</button>
+    <button>📝 Notepad</button>
   </div>
 </div>
 
+<button id="togglePanelBtn" onclick="toggleSidePanel()">⫷</button>
+
+
+  <div id="image-modal" style="display:none;">
+  <div id="modal-overlay"></div>
+  <img id="modal-image" src="">
 </div>
-
-
 
 <header>
   <h1 style="text-align: center; color:
    rgb(218, 215, 215);
-    margin-top: 70px;
+    margin-top: 20px;
     font-size: 36px;
     font-weight: bold;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);" >
    
     <img src="images/Seavo nautiq logo.png" alt="logo" class="logo">
-  Provisions</h1>
+  Equipment</h1>
+
+
 </header>
-
-
-
-
   <input type="text" id="searchBox" placeholder="Search inventory..." oninput="searchInPage()">
 
- <div>
-  <button class="activate-calculator" onclick="document.getElementById('calculatorModal').style.display='block'">🧮 Calculator</button>
-  </div>
-
- <button class="activate-notepad" onclick="toggleNotisblokk()">📝 Notepad</button>
-
-
-<img src="images/Provisions.PNG" alt="provisions" class="provisions">
-
-
-<div class="category-slider">
-  <button class="arrow" onclick="scrollSlider(-100)">←</button>
-  <div id="category-container" style="display: flex; overflow-x: auto; max-width: 50%; scroll-behavior: smooth;">
-    <div id="categories" style="display: flex; gap: 8px;"></div>
-  </div>
-  <button class="arrow" onclick="scrollSlider(100)">→</button>
-  <button class="add-category" onclick="addCategory()">+ Category</button>
-</div>
-
-<div class="container">
-  <span class="info-badge">Expires in 10 days </span>
-  <span class="info-badge2">Expired </span>
-</div>
 
 <style>
 .highlight {
@@ -648,28 +510,39 @@
 </style>
 
 
+<div class="category-slider-parts">
+  <button class="arrow" onclick="scrollSlider(-100)">←</button>
+  <div id="category-container" style="display: flex; overflow-x: auto; max-width: 50%; scroll-behavior: smooth;">
+    <div id="categories" style="display: flex; gap: 8px;"></div>
+  </div>
+  <button class="arrow" onclick="scrollSlider(100)">→</button>
+  <button class="add-category" onclick="addCategory()">+ Category</button>
 </div>
+
+<img src="images/Equipment.PNG" alt="equipment" class="equipment">
+
+
+  
+
+
+
+
+
 
 
 
 <div id="content"></div>
 
 
-<button class="global-button" onclick="showGlobalOverview()">📋 Global Overview</button>
+<button id="globalToggleButton" class="global-button" onclick="toggleGlobalView()">📋 Global Overview</button>
 
 <div>
 
 
 </button>
 <button class="global-button" onclick="generatePDF()">📄 Generate PDF</button>
-<div>
-<button class="exportToExcel" onclick="exportToExcel()">📄 Export to Excel</button>
-<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 
 </div>
-
-<div id="pdf-content" style="display: none;"></div>
-
 
 
 <script>
@@ -742,6 +615,8 @@ function scrollSlider(offset) {
   document.getElementById("category-container").scrollLeft += offset;
 }
 
+
+
 function updateCategories() {
   const container = document.getElementById("categories");
   container.innerHTML = "";
@@ -802,8 +677,7 @@ function showCategory() {
     <thead>
       <tr>
         <th>Product/Type</th><th>Start Qty</th><th>Used</th><th>End Qty</th>
-        <th>MIN🔔</th><th>Expiry Date</th><th>Comments</th>
-        <th>Order</th><th>Move</th><th>Delete</th>
+        <th>MIN🔔</th><th>Image<th>Comments</th><th>Order</th><th>Move</th><th>Delete</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -833,21 +707,81 @@ function showCategory() {
       const del = document.createElement("td");
       del.style.textAlign = "center";
       del.innerHTML = `<span class="delete-button" onclick="deleteRow(${i})" style="cursor:pointer;">🗑️</span>`;
-     
 
       tr.appendChild(del);
       tbody.appendChild(tr);
       return;
     }
 
-    const fields = ['provisions', 'start', 'used', 'end', 'min', 'expiry', 'comment', 'order'];
+    const fields = ['Parts and tools', 'start', 'used', 'end', 'min', 'image', 'comment', 'order'];
     const inputs = {};
 
     fields.forEach((key) => {
       const td = document.createElement("td");
-      
-      if (key === "provisions") td.classList.add("cell-product");
-      
+
+    if (key === "image") {
+  td.classList.add("cell-image");
+
+  // Lag input-elementet (skjult)
+  const fileInput = document.createElement("input");
+  fileInput.type = "file";
+  fileInput.accept = "image/*";
+  fileInput.style.display = "none";
+  const inputId = `file-${i}`;
+  fileInput.id = inputId;
+
+  // Lag en tilpasset knapp
+  const customButton = document.createElement("button");
+  customButton.textContent = "📷 Upload";
+  customButton.className = "upload-btn";
+  customButton.onclick = (e) => {
+    e.preventDefault();
+    document.getElementById(inputId).click();
+  };
+
+  // Lag bilde-elementet (preview)
+  const preview = document.createElement("img");
+  preview.style.maxWidth = "60px";
+  preview.style.maxHeight = "50px";
+  preview.style.display = row.image ? "block" : "none";
+  if (row.image) preview.src = row.image;
+
+  preview.style.cursor = "pointer";
+  preview.onclick = () => {
+  openImageModal(preview.src);
+ };
+
+
+  // Les bildet når valgt
+  fileInput.onchange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        row.image = event.target.result;
+        preview.src = row.image;
+        preview.style.display = "block";
+        save();
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // 📦 Legg knapp og bilde i container med flex-styling
+  const container = document.createElement("div");
+  container.className = "image-upload-container"; // CSS-klassen for side-ved-side visning
+  container.appendChild(customButton);
+  container.appendChild(preview);
+
+  // 🧩 Legg elementene til cellen
+  td.appendChild(fileInput); // skjult input
+  td.appendChild(container);
+  tr.appendChild(td);
+  return;
+}
+
+
+      if (key === "Parts and tools") td.classList.add("cell-product");
       else if (key === "comment") td.classList.add("cell-comment");
       else if (key === "min") td.classList.add("cell-min");
       else if (key === "order") td.classList.add("cell-order");
@@ -855,13 +789,13 @@ function showCategory() {
 
 
       const input = document.createElement("input");
-      input.type = key === "provisions" || key === "comment" ? "text" : "number";
+      input.type = key === "Parts and tools" || key === "comment" ? "text" : "number";
       input.value = row[key] || "";
       input.style.width = "90%";
       input.style.padding = "4px";
       input.style.borderRadius = "5px";
       input.placeholder = key.charAt(0).toUpperCase() + key.slice(1);
-      if (["provisions", "comment", "start", "used", "end", "min", "order"].includes(key)) {
+      if (["Parts and tools", "comment", "start", "used", "end", "min", "order"].includes(key)) {
      input.classList.add("large-bold-input");
      }
 
@@ -884,7 +818,7 @@ function showCategory() {
       };
       inputs[key] = input;
       td.appendChild(input);
-      if (key === "provisions") {
+      if (key === "Parts and tools") {
   // 1. Lag fargeknappene
   const colorContainer = document.createElement("div");
   colorContainer.className = "color-buttons";
@@ -912,41 +846,6 @@ function showCategory() {
   }
 }
       tr.appendChild(td);
-
-   if (key === "expiry") {
-  input.type = "date";
-
-  const updateExpiryClass = () => {
-    input.classList.remove("expiry-green", "expiry-yellow", "expiry-red");
-
-    if (!input.value) return;
-
-    const today = new Date();
-    const expiryDate = new Date(input.value);
-    const diffTime = expiryDate - today;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays < 0) {
-      input.classList.add("expiry-red");
-    } else if (diffDays <= 10) {
-      input.classList.add("expiry-yellow");
-    } else {
-      input.classList.add("expiry-green");
-    }
-  };
-
-  input.oninput = () => {
-    row[key] = input.value;
-    updateExpiryClass();
-    save();
-  };
-
-  // Sett farge ved lasting
-   updateExpiryClass();
-  }
-
-
-
     });
 
     const tdMove = document.createElement("td");
@@ -974,7 +873,7 @@ function showCategory() {
   addLine.onclick = () => {
     data[activeCategory].push({
     type: "line", product: "", start: 0, used: 0,
-    comment: "", min: 0, expiry: "", order: 0, end: 0, productColor: null
+    comment: "", min: 0, order: 0, end: 0, productColor: null
   });
 
     save();
@@ -1021,10 +920,9 @@ function moveRow(index, direction) {
 
 function showGlobalOverview() {
   const content = document.getElementById("content");
-  content.innerHTML = "<h2>Global overview of the entire provisions</h2>";
+  content.innerHTML = "<h2>Global overview of the entire inventory</h2>";
   const table = document.createElement("table");
   table.innerHTML = `
-
     <thead>
       <tr><th>Category</th><th>Product</th><th>Start</th><th>Used</th><th>End</th><th>Min</th><th>Comment</th><th>Order</th></tr>
     </thead>
@@ -1070,6 +968,26 @@ if (!data[activeCategory]) {
   data[activeCategory] = [];
   save();
 }
+
+let isGlobalView = false;
+
+function toggleGlobalView() {
+  const button = document.getElementById("globalToggleButton");
+
+  if (!isGlobalView) {
+    // Vis global oversikt
+    showGlobalOverview();
+    button.textContent = "🔙 Back to Table";
+  } else {
+    // Gå tilbake til aktiv kategori
+    showCategory();
+    button.textContent = "📋 Global Overview";
+  }
+
+  isGlobalView = !isGlobalView;
+}
+
+
 updateCategories();
 showCategory();
 
@@ -1077,221 +995,59 @@ async function generatePDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF('p', 'mm', 'a4');
 
+  
   const logoImg = new Image();
   logoImg.src = "images/Logo Seavo Nautiq.png";
   await new Promise(resolve => { logoImg.onload = resolve; });
 
-  doc.addImage(logoImg, 'PNG', 10, 20, 100, 20); // Logo øverst
+  doc.addImage(logoImg, 'PNG', 10, 10, 60, 35); // (x, y, width, height)
 
-  // KLONE OG RENS INNHOLDET
-  const original = document.getElementById("content");
-  const clone = original.cloneNode(true);
-
-  // Fjern bakgrunnsfarger og juster utseende
-  clone.querySelectorAll("*").forEach(el => {
-    el.style.backgroundColor = "transparent";
-    el.style.color = "black";
-    el.style.boxShadow = "none";
-    el.style.borderColor = "#333"; // valgfritt: vis rammer
+  Headers.forEach((header, index) => {
+    doc.setFontSize(16);
+    doc.text(header, 10, 50 + (index * 10));
   });
 
-  const pdfContainer = document.getElementById("pdf-content");
-  pdfContainer.innerHTML = "";
-  pdfContainer.appendChild(clone);
-  pdfContainer.style.display = "block";
+  // Ta skjermbilde av innhold
+  const content = document.getElementById("content");
 
-  await html2canvas(pdfContainer, {
-    backgroundColor: "#ffffff",
-    scale: 2 // forbedrer kvalitet
+  await html2canvas(content, {
+    backgroundColor: "#ffffff"
   }).then(canvas => {
     const imgData = canvas.toDataURL('image/png');
-    const pdfWidth = doc.internal.pageSize.getWidth() - 20;
     const imgProps = doc.getImageProperties(imgData);
+    const pdfWidth = doc.internal.pageSize.getWidth() - 20;
     const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-    doc.addImage(imgData, 'PNG', 13, 50, pdfWidth, pdfHeight);
+    doc.addImage(imgData, 'PNG', 13, 35, pdfWidth, pdfHeight);
     doc.save("SeavoNautiq_Inventory.pdf");
   });
-
-  
-  pdfContainer.style.display = "none";
 }
 
-updateCategories();
-showCategory();
-
-function exportToExcel() {
-  const workbook = XLSX.utils.book_new();
-  const sheetData = [];
-
-  // Header row
-  sheetData.push(["Category", "Product", "Start Qty", "Used Qty", "End Qty", "Min Qty", "Expiry Date", "Comments", "Order"]);
-
-  Object.entries(data).forEach(([category, rows]) => {
-    rows.forEach(row => {
-      if (row.type === "header") return;
-      const start = parseInt(row.start) || 0;
-      const used = parseInt(row.used) || 0;
-      const end = row.end ?? (start - used);
-      const min = parseInt(row.min) || 0;
-
-      sheetData.push([
-        category,
-        row.product || "",
-        start,
-        used,
-        end,
-        min,
-        row.expiry || "",
-        row.comment || "",
-        row.order || ""
-      ]);
-    });
-  });
-
-  const worksheet = XLSX.utils.aoa_to_sheet(sheetData);
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Inventory");
-  
-  XLSX.writeFile(workbook, "SeavoNautiq_Inventory.xlsx");
+function openImageModal(src) {
+  const modal = document.getElementById("image-modal");
+  const modalImg = document.getElementById("modal-image");
+  modalImg.src = src;
+  modal.style.display = "flex";
 }
 
+document.getElementById("modal-overlay").onclick = () => {
+  document.getElementById("image-modal").style.display = "none";
+};
 
+function toggleSidePanel() {
+  const panel = document.getElementById("sidePanel");
+  const toggleBtn = document.getElementById("togglePanelBtn");
 
-
-function appendCalc(value) {
-  const display = document.getElementById("calc-display");
-  display.value += value;
-}
-
-function clearCalc() {
-  document.getElementById("calc-display").value = "";
-}
-
-function calculateResult() {
-  try {
-    const display = document.getElementById("calc-display");
-    let expression = display.value.replace(/%/g, "/100");
-    display.value = eval(expression);
-  } catch {
-    alert("Invalid expression");
+  if (panel.classList.contains("hidden")) {
+    panel.classList.remove("hidden");
+    toggleBtn.style.right = "220px";
+    toggleBtn.textContent = "⫸";
+  } else {
+    panel.classList.add("hidden");
+    toggleBtn.style.right = "0px";
+    toggleBtn.textContent = "⫷";
   }
 }
-
-
-function deleteLast() {
-  const display = document.getElementById("calc-display");
-  display.value = display.value.slice(0, -1);
-}
-
-function toggleSign() {
-  const display = document.getElementById("calc-display");
-  if (display.value) {
-    if (display.value.startsWith('-')) {
-      display.value = display.value.substring(1);
-    } else {
-      display.value = '-' + display.value;
-    }
-  }
-}
-
-
-let isDragging = false;
-let offsetX, offsetY;
-
-function startDrag(e) {
-  const target = e.target.closest(".calculator-header");
-  if (!target) return;
-
-  isDragging = true;
-  const calcWindow = document.getElementById("calculatorWindow");
-  offsetX = e.clientX - calcWindow.offsetLeft;
-  offsetY = e.clientY - calcWindow.offsetTop;
-
-  document.onmousemove = drag;
-  document.onmouseup = stopDrag;
-}
-
-function drag(e) {
-  if (!isDragging) return;
-  const calcWindow = document.getElementById("calculatorWindow");
-  calcWindow.style.left = `${e.clientX - offsetX}px`;
-  calcWindow.style.top = `${e.clientY - offsetY}px`;
-}
-
-function stopDrag() {
-  isDragging = false;
-  document.onmousemove = null;
-  document.onmouseup = null;
-}
-
-function closeCalculator() {
-  document.getElementById("calculatorModal").style.display = "none";
-}
-
-
-const notis = document.getElementById("notisblokk");
-const header = document.getElementById("notis-header");
-const tekstfelt = document.getElementById("notis-tekst");
-
-// Last lagret tekst og posisjon
-window.addEventListener("load", () => {
-  const lagretTekst = localStorage.getItem("notisTekst");
-  const posX = localStorage.getItem("notisPosX");
-  const posY = localStorage.getItem("notisPosY");
-
-  if (lagretTekst) tekstfelt.value = lagretTekst;
-  if (posX && posY) {
-    notis.style.left = posX + "px";
-    notis.style.top = posY + "px";
-  }
-});
-
-// Toggle notisblokk
-function toggleNotisblokk() {
-  notis.style.display = (notis.style.display === "block") ? "none" : "block";
-}
-
-// Slett notat
-function slettNotis() {
-  tekstfelt.value = "";
-  notis.style.left = "100px";
-  notis.style.top = "100px";
-  localStorage.removeItem("notisTekst");
-  localStorage.removeItem("notisPosX");
-  localStorage.removeItem("notisPosY");
-}
-
-// Lagre tekst automatisk
-tekstfelt.addEventListener("input", () => {
-  localStorage.setItem("notisTekst", tekstfelt.value);
-});
-
-// Dra-funksjon med posisjonslagring
-let isDraggingNotis = false, offsetXNotis = 0, offsetYNotis = 0;
-
-header.addEventListener("mousedown", (e) => {
-  isDraggingNotis = true;
-  offsetXNotis = e.clientX - notis.offsetLeft;
-  offsetYNotis = e.clientY - notis.offsetTop;
-});
-
-document.addEventListener("mousemove", (e) => {
-  if (isDraggingNotis) {
-    notis.style.left = `${e.clientX - offsetXNotis}px`;
-    notis.style.top = `${e.clientY - offsetYNotis}px`;
-  }
-});
-
-document.addEventListener("mouseup", () => {
-  if (isDraggingNotis) {
-    localStorage.setItem("notisPosX", parseInt(notis.style.left));
-    localStorage.setItem("notisPosY", parseInt(notis.style.top));
-  }
-  isDraggingNotis = false;
-
-
-});
-
 
 
 

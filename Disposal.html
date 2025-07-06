@@ -83,26 +83,26 @@ button:hover {
 }
 
 
-.condition-defective {
-  background-color: #e78514; 
+
+select.condition-defective {
+  background-color: #e9a150;
   color: white;
 }
 
-.condition-worn {
-  background-color: #fdf036; 
+select.condition-worn {
+  background-color: #8dd453;
   color: black;
 }
 
-.condition-lost {
-  background-color: #1b8ca8; 
+select.condition-lost {
+  background-color: #1ba895;
   color: white;
 }
 
-.condition-discarded {
-  background-color: #7f8c8d; 
+select.condition-discarded {
+  background-color: #293c3d;
   color: white;
 }
-
 
 
 @media (max-width: 768px) {
@@ -272,25 +272,31 @@ function updateConditionColor(select) {
   const value = select.value;
   const td = select.parentElement;
 
-  // Fjern gamle klasser først
+  // Fjern gamle klasser
   td.classList.remove("condition-defective", "condition-worn", "condition-lost", "condition-discarded");
+  select.classList.remove("condition-defective", "condition-worn", "condition-lost", "condition-discarded");
 
-  // Legg til ny klasse basert på valgt verdi
+  // Legg til ny klasse på både td og select
   switch (value) {
     case "Defective":
       td.classList.add("condition-defective");
+      select.classList.add("condition-defective");
       break;
     case "Worn":
       td.classList.add("condition-worn");
+      select.classList.add("condition-worn");
       break;
     case "Lost":
       td.classList.add("condition-lost");
+      select.classList.add("condition-lost");
       break;
     case "Discarded":
       td.classList.add("condition-discarded");
+      select.classList.add("condition-discarded");
       break;
   }
 }
+
 
 
 

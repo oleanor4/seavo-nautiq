@@ -2,55 +2,120 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Mobile</title>
+  <title>Mobil Popup Companion</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Klikkbart mobilbilde -->
+  <div class="mobile-wrapper">
+    <img src="images/mobile.png" alt="Mobilbilde" class="mobile-image" onclick="openPopup()">
+  </div>
+
+  <!-- Popup-vindu -->
+  <div class="popup" id="popup">
+    <div class="popup-inner">
+        <div class="container">
+            <form>
+      <img src="images/Mobile companion.png" alt="Companion" class="popup-image">
+       <div class="popup-overlay">
+      <h3>Ny melding</h3>
+    
+
+
+      <button class="close-btn" onclick="closePopup()">✕</button>
+
+      
+     </form>
+    </div>
+ <!-- Overlay som matcher blå skjerm -->
+  <script src="script.js"></script>
+
   <style>
     body {
-      background-color: #12315c;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      color: rgb(255, 255, 255);
-    }
+  margin: 0;
+  background-color: #12315c;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 
-     .logo {
-      width: 200px;
-      height: 40px;
-      margin: 0 auto;
-      margin-bottom: 0px;
-      display: block;
-      position: absolute;
-      border-radius: 6px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-      margin-top: -30px;
-      margin-left: 20px;
-    }
-    
-    .mobile {
-      width: 20%;
-      height: auto;
-      display: block;
-      margin: 0 auto;
-      margin-top: 20px;
-      border-radius: 6px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-    }
+.mobile-wrapper {
+  width: 80%;
+  max-width: 300px;
+}
+
+.mobile-image {
+  width: 100%;
+  cursor: pointer;
+  display: block;
+  border-radius: 18px;
+}
+
+/* Popup fullskjerm bakgrunn */
+.popup {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
 
 
-  </style>       
-    </body>
-    <header>
+/* Mobile */
+.popup-image {
+  width: 140%;
+  display: block;
+  border-radius: 80px;
 
-    <img src="images/Seavo nautiq logo.png" alt="logo" class="logo">
+}
 
-    <h1 style="text-align: center; color:
-   rgb(218, 215, 215);
-    margin-top: 70px;
-    font-size: 36px;
-    font-weight: bold;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);">
-    Mobile</h1>
-    
- 
-</head>
-  <img src="images/mobile.png" alt="mobile" class="mobile"> 
+.popup-overlay {
+  position: absolute;
+  top: 10%;     /* justert for å matche blå skjerm */
+  left: 42%;
+  width: 22%;
+  height: 79%;
+  background: rgba(3, 40, 65, 0.95);
+  border-radius: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  margin-left: 10px; /* justert for å matche blå skjerm */
+}
 
+/* Lukkeknapp */
+.close-btn {
+  top: 0px;
+  right: 18px;
+  background: #242424;
+  color: white;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 16px;
+  cursor: pointer;
+
+
+}
+
+
+  </style>
+
+  <script>
+    function openPopup() {
+  document.getElementById("popup").style.display = "flex";
+}
+
+function closePopup() {
+  document.getElementById("popup").style.display = "none";
+}
+
+  </script>
+</body>
 </html>

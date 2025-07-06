@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order – Seavo Nautiq</title>
+  <style>
+
+    
+    body {
+      background-color: #12315c;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      color: white;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: rgb(218, 215, 215);
+      margin-top: 20px;
+      font-size: 35px;
+      font-weight: bold;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    }
+
+    .logo, .Order {
+      position: absolute;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+    }
+
+    .logo {
+      width: 200px;
+      height: auto;
+      margin-top: -80px;
+    }
+
+    .Order {
+      width: 100%;
+      height: 180%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      opacity: 0.1;
+      pointer-events: none;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 50px;
+    }
+
+
+    table th,
+    table td {
+     width: 20px; /* eller tilpass etter behov per kolonne */
+     text-align: left;
+     vertical-align: middle;
+    }
+
+    .input-product {
+     width: 380px;
+    }
+
+   .input-quantity {
+     width: 100px;
+    }
+
+   .input-unitprice {
+     width: 100px;
+    }
+
+   .input-comments {
+     width: 280px;
+     margin-left: 0px;
+    }
+
+.input-base {
+  height: 25px;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 6px;
+  border-radius: 6px;
+  border: 2px solid #000000;
+  resize: none;
+}
+
+.move-buttons {
+  display: flex;
+  gap: 0px;
+  justify-content: left;
+  align-items: left;
+}
+
+
+.move-btn {
+  background-color: #48adbe;
+  color: white;
+  border-radius: 4px;
+  padding: 4px 10px;
+  margin: 2px;
+  margin-left: 0px;
+  cursor: pointer;
+  font-size: 14px
+  
+}
+
+.move-btn:hover {
+  background-color: #a0e9eb;
+}
+
+.del-btn {
+  background-color: #ffffff;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.del-btn:hover {
+  background-color: #c1121f;
+}
+
+
+.delete-btn {
+  background-color: #ffffff;
+  color: white;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background-color: #c1121f;
+}
+
+   
+
+.upload-container {
+  display: flex;
+  align-items: center;
+  gap: 12px; 
+  justify-content: left;
+  margin-right: 200px;
+}
+
+.upload-preview {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border: 1px solid #000000;
+  cursor: pointer;
+  display: flex;
+}
+
+
+    .controls {
+      margin-top: 50px;
+      text-align: center;
+    }
+
+    .total-cell {
+      font-weight: bold;
+      background-color: #0e2a4d;
+      border-top: 2px solid #fff;
+      border-radius: 6px;
+      box-shadow:  0 2px 5px rgba(0, 0, 0, 0.8);
+      width: 90px;
+    }
+
+    
+
+    .btn {
+      background: linear-gradient(to right, #00b7ff, #1c60a0);
+      color: white;
+      padding: 10px 20px;
+      margin: 5px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: linear-gradient(to right, #57d0ee, #072846);
+    }
+
+  .spacer {
+    width: 200px;
+  }
+
+
+
+  @media print {
+  body {
+    background-color: white !important;
+    color: black !important;
+  }
+}
+
+  </style>
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+
+</head>
+
+
+
+<body>
+  <header>
+    <h1>Order</h1>
+    <img src="images/Seavo nautiq logo.png" alt="logo" class="logo">
+    <img src="images/Order.png" alt="Order" class="Order"> 
+  </header>
+
+  <div class="controls">
+    <button class="btn" onclick="addHeaderRow()">+ Add header/section</button>
+    <button class="btn" onclick="addLineRow()">+ Add line</button>
+  </div>
+
+  <table id="orderTable">
+    <thead>
+      <tr>
+        <th>Product/type</th>
+        <th>Quantity</th>
+        <th>Upload Picture</th>
+        <th class="spacer"></th>
+        <th>Unit Price</th>
+        <th>Total Unit Price</th>
+        <th>Comments</th>
+        <th>Move</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+    <tfoot>
+      <tr>
+        <td colspan="5"></td>
+        <td class="total-cell" id="grandTotal">Total : 0</td>
+        <td colspan="3"></td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <div style="margin-top: 30px; text-align: left;">
+  <button class="btn" onclick="generatePDF()">📄 Generate PDF</button>
+  </div>
+
+
+  <script>
+    const tableBody = document.querySelector("#orderTable tbody");
+    const grandTotalCell = document.getElementById("grandTotal");
+
+    function createCell(tag = "td", content = "") {
+      const cell = document.createElement(tag);
+      cell.innerHTML = content;
+      return cell;
+    }
+
+    function addLineRow() {
+      const row = document.createElement("tr");
+
+      // Product
+      const product = createCell();
+      product.classList.add("product");
+      const inputProd = document.createElement("input");
+      inputProd.placeholder = "Product/type";
+      inputProd.className = "input-base input-product";
+      product.appendChild(inputProd);
+      row.appendChild(product);
+
+      // Quantity
+      const qty = createCell();
+      const inputQty = document.createElement("input");
+      inputQty.className = "input-base input-quantity";
+      inputQty.type = "number";
+      inputQty.value = 0;
+      inputQty.oninput = updateRowTotal;
+      qty.appendChild(inputQty);
+      row.appendChild(qty);
+
+     // Upload picture
+const upload = createCell();
+const container = document.createElement("div");
+container.className = "upload-container";
+
+const file = document.createElement("input");
+file.type = "file";
+file.accept = "image/*";
+file.style.display = "none";
+
+const preview = document.createElement("img");
+preview.className = "upload-preview";
+preview.style.display = "none";
+preview.onclick = () => {
+  const win = window.open();
+  win.document.write(`<img src="${preview.src}" style="width:100%">`);
+};
+
+const button = document.createElement("button");
+button.className = "btn";
+button.textContent = "📷 Upload";
+button.onclick = () => file.click();
+
+file.onchange = () => {
+  const reader = new FileReader();
+  reader.onload = e => {
+    preview.src = e.target.result;
+    preview.style.display = "block";
+  };
+  reader.readAsDataURL(file.files[0]);
+};
+
+container.append(button, preview, file);
+upload.appendChild(container);
+row.appendChild(upload);
+
+
+      // Spacer
+      row.appendChild(createCell("td", ""));
+
+      // Unit Price
+      const unitPrice = createCell();
+      const inputPrice = document.createElement("input");
+      inputPrice.className = "input-base input-unitprice";
+      inputPrice.type = "number";
+      inputPrice.value = 0;
+      inputPrice.oninput = updateRowTotal;
+      unitPrice.appendChild(inputPrice);
+      row.appendChild(unitPrice);
+
+      // Total per unit
+      const totalUnit = createCell();
+      totalUnit.className = "unitTotal";
+      totalUnit.textContent = "0";
+      row.appendChild(totalUnit);
+
+      // Comments
+      const comments = createCell();
+      const inputComment = document.createElement("input");
+      inputComment.placeholder = "Comments";
+      inputComment.className = "input-base input-comments";
+      comments.appendChild(inputComment);
+      row.appendChild(comments);
+
+      // Move
+      const move = createCell();
+      move.innerHTML = `
+      <div class="move-buttons">
+      <button class="move-btn" onclick="moveRow(this, -1)">↑</button>
+      <button class="move-btn" onclick="moveRow(this, 1)">↓</button>
+      </div>`;
+      row.appendChild(move);
+
+      // Delete
+      const del = createCell();
+      const delBtn = document.createElement("button");
+      delBtn.className = "del-btn";
+      delBtn.textContent = "❌";
+      delBtn.onclick = () => {
+        row.remove();
+        updateGrandTotal();
+      };
+      del.appendChild(delBtn);
+      row.appendChild(del);
+
+      tableBody.appendChild(row);
+    }
+
+     function addHeaderRow() {
+     const row = document.createElement("tr");
+
+     const headerCell = createCell("td");
+     headerCell.colSpan = 8;
+     headerCell.style.background = "#1d3557";
+     headerCell.innerHTML = `
+    <strong contenteditable="true">Section Header</strong>
+    `;
+
+    const deleteCell = createCell("td");
+    const deleteBtn = document.createElement("button");
+    deleteBtn.className = "delete-btn";
+    deleteBtn.textContent = "❌";
+    deleteBtn.onclick = () => {
+    row.remove();
+  };
+    deleteCell.appendChild(deleteBtn);
+
+    row.appendChild(headerCell);
+    row.appendChild(deleteCell);
+    tableBody.appendChild(row);
+  }
+
+
+    function moveRow(btn, direction) {
+      const row = btn.closest("tr");
+      const index = [...tableBody.children].indexOf(row);
+      const newIndex = index + direction;
+
+      if (newIndex < 0 || newIndex >= tableBody.children.length) return;
+      const target = tableBody.children[newIndex];
+      tableBody.insertBefore(row, direction === -1 ? target : target.nextSibling);
+    }
+
+    function updateRowTotal(e) {
+      const row = e.target.closest("tr");
+      const qty = row.querySelector('td:nth-child(2) input').valueAsNumber || 0;
+      const price = row.querySelector('td:nth-child(5) input').valueAsNumber || 0;
+      const total = qty * price;
+      row.querySelector(".unitTotal").textContent = total.toFixed(2);
+      updateGrandTotal();
+    }
+
+    function updateGrandTotal() {
+      let sum = 0;
+      document.querySelectorAll(".unitTotal").forEach(cell => {
+        sum += parseFloat(cell.textContent) || 0;
+      });
+      grandTotalCell.textContent = "Total: " + sum.toFixed(2);
+    }
+
+
+  </script>
+
+  <script>
+
+  async function generatePDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('p', 'mm', 'a4');
+  const marginLeft = 10;
+  let y = 10;
+
+  // Logo
+  const logo = new Image();
+  logo.src = "images/Seavo nautiq logo.png";
+  await new Promise(resolve => { logo.onload = resolve; });
+  doc.addImage(logo, 'PNG', marginLeft, y, 50, 20);
+  y += 30;
+
+  // Tabell-data
+  const rows = [];
+  const headers = ["Product/type", "Quantity", "Unit Price", "Total Unit Price", "Comments"];
+
+  document.querySelectorAll("#orderTable tbody tr").forEach(row => {
+    const cells = row.querySelectorAll("td");
+    if (cells.length === 9) {
+      const product = cells[0].querySelector("input")?.value || "";
+      const qty = cells[1].querySelector("input")?.value || "";
+      const unit = cells[4].querySelector("input")?.value || "";
+      const total = cells[5]?.textContent || "";
+      const comment = cells[6].querySelector("input")?.value || "";
+      rows.push([product, qty, unit, total, comment]);
+    } else if (cells.length === 2 && cells[0].colSpan === 8) {
+      const sectionHeader = cells[0].textContent.trim();
+      rows.push([`--- ${sectionHeader} ---`, "", "", "", ""]);
+    }
+  });
+
+  // Legg til Total price som siste rad
+  const total = document.getElementById("grandTotal").textContent.replace("Total: ", "");
+  rows.push(["", "", "", "", ""]);
+  rows.push(["", "", "", "TOTAL:", total]);
+
+  // Lag tabell med grid-stil (tynne linjer)
+  doc.setFontSize(12);
+  doc.setTextColor(0, 0, 0);
+  doc.setFont("helvetica", "bold");
+
+  doc.autoTable({
+    startY: y,
+    head: [headers],
+    body: rows,
+    theme: 'grid', // <-- tegner tynne linjer
+    headStyles: { fillColor: [0, 0, 0], textColor: [255, 255, 255] },
+    bodyStyles: { textColor: [0, 0, 0] },
+    styles: { font: "helvetica", fontSize: 10, cellPadding: 2 },
+    margin: { left: marginLeft },
+    tableWidth: 'auto'
+  });
+
+  doc.save("Order_Seavo_Nautiq.pdf");
+}
+
+</script>
+</body>
+</html>

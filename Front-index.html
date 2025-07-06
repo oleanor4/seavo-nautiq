@@ -250,6 +250,16 @@
     }
 
 
+    #mobilpicture {
+  cursor: pointer;
+  width: 250px;
+  transition: transform 0.2s;
+}
+#mobilpicture:hover {
+  transform: scale(1.05);
+}
+
+
   @media (max-width: 768px) {
   table, thead, tbody, th, td, tr {
     display: block;
@@ -344,7 +354,9 @@
   <h1 style="color: rgb(255, 255, 255);">Welcome to Seavo Nautiq</h1>
 
   <img src="images/Animasjon.gif" alt="forsidebilde" id="forsidebilde">
-  <img src="images/mobile.png" alt="mobilpicture" id="mobilpicture">
+  <img src="images/mobile.png" alt="mobilpicture" id="mobilpicture" onclick="openPopup()" />
+
+
  
   <div id="infobubble" class="infobubble-wrapper">
     
@@ -387,8 +399,9 @@
 
 <p style="margin-bottom: 50px;"></p>
 
-<p>If you are new to the platform, we recommend starting with the "Office" or "Equipment" section to familiarize yourself with how categories are structured.</p>
-
+<p>If you are new to the platform, i recommend starting with the "Office" or "Equipment" section to familiarize yourself with how categories are structured.</p>
+<p style="margin-bottom: 50px;"></p>
+<p>This platform is a one-man project. I have years of experience as a fisherman and a first mate at sea. My current qualification is sea captain.</p>
    <p>
 </div>
 
@@ -522,6 +535,8 @@ function endreBilde(bildefil) {
     button.textContent = "Show";
   }
 }
+
+
 
   
 

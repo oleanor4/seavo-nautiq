@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html>
+<head>
+  
+  <meta charset="UTF-8">
+  <title>Seavo Nautiq</title>
+  <link rel="stylesheet" href="style.css">
+
+  
+  <style>
+    body {
+      background: linear-gradient(to bottom, #12315c, #000000);
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .toppbilde-container {
+      position: relative; 
+      width: 100%;
+    }
+
+    .toppbilde {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+ 
+    .toppbilde-container {
+  position: relative;
+  width: 100%;
+  }
+
+  #forsidebilde {
+      width: 40%;
+      height: auto;
+      border-radius: 20px;
+      margin-top: 30px;
+      box-shadow: #000000 0px 0px 10px 3px;
+    }
+
+
+    #mobilpicture {
+      width: 13%;
+      height: auto;
+      border-radius: 20px;
+      margin-top: 35px;
+      box-shadow: #000000 0px 0px 10px 3px;
+      margin-left: 400px;
+      position: absolute;
+    }
+
+    #mobilpicture:hover {
+      transform: scale(1.1);
+      transition: transform 0.3s ease;
+     
+  }
+
+.video-header {
+  position: relative;
+  width: 100%;
+  height: 135px;
+  overflow: hidden;
+}
+
+
+.video-header video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+}
+
+
+
+
+
+
+   .infobubble-wrapper {
+     width: 15%;
+     position: absolute;
+     margin-top: -200px;
+     margin-left: 560px;
+ 
+   }
+
+  .infobubble-img {
+   width: 100%;
+   height:auto;
+   display: block;
+  }
+
+ .toggle-btn {
+  position: absolute;
+  bottom: 8px;
+  right: 6px;
+  background-color: rgba(0, 140, 255, 0.8);
+  color: rgb(255, 255, 255);
+  border: none;
+  padding: 5px 10px;
+  font-size: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.toggle-btn:hover {
+  background-color: rgba(0, 89, 255, 1);
+}
+
+
+  .forsidebilde2 {
+     width: 100%;
+     height: 100%;
+     position: absolute;
+     top: 0;
+     left: 0;
+     z-index: -1;
+     opacity: 0.1;
+     pointer-events: none;
+    }
+
+
+      .language-selector {
+      background-color: transparent;
+      font-family: Arial, sans-serif;
+      padding: 0px;
+      color: rgb(201, 188, 188);
+      float: right;
+      margin-right: 38px;
+      margin-top: -59px;
+    }
+
+    .language-selector {
+      position: relative;
+      display: inline-block;
+    }
+
+    .language-button {
+      background: linear-gradient(to right, #1e3a5f, #326fa8);
+      color: rgb(255, 255, 255);
+      padding: 10px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .language-button:hover {
+      background: #4984dd;
+    }
+
+    .flag {
+      width: 24px;
+      height: 16px;
+      object-fit: cover;
+      border-radius: 3px;
+    }
+
+    .language-dropdown {
+      display: none;
+      position: absolute;
+      right: 170px;
+      background: linear-gradient(to right, #3a5d8a, #5799d6);
+      min-width: 160px;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.6);
+      border-radius: 6px;
+      z-index: 1;
+      top: 100px;
+    }
+
+    .language-dropdown div {
+      color: rgb(0, 0, 0);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .language-dropdown div:hover {
+      background-color: #e6e6e6;
+    }
+
+
+
+    .gradient-overgang {
+      height: 10px;
+      background: linear-gradient(to left, #62b2e7, #001125);
+    }
+
+
+
+    .container-wrapper {
+      display: flex;
+      justify-content: space-between;
+      padding: 30px;
+    }
+
+    .venstre-container {
+      width: 250px;
+      height: 450px;
+      background: linear-gradient(to left, #12315c, #215db1);
+      border-radius: 40px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+      padding: 20px;
+      margin-top: 5px;
+    }
+
+
+    .ny-container {
+      margin-top: 40px;
+      margin-left: -20px;
+      width: 250px;
+      height: 260px;
+      padding: 20px;
+      background: linear-gradient(to left, #12315c, #215db1); 
+      border-radius: 40px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.6);
+    }  
+   
+    .top-container {
+      display: flex;
+      justify-content: center; 
+      align-items: center;     
+      text-align: center;
+      height: 20px;
+      width: 250px;
+      padding: 20px;
+      background: linear-gradient(to right, #1e3a5f, #326fa8);
+      border-radius: 40px;
+      color: white;
+    }
+
+    
+    .hoyre-container {
+      width: 250px;
+      height: 350px;
+      background: linear-gradient(to left, #12315c, #215db1);
+      border-radius: 40px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.6);
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+
+    .venstre-container button,
+    .hoyre-container button {
+      background: linear-gradient(to left, #7396c7, #173c70);
+      color: #000000;
+      border-radius: 12px;
+      width: 250px;
+      height: 40px;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
+      transition: background-color 0.3s ease;
+      margin-bottom: 18px; 
+      position: relative;
+    }
+
+    
+    .venstre-container button:hover,
+    .hoyre-container button:hover {
+      background: #97b4d3;
+    }
+
+
+    #mobilpicture {
+  cursor: pointer;
+  width: 250px;
+  transition: transform 0.2s;
+}
+#mobilpicture:hover {
+  transform: scale(1.05);
+}
+
+
+  @media (max-width: 768px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+}
+
+ 
+  </style>
+</head>
+<body>
+  
+<audio id="sonar" src="Sound/Sonar.mp3"></audio>
+
+
+
+  <header>
+      
+ <header class="video-header">
+  <video autoplay muted loop playsinline>
+    <source src="Video/Ocean-Seavo.mp4" type="video/mp4">
+    Your browser does not support HTML5 video.
+  </video>
+</header>
+
+    <div class="gradient-overgang"></div>
+
+
+  <div class="language-selector">
+  <button class="language-button" onclick="toggleDropdown()">
+    <img src="https://flagcdn.com/w40/gb.png" class="flag" id="selected-flag">
+    English
+  </button>
+</div>
+
+  <div class="language-dropdown" id="language-dropdown">
+    <div onclick="selectLanguage('English', 'gb')"><img src="https://flagcdn.com/w40/gb.png" class="flag"> English</div>
+    <div onclick="selectLanguage('Norsk', 'no')"><img src="https://flagcdn.com/w40/no.png" class="flag"> Norsk</div>
+    <div onclick="selectLanguage('Русский', 'ru')"><img src="https://flagcdn.com/w40/ru.png" class="flag"> Русский</div>
+    <div onclick="selectLanguage('中文', 'cn')"><img src="https://flagcdn.com/w40/cn.png" class="flag"> 中文</div>
+    <div onclick="selectLanguage('Español', 'es')"><img src="https://flagcdn.com/w40/es.png" class="flag"> Español</div>
+    <div onclick="selectLanguage('Português', 'pt')"><img src="https://flagcdn.com/w40/pt.png" class="flag"> Português</div>
+
+    
+  </div>
+</div>
+    
+
+</div>
+
+     
+  </header>
+
+ <button> <img src="icon/go-online.png" alt="Info" style="width: 20px; background: #1c5cb4;"> Go online</button>
+</div>
+
+  <div class="container-wrapper">
+    <div class="venstre-container">
+
+      <button onclick="window.open('office.html', '_blank')">Office</button>
+
+      <button onclick="window.open('equipment.html', '_blank')">Equipment</button>
+      <button>Parts and tools</button>
+      <button>Provisions</button>
+      <button>Medicine chest</button>
+      <button>Safety</button>
+      <button>Supplies</button>
+      <button>Disposal</button>
+
+
+  
+
+     <div class="ny-container">
+      <button> <img src="icon/Order-black.png" alt="Info" style="height: 32px; vertical-align: middle;">Orders</button>
+      <button> <img src="icon/Participants.png" alt="Info" style="height: 32px; vertical-align: middle;">Participants</button>
+      <button> <img src="icon/Voyage.png" alt="Info" style="height: 32px; vertical-align: middle;">Voyages</button>
+      <button> <img src="icon/Fleet.png" alt="Info" style="height: 32px; vertical-align: middle;">Fleet</button>
+ 
+  </div>   
+    </div> 
+      
+      <div class="bildevindu" id="bildevisning">
+  <img id="visningsbilde" src="Images/" alt="Aktivt bilde">
+  <div class="overlay"></div>
+</div>
+
+
+
+<div id="info-text-utenfor" 
+     style="display: none; 
+            padding: 50px; 
+            margin: 20px 1; 
+            margin-left: 10px; 
+            margin-top: -40px;
+            color: rgb(255, 255, 255); 
+            font-size: 18px;">
+          
+
+ 
+
+  <p style="margin-bottom: 40px;"></p>
+  <h1 style="color: rgb(255, 255, 255);">Welcome to Seavo Nautiq</h1>
+
+  <img src="images/Animasjon.gif" alt="forsidebilde" id="forsidebilde">
+  <img src="images/mobile.png" alt="mobilpicture" id="mobilpicture" onclick="openPopup()" />
+
+
+ 
+  <div id="infobubble" class="infobubble-wrapper">
+    
+  <img src="images/Infobubble.png" alt="infobubble" class="infobubble-img">
+  <button onclick="toggleInfobubble()" id="infobubbleToggleBtn" class="toggle-btn">Hide</button>
+</div>
+
+
+  
+
+  <img src="images/Picture_collection.png" class="forsidebilde2" alt="forsidebilde2">
+  
+  <audio id="sonar" src="Sound/Sonar.mp3" preload="auto"></audio>
+
+<div style="margin-top: 20px;">
+  <button onclick="toggleSonar()" id="toggleButton" style="background: linear-gradient(#173c70, #8bb7e2);">🔈 ASDIC</button>
+ </div>
+
+
+
+
+
+
+   <p style="margin-bottom: 50px;"></p>
+  <p>This is a platform for managing vessel inventory efficiently. <p> 
+   </p>Although the platform was initially intended as a tailor-made digital solution for the fishing fleet, the inventory management offers </p>
+   <p>flexible solutions for other types of vessels with extensive quantities of items on board.</p>
+
+    <p style="margin-bottom: 50px;"></p>
+    
+<p>The platform allows you to register, track, and update equipment, provisions, tools, and safety items with ease.</p>
+<p>Users can quickly generate inventory reports, export them to PDF or Excel, and share them with other users or vessels when needed.</p>
+<p>Multiple user roles ensure structured access — for example, officers can manage full inventory control, while crew members can register consumption and updates by using the limited appversion Seavo Nautiq mobile.</p>
+
+<p style="margin-bottom: 50px;"></p>
+
+<p>Additional modules include voyage planning, order tracking, fleet overview, and integration with safety and compliance routines.</p>
+<p>Expiration dates for critical items like medicine, rescue equipment, and batteries can be monitored to help ensure regulatory compliance.</p>
+<p>The system is designed to work both online and offline, making it a reliable tool even when there is limited internet coverage at sea.</p>
+
+<p style="margin-bottom: 50px;"></p>
+
+<p>If you are new to the platform, i recommend starting with the "Office" or "Equipment" section to familiarize yourself with how categories are structured.</p>
+<p style="margin-bottom: 50px;"></p>
+
+   
+</div>
+
+
+
+
+<div class="hoyre-kolonne">
+  <div class="top-container">
+    <img src="icon/User.png" alt="Info" style="height: 32px; vertical-align: middle;">
+    <p>Vessels name and call sign</p>
+  </div>
+
+  <div class="hoyre-container">
+
+    <div>
+  
+  
+</div>
+
+    <button  id="infoBtn" onclick="visInfoTekst()">
+  <img src="Icon/info.png" alt="Info" style="height: 32px; vertical-align: middle;">
+  Information</button>
+    <button>  <img src="icon/Doc-black.png" alt="Info" style="height: 32px; vertical-align: middle;">
+  Documents </button>
+  <button> <img src="icon/Share-black.png" alt="Info" style="height: 32px; vertical-align: middle;">
+    Shared content</button>
+    <button>  <img src="icon/Settings.png" alt="Info" style="height: 32px; vertical-align: middle;">
+  Settings </button>
+    <button>  <img src="icon/Sign out.png" alt="Info" style="height: 32px; vertical-align: middle;">
+  Sign out</button>
+
+  <div>
+
+    <div id="info-tekst" style="display: none; margin-top: 10px; color: rgb(0, 0, 0);">
+    
+  </div>
+</div>
+
+
+
+
+<script>
+  const sonar = document.getElementById("sonar");
+  const toggleButton = document.getElementById("toggleButton");
+  
+  const volumeSlider = document.getElementById("volumeSlider");
+
+  let sonarInterval = null;
+  let isPlaying = false;
+
+  function playSonar() {
+    sonar.currentTime = 0;
+    sonar.play();
+  }
+
+  function toggleSonar() {
+    if (isPlaying) {
+      clearInterval(sonarInterval);
+      toggleButton.textContent = "🔈 ASDIC";
+    } else {
+      playSonar(); 
+      sonarInterval = setInterval(playSonar, 12000); // deretter hvert 12. sekund
+      toggleButton.textContent = "⏸️ ASDIC";
+    }
+    isPlaying = !isPlaying;
+ 
+  }
+
+
+</script>
+
+
+    <script>
+      function visInfoTekst() {
+
+  document.getElementById("bildevisning").style.display = "none";
+  document.getElementById("info-text-utenfor").style.display = "block";
+
+  
+  document.getElementById("infoBtn").classList.add("aktiv-knapp");
+}
+
+function endreBilde(bildefil) {
+  document.getElementById("bildevisning").style.display = "block";
+  document.getElementById("info-text-utenfor").style.display = "none";
+
+  document.getElementById('visningsbilde').src = bildefil;
+
+ 
+  document.getElementById("infoBtn").classList.remove("aktiv-knapp");
+}
+
+  
+  window.onload = function() {
+    visInfoTekst();
+  };
+
+
+  function toggleDropdown() {
+    const dropdown = document.getElementById('language-dropdown');
+    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+  }
+
+  function selectLanguage(language, countryCode) {
+    document.querySelector('.language-button').innerHTML =
+      `<img src="https://flagcdn.com/w40/${countryCode}.png" class="flag" id="selected-flag"> ${language}`;
+    toggleDropdown();
+  }
+
+  
+
+  // Klikk utenfor menyen lukker dropdown
+  window.onclick = function(event) {
+    if (!event.target.closest('.language-selector')) {
+      document.getElementById('language-dropdown').style.display = 'none';
+    }
+  }
+
+  
+  function toggleInfobubble() {
+  const wrapper = document.getElementById("infobubble");
+  const button = document.getElementById("infobubbleToggleBtn");
+
+  const image = wrapper.querySelector(".infobubble-img");
+
+  if (image.style.display === "none") {
+    image.style.display = "block";
+    button.textContent = "Hide";
+  } else {
+    image.style.display = "none";
+    button.textContent = "Show";
+  }
+}
+
+
+
+  
+
+  </script>
+
+</body>
+</html>

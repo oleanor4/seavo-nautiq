@@ -86,18 +86,21 @@
       padding: 60px;
     }
 
-    .logo {
-      width: 200px;
-      height: 40px;
-      margin: 0 auto;
-      margin-bottom: 0px;
-      display: block;
-      position: absolute;
-      border-radius: 6px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-      margin-top: 5px;
-      margin-left: 20px;
-    }
+.logo {
+  width: 200px;
+  height: auto;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  margin-left: 60px;
+  float: left;
+}
+
+.logo:hover {
+  transform: scale(1.08);
+  transition: transform 0.2s ease;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+}
 
     #searchBox {
       width: 200px;
@@ -489,8 +492,13 @@
     font-weight: bold;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);" >
    
-    <img src="images/Seavo nautiq logo.png" alt="logo" class="logo">
   Equipment</h1>
+
+  
+      <a href="index.html" class="logo-link">
+  <img src="images/Logo Seavo Nautiq.png" alt="Logo Seavo Nautiq" class="logo"> 
+</a> 
+
 
 
 </header>

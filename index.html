@@ -9,10 +9,47 @@
   
   <style>
     body {
-      background: linear-gradient(to bottom, #12315c, #000000);
-      margin: 0;
-      font-family: Arial, sans-serif;
+        background-color: hsl(210, 100%, var(--bg-lightness));
+        transition: background-color 0.5s ease;
+        margin: 0;
+        font-family: Arial, sans-serif;
     }
+
+    body::before {
+     content: "";
+     position: fixed;
+     inset: 0;
+     pointer-events: none;
+     background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7));
+     z-index: -1;
+  }
+
+   :root {
+  --bg-lightness: 20%;
+  --text-color: #ffffff;
+  --box-color: hsl(210, 50%, 25%);
+  --button-color: hsl(210, 70%, 30%);
+  --button-text: #ffffff;
+}
+
+  .theme-slider-container {
+    position: relative;
+    top: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 5px 15px;
+    border-radius: 12px;
+    color: white;
+    font-family: Arial, sans-serif;
+    z-index: 1000;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    width: 160px;
+    margin-left: 30px;
+  }
+
+  .theme-slider-container input[type="range"] {
+    width: 100px;
+    cursor: pointer;
+  }
 
     .toppbilde-container {
       position: relative; 
@@ -31,10 +68,10 @@
   }
 
   #forsidebilde {
-      width: 40%;
+      width: 38%;
       height: auto;
       border-radius: 20px;
-      margin-top: 30px;
+     margin-top: 20px;
       box-shadow: #000000 0px 0px 10px 3px;
     }
 
@@ -52,29 +89,25 @@
     #mobilpicture:hover {
       transform: scale(1.1);
       transition: transform 0.3s ease;
+      box-shadow: #e6e6e6 0px 0px 15px 5px;
      
   }
 
-.video-header {
+  .video-header {
   position: relative;
-  width: 100%;
-  height: 135px;
+  width: 100vw;
+  aspect-ratio: 1280 / 99; /* behold riktig proporsjon */
   overflow: hidden;
+  background-color: #000; /* fallback bakgrunn */
 }
 
 
 .video-header video {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  min-width: 100%;
-  min-height: 100%;
-  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 200%;
   object-fit: cover;
+  display: block;
 }
-
-
-
 
 
 
@@ -125,11 +158,11 @@
       .language-selector {
       background-color: transparent;
       font-family: Arial, sans-serif;
-      padding: 0px;
+
       color: rgb(201, 188, 188);
       float: right;
       margin-right: 38px;
-      margin-top: -59px;
+      margin-top: -60px;
     }
 
     .language-selector {
@@ -239,13 +272,15 @@
     
     .hoyre-container {
       width: 250px;
-      height: 350px;
+      height: 280px;
       background: linear-gradient(to left, #12315c, #215db1);
       border-radius: 40px;
       box-shadow: 0 0 10px rgba(0,0,0,0.6);
       padding: 20px;
       margin-top: 20px;
     }
+
+
 
 
     .venstre-container button,
@@ -270,15 +305,36 @@
       background: #97b4d3;
     }
 
+  .digital-clock-container {
+  width:150px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.5);
+  
+  
+  border: 2px solid #8f8248;
+  font-family: 'Courier New', Courier, monospace;
+  text-align: center;
+  
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  margin: 0 auto;
+  margin-top: 30px;
+}
 
-    #mobilpicture {
-  cursor: pointer;
-  width: 250px;
-  transition: transform 0.2s;
+.time {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #ffffff;
 }
-#mobilpicture:hover {
-  transform: scale(1.05);
+
+.date {
+  font-size: 1.0rem;
+  color: #b0ffb0;
+  letter-spacing: 1px;
 }
+
+
 
 
   @media (max-width: 768px) {
@@ -291,18 +347,19 @@
   </style>
 </head>
 <body>
+
   
+
 <audio id="sonar" src="Sound/Sonar.mp3"></audio>
 
-
-
-  <header>
-      
- <header class="video-header">
+<header class="video-header">
   <video autoplay muted loop playsinline>
-    <source src="Video/Ocean-Seavo.mp4" type="video/mp4">
+    <source src="Video/Ocean-Seavo-Nautiq.mp4" type="video/mp4">
     Your browser does not support HTML5 video.
-  </video>
+
+ </video>
+
+  
 </header>
 
     <div class="gradient-overgang"></div>
@@ -315,6 +372,11 @@
   </button>
 </div>
 
+
+
+
+
+
   <div class="language-dropdown" id="language-dropdown">
     <div onclick="selectLanguage('English', 'gb')"><img src="https://flagcdn.com/w40/gb.png" class="flag"> English</div>
     <div onclick="selectLanguage('Norsk', 'no')"><img src="https://flagcdn.com/w40/no.png" class="flag"> Norsk</div>
@@ -322,32 +384,25 @@
     <div onclick="selectLanguage('中文', 'cn')"><img src="https://flagcdn.com/w40/cn.png" class="flag"> 中文</div>
     <div onclick="selectLanguage('Español', 'es')"><img src="https://flagcdn.com/w40/es.png" class="flag"> Español</div>
     <div onclick="selectLanguage('Português', 'pt')"><img src="https://flagcdn.com/w40/pt.png" class="flag"> Português</div>
-
-    
   </div>
-</div>
+
     
 
-</div>
-
-     
   </header>
 
- <button> <img src="icon/go-online.png" alt="Info" style="width: 20px; background: #1c5cb4;"> Go online</button>
 </div>
 
   <div class="container-wrapper">
     <div class="venstre-container">
 
       <button onclick="window.open('office.html', '_blank')">Office</button>
-
       <button onclick="window.open('equipment.html', '_blank')">Equipment</button>
-      <button>Parts and tools</button>
-      <button>Provisions</button>
-      <button>Medicine chest</button>
-      <button>Safety</button>
-      <button>Supplies</button>
-      <button>Disposal</button>
+      <button onclick="window.open('Parts and tools.html', '_blank')">Parts and tools</button>
+      <button onclick="window.open('provisions.html', '_blank')">Provisions</button>
+      <button onclick="window.open('medicine-chest.html', '_blank')">Medicine chest</button>
+      <button onclick="window.open('safety.html', '_blank')">Safety</button>
+      <button onclick="window.open('supplies.html', '_blank')">Supplies</button>
+      <button onclick="window.open('disposal.html', '_blank')">Disposal</button>
 
 
   
@@ -357,7 +412,8 @@
       <button> <img src="icon/Participants.png" alt="Info" style="height: 32px; vertical-align: middle;">Participants</button>
       <button> <img src="icon/Voyage.png" alt="Info" style="height: 32px; vertical-align: middle;">Voyages</button>
       <button> <img src="icon/Fleet.png" alt="Info" style="height: 32px; vertical-align: middle;">Fleet</button>
- 
+      <button> <img src="icon/go-online.png" alt="online" style="width: 22px; background: #1c5cb4;"></button>
+      
   </div>   
     </div> 
       
@@ -395,14 +451,13 @@
 </div>
 
 
-  
-
+<div>
   <img src="images/Picture_collection.png" class="forsidebilde2" alt="forsidebilde2">
-  
+  </div>
   <audio id="sonar" src="Sound/Sonar.mp3" preload="auto"></audio>
 
 <div style="margin-top: 20px;">
-  <button onclick="toggleSonar()" id="toggleButton" style="background: linear-gradient(#173c70, #8bb7e2);">🔈 ASDIC</button>
+  <button onclick="toggleSonar()" id="toggleButton" style="background: linear-gradient(#0a408b, #56b9e7);">🔈 ASDIC</button>
  </div>
 
 
@@ -410,27 +465,31 @@
 
 
 
-   <p style="margin-bottom: 50px;"></p>
-  <p>This is a platform for managing vessel inventory efficiently. <p> 
-   </p>Although the platform was initially intended as a tailor-made digital solution for the fishing fleet, the inventory management offers </p>
-   <p>flexible solutions for other types of vessels with extensive quantities of items on board.</p>
+  <section style="margin-bottom: 50px;">
+  <h2>Efficient management of the vessel's inventory</h2>
 
-    <p style="margin-bottom: 50px;"></p>
-    
-<p>The platform allows you to register, track, and update equipment, provisions, tools, and safety items with ease.</p>
-<p>Users can quickly generate inventory reports, export them to PDF or Excel, and share them with other users or vessels when needed.</p>
-<p>Multiple user roles ensure structured access — for example, officers can manage full inventory control, while crew members can register consumption and updates by using the limited appversion Seavo Nautiq mobile.</p>
+  <p>This platform is designed to streamline inventory management on board vessels. Originally tailored for the fishing fleet, the solution offers flexible features suitable for all vessels with large amounts of equipment on board.</p>
+</section>
 
-<p style="margin-bottom: 50px;"></p>
+<section style="margin-bottom: 50px;">
+  <h3>Functions and use</h3>
+  <p>The platform allows you to easily register, track, and update equipment, supplies, tools, and safety items. You can quickly generate reports, export to PDF or Excel, and share them with other users or vessels.</p>
+  <p>With various user roles, structured access is ensured: For example, officers have full control over the inventory, while crew members can register consumption and updates via the <strong>Seavo Nautiq Mobile</strong> app.</p>
+</section>
 
-<p>Additional modules include voyage planning, order tracking, fleet overview, and integration with safety and compliance routines.</p>
-<p>Expiration dates for critical items like medicine, rescue equipment, and batteries can be monitored to help ensure regulatory compliance.</p>
-<p>The system is designed to work both online and offline, making it a reliable tool even when there is limited internet coverage at sea.</p>
+<section style="margin-bottom: 50px;">
+  <h3>Additional modules</h3>
+  <p>The system also includes modules for travel planning, order tracking, fleet overview, and integration with safety and compliance procedures.</p>
+  <p>Critical expiry dates – such as for medications, rescue equipment, and batteries – are automatically monitored to ensure compliance with regulations.</p>
+  <p>The solution works both online and offline, making it reliable even with limited internet coverage at sea.</p>
+</section>
 
-<p style="margin-bottom: 50px;"></p>
+<section style="margin-bottom: 50px;">
+  <h3>Getting started</h3>
+  <p>If you are a new user, we recommend starting with the tabs <em>"Office"</em> or <em>"Equipment"</em> to familiarize yourself with how the categories are structured.</p>
+  <p>You can also find useful resources and guides in the help section to the right.</p>
+</section>
 
-<p>If you are new to the platform, i recommend starting with the "Office" or "Equipment" section to familiarize yourself with how categories are structured.</p>
-<p style="margin-bottom: 50px;"></p>
 
    
 </div>
@@ -445,11 +504,12 @@
   </div>
 
   <div class="hoyre-container">
-
     <div>
-  
-  
-</div>
+ 
+
+
+
+
 
     <button  id="infoBtn" onclick="visInfoTekst()">
   <img src="Icon/info.png" alt="Info" style="height: 32px; vertical-align: middle;">
@@ -464,12 +524,19 @@
   Sign out</button>
 
   <div>
-
-    <div id="info-tekst" style="display: none; margin-top: 10px; color: rgb(0, 0, 0);">
-    
+    <div class="theme-slider-container">
+  <label for="themeSlider">☀️</label>
+  <input type="range" min="1" max="20" value="10" id="themeSlider">
+  <label for="themeSlider">🌙</label>
+</div>
+  
   </div>
 </div>
 
+<div class="digital-clock-container">
+  <div class="time" id="time">--:--:--</div>
+  <div class="date" id="date">--.--.--</div>
+</div>
 
 
 
@@ -567,10 +634,45 @@ function endreBilde(bildefil) {
 }
 
 
+function updateDigitalClock() {
+  const now = new Date();
 
-  
+  const hours = now.getHours().toString().padStart(2, '0');
+  const minutes = now.getMinutes().toString().padStart(2, '0');
+  const seconds = now.getSeconds().toString().padStart(2, '0');
 
-  </script>
+  const day = now.getDate().toString().padStart(2, '0');
+  const month = (now.getMonth() + 1).toString().padStart(2, '0');
+  const year = now.getFullYear().toString().slice(-2);
+
+  document.getElementById("time").textContent = `${hours}:${minutes}:${seconds}`;
+  document.getElementById("date").textContent = `${day}.${month}.${year}`;
+}
+
+setInterval(updateDigitalClock, 1000);
+updateDigitalClock(); // første kall
+</script>
+
+
+<script>
+  const themeSlider = document.getElementById('themeSlider');
+  themeSlider.addEventListener('input', () => {
+    const value = parseInt(themeSlider.value);
+    const lightness = 100 - (value * 8); // 92% til 20%
+    const textColor = lightness < 45 ? '#ffffff' : '#000000';
+    const boxColor = `hsl(210, 50%, ${Math.max(lightness - 10, 15)}%)`;
+    const buttonColor = `hsl(210, 70%, ${Math.max(lightness - 5, 20)}%)`;
+    const buttonText = lightness < 45 ? '#ffffff' : '#000000';
+
+    document.documentElement.style.setProperty('--bg-lightness', `${lightness}%`);
+    document.documentElement.style.setProperty('--text-color', textColor);
+    document.documentElement.style.setProperty('--box-color', boxColor);
+    document.documentElement.style.setProperty('--button-color', buttonColor);
+    document.documentElement.style.setProperty('--button-text', buttonText);
+  });
+</script>
+
+
 
 </body>
 </html>

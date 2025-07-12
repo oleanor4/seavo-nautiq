@@ -92,7 +92,7 @@
   border-radius: 6px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
   cursor: pointer;
-  margin-left: 60px;
+  margin-left: 80px;
   float: left;
 }
 
@@ -108,10 +108,11 @@
       border-radius: 6px;
       border:  1px solid #000000;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-      margin-left: 60px;
-      margin-top: 50px;
-      margin-bottom: 20px;
+      margin-top: 80px;
+      margin-bottom: 40px;
       font-weight: bold;
+      margin-left: -180px;
+
     }
 
     .equipment {
@@ -721,7 +722,7 @@ function showCategory() {
       return;
     }
 
-    const fields = ['Parts and tools', 'start', 'used', 'end', 'min', 'image', 'comment', 'order'];
+    const fields = ['Equipment', 'start', 'used', 'end', 'min', 'image', 'comment', 'order'];
     const inputs = {};
 
     fields.forEach((key) => {
@@ -789,7 +790,7 @@ function showCategory() {
 }
 
 
-      if (key === "Parts and tools") td.classList.add("cell-product");
+      if (key === "Equipment") td.classList.add("cell-product");
       else if (key === "comment") td.classList.add("cell-comment");
       else if (key === "min") td.classList.add("cell-min");
       else if (key === "order") td.classList.add("cell-order");
@@ -797,13 +798,13 @@ function showCategory() {
 
 
       const input = document.createElement("input");
-      input.type = key === "Parts and tools" || key === "comment" ? "text" : "number";
+      input.type = key === "Equipment" || key === "comment" ? "text" : "number";
       input.value = row[key] || "";
       input.style.width = "90%";
       input.style.padding = "4px";
       input.style.borderRadius = "5px";
       input.placeholder = key.charAt(0).toUpperCase() + key.slice(1);
-      if (["Parts and tools", "comment", "start", "used", "end", "min", "order"].includes(key)) {
+      if (["Equipment", "comment", "start", "used", "end", "min", "order"].includes(key)) {
      input.classList.add("large-bold-input");
      }
 
@@ -826,7 +827,7 @@ function showCategory() {
       };
       inputs[key] = input;
       td.appendChild(input);
-      if (key === "Parts and tools") {
+      if (key === "Equipment") {
   // 1. Lag fargeknappene
   const colorContainer = document.createElement("div");
   colorContainer.className = "color-buttons";

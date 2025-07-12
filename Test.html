@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Videoheader</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .video-header {
+      position: relative;
+      width: 100vw;
+      height: 45vh;
+      max-height: 400px;
+      overflow: hidden;
+      background-color: black;
+    }
+
+    .video-header video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      transform: translate(-50%, -50%);
+      object-fit: cover;
+    }
+
+    .klokke-container {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10, 10, 10, 0.4);
+      border: 3px solid #c2a165;
+      border-radius: 50%;
+      padding: 20px;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff0c0;
+      font-family: 'Courier New', monospace;
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="video-header">
+    <video autoplay muted loop playsinline>
+      <source src="Video/Ocean-Seavo-Nautiq.mp4" type="video/mp4">
+    </video>
+
+    <div class="klokke-container" id="klokke">00:00:00</div>
+  </header>
+
+  <script>
+    function oppdaterKlokke() {
+      const nå = new Date();
+      const tid = nå.toLocaleTimeString('no-NO', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      document.getElementById('klokke').textContent = tid;
+    }
+
+    setInterval(oppdaterKlokke, 1000);
+    oppdaterKlokke();
+  </script>
+
+</body>
+</html>

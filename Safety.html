@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Inventory Management – Seavo Nautiq</title>
+  <style>
+    body {
+      background-color: #12315c;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      color: white;
+      padding: 20px;
+    }
+
+  .logo {
+  width: 200px;
+  height: auto;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  margin-left: 60px;
+  }
+
+  .logo:hover {
+  transform: scale(1.08);
+  transition: transform 0.2s ease;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+  }
+
+    .Safety {
+      width: 100%;
+     height: 140%;
+     position: absolute;
+     top: 0;
+     left: 0%;
+     z-index: -1;
+     opacity: 0.1;
+     pointer-events: none;
+    }
+
+
+
+    .table-container {
+      width: 100%;
+      max-width: 1200px;
+      margin-top: 30px;
+      margin-bottom: 50px;
+    }
+
+    .controls {
+      margin-bottom: 40px;
+    }
+    
+    button {
+      background: linear-gradient(to right, #4bc8ee, #246fd1);
+      color: rgb(255, 255, 255);
+      padding: 8px 12px;
+      margin-right: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+    }
+
+    button:hover {
+      background: #8ed8ee;
+    }
+
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2px;
+    }
+
+    th, td {
+      border: 1px solid #cccccc44;
+      padding: 8px;
+      text-align: center;;
+    }
+
+    input[type="text"], input[type="date"] {
+      width: 90%;
+      padding: 4px;
+      border-radius: 4px;
+      border: none;
+      font-weight: bold;
+    }
+
+    .alert-green {
+      background: linear-gradient(to right, #ffffff, #4CAF50); 
+      color: black;
+    }
+
+
+    .alert-yellow {
+      background: linear-gradient(to right, #ffffff, #ffcc00);
+      color: black;
+    }
+
+    .alert-red {
+      background: linear-gradient(to right, #ffffff, #f05c5c);
+      color: rgb(0, 0, 0);
+    }
+
+
+    .alarm-blink {
+      animation: blink 1.5s infinite;
+      margin-left: 20px;
+    }
+
+    @keyframes blink {
+    0%, 50%, 100% { opacity: 1; }
+    25%, 75% { opacity: 0.4; }
+  }
+
+
+    .number-control {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .number-control button {
+      padding: 5px;
+      font-size: 16px;
+    }
+
+    .header-row {
+      background: linear-gradient(to right, #0e6ba1, #7bb7ee);
+      font-weight: bold;
+      text-align: left;
+    }
+    
+    .row-controls {
+      display: flex;
+      gap: 5px;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 style="text-align: center; color:
+   rgb(218, 215, 215);
+    margin-top: 20px;
+    font-size: 36px;
+    font-weight: bold;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);" >
+    Safety</h1>
+
+    
+       <a href="index.html" class="logo-link">
+  <img src="images/Logo Seavo Nautiq.png" alt="Logo Seavo Nautiq" class="logo"> 
+</a> 
+    
+    
+    <img src="images/Safety.JPG" alt="Safety" class="Safety"> 
+  </header>
+
+  <div>
+    
+  </div>
+
+
+
+    <div><table id="expiryTable"> 
+      <style>
+        #expiryTable {
+          width: 8%;
+          color: rgb(0, 0, 0);
+          margin-top: 20px;
+          margin-left: auto;
+          background: linear-gradient(to right, #ffffff, #ffcc00);
+          border-radius: 15px;
+          border: 2px solid #12315c;
+          font-size: 12px;
+          font-weight: bold;
+        }
+
+        
+      </style>
+      <tr>
+        <td>Expires in 90 days</td> 
+      </tr>
+    </table>
+    <div>
+
+      <div><table id="expiryTable2"> 
+      <style>
+        #expiryTable2 {
+          width: 8%;
+          color: rgb(0, 0, 0);
+          margin-top: 2px;
+          margin-left: auto;
+          background: linear-gradient(to right, #ffffff, #ff0000);
+          border-radius: 15px;
+          border: 2px solid #12315c;
+          font-size: 12px;
+          font-weight: bold;
+        }
+
+      </style>
+      <tr>
+        <td>Expires in 45 days</td> 
+
+      </tr>
+    </table>
+    <div>
+
+    <table id="safetyTable">
+      <tr>
+        <th>Safety Equipment</th>
+        <th>Number</th>
+        <th>Date of Registration</th>
+        <th>Expiry Date</th>
+        <th>Comments</th>
+        <th>Order</th>
+        <th>Move/Delete</th>
+      </tr>
+    </table>
+
+  </div>
+
+
+
+    <div class="table-container">
+    <div class="controls">
+      <button onclick="addRow()">+ Add Line</button>
+      <button onclick="addHeader()">+ Add Header Section</button>
+    </div>
+
+
+  <div>
+    <p>Notice❗
+    This list is not ment as guidance on 
+    routine checks or function tests. 
+    Please refer to platforms approved 
+    by your maritime authority and radio provider.</p>
+
+    <style>
+      p {
+        margin: 14px;
+        font-family: Arial, sans-serif;
+        position: absolute;
+        font-size: 1.2em;
+        color: #ffffff
+        
+      }
+    </style>
+  </div>
+
+
+  <script>
+    const yellowDays = 90;
+    const redDays = 45; 
+
+    function addRow(data = {}) {
+      const table = document.getElementById('safetyTable');
+      const row = table.insertRow(-1);
+
+      row.insertCell(0).innerHTML = `<input type="text" value="${data.equipment || ''}" placeholder="Safety Equipment">`;
+
+      row.insertCell(1).innerHTML = `
+        <div class="number-control">
+          <button onclick="changeNumber(this, -1)">-</button>
+          <input type="text" value="${data.number || 0}" readonly style="width:40px; text-align:center;">
+          <button onclick="changeNumber(this, 1)">+</button>
+        </div>`;
+
+      row.insertCell(2).innerHTML = `<input type="date" value="${data.registered || ''}">`;
+
+      const expiryCell = row.insertCell(3);
+      expiryCell.style.position = "relative";
+
+      const alarmIcon = document.createElement("span");
+      alarmIcon.textContent = "🚨"; // eller ⚠️
+      alarmIcon.className = "alarm-blink";
+      alarmIcon.style.position = "absolute";
+      alarmIcon.style.left = "100px";
+      alarmIcon.style.top = "18px";
+      alarmIcon.style.fontSize = "13px";
+      alarmIcon.style.display = "none"; // skjult til det trengs
+
+      const expiryInput = document.createElement("input");
+      expiryInput.type = "date";
+      expiryInput.value = data.expiry || "";
+      
+      expiryInput.onchange = function () {
+      checkExpiry(expiryInput, alarmIcon);
+    };
+
+     expiryCell.appendChild(alarmIcon);
+     expiryCell.appendChild(expiryInput);
+
+
+      row.insertCell(4).innerHTML = `<input type="text" value="${data.comments || ''}" placeholder="Optional comments">`;
+
+      row.insertCell(5).innerHTML = `
+        <div class="number-control">
+          <button onclick="changeNumber(this, -1)">-</button>
+          <input type="text" value="${data.order || 0}" readonly style="width:40px; text-align:center;">
+          <button onclick="changeNumber(this, 1)">+</button>
+        </div>`;
+
+      row.insertCell(6).innerHTML = `
+        <div class="row-controls">
+          <button onclick="moveRow(this, -1)">⬆️</button>
+          <button onclick="moveRow(this, 1)">⬇️</button>
+          <button onclick="deleteRow(this)">🗑️</button>
+        </div>`;
+
+      saveTable();
+    }
+
+    function addHeader(text = '') {
+      const table = document.getElementById('safetyTable');
+      const row = table.insertRow(-1);
+      row.className = 'header-row';
+
+      const cell = row.insertCell(0);
+      cell.colSpan = 6;
+      cell.innerHTML = `<input type="text" value="${text}" placeholder="New Section Title" style="width:100%; font-weight:bold;">`;
+
+      const del = row.insertCell(1);
+      del.innerHTML = `<button onclick="deleteRow(this)">🗑️</button>`;
+
+      saveTable();
+    }
+
+    function deleteRow(btn) {
+      const row = btn.closest('tr');
+      row.remove();
+      saveTable();
+    }
+
+    function changeNumber(button, delta) {
+      const input = button.parentElement.querySelector('input');
+      let value = parseInt(input.value);
+      if (!isNaN(value)) {
+        value += delta;
+        input.value = value < 0 ? 0 : value;
+      }
+      saveTable();
+    }
+
+    function checkExpiry(input, icon) {
+  const date = new Date(input.value);
+  const today = new Date();
+  const diffDays = Math.floor((date - today) / (1000 * 60 * 60 * 24));
+
+  input.classList.remove('alert-yellow', 'alert-red', 'alert-green');
+  icon.style.display = "none";
+
+  if (diffDays <= redDays) {
+    input.classList.add('alert-red');
+    icon.style.display = "inline";
+  } else if (diffDays <= yellowDays) {
+    input.classList.add('alert-yellow');
+    } else if (!isNaN(diffDays)) {
+    input.classList.add('alert-green');
+  }
+  saveTable();
+}
+
+
+    function moveRow(btn, direction) {
+      const row = btn.closest('tr');
+      const table = document.getElementById('safetyTable');
+      const index = row.rowIndex;
+      const targetIndex = index + direction;
+
+      if (targetIndex > 0 && targetIndex < table.rows.length) {
+        const refRow = table.rows[targetIndex];
+        if (direction > 0) {
+          refRow.after(row);
+        } else {
+          refRow.before(row);
+        }
+        saveTable();
+      }
+    }
+
+    function saveTable() {
+      const table = document.getElementById('safetyTable');
+      const rows = Array.from(table.rows).slice(1); // skip header
+
+      const data = rows.map(row => {
+        if (row.className === 'header-row') {
+          return { type: 'header', text: row.cells[0].querySelector('input').value };
+        } else {
+          return {
+            type: 'row',
+            equipment: row.cells[0].querySelector('input').value,
+            number: row.cells[1].querySelector('input').value,
+            registered: row.cells[2].querySelector('input').value,
+            expiry: row.cells[3].querySelector('input').value,
+            comments: row.cells[4].querySelector('input').value,
+            order: row.cells[5].querySelector('input').value
+          };
+        }
+      });
+
+      localStorage.setItem('safetyTable', JSON.stringify(data));
+    }
+
+    function loadTable() {
+      const data = JSON.parse(localStorage.getItem('safetyTable') || '[]');
+      data.forEach(item => {
+        if (item.type === 'row') {
+          addRow(item);
+        } else if (item.type === 'header') {
+          addHeader(item.text);
+        }
+      });
+    }
+
+    window.onload = loadTable;
+  </script>
+</body>
+</html>

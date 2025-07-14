@@ -20,7 +20,8 @@
       background: linear-gradient(to right, #041425, #3b7fbe);
       padding: 18px;
       overflow-x: auto;
-      margin-bottom: -10px;
+      margin-bottom: 10px;
+      margin-top: 30px;
       width: 90%;
       margin-left: 80px;
       border-radius: 18px;
@@ -87,17 +88,22 @@
     }
 
     .logo {
-      width: 200px;
-      height: 40px;
-      margin: 0 auto;
-      margin-bottom: 0px;
-      display: block;
-      position: absolute;
-      border-radius: 6px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-      margin-top: 5px;
-      margin-left: 20px;
-    }
+     width: 200px;
+     height: auto;
+     border-radius: 6px;
+     box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+     cursor: pointer;
+     float: left;
+     margin-left: 60px;
+     margin-top: -40px;
+   }
+
+.logo:hover {
+  transform: scale(1.08);
+  transition: transform 0.2s ease;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+}
+
 
     #searchBox {
       width: 200px;
@@ -106,10 +112,20 @@
       border:  1px solid #000000;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
       margin-left: 60px;
-      margin-top: 50px;
-      margin-bottom: 20px;
+      margin-top: 60px;
+      margin-bottom:  10px;
       font-weight: bold;
     }
+
+    .highlight {
+  background-color: rgb(240, 138, 42);
+  font-weight: bold;
+}
+
+.highlight-input {
+  background-color: yellow;
+  font-weight: bold;
+}
 
     .parts-and-tools {
        width: 100%;
@@ -488,26 +504,21 @@
     font-size: 36px;
     font-weight: bold;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);" >
-   
-    <img src="images/Seavo nautiq logo.png" alt="logo" class="logo">
-  Parts and tools</h1>
+    Parts and tools</h1>
+      
+     
+     <div>
+     <a href="index.html" class="logo-link">
+  <img src="images/Logo Seavo Nautiq.png" alt="Logo Seavo Nautiq" class="logo"> 
+</a> 
+</div>
 
 
+<div>
 </header>
   <input type="text" id="searchBox" placeholder="Search inventory..." oninput="searchInPage()">
+</div>
 
-
-<style>
-.highlight {
-  background-color: rgb(240, 138, 42);
-  font-weight: bold;
-}
-
-.highlight-input {
-  background-color: yellow;
-  font-weight: bold;
-}
-</style>
 
 
 <div class="category-slider-parts">

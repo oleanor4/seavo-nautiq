@@ -24,13 +24,14 @@
      z-index: -1;
   }
 
-   :root {
-  --bg-lightness: 20%;
-  --text-color: #ffffff;
-  --box-color: hsl(210, 50%, 25%);
-  --button-color: hsl(210, 70%, 30%);
-  --button-text: #ffffff;
-}
+  :root {
+    --bg-lightness: 20%;
+    --text-color: hsl(0, 0%, calc(100% - var(--bg-lightness)));
+    --box-color: hsl(210, 50%, calc(var(--bg-lightness) + 5%));
+    --button-color: hsl(210, 70%, calc(var(--bg-lightness) + 10%));
+    --button-text: hsl(0, 0%, calc(100% - var(--bg-lightness)));
+  }
+
 
   .theme-slider-container {
     position: relative;
@@ -38,12 +39,13 @@
     background: rgba(0, 0, 0, 0.6);
     padding: 5px 15px;
     border-radius: 12px;
+    border: 2px solid #8f8248;
     color: white;
     font-family: Arial, sans-serif;
     z-index: 1000;
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
     width: 160px;
-    margin-left: 30px;
+    margin-left: 50px;
   }
 
   .theme-slider-container input[type="range"] {
@@ -67,31 +69,7 @@
   width: 100%;
   }
 
-  #forsidebilde {
-      width: 38%;
-      height: auto;
-      border-radius: 20px;
-     margin-top: 20px;
-      box-shadow: #000000 0px 0px 10px 3px;
-    }
 
-
-    #mobilpicture {
-      width: 13%;
-      height: auto;
-      border-radius: 20px;
-      margin-top: 35px;
-      box-shadow: #000000 0px 0px 10px 3px;
-      margin-left: 400px;
-      position: absolute;
-    }
-
-    #mobilpicture:hover {
-      transform: scale(1.1);
-      transition: transform 0.3s ease;
-      box-shadow: #e6e6e6 0px 0px 15px 5px;
-     
-  }
 
   .video-header {
   position: relative;
@@ -109,28 +87,105 @@
   display: block;
 }
 
+.hoved-rad {
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+  padding: 30px;
+  flex-wrap: wrap;
+}
 
 
-   .infobubble-wrapper {
-     width: 15%;
-     position: absolute;
-     margin-top: -200px;
-     margin-left: 560px;
- 
-   }
 
-  .infobubble-img {
-   width: 100%;
-   height:auto;
-   display: block;
-  }
+.seavo-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 40px;
+  padding-left: 0px;
+  margin: 20px 20px;
+  
+}
 
- .toggle-btn {
-  position: absolute;
+.seavo-left {
+  flex: 1 1 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.seavo-left h1 {
+  color: #7ddbf3;
+  margin: 0;
+  font-size: 2rem;
+  font: 2em "Arial", ;
+}
+
+ #forsidebilde {
+  width: 100%;
+  max-width: 500px;
+  border-radius: 20px;
+  box-shadow: #000000 0px 0px 10px 3px;
+}
+
+.asdicknapp {
+  width: fit-content;
+  padding: 5px 10px;
+  background: linear-gradient(#0a408b, #56b9e7);
+  color: rgb(0, 255, 13);
+  border-radius: 12px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
+}
+
+.asdicknapp:hover {
+  background: #1bc537;
+}
+
+.seavo-right {
+  flex: 1 1 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+#mobilpicture {
+  width: 80%;
+  max-width: 250px;
+  border-radius: 20px;
+  box-shadow: #000000 0px 0px 10px 3px;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  margin-left: 240px;
+  margin-top: 100px;
+}
+
+#mobilpicture:hover {
+  transform: scale(1.1);
+  box-shadow: #39addb 0px 0px 15px 5px;
+}
+
+.infobubble-wrapper {
+  width: 100%;
+  max-width: 160px;
+  margin-left: -75px;
+  margin-top: -80px;
+}
+
+.infobubble-img {
+  width: 200%;
+
+  
+}
+
+.toggle-btn {
   bottom: 8px;
   right: 6px;
   background-color: rgba(0, 140, 255, 0.8);
-  color: rgb(255, 255, 255);
+  color: white;
   border: none;
   padding: 5px 10px;
   font-size: 14px;
@@ -138,9 +193,6 @@
   cursor: pointer;
 }
 
-.toggle-btn:hover {
-  background-color: rgba(0, 89, 255, 1);
-}
 
 
   .forsidebilde2 {
@@ -224,41 +276,42 @@
     .gradient-overgang {
       height: 10px;
       background: linear-gradient(to left, #62b2e7, #001125);
+      box-shadow: 6px 4px 6px rgba(0, 0, 0, 0.7);
     }
 
 
-
-    .container-wrapper {
-      display: flex;
-      justify-content: space-between;
-      padding: 30px;
-    }
+   .container-wrapper {
+     display: flex;
+     align-items: flex-start;
+     gap: 20px; /* juster avstanden her */
+     padding: 30px;
+   }
 
     .venstre-container {
       width: 250px;
       height: 450px;
       background: linear-gradient(to left, #12315c, #215db1);
       border-radius: 40px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+      box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.6);
       padding: 20px;
       margin-top: 5px;
     }
 
 
     .ny-container {
-      margin-top: 40px;
+      margin-top: 20px;
       margin-left: -20px;
       width: 250px;
       height: 260px;
       padding: 20px;
       background: linear-gradient(to left, #12315c, #215db1); 
       border-radius: 40px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.6);
+      box-shadow: 6px 6px 6px rgba(0,0,0,0.6);
     }  
    
     .top-container {
       display: flex;
-      justify-content: center; 
+      justify-content: center;
       align-items: center;     
       text-align: center;
       height: 20px;
@@ -267,6 +320,7 @@
       background: linear-gradient(to right, #1e3a5f, #326fa8);
       border-radius: 40px;
       color: white;
+      box-shadow: 6px 6px 6px rgba(0,0,0,0.6);
     }
 
     
@@ -275,7 +329,7 @@
       height: 280px;
       background: linear-gradient(to left, #12315c, #215db1);
       border-radius: 40px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.6);
+      box-shadow: 6px 6px 6px rgba(0,0,0,0.6);
       padding: 20px;
       margin-top: 20px;
     }
@@ -303,6 +357,7 @@
     .venstre-container button:hover,
     .hoyre-container button:hover {
       background: #97b4d3;
+      filter: brightness(1.1);
     }
 
   .digital-clock-container {
@@ -318,7 +373,7 @@
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
   margin: 0 auto;
-  margin-top: 30px;
+  margin-top: 40px;
 }
 
 .time {
@@ -337,11 +392,66 @@
 
 
 
+    #info-text-utenfor {
+      margin-top: -435px;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+      overflow-y: auto;
+      padding: 360px;
+      font-size: 18px;
+    }
+
+    .text-box {
+      border: 1px solid #000000;
+      padding: 0px;
+      margin-bottom: 40px;
+      border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0.05);
+      box-shadow: #000000 1px 2px 4px 1px;
+    }
+
+    h2, h3 {
+      margin-top: 5px;
+      margin-bottom: 10px;
+      margin-left: 10px;
+      color: #7ddbf3;
+    }
+
+    p {
+      margin-bottom: 14px;
+      line-height: 1.6;
+      margin-left: 10px;
+      color: #ffffff;
+    }
+
+
+
+
   @media (max-width: 768px) {
   table, thead, tbody, th, td, tr {
     display: block;
   }
 }
+
+@media (max-width: 768px) {
+  .seavo-wrapper {
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .seavo-left, .seavo-right {
+    flex: 1 1 100%;
+    align-items: center;
+    text-align: center;
+  }
+
+  #forsidebilde, #mobilpicture, .infobubble-wrapper {
+    max-width: 90%;
+  }
+}
+
 
  
   </style>
@@ -350,12 +460,12 @@
 
   
 
-<audio id="sonar" src="Sound/Sonar.mp3"></audio>
+
 
 <header class="video-header">
   <video autoplay muted loop playsinline>
     <source src="Video/Ocean-Seavo-Nautiq.mp4" type="video/mp4">
-    Your browser does not support HTML5 video.
+    
 
  </video>
 
@@ -392,152 +502,131 @@
 
 </div>
 
-  <div class="container-wrapper">
-    <div class="venstre-container">
+<div class="hoved-rad">
+  <!-- Venstre container -->
+  <div class="venstre-container">
+    <button onclick="window.open('office.html', '_blank')">Office</button>
+    <button onclick="window.open('equipment.html', '_blank')">Equipment</button>
+    <button onclick="window.open('Parts and tools.html', '_blank')">Parts and tools</button>
+    <button onclick="window.open('provisions.html', '_blank')">Provisions</button>
+    <button onclick="window.open('medicine-chest.html', '_blank')">Medicine chest</button>
+    <button onclick="window.open('safety.html', '_blank')">Safety</button>
+    <button onclick="window.open('supplies.html', '_blank')">Supplies</button>
+    <button onclick="window.open('disposal.html', '_blank')">Disposal</button>
 
-      <button onclick="window.open('office.html', '_blank')">Office</button>
-      <button onclick="window.open('equipment.html', '_blank')">Equipment</button>
-      <button onclick="window.open('Parts and tools.html', '_blank')">Parts and tools</button>
-      <button onclick="window.open('provisions.html', '_blank')">Provisions</button>
-      <button onclick="window.open('medicine-chest.html', '_blank')">Medicine chest</button>
-      <button onclick="window.open('safety.html', '_blank')">Safety</button>
-      <button onclick="window.open('supplies.html', '_blank')">Supplies</button>
-      <button onclick="window.open('disposal.html', '_blank')">Disposal</button>
+    <div class="ny-container">
+      <button><img src="icon/Order-black.png" alt="Info" style="height: 32px; vertical-align: middle;"> Orders</button>
+      <button><img src="icon/Participants.png" alt="Info" style="height: 32px; vertical-align: middle;"> Participants</button>
+      <button><img src="icon/Voyage.png" alt="Info" style="height: 32px; vertical-align: middle;"> Voyages</button>
+      <button><img src="icon/Fleet.png" alt="Info" style="height: 32px; vertical-align: middle;"> Fleet</button>
+      <button><img src="icon/go-online.png" alt="online" style="width: 22px; background: #1c5cb4;"></button>
+    </div>
+  </div>
 
-
-  
-
-     <div class="ny-container">
-      <button> <img src="icon/Order-black.png" alt="Info" style="height: 32px; vertical-align: middle;">Orders</button>
-      <button> <img src="icon/Participants.png" alt="Info" style="height: 32px; vertical-align: middle;">Participants</button>
-      <button> <img src="icon/Voyage.png" alt="Info" style="height: 32px; vertical-align: middle;">Voyages</button>
-      <button> <img src="icon/Fleet.png" alt="Info" style="height: 32px; vertical-align: middle;">Fleet</button>
-      <button> <img src="icon/go-online.png" alt="online" style="width: 22px; background: #1c5cb4;"></button>
-      
-  </div>   
-    </div> 
-      
-      <div class="bildevindu" id="bildevisning">
-  <img id="visningsbilde" src="Images/" alt="Aktivt bilde">
-  <div class="overlay"></div>
-</div>
-
+  <!-- Midtseksjon -->
+  <div class="seavo-wrapper">
+    <div class="seavo-left">
+      <h1>Welcome to Seavo Nautiq</h1>
+      <img src="images/Animasjon.gif" alt="forsidebilde" id="forsidebilde">
+      <button onclick="toggleSonar()" id="toggleButton" class="asdicknapp">🔈 ASDIC</button>
+    </div>
 
 
-<div id="info-text-utenfor" 
-     style="display: none; 
-            padding: 50px; 
-            margin: 20px 1; 
-            margin-left: 10px; 
-            margin-top: -40px;
-            color: rgb(255, 255, 255); 
-            font-size: 18px;">
-          
 
  
 
-  <p style="margin-bottom: 40px;"></p>
-  <h1 style="color: rgb(255, 255, 255);">Welcome to Seavo Nautiq</h1>
-
-  <img src="images/Animasjon.gif" alt="forsidebilde" id="forsidebilde">
-  <img src="images/mobile.png" alt="mobilpicture" id="mobilpicture" onclick="openPopup()" />
 
 
- 
-  <div id="infobubble" class="infobubble-wrapper">
+
+ <div class="seavo-right">
+      <img src="images/mobile.png" alt="mobilpicture" id="mobilpicture">
+
+      <div id="infobubble" class="infobubble-wrapper">
+        <img src="images/Infobubble.png" alt="infobubble" class="infobubble-img">
+        <button onclick="toggleInfobubble()" id="infobubbleToggleBtn" class="toggle-btn">Hide</button>
+
+        
+        
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Høyre kolonne -->
+  <div class="hoyre-kolonne">
+    <div class="top-container">
+      <img src="icon/User.png" alt="Info" style="height: 32px; vertical-align: middle;">
+      <p>Vessels name and call sign</p>
+    </div>
+
+    <div class="hoyre-container">
+      
+      <button><img src="icon/info.png" alt="Info" style="height: 32px; vertical-align: middle;">Help</button>
+      <button><img src="icon/Doc-black.png" alt="Info" style="height: 32px; vertical-align: middle;"> Documents</button>
+      <button><img src="icon/Share-black.png" alt="Info" style="height: 32px; vertical-align: middle;"> Shared content</button>
+      <button><img src="icon/Settings.png" alt="Info" style="height: 32px; vertical-align: middle;"> Settings</button>
+      <button><img src="icon/Sign out.png" alt="Info" style="height: 32px; vertical-align: middle;"> Sign out</button>
+    </div>
+
     
-  <img src="images/Infobubble.png" alt="infobubble" class="infobubble-img">
-  <button onclick="toggleInfobubble()" id="infobubbleToggleBtn" class="toggle-btn">Hide</button>
+
+      <div class="theme-slider-container">
+        <label for="themeSlider">☀️</label>
+        <input type="range" min="1" max="13" value="10" id="themeSlider">
+        <label for="themeSlider">🌙</label>
+      </div>
+
+    <div class="digital-clock-container">
+      <div class="time" id="time">--:--:--</div>
+      <div class="date" id="date">--.--.--</div>
+    </div>
+  </div>
 </div>
 
+ <audio id="sonar" src="Sound/Sonar.mp3" preload="auto"></audio>
 
 <div>
   <img src="images/Picture_collection.png" class="forsidebilde2" alt="forsidebilde2">
   </div>
-  <audio id="sonar" src="Sound/Sonar.mp3" preload="auto"></audio>
-
-<div style="margin-top: 20px;">
-  <button onclick="toggleSonar()" id="toggleButton" style="background: linear-gradient(#0a408b, #56b9e7);">🔈 ASDIC</button>
- </div>
 
 
 
 
 
+ <main>
+     <div id="info-text-utenfor">
 
-  <section style="margin-bottom: 50px;">
-  <h2>Efficient management of the vessel's inventory</h2>
-
-  <p>This platform is designed to streamline inventory management on board vessels. Originally tailored for the fishing fleet, the solution offers flexible features suitable for all vessels with large amounts of equipment on board.</p>
-</section>
-
-<section style="margin-bottom: 50px;">
-  <h3>Functions and use</h3>
-  <p>The platform allows you to easily register, track, and update equipment, supplies, tools, and safety items. You can quickly generate reports, export to PDF or Excel, and share them with other users or vessels.</p>
-  <p>With various user roles, structured access is ensured: For example, officers have full control over the inventory, while crew members can register consumption and updates via the <strong>Seavo Nautiq Mobile</strong> app.</p>
-</section>
-
-<section style="margin-bottom: 50px;">
-  <h3>Additional modules</h3>
-  <p>The system also includes modules for travel planning, order tracking, fleet overview, and integration with safety and compliance procedures.</p>
-  <p>Critical expiry dates – such as for medications, rescue equipment, and batteries – are automatically monitored to ensure compliance with regulations.</p>
-  <p>The solution works both online and offline, making it reliable even with limited internet coverage at sea.</p>
-</section>
-
-<section style="margin-bottom: 50px;">
-  <h3>Getting started</h3>
-  <p>If you are a new user, we recommend starting with the tabs <em>"Office"</em> or <em>"Equipment"</em> to familiarize yourself with how the categories are structured.</p>
-  <p>You can also find useful resources and guides in the help section to the right.</p>
-</section>
-
-
-   
-</div>
-
-
-
-
-<div class="hoyre-kolonne">
-  <div class="top-container">
-    <img src="icon/User.png" alt="Info" style="height: 32px; vertical-align: middle;">
-    <p>Vessels name and call sign</p>
+  <div class="text-box">
+    <h2>Efficient management of the vessel's inventory</h2>
+    <p>This platform is designed to streamline inventory management on board vessels. Originally tailored for the fishing fleet, the solution offers flexible features suitable for all vessels with large amounts of equipment on board.</p>
   </div>
 
-  <div class="hoyre-container">
-    <div>
+  <div class="text-box">
+    <h3>Functions and use</h3>
+    <p>The platform allows you to easily register, track, and update equipment, supplies, tools, and safety items. You can quickly generate reports, export to PDF or Excel, and share them with other users or vessels.</p>
+    <p>With various user roles, structured access is ensured: For example, officers have full control over the inventory, while crew members can register consumption and updates via the <strong>Seavo Nautiq Mobile</strong> app.</p>
+  </div>
+
+  <div class="text-box">
+    <h3>Additional modules</h3>
+    <p>The system also includes modules for travel planning, order tracking, fleet overview, and integration with safety and compliance procedures.</p>
+    <p>Critical expiry dates – such as for medications, rescue equipment, and batteries – are automatically monitored to ensure compliance with regulations.</p>
+    <p>The solution works both online and offline, making it reliable even with limited internet coverage at sea.</p>
+  </div>
+
+  <div class="text-box">
+    <h3>Getting started</h3>
+    <p>If you are a new user, we recommend starting with the tabs <em>"Office"</em> or <em>"Equipment"</em> to familiarize yourself with how the categories are structured.</p>
+    <p>You can also find useful resources and guides in the help section.</p>
+  </div>
+
+</div>
+</main>
+</body>
+
+
+          
  
-
-
-
-
-
-    <button  id="infoBtn" onclick="visInfoTekst()">
-  <img src="Icon/info.png" alt="Info" style="height: 32px; vertical-align: middle;">
-  Information</button>
-    <button>  <img src="icon/Doc-black.png" alt="Info" style="height: 32px; vertical-align: middle;">
-  Documents </button>
-  <button> <img src="icon/Share-black.png" alt="Info" style="height: 32px; vertical-align: middle;">
-    Shared content</button>
-    <button>  <img src="icon/Settings.png" alt="Info" style="height: 32px; vertical-align: middle;">
-  Settings </button>
-    <button>  <img src="icon/Sign out.png" alt="Info" style="height: 32px; vertical-align: middle;">
-  Sign out</button>
-
-  <div>
-    <div class="theme-slider-container">
-  <label for="themeSlider">☀️</label>
-  <input type="range" min="1" max="20" value="10" id="themeSlider">
-  <label for="themeSlider">🌙</label>
-</div>
-  
-  </div>
-</div>
-
-<div class="digital-clock-container">
-  <div class="time" id="time">--:--:--</div>
-  <div class="date" id="date">--.--.--</div>
-</div>
-
 
 
 <script>
@@ -671,6 +760,7 @@ updateDigitalClock(); // første kall
     document.documentElement.style.setProperty('--button-text', buttonText);
   });
 </script>
+
 
 
 

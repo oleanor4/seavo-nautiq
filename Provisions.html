@@ -82,17 +82,22 @@
       padding: 60px;
     }
 
-    .logo {
-      width: 200px;
-      height: 40px;
-      margin: 0 auto;
-      margin-bottom: 0px;
-      display: block;
-      border-radius: 6px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-      margin-top: -40px;
-      margin-left: 20px;
-    }
+   
+   .logo {
+     width: 200px;
+     height: auto;
+     border-radius: 6px;
+     box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+     cursor: pointer;
+     margin-left: 60px;
+   }
+
+   .logo:hover {
+     transform: scale(1.08);
+     transition: transform 0.2s ease;
+     box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+   }
+
 
     #searchBox {
       width: 200px;
@@ -101,7 +106,7 @@
       border:  1px solid #000000;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
       margin-left: 60px;
-      margin-top: 0px;
+      margin-top: 30px;
       margin-bottom: -20px;
       font-weight: bold;
     }
@@ -601,12 +606,14 @@
     font-size: 36px;
     font-weight: bold;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);" >
-   
-    <img src="images/Seavo nautiq logo.png" alt="logo" class="logo">
   Provisions</h1>
 </header>
 
-
+<div>
+   <a href="index.html" class="logo-link">
+  <img src="images/Logo Seavo Nautiq.png" alt="Logo Seavo Nautiq" class="logo"> 
+</a> 
+</div>
 
 
   <input type="text" id="searchBox" placeholder="Search inventory..." oninput="searchInPage()">

@@ -1,0 +1,76 @@
+<!-- Kalkulator -->
+<div id="calculatorModal" class="modal" style="display: none;">
+  <div class="modal-innhold" id="calculatorWindow">
+    <div class="calculator-header" onmousedown="startDrag(event)">
+      <h2 style="margin: 0; font-size: 15px;">Kalkulator</h2>
+      <span class="lukk" onclick="closeCalculator()">×</span>
+    </div>
+    <input id="calc-display" type="text" readonly style="width: 90%; padding: 10px; font-size: 25px; text-align: right; margin-top: 10px;"><br><br>
+    <div id="calc-buttons">
+      <button onclick="appendCalc('7')">7</button>
+      <button onclick="appendCalc('8')">8</button>
+      <button onclick="appendCalc('9')">9</button>
+      <button onclick="appendCalc('/')">÷</button><br>
+      <button onclick="appendCalc('4')">4</button>
+      <button onclick="appendCalc('5')">5</button>
+      <button onclick="appendCalc('6')">6</button>
+      <button onclick="appendCalc('*')">×</button><br>
+      <button onclick="appendCalc('1')">1</button>
+      <button onclick="appendCalc('2')">2</button>
+      <button onclick="appendCalc('3')">3</button>
+      <button onclick="appendCalc('-')">−</button><br>
+      <button onclick="appendCalc('0')">0</button>
+      <button onclick="appendCalc('.')">.</button>
+      <button onclick="calculateResult()">=</button>
+      <button onclick="appendCalc('+')">+</button><br>
+      <button onclick="appendCalc('%')">%</button>
+      <button onclick="deleteLast()" style="width: 30%;">DEL</button><br>
+      <button onclick="clearCalc()" style="width: 90%">C</button>
+    </div>
+  </div>
+</div>
+<style>
+  .modal-innhold {
+    position: absolute;
+    left: 300px;
+    top: 200px;
+    transform: translate(0, 0);
+    background: linear-gradient(to right, #041425, #10395f);
+    padding: 15px;
+    width: 240px;
+    border-radius: 18px;
+    box-shadow: 0 0 12px #000;
+    text-align: center;
+    z-index: 999;
+  }
+
+  .calculator-header {
+    background: linear-gradient(to right, #104f68, #326fa8);
+    color: white;
+    padding: 5px;
+    cursor: move;
+    border-radius: 10px 10px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .lukk {
+    font-weight: bold;
+    font-size: 25px;
+    cursor: pointer;
+  }
+
+  #calc-buttons button {
+    width: 36px;
+    height: 30px;
+    font-size: 18px;
+    margin: 3px;
+    background: linear-gradient(to right, #00b7ff, #326fa8);
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+</style>
+  

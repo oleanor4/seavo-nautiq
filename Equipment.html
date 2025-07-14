@@ -480,13 +480,22 @@
   <button>Settings</button>
   <button id="signOutBtn">Sign Out</button>
 
-  <div id="bottomButtons">
-    <button>🧮 Calculator</button>
-    <button>📝 Notepad</button>
-  </div>
+ 
+
+<div id="bottomButtons">
+<button onclick="loadTool('calc')">🧮 Kalkulator</button>
+<button onclick="loadTool('notis')">📝 Notatblokk</button>
+
 </div>
 
-<button id="togglePanelBtn" onclick="toggleSidePanel()">⫷</button>
+  </div>
+
+  <div>
+  <button id="togglePanelBtn" onclick="toggleSidePanel()">⫷</button>
+</div>
+</div>
+
+ <div id="toolsContainer"></div>
 
 
   <div id="image-modal" style="display:none;">
@@ -613,6 +622,47 @@ function removeHighlights() {
   document.querySelectorAll(".highlight-input").forEach(input => {
     input.classList.remove("highlight-input");
   });
+}
+
+
+</script>
+
+
+
+
+<script>
+function loadTool(type) {
+  const container = document.getElementById("toolsContainer");
+  let file = "";
+  if (type === "calc") file = "tools2.html";
+  else if (type === "notis") file = "tools.html";
+  else return;
+
+  fetch(file)
+    .then(response => response.text())
+    .then(html => {
+      const temp = document.createElement("div");
+      temp.innerHTML = html;
+      container.innerHTML = '';
+
+      if (type === "calc") {
+        const el = temp.querySelector("#calculatorModal");
+        container.appendChild(el);
+        el.style.display = "block";
+        initKalkulator(); // 👈 initialiser kalkulator
+      } else if (type === "notis") {
+        const el = temp.querySelector("#notisblokk");
+        container.appendChild(el);
+        el.style.display = "block";
+        initNotisblokk(); // 👈 initialiser notisblokk
+      }
+
+      // Legg til <style>
+      const styles = temp.querySelectorAll("style");
+      styles.forEach(style => {
+        document.head.appendChild(style.cloneNode(true));
+      });
+    });
 }
 
 
@@ -1067,6 +1117,134 @@ function toggleSidePanel() {
   }
 }
 
+
+function initNotisblokk() {
+  const notis = document.getElementById("notisblokk");
+  const notisHeader = document.getElementById("notis-header");
+  const tekst = document.getElementById("notis-tekst");
+  const lukkKnapp = document.getElementById("lukkNotis");
+
+  if (!notis || !notisHeader || !tekst || !lukkKnapp) return;
+
+  // Lukke-knapp
+  lukkKnapp.onclick = () => {
+    notis.style.display = "none";
+  };
+
+  // Dra-funksjon
+  let isDraggingNotis = false;
+  let offsetX = 0, offsetY = 0;
+
+  notisHeader.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    isDraggingNotis = true;
+    offsetX = e.clientX - notis.offsetLeft;
+    offsetY = e.clientY - notis.offsetTop;
+  });
+
+  document.addEventListener("mousemove", (e) => {
+    if (isDraggingNotis) {
+      notis.style.left = `${e.clientX - offsetX}px`;
+      notis.style.top = `${e.clientY - offsetY}px`;
+    }
+  });
+
+  document.addEventListener("mouseup", () => {
+    if (isDraggingNotis) {
+      localStorage.setItem("notisPosX", parseInt(notis.style.left));
+      localStorage.setItem("notisPosY", parseInt(notis.style.top));
+    }
+    isDraggingNotis = false;
+  });
+
+  // Lagre tekst
+  tekst.addEventListener("input", () => {
+    localStorage.setItem("notisTekst", tekst.value);
+  });
+
+  // Slett-knapp
+  const slettKnapp = notis.querySelector(".slett-knapp");
+  slettKnapp.onclick = () => {
+    tekst.value = "";
+    notis.style.left = "100px";
+    notis.style.top = "100px";
+    localStorage.removeItem("notisTekst");
+    localStorage.removeItem("notisPosX");
+    localStorage.removeItem("notisPosY");
+  };
+
+  // Last posisjon og tekst
+  const tekstLagret = localStorage.getItem("notisTekst");
+  if (tekstLagret) tekst.value = tekstLagret;
+
+  const posX = localStorage.getItem("notisPosX");
+  const posY = localStorage.getItem("notisPosY");
+  if (posX && posY) {
+    notis.style.left = posX + "px";
+    notis.style.top = posY + "px";
+  }
+}
+</script>
+
+
+<script>
+function initKalkulator() {
+  const win = document.getElementById("calculatorWindow");
+  const closeBtn = document.querySelector("#calculatorModal .lukk");
+  const display = document.getElementById("calc-display");
+
+  if (!win || !closeBtn || !display) return;
+
+  // Dra-funksjon
+  let isDragging = false, offsetX = 0, offsetY = 0;
+
+  const header = win.querySelector(".calculator-header");
+  header.addEventListener("mousedown", (e) => {
+    isDragging = true;
+    offsetX = e.clientX - win.offsetLeft;
+    offsetY = e.clientY - win.offsetTop;
+    e.preventDefault();
+  });
+
+  document.addEventListener("mousemove", (e) => {
+    if (isDragging) {
+      win.style.left = `${e.clientX - offsetX}px`;
+      win.style.top = `${e.clientY - offsetY}px`;
+    }
+  });
+
+  document.addEventListener("mouseup", () => {
+    isDragging = false;
+  });
+
+  // Lukke-knapp
+  closeBtn.onclick = () => {
+    document.getElementById("calculatorModal").style.display = "none";
+  };
+
+  // Kalkulatorknapper (delegert håndtering)
+  const buttons = document.querySelectorAll("#calc-buttons button");
+
+  buttons.forEach(btn => {
+    const val = btn.textContent;
+    if (val === "DEL") {
+      btn.onclick = () => display.value = display.value.slice(0, -1);
+    } else if (val === "C") {
+      btn.onclick = () => display.value = "";
+    } else if (val === "=") {
+      btn.onclick = () => {
+        try {
+          display.value = eval(display.value.replace(/%/g, "/100"));
+        } catch {
+          alert("Ugyldig uttrykk");
+        }
+      };
+    } else {
+      btn.onclick = () => display.value += val;
+    }
+  });
+}
+</script>
 
 
 </script>

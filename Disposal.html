@@ -13,6 +13,31 @@
       color: rgb(255, 255, 255);
     }
 
+          .video-header {
+  position: relative;
+  aspect-ratio: 1280 / 99; /* behold riktig proporsjon */
+  overflow: hidden;
+  background-color: #000; /* fallback bakgrunn */
+}
+
+
+.video-header video {
+  width: 100%;
+  height: 200%;
+  object-fit: cover;
+  display: block;
+}
+
+
+
+    .gradient-overgang {
+      height: 10px;
+      background: linear-gradient(to left, #62b2e7, #001125);
+      box-shadow: 6px 4px 6px rgba(0, 0, 0, 0.7);
+    }
+
+
+
 .logo {
   width: 200px;
   height: auto;
@@ -47,7 +72,7 @@
 
 
 input, select {
-  width: 100%;
+  width: 90%;
   height: 28px;
   box-sizing: border-box;
   font-weight: bold;
@@ -120,8 +145,18 @@ select.condition-discarded {
 
   </style>
   <header>
- 
+ </head>
+<body>
+  <header class="video-header">
+  <video autoplay muted loop playsinline>
+    <source src="Video/Ocean-Seavo-Nautiq.mp4" type="video/mp4">
+    
 
+ </video>
+
+  
+</header>
+   <div class="gradient-overgang"></div>
     <div>
     <h1 style="text-align: center; color:
    rgb(218, 215, 215);

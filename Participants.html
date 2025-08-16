@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <title>List of participants</title>
+  <style>
+      body {
+      background-color: #0b2d5e;
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      color: rgb(255, 255, 255);
+      font-weight: bold;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+      background-color: rgb(93, 94, 95);
+      
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+      
+    }
+
+    th {
+      background-color: #212224;
+      color: rgb(255, 255, 255);
+      margin-bottom: 10px;
+    }
+
+
+    input[type="text"], input[type="email"], input[type="tel"], select {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border-radius: 5px;
+    }
+
+    
+
+    .status-valid {
+      background-color: #28e755;
+      color: #000000;
+    }
+
+    .status-warning {
+      background-color: #ecc543;
+      color: #000000;
+    }
+
+    .status-expired {
+      background-color: #f03747;
+      color: #ffffff;
+    }
+
+
+
+    .add-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: linear-gradient(to right, #007bff, #0056b3);
+      color: rgb(255, 255, 255);
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    .add-btn:hover {
+      background: #598fc9;
+    }
+
+
+
+  </style>
+</head>
+<body>
+
+       <div>
+    <h1 style="text-align: center; color:
+   rgb(255, 255, 255);
+    margin-top: 20px;
+    font-size: 36px;
+    font-weight: bold;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);" >
+    List of participants</h1>
+   </div>
+
+  <h2>Register</h2>
+
+  <table id="crewTable">
+    <thead>
+      <tr>
+        <th>✔️</th>
+        <th>Participant / Crew</th>
+        <th>Nationality</th>
+        <th>Phone number</th>
+        <th>E-mail</th>
+        <th>Status of documents</th>
+        <th>Delete</th>
+
+      </tr>
+    </thead>
+    <tbody id="crewBody">
+      <!-- Rader legges til her -->
+    </tbody>
+  </table>
+
+ 
+
+
+  <form id="crewForm">
+  <table>
+  <tr>
+    <td><label for="name">Full name:</label></td>
+    <td><input type="text" id="name" placeholder="Full name" required></td>
+  </tr>
+  <tr>
+    <td><label for="nationality">Nationality:</label></td>
+    <td><input type="text" id="nationality" placeholder="Nationality" required></td>
+  </tr>
+  <tr>
+    <td><label for="phone">Telephone number:</label></td>
+    <td><input type="tel" id="phone" placeholder="Telephone number" required></td>
+  </tr>
+  <tr>
+    <td><label for="email">E-mail:</label></td>
+    <td><input type="email" id="email" placeholder="E-mail" required></td>
+  </tr>
+  <tr>
+    <td><label for="status">Status:</label></td>
+    <td>
+      <select id="status" required>
+        <option value="valid" class="status-valid">✅ Valid</option>
+        <option value="soon" class="status-warning">⚠️ One or more expires soon</option>
+        <option value="expired" class="status-expired">❌ Expired</option>
+      </select>
+    </td>
+  </tr>
+</table>
+
+    <button type="button" class="add-btn" onclick="addParticipant()">Add Participant/Crew</button>
+  </form>
+
+  <script>
+  function addParticipant() {
+  const name = document.getElementById('name').value;
+  const nationality = document.getElementById('nationality').value;
+  const phone = document.getElementById('phone').value;
+  const email = document.getElementById('email').value;
+  const status = document.getElementById('status').value;
+
+  if (!name || !nationality || !phone || !email || !status) {
+    alert("Vennligst fyll ut alle felt.");
+    return;
+  }
+
+  const statusText = {
+    valid: "✅ Valid",
+    soon: "⚠️ Soon to expire",
+    expired: "❌ Expired"
+  };
+
+  const statusClass = {
+    valid: "status-valid",
+    soon: "status-warning",
+    expired: "status-expired"
+  };
+
+  const tableBody = document.getElementById('crewBody');
+  const row = document.createElement('tr');
+
+  row.innerHTML = `
+    <td><input type="checkbox"></td>
+    <td>${name}</td>
+    <td>${nationality}</td>
+    <td>${phone}</td>
+    <td>${email}</td>
+    <td class="${statusClass[status]}">${statusText[status]}</td>
+    <td><button onclick="deleteRow(this)">Delete</button></td>
+  `;
+
+  tableBody.appendChild(row);
+
+  // Nullstill feltene
+  document.getElementById('crewForm').reset();
+}
+
+function deleteRow(button) {
+  const row = button.closest('tr');
+  row.remove();
+}
+
+  </script>
+
+</body>
+</html>

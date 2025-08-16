@@ -8,12 +8,17 @@
 
   
   <style>
+
+    
     body {
         background-color: hsl(210, 100%, var(--bg-lightness));
         transition: background-color 0.5s ease;
         margin: 0;
         font-family: Arial, sans-serif;
+        overflow-x: hidden;
     }
+
+    
 
     body::before {
      content: "";
@@ -53,27 +58,10 @@
     cursor: pointer;
   }
 
-    .toppbilde-container {
-      position: relative; 
-      width: 100%;
-    }
-
-    .toppbilde {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
- 
-    .toppbilde-container {
-  position: relative;
-  width: 100%;
-  }
-
-
+  
 
   .video-header {
   position: relative;
-  width: 100vw;
   aspect-ratio: 1280 / 99; /* behold riktig proporsjon */
   overflow: hidden;
   background-color: #000; /* fallback bakgrunn */
@@ -130,20 +118,6 @@
   box-shadow: #000000 0px 0px 10px 3px;
 }
 
-.asdicknapp {
-  width: fit-content;
-  padding: 5px 10px;
-  background: linear-gradient(#0a408b, #56b9e7);
-  color: rgb(0, 255, 13);
-  border-radius: 12px;
-  font-size: 0.7rem;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
-}
-
-.asdicknapp:hover {
-  background: #1bc537;
-}
 
 .seavo-right {
   flex: 1 1 40%;
@@ -159,27 +133,14 @@
   box-shadow: #000000 0px 0px 10px 3px;
   transition: transform 0.3s ease;
   cursor: pointer;
-  margin-left: 240px;
-  margin-top: 100px;
 }
 
 #mobilpicture:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
   box-shadow: #39addb 0px 0px 15px 5px;
 }
 
-.infobubble-wrapper {
-  width: 100%;
-  max-width: 160px;
-  margin-left: -75px;
-  margin-top: -80px;
-}
 
-.infobubble-img {
-  width: 200%;
-
-  
-}
 
 .toggle-btn {
   bottom: 8px;
@@ -227,6 +188,7 @@
       color: rgb(255, 255, 255);
       padding: 10px 16px;
       border-radius: 10px;
+      border: 1px solid rgb(149, 149, 180);
       cursor: pointer;
       font-size: 16px;
       font-weight: bold;
@@ -342,6 +304,7 @@
       background: linear-gradient(to left, #7396c7, #173c70);
       color: #000000;
       border-radius: 12px;
+      border: color(srgb 255 0 0 );
       width: 250px;
       height: 40px;
       font-size: 24px;
@@ -358,6 +321,7 @@
     .hoyre-container button:hover {
       background: #97b4d3;
       filter: brightness(1.1);
+      transform: scale(1.05);
     }
 
   .digital-clock-container {
@@ -393,12 +357,12 @@
 
 
     #info-text-utenfor {
-      margin-top: -435px;
+      margin-top: 220px;
       left: 0px;
       right: 0px;
       bottom: 0px;
       overflow-y: auto;
-      padding: 360px;
+      padding: 30px;
       font-size: 18px;
     }
 
@@ -425,8 +389,13 @@
       color: #ffffff;
     }
 
+ #forsidebilde {
+    max-width: 90%;
+  }
 
-
+  #mobilpicture {
+    max-width: 55%;
+  }
 
   @media (max-width: 768px) {
   table, thead, tbody, th, td, tr {
@@ -434,27 +403,36 @@
   }
 }
 
-@media (max-width: 768px) {
+
+
+@media (orientation: landscape) and (max-width: 812px) {
+ 
+  .container {
+    padding: 5px;
+    font-size: 0.9rem;
+  }
+}
+
+@media screen and (max-width: 812px) and (orientation: landscape) {
+  body {
+    font-size: 0.9rem;
+  }
+
+  #mobilpicture {
+    margin: 10px auto;
+  
+  }
+
   .seavo-wrapper {
     flex-direction: column;
-    align-items: center;
-    padding: 20px;
-  }
-
-  .seavo-left, .seavo-right {
-    flex: 1 1 100%;
-    align-items: center;
-    text-align: center;
-  }
-
-  #forsidebilde, #mobilpicture, .infobubble-wrapper {
-    max-width: 90%;
+    padding: 10px;
   }
 }
 
 
- 
   </style>
+ 
+
 </head>
 <body>
 
@@ -515,11 +493,10 @@
     <button onclick="window.open('disposal.html', '_blank')">Disposal</button>
 
     <div class="ny-container">
-      <button><img src="icon/Order-black.png" alt="Info" style="height: 32px; vertical-align: middle;"> Orders</button>
-      <button><img src="icon/Participants.png" alt="Info" style="height: 32px; vertical-align: middle;"> Participants</button>
+      <button onclick="åpnePopup3()"><img src="icon/Order-black.png" alt="Info" style="height: 32px; vertical-align: middle;"> Orders</button>
+      <button onclick="åpnePopup()"><img src="icon/Participants.png" alt="Info" style="height: 32px; vertical-align: middle;"> Participants</button>
       <button><img src="icon/Voyage.png" alt="Info" style="height: 32px; vertical-align: middle;"> Voyages</button>
       <button><img src="icon/Fleet.png" alt="Info" style="height: 32px; vertical-align: middle;"> Fleet</button>
-      <button><img src="icon/go-online.png" alt="online" style="width: 22px; background: #1c5cb4;"></button>
     </div>
   </div>
 
@@ -528,26 +505,15 @@
     <div class="seavo-left">
       <h1>Welcome to Seavo Nautiq</h1>
       <img src="images/Animasjon.gif" alt="forsidebilde" id="forsidebilde">
-      <button onclick="toggleSonar()" id="toggleButton" class="asdicknapp">🔈 ASDIC</button>
     </div>
-
-
-
- 
 
 
 
 
  <div class="seavo-right">
       <img src="images/mobile.png" alt="mobilpicture" id="mobilpicture">
-
-      <div id="infobubble" class="infobubble-wrapper">
-        <img src="images/Infobubble.png" alt="infobubble" class="infobubble-img">
-        <button onclick="toggleInfobubble()" id="infobubbleToggleBtn" class="toggle-btn">Hide</button>
-
-        
-        
-      </div>
+  
+      
     </div>
   </div>
 
@@ -562,7 +528,7 @@
     <div class="hoyre-container">
       
       <button><img src="icon/info.png" alt="Info" style="height: 32px; vertical-align: middle;">Help</button>
-      <button><img src="icon/Doc-black.png" alt="Info" style="height: 32px; vertical-align: middle;"> Documents</button>
+      <button onclick="åpnePopup2()"><img src="icon/Doc-black.png" alt="Info" style="height: 32px; vertical-align: middle;"> Documents</button>
       <button><img src="icon/Share-black.png" alt="Info" style="height: 32px; vertical-align: middle;"> Shared content</button>
       <button><img src="icon/Settings.png" alt="Info" style="height: 32px; vertical-align: middle;"> Settings</button>
       <button><img src="icon/Sign out.png" alt="Info" style="height: 32px; vertical-align: middle;"> Sign out</button>
@@ -588,9 +554,7 @@
 <div>
   <img src="images/Picture_collection.png" class="forsidebilde2" alt="forsidebilde2">
   </div>
-
-
-
+  
 
 
  <main>
@@ -759,6 +723,33 @@ updateDigitalClock(); // første kall
     document.documentElement.style.setProperty('--button-color', buttonColor);
     document.documentElement.style.setProperty('--button-text', buttonText);
   });
+
+
+     function åpnePopup() {
+      window.open(
+        'participants.html',    // Filnavnet til deltaker-siden
+        'popup',                  // Navn på vinduet
+        'width=1200,height=700'   // Størrelse og evt. tilpasninger
+      );
+    }
+
+      function åpnePopup2() {
+      window.open(
+        'Documents.html',    // Filnavnet til deltaker-siden
+        'popup',                  // Navn på vinduet
+        'width=1400,height=800'   // Størrelse og evt. tilpasninger
+      );
+    }
+
+       function åpnePopup3() {
+      window.open(
+        'Orders.html',    // Filnavnet til deltaker-siden
+        'popup',                  // Navn på vinduet
+        'width=1400,height=800'   // Størrelse og evt. tilpasninger
+      );
+    }
+
+
 </script>
 
 

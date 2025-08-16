@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Saved • Uploaded</title>
+  <style>
+    :root {
+      --bg: #0f1b2d;
+      --panel: #172a46;
+      --panel-2: #1c3358;
+      --accent: #3ba1ff;
+      --text: #e6f0ff;
+      --muted: #9bb3d1;
+      --danger: #e74c3c;
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0; background: linear-gradient(180deg, #0b1423, var(--bg));
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";
+      color: var(--text);
+    }
+
+    .wrap { max-width: 1100px; margin: 28px auto; padding: 0 16px 80px; }
+    h1 { font-size: 28px; font-weight: 800; margin: 0 0 18px; letter-spacing: .2px; }
+    p.lead { margin-top: 0; color: var(--muted); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    @media (max-width: 900px){ .grid { grid-template-columns: 1fr; } }
+
+    .panel {
+      background: linear-gradient(180deg, var(--panel-2), var(--panel));
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      min-height: 420px;
+    }
+
+    .panel header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px; background: rgba(0,0,0,.25);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .panel header h2 { margin: 0; font-size: 16px; font-weight: 700; }
+
+    .panel .body { padding: 14px; flex: 1; overflow: auto; }
+
+    .btn { appearance: none; border: 0; cursor: pointer; font-weight: 700;
+      border-radius: 12px; padding: 8px 12px; color: #00172b; background: var(--accent);
+      transition: transform .06s ease, filter .2s ease; box-shadow: 0 6px 18px rgba(59,161,255,.25);
+      font-size: 13px;
+    }
+    .btn:hover { filter: brightness(1.06); }
+    .btn:active { transform: translateY(1px); }
+    .btn.ghost { background: transparent; color: var(--text); border: 1px solid rgba(255,255,255,.15); box-shadow: none; }
+    .btn.small { padding: 6px 10px; border-radius: 10px; font-size: 12px; }
+    .btn.danger { background: var(--danger); color: #fff; box-shadow: 0 6px 18px rgba(231,76,60,.25); }
+
+    .hint { font-size: 12px; color: var(--muted); }
+
+    /* SAVED */
+    .saved-list { display: grid; gap: 10px; }
+    .saved-item {
+      display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px;
+      padding: 10px; border: 1px solid rgba(255,255,255,.1); border-radius: 12px; background: rgba(0,0,0,.15);
+    }
+    .badge { padding: 4px 8px; border-radius: 999px; font-size: 11px; font-weight: 800; color: #00172b;
+      background: linear-gradient(180deg,#9fe2ff,#4dbfff);
+    }
+    .file-meta { font-size: 12px; color: var(--muted); }
+
+    /* UPLOADED */
+    .dropzone{
+  display: flex;              /* gjør den lett å sentrere innhold */
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 140px;          /* valgfritt: gir en behagelig høyde */
+  padding: 16px;
+  margin: 0;                  /* unngå uventet forskyvning */
+  border: 2px dashed rgba(255,255,255,.2);
+  border-radius: 14px;
+  background: rgba(0,0,0,.15);
+  box-sizing: border-box;     /* sikker på at border/padding ikke sprenger bredde */
+}
+  #uploadPanel .body { display: flex; flex-direction: column; gap: 12px; }
+
+
+.dropzone.dragover { background: rgba(59,161,255,.08); border-color: var(--accent); }
+.dropzone input[type=file] { display: none; }
+
+.uploads { margin-top: 12px; display: grid; gap: 12px; }
+.upload-card { display: grid; grid-template-columns: 56px 1fr auto; align-items: center; gap: 12px; padding: 10px; border: 1px solid rgba(255,255,255,.1); border-radius: 12px; background: rgba(0,0,0,.15); }
+.thumb { width: 56px; height: 56px; border-radius: 10px; background: #0b1423; display: grid; place-items: center; font-size: 10px; color: var(--muted); overflow: hidden; border: 1px solid rgba(255,255,255,.08); }
+.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Saved • Uploaded</h1>
+    <p class="lead">To bokser i parallell. Last opp filer i <strong>Uploaded</strong>, lagre viktige i <strong>Saved</strong>.</p>
+
+    <div class="grid">
+      <!-- SAVED -->
+      <section class="panel" id="savedPanel">
+        <header>
+          <h2>Saved</h2>
+          <div style="display:flex; gap:8px;">
+            <button class="btn small ghost" id="exportSaved">Eksporter liste</button>
+            <label class="btn small ghost" for="importSaved">Importer</label>
+            <input id="importSaved" type="file" accept="application/json" hidden />
+          </div>
+        </header>
+        <div class="body">
+          <div class="saved-list" id="savedList"></div>
+          <p class="hint" id="savedEmptyHint">Ingen lagrede ennå. Flytt fra <em>Uploaded</em> → <strong>Save</strong>.</p>
+        </div>
+      </section>
+
+      <!-- UPLOADED -->
+      <section class="panel" id="uploadPanel">
+        <header>
+          <h2>Uploaded</h2>
+          <button class="btn small" id="clearUploads">Empty</button>
+        </header>
+        <div class="body">
+          <label class="dropzone" id="dropzone">
+            <input id="fileInput" type="file" multiple />
+            <strong>Drag and drop</strong> files here, or <u>click to select</u>.
+            <div class="hint">Images will be previewed. Max 10 MB per file when saving to "Saved".</div>
+          </label>
+          <div class="uploads" id="uploads"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const $ = (s, p=document) => p.querySelector(s);
+
+    const humanSize = b => {
+      if (b < 1024) return b + ' B';
+      if (b < 1024*1024) return (b/1024).toFixed(1)+' KB';
+      if (b < 1024*1024*1024) return (b/1024/1024).toFixed(1)+' MB';
+      return (b/1024/1024/1024).toFixed(1)+' GB';
+    };
+
+    const SAVED_KEY = 'seavo_saved_items_v1';
+    const MAX_DATAURL_BYTES = 10 * 1024 * 1024;
+
+    const loadSaved = () => {
+      try { return JSON.parse(localStorage.getItem(SAVED_KEY) || '[]'); }
+      catch { return []; }
+    };
+    const saveSaved = (arr) => localStorage.setItem(SAVED_KEY, JSON.stringify(arr));
+
+    const renderSaved = () => {
+      const list = $('#savedList');
+      list.innerHTML = '';
+      const data = loadSaved();
+      $('#savedEmptyHint').style.display = data.length ? 'none' : 'block';
+      data.forEach((item, idx) => {
+        const row = document.createElement('div');
+        row.className = 'saved-item';
+        const badge = document.createElement('span');
+        badge.className = 'badge';
+        badge.textContent = item.type?.split('/')?.[0]?.toUpperCase() || 'FILE';
+        const meta = document.createElement('div');
+        meta.innerHTML = `<div><strong>${item.name}</strong></div><div class="file-meta">${humanSize(item.size)} · ${item.type || 'ukjent'}</div>`;
+        const actions = document.createElement('div');
+        actions.style.display = 'flex'; actions.style.gap = '8px';
+
+        const downloadBtn = document.createElement('button');
+        downloadBtn.className = 'btn small ghost';
+        downloadBtn.textContent = 'Last ned';
+        downloadBtn.onclick = () => {
+          const a = document.createElement('a');
+          if (item.dataURL) a.href = item.dataURL; else a.href = item.objectURL;
+          a.download = item.name;
+          a.click();
+        };
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'btn small danger';
+        delBtn.textContent = 'Slett';
+        delBtn.onclick = () => { const arr = loadSaved(); arr.splice(idx,1); saveSaved(arr); renderSaved(); };
+
+        actions.append(downloadBtn, delBtn);
+        row.append(badge, meta, actions);
+        list.append(row);
+      });
+    };
+
+    $('#exportSaved').addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify(loadSaved(), null, 2)], {type: 'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'saved-list.json';
+      a.click();
+    });
+    $('#importSaved').addEventListener('change', async (e) => {
+      const file = e.target.files?.[0]; if (!file) return;
+      const text = await file.text();
+      try { const arr = JSON.parse(text); if (Array.isArray(arr)) { saveSaved(arr); renderSaved(); } } catch {}
+      e.target.value = '';
+    });
+
+    const uploads = [];
+
+    const renderUploads = () => {
+      const wrap = $('#uploads');
+      wrap.innerHTML = '';
+      uploads.forEach((u, idx) => {
+        const card = document.createElement('div');
+        card.className = 'upload-card';
+        const thumb = document.createElement('div');
+        thumb.className = 'thumb';
+        if (u.type.startsWith('image/')) {
+          const img = document.createElement('img');
+          img.src = u.objectURL; thumb.append(img);
+        } else {
+          thumb.textContent = u.type.split('/')?.[1]?.toUpperCase() || 'FILE';
+        }
+        const meta = document.createElement('div');
+        meta.innerHTML = `<div><strong>${u.name}</strong></div><div class="file-meta">${humanSize(u.size)} · ${u.type || 'ukjent'}</div>`;
+        const actions = document.createElement('div');
+        actions.style.display = 'grid'; actions.style.gap = '6px';
+        const saveBtn = document.createElement('button'); saveBtn.className = 'btn small'; saveBtn.textContent = 'Save';
+        saveBtn.onclick = () => saveUpload(idx);
+        const rmBtn = document.createElement('button'); rmBtn.className = 'btn small ghost'; rmBtn.textContent = 'Fjern';
+        rmBtn.onclick = () => { URL.revokeObjectURL(u.objectURL); uploads.splice(idx,1); renderUploads(); };
+        actions.append(saveBtn, rmBtn);
+        card.append(thumb, meta, actions);
+        wrap.append(card);
+      });
+    };
+
+    const saveUpload = async (idx) => {
+      const u = uploads[idx]; if (!u) return;
+      const arr = loadSaved();
+      let dataURL = null;
+      if (u.size <= MAX_DATAURL_BYTES) {
+        dataURL = await fileToDataURL(u.file);
+      }
+      arr.unshift({ name: u.name, type: u.type, size: u.size, dataURL, objectURL: dataURL ? undefined : u.objectURL });
+      saveSaved(arr); renderSaved();
+    };
+
+    const fileToDataURL = (file) => new Promise((resolve, reject) => {
+      const fr = new FileReader();
+      fr.onload = () => resolve(fr.result);
+      fr.onerror = reject;
+      fr.readAsDataURL(file);
+    });
+
+    const handleFiles = (files) => {
+      [...files].forEach(f => {
+        const u = { name: f.name, size: f.size, type: f.type || 'application/octet-stream', objectURL: URL.createObjectURL(f), file: f };
+        uploads.unshift(u);
+      });
+      renderUploads();
+    };
+
+    $('#fileInput').addEventListener('change', (e) => { if (e.target.files?.length) handleFiles(e.target.files); e.target.value=''; });
+
+    const dz = $('#dropzone');
+    dz.addEventListener('click', () => $('#fileInput').click());
+    ;['dragenter','dragover'].forEach(evt => dz.addEventListener(evt, e => { e.preventDefault(); dz.classList.add('dragover'); }));
+    ;['dragleave','drop'].forEach(evt => dz.addEventListener(evt, e => { e.preventDefault(); dz.classList.remove('dragover'); }));
+    dz.addEventListener('drop', e => { const files = e.dataTransfer?.files; if (files?.length) handleFiles(files); });
+
+    $('#clearUploads').addEventListener('click', () => { uploads.splice(0, uploads.length).forEach(u => URL.revokeObjectURL(u.objectURL)); renderUploads(); });
+
+    renderSaved();
+  </script>
+</body>
+</html>

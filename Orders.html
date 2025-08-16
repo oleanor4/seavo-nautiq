@@ -60,7 +60,7 @@
     }
 
     .input-product {
-     width: 380px;
+     width: 400px;
     }
 
    .input-quantity {
@@ -188,7 +188,11 @@
     width: 200px;
   }
 
-
+@media (max-width: 768px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+}
 
   @media print {
   body {
@@ -437,7 +441,7 @@ row.appendChild(upload);
 
   // Logo
   const logo = new Image();
-  logo.src = "images/Seavo nautiq logo.png";
+  logo.src = "images/Logo Seavo Nautiq.png";
   await new Promise(resolve => { logo.onload = resolve; });
   doc.addImage(logo, 'PNG', marginLeft, y, 50, 20);
   y += 30;

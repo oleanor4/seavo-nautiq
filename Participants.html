@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>List of participants</title>
   <style>
-      body {
+    body {
       background-color: #0b2d5e;
       font-family: Arial, sans-serif;
       margin: 30px;
@@ -17,14 +17,12 @@
       border-collapse: collapse;
       margin-bottom: 30px;
       background-color: rgb(93, 94, 95);
-      
     }
 
     th, td {
       border: 1px solid #ddd;
       padding: 12px;
       text-align: left;
-      
     }
 
     th {
@@ -33,65 +31,49 @@
       margin-bottom: 10px;
     }
 
-
-    input[type="text"], input[type="email"], input[type="tel"], select {
+    input[type="text"], input[type="email"], input[type="tel"], select, input[list] {
       width: 100%;
       padding: 8px;
       box-sizing: border-box;
       border-radius: 5px;
     }
 
-    
-
-    .status-valid {
-      background-color: #28e755;
-      color: #000000;
-    }
-
-    .status-warning {
-      background-color: #ecc543;
-      color: #000000;
-    }
-
-    .status-expired {
-      background-color: #f03747;
-      color: #ffffff;
-    }
-
-
+    .status-valid { background-color: #28e755; color: #000; }
+    .status-warning { background-color: #ecc543; color: #000; }
+    .status-expired { background-color: #f03747; color: #fff; }
 
     .add-btn {
       padding: 10px 20px;
       font-size: 16px;
       background: linear-gradient(to right, #007bff, #0056b3);
-      color: rgb(255, 255, 255);
+      color: #fff;
       border: none;
       border-radius: 6px;
       cursor: pointer;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
     }
+    .add-btn:hover { background: #598fc9; }
 
-    .add-btn:hover {
-      background: #598fc9;
+    .delete-row-btn {
+      background: #d9534f;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 6px 10px;
+      cursor: pointer;
     }
-
-
-
+    .delete-row-btn:hover { opacity: .9; }
   </style>
 </head>
 <body>
 
-       <div>
-    <h1 style="text-align: center; color:
-   rgb(255, 255, 255);
-    margin-top: 20px;
-    font-size: 36px;
-    font-weight: bold;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);" >
-    List of participants</h1>
-   </div>
+  <div>
+    <h1 style="text-align: center; color: #fff; margin-top: 20px; font-size: 36px; font-weight: bold; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);">
+      List of participants
+    </h1>
+  </div>
 
-  <h2>Register</h2>
+  <h2>Registered Participants</h2>
 
   <table id="crewTable">
     <thead>
@@ -102,100 +84,158 @@
         <th>Phone number</th>
         <th>E-mail</th>
         <th>Status of documents</th>
+        <th>Job position</th>
         <th>Delete</th>
-
       </tr>
     </thead>
     <tbody id="crewBody">
-      <!-- Rader legges til her -->
+      <!-- Rader lastes fra localStorage -->
     </tbody>
   </table>
+<h2>Register New </h2>
+  <form id="crewForm" onsubmit="return false;">
+    <table>
+      <tr>
+        <td><label for="name">Full name:</label></td>
+        <td><input type="text" id="name" placeholder="Full name" required></td>
+      </tr>
+      <tr>
+        <td><label for="nationality">Nationality:</label></td>
+        <td><input type="text" id="nationality" placeholder="Nationality" required></td>
+      </tr>
+      <tr>
+        <td><label for="phone">Telephone number:</label></td>
+        <td><input type="tel" id="phone" placeholder="Telephone number" required></td>
+      </tr>
+      <tr>
+        <td><label for="email">E-mail:</label></td>
+        <td><input type="email" id="email" placeholder="E-mail" required></td>
+      </tr>
 
- 
+      <tr>
+        <td><label for="position">Job position:</label></td>
+        <td>
+          <input type="text" id="position" list="positions" placeholder="Type Job Position" required>
+          <datalist id="positions">
+            <option value="Captain"></option>
+            <option value="Chief Officer"></option>
+            <option value="Second Officer"></option>
+            <option value="Third Officer"></option>
+            <option value="Deck Cadet"></option>
+            <option value="Chief Engineer"></option>
+            <option value="First Engineer"></option>
+            <option value="Second Engineer"></option>
+            <option value="Third Engineer"></option>
+            <option value="Chief Steward"></option>
+            <option value="Cook"></option>
+            <option value="Stuard"></option>
+            <option value="Fisherman"></option>
+            <option value="Sailor"></option>
+            <option value="Apprentice"></option>
+          </datalist>
+        </td>
+      </tr>
 
-
-  <form id="crewForm">
-  <table>
-  <tr>
-    <td><label for="name">Full name:</label></td>
-    <td><input type="text" id="name" placeholder="Full name" required></td>
-  </tr>
-  <tr>
-    <td><label for="nationality">Nationality:</label></td>
-    <td><input type="text" id="nationality" placeholder="Nationality" required></td>
-  </tr>
-  <tr>
-    <td><label for="phone">Telephone number:</label></td>
-    <td><input type="tel" id="phone" placeholder="Telephone number" required></td>
-  </tr>
-  <tr>
-    <td><label for="email">E-mail:</label></td>
-    <td><input type="email" id="email" placeholder="E-mail" required></td>
-  </tr>
-  <tr>
-    <td><label for="status">Status:</label></td>
-    <td>
-      <select id="status" required>
-        <option value="valid" class="status-valid">✅ Valid</option>
-        <option value="soon" class="status-warning">⚠️ One or more expires soon</option>
-        <option value="expired" class="status-expired">❌ Expired</option>
-      </select>
-    </td>
-  </tr>
-</table>
+      <tr>
+        <td><label for="status">Status:</label></td>
+        <td>
+          <select id="status" required>
+            <option value="valid" class="status-valid">✅ Valid</option>
+            <option value="soon" class="status-warning">⚠️ One or more expires soon</option>
+            <option value="expired" class="status-expired">❌ Expired</option>
+          </select>
+        </td>
+      </tr>
+    </table>
 
     <button type="button" class="add-btn" onclick="addParticipant()">Add Participant/Crew</button>
   </form>
 
   <script>
-  function addParticipant() {
-  const name = document.getElementById('name').value;
-  const nationality = document.getElementById('nationality').value;
-  const phone = document.getElementById('phone').value;
-  const email = document.getElementById('email').value;
-  const status = document.getElementById('status').value;
+    const PKEY = 'participants_v1';
+    const $ = id => document.getElementById(id);
 
-  if (!name || !nationality || !phone || !email || !status) {
-    alert("Vennligst fyll ut alle felt.");
-    return;
-  }
+    const loadParticipants = () => {
+      try { return JSON.parse(localStorage.getItem(PKEY)) || []; }
+      catch { return []; }
+    };
+    const saveParticipants = (arr) => {
+      localStorage.setItem(PKEY, JSON.stringify(arr));
+    };
 
-  const statusText = {
-    valid: "✅ Valid",
-    soon: "⚠️ Soon to expire",
-    expired: "❌ Expired"
-  };
+    let participants = loadParticipants();
 
-  const statusClass = {
-    valid: "status-valid",
-    soon: "status-warning",
-    expired: "status-expired"
-  };
+    function renderTable() {
+      const body = $('crewBody');
+      body.innerHTML = '';
+      participants.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><input type="checkbox"></td>
+          <td>${escapeHtml(p.name)}</td>
+          <td>${escapeHtml(p.nationality)}</td>
+          <td>${escapeHtml(p.phone)}</td>
+          <td>${escapeHtml(p.email)}</td>
+          <td class="${statusClass(p.status)}">${statusText(p.status)}</td>
+          <td>${escapeHtml(p.position)}</td>
+          <td><button class="delete-row-btn" onclick="deleteRow('${p.id}')">Delete</button></td>
+        `;
+        body.appendChild(tr);
+      });
+    }
 
-  const tableBody = document.getElementById('crewBody');
-  const row = document.createElement('tr');
+    function statusText(s) {
+      return s === 'valid' ? '✅ Valid'
+           : s === 'soon' ? '⚠️ Soon to expire'
+           : '❌ Expired';
+    }
+    function statusClass(s) {
+      return s === 'valid' ? 'status-valid'
+           : s === 'soon' ? 'status-warning'
+           : 'status-expired';
+    }
 
-  row.innerHTML = `
-    <td><input type="checkbox"></td>
-    <td>${name}</td>
-    <td>${nationality}</td>
-    <td>${phone}</td>
-    <td>${email}</td>
-    <td class="${statusClass[status]}">${statusText[status]}</td>
-    <td><button onclick="deleteRow(this)">Delete</button></td>
-  `;
+    function addParticipant() {
+      const name = $('name').value.trim();
+      const nationality = $('nationality').value.trim();
+      const phone = $('phone').value.trim();
+      const email = $('email').value.trim();
+      const position = $('position').value.trim();
+      const status = $('status').value;
 
-  tableBody.appendChild(row);
+      if (!name || !nationality || !phone || !email || !position || !status) {
+        alert('Vennligst fyll ut alle felt.');
+        return;
+      }
 
-  // Nullstill feltene
-  document.getElementById('crewForm').reset();
-}
+      participants.push({
+        id: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2,10),
+        name, nationality, phone, email, position, status
+      });
+      saveParticipants(participants);
+      renderTable();
 
-function deleteRow(button) {
-  const row = button.closest('tr');
-  row.remove();
-}
+      $('crewForm').reset();
+      $('name').focus();
+    }
 
+    function deleteRow(id) {
+      participants = participants.filter(p => p.id !== id);
+      saveParticipants(participants);
+      renderTable();
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    // Init
+    renderTable();
   </script>
 
 </body>

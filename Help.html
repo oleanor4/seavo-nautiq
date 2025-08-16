@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Help</title>
+
+  <style>
+    body {
+      background-color: #12315c;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      color: rgb(255, 255, 255);
+    }
+
+    .video-header {
+      position: relative;
+      aspect-ratio: 1280 / 99;
+      overflow: hidden;
+      background-color: #000;
+    }
+
+    .video-header video {
+      width: 100%;
+      height: 200%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .gradient-overgang {
+      height: 10px;
+      background: linear-gradient(to left, #62b2e7, #001125);
+      box-shadow: 6px 4px 6px rgba(0, 0, 0, 0.7);
+    }
+
+    #info-text-utenfor {
+      margin-top: 30px;
+      padding: 30px;
+      font-size: 18px;
+    }
+
+    /* Flex container for tekstboksene */
+    .text-box-container {
+      display: flex;
+      flex-wrap: wrap;      /* bryter ned på flere linjer hvis plassmangel */
+      gap: 20px;            /* mellomrom mellom boksene */
+    }
+
+    .text-box {
+      flex: 1 1 45%;        /* boksene tar ca 45% bredde, to per rad */
+      max-width: 500px;     /* maks bredde pr boks */
+      border: 1px solid #000000;
+      padding: 15px;
+      border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0.05);
+      box-shadow: #000000 1px 2px 4px 2px;
+    }
+
+    h2, h3 {
+      margin-top: 5px;
+      margin-bottom: 10px;
+      color: #7ddbf3;
+    }
+
+    p {
+      margin-bottom: 14px;
+      line-height: 1.6;
+      color: #ffffff;
+    }
+
+    /* Mobilvisning: 100% bredde på små skjermer */
+    @media (max-width: 768px) {
+      .text-box {
+        flex: 1 1 100%;
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="video-header">
+    <video autoplay muted loop playsinline>
+      <source src="Video/Ocean-Seavo-Nautiq.mp4" type="video/mp4">
+    </video>
+  </header>
+
+  <div class="gradient-overgang"></div>
+
+  <main id="info-text-utenfor">
+    <div class="text-box-container">
+      <div class="text-box">
+        <h2>The use of tables</h2>
+        <p>You may have noticed that the tables for the different inventory items are quite similar. They are built in the same way with some different features and variations in styling. This makes the tables easy to understand for its purpose.</p>
+
+
+      
+        <h3>Storage location</h3>
+        <p>Each table has comment input fields that allow users to add notes or details about the specific inventory item. This feature is particularly useful for keeping track of the storage location of each item on the vessel.</p>
+     
+
+    
+        <h3>Expiry dates</h3>
+        <p>Some tables like provisions, medicine-chest and safety equipment have expiry dates associated with their items. Simply enter the expiry date in the designated field, and the system will automatically track and notify you of upcoming expirations with colors in the input fields.</p>
+         <p>
+             Notice❗ The lists are not ment as guidance on routine checks or function tests. Please refer to platforms approved by your maritime authority and radio provider. You can find links to platforms that offers safety management in the link box.</p>
+        <h3>Set minimum and maximum stock levels</h3>
+        <p>Avoid stockouts and overstock situations by setting minimum and maximum stock levels for each item. This ensures you have the right amount of inventory on hand at all times.</p>
+
+        <h3>Upload images</h3>
+        <p>For better inventory management, you can upload images of each item. This visual reference can help with identification and tracking.</p>
+
+        <h3>Order new</h3>
+        <p>Place a new order, send, print or take the order from the entire list to orders for checking the unit price and total amount. Prices must be typed manually.</p>
+
+        <h3>Flexiblebility</h3>
+        <p>The system is designed to be flexible and you don't have to type in every input field for the system to work and save your progress. </p>
+      </div>
+
+       <div class="text-box-container">
+      <div class="text-box">
+        <h2>Links</h2>
+        <ul>
+          <style>
+            ul {
+              list-style-type: none;
+              padding: 0;
+            }
+            li {
+              margin-bottom: 10px;
+            }
+            a {
+              text-decoration: none;
+              color: #62b2e7;
+            }
+            a:hover {
+              text-decoration: underline;
+            }
+          </style>
+          <li><a href="https://www.Norseye.com" target="_blank">Norseye</a></li>
+          <li><a href="https://www.Ccom.no" target="_blank">Ccom</a></li>
+          
+        </ul>
+      </div>
+  </main>
+</body>
+</html>

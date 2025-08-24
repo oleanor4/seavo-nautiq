@@ -5,40 +5,19 @@
   <title>Voyages</title>
   <style>
     :root {
-      --bg: #12315c;
-      --panel: rgba(0,0,0,.15);
-      --panel-2: rgba(255,255,255,.08);
-      --text: #fff;
-      --muted: #bcd3f1;
-      --accent: #62b2e7;
-      --danger: #f03747;
-      --ok: #28e755;
+      --bg: #12315c; --panel: rgba(0,0,0,.15); --panel-2: rgba(255,255,255,.08);
+      --text: #fff; --muted: #bcd3f1; --accent: #62b2e7; --danger: #f03747; --ok: #28e755;
     }
-
     * { box-sizing: border-box; }
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: Arial, sans-serif;
-      margin: 0;
-    }
+    body { background-color: var(--bg); color: var(--text); font-family: Arial, sans-serif; margin: 0; }
 
-    .video-header {
-      position: relative;
-      aspect-ratio: 1280 / 99;
-      overflow: hidden;
-      background-color: #000;
-    }
-    .video-header video {
-      width: 100%;
-      height: 200%;
-      object-fit: cover;
-      display: block;
-    }
+    .video-header { position: relative; aspect-ratio: 1280 / 99; overflow: hidden; background:#000; }
+    .video-header video { width: 100%; height: 200%; object-fit: cover; display: block; }
+
     .gradient-overgang {
       height: 10px;
       background: linear-gradient(to left, #62b2e7, #001125);
-      box-shadow: 6px 4px 6px rgba(0, 0, 0, 0.7);
+      box-shadow: 6px 4px 6px rgba(0,0,0,.7);
     }
 
     .container { padding: 20px 24px 60px; max-width: 1200px; margin: 0 auto; }
@@ -47,23 +26,23 @@
 
     table {
       width: 100%; border-collapse: collapse; background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.15); border-radius: 10px; overflow: hidden;
+      border:1px solid rgba(255,255,255,.15); border-radius:10px; overflow:hidden;
     }
-    thead th { background: #212224; color: #fff; text-align: left; padding: 10px 12px; font-weight: bold; }
-    tbody td { border-top: 1px solid rgba(255,255,255,.15); padding: 10px 12px; background: rgba(0,0,0,.1); }
+    thead th { background:#212224; color:#fff; text-align:left; padding:10px 12px; font-weight:bold; }
+    tbody td { border-top:1px solid rgba(255,255,255,.15); padding:10px 12px; background: rgba(0,0,0,.1); }
     tbody tr:nth-child(even) td { background: rgba(255,255,255,.06); }
-    .row-actions { display: flex; gap: 8px; }
+    .row-actions { display:flex; gap:8px; }
+    .selected-row { outline:2px solid var(--accent); outline-offset:-2px; }
 
     .panel {
-      background: var(--panel); border: 1px solid var(--panel-2); border-radius: 12px;
-      padding: 14px; margin: 18px 0 28px; box-shadow: 0 6px 18px rgba(0,0,0,.18) inset, 0 4px 22px rgba(0,0,0,.18);
+      background: var(--panel); border:1px solid var(--panel-2); border-radius:12px;
+      padding:14px; margin:18px 0 28px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.18) inset, 0 4px 22px rgba(0,0,0,.18);
     }
-
-    label { font-weight: bold; }
-    .grid { display: grid; gap: 12px; }
+    label { font-weight:bold; }
+    .grid { display:grid; gap:12px; }
     .grid-3 { grid-template-columns: 1.4fr 1fr 1fr; }
-    .grid-2 { grid-template-columns: 1fr 1fr; }
-    @media (max-width: 900px) { .grid-3, .grid-2 { grid-template-columns: 1fr; } }
+    @media (max-width: 900px) { .grid-3 { grid-template-columns: 1fr; } }
 
     input[type="text"], input[type="date"], input[type="email"], input[type="tel"], select, input[list] {
       width: 100%; padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,.18);
@@ -72,47 +51,47 @@
     input::placeholder { color: rgba(255,255,255,.7); }
 
     .btn {
-      display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px; border: none; border-radius: 8px;
-      cursor: pointer; font-weight: 600; color: #fff; background: linear-gradient(90deg, #007bff, #0056b3);
-      box-shadow: 0 2px 8px rgba(0,0,0,.35);
+      display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border:none; border-radius:8px;
+      cursor:pointer; font-weight:600; color:#fff; background:linear-gradient(90deg,#007bff,#0056b3);
+      box-shadow:0 2px 8px rgba(0,0,0,.35);
     }
-    .btn:disabled { opacity: .55; cursor: not-allowed; }
+    .btn:disabled { opacity:.55; cursor:not-allowed; }
     .btn-secondary { background: linear-gradient(90deg, #6c757d, #495057); }
     .btn-danger { background: linear-gradient(90deg, #f14b53, #b82127); }
-    .btn-ok { background: linear-gradient(90deg, #28e755, #0f9d2a); color: #001; }
-
-    .badge { display: inline-block; padding: 4px 8px; border-radius: 999px; font-size: .85rem; background: rgba(0,0,0,.35); border: 1px solid rgba(255,255,255,.2); }
-    .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 10px; }
+    .btn-ok { background: linear-gradient(90deg, #28e755, #0f9d2a); color:#001; }
+    .badge { display:inline-block; padding:4px 8px; border-radius:999px; font-size:.85rem; background:rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.2); }
+    .toolbar { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:10px; }
+    .muted { color: var(--muted); }
 
     /* Uploads */
-    .dropzone { border: 2px dashed rgba(255,255,255,.25); border-radius: 12px; padding: 16px; text-align: center; background: rgba(0,0,0,.15); transition: border-color .2s, background .2s; }
+    .dropzone { border:2px dashed rgba(255,255,255,.25); border-radius:12px; padding:16px; text-align:center; background:rgba(0,0,0,.15); transition:border-color .2s, background .2s; }
     .dropzone.dragover { background: rgba(59,161,255,.08); border-color: var(--accent); }
-    .dropzone input[type=file] { display: none; }
-    .uploads { margin-top: 12px; display: grid; gap: 12px; }
-    .upload-card { display: grid; grid-template-columns: 56px 1fr auto; align-items: center; gap: 12px; padding: 10px; border: 1px solid rgba(255,255,255,.15); border-radius: 12px; background: rgba(0,0,0,.15); }
-    .thumb { width: 56px; height: 56px; border-radius: 10px; background: #0b1423; display: grid; place-items: center; overflow: hidden; }
-    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .file-meta { font-size: .92rem; color: var(--muted); }
-    .upload-actions { display: flex; gap: 8px; }
-    a.file-link { color: #fff; text-decoration: underline; }
-    .muted { color: var(--muted); }
-    .selected-row { outline: 2px solid var(--accent); outline-offset: -2px; }
+    .dropzone input[type=file] { display:none; }
+    .uploads { margin-top:12px; display:grid; gap:12px; }
+    .upload-card { display:grid; grid-template-columns:56px 1fr auto; align-items:center; gap:12px; padding:10px; border:1px solid rgba(255,255,255,.15); border-radius:12px; background:rgba(0,0,0,.15); }
+    .thumb { width:56px; height:56px; border-radius:10px; background:#0b1423; display:grid; place-items:center; overflow:hidden; }
+    .thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+    .file-meta { font-size:.92rem; color: var(--muted); }
+    .upload-actions { display:flex; gap:8px; }
+    a.file-link { color:#fff; text-decoration:underline; }
 
-    /* Modal for Participants import */
-    .modal-backdrop {
-      position: fixed; inset: 0; background: rgba(0,0,0,.5); display: none; align-items: center; justify-content: center; z-index: 9999;
+    /* Inline import popup (under Crew-seksjonen) */
+    .inline-import {
+      display:none; margin-top:12px; border:1px solid rgba(255,255,255,.2); border-radius:12px;
+      background:#0f274a; box-shadow:0 20px 60px rgba(0,0,0,.35);
     }
-    .modal {
-      width: min(900px, 92vw); max-height: 85vh; overflow: auto; background: #0f274a; border: 1px solid rgba(255,255,255,.2);
-      border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.5); padding: 16px;
+    .inline-import-header {
+      display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 12px;
+      border-bottom:1px solid rgba(255,255,255,.15);
     }
-    .modal-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
-    .modal-title { font-size: 1.1rem; font-weight: 700; }
-    .modal-actions { display: flex; align-items: center; gap: 8px; }
-    .close-x { cursor: pointer; font-size: 22px; line-height: 1; padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,.1); }
-    .search-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-bottom: 10px; }
-    .small { font-size: .9rem; color: var(--muted); }
-    .minw-110 { min-width: 110px; }
+    .inline-import-title { font-weight:700; }
+    .inline-import-body { padding:12px; }
+    .inline-import .search-row { display:grid; grid-template-columns:1fr auto; gap:10px; margin-bottom:10px; }
+    .inline-import table { margin:0; }
+    .inline-import .small-hint { color: var(--muted); font-size:.9rem; margin-left:6px; }
+    .close-x { cursor:pointer; font-size:20px; padding:6px 10px; border-radius:8px; background:rgba(255,255,255,.1); }
+    .minw-110 { min-width:110px; }
+    .scroll-area { max-height: 320px; overflow:auto; border-radius:10px; }
   </style>
 </head>
 <body>
@@ -125,7 +104,7 @@
 
   <div class="container">
     <h1>Voyages</h1>
-    <p class="hint">Opprett et tokt, velg det i hovedtabellen, legg til mannskap (inkludert import fra Participants.html) og last opp beholdningslister. Eksporter PDF for hele toktet.</p>
+    <p class="hint">Create a voyage, select it in the main table, add crew, and upload relevant documents. Export PDF or send the active voyage to Fleet.</p>
 
     <!-- Add Voyage -->
     <div class="panel">
@@ -140,14 +119,15 @@
           <input type="date" id="startDate">
         </div>
         <div>
-          <label for="endDate">End Date</label>
+          <label for="endDate">Estimated End Date</label>
           <input type="date" id="endDate">
         </div>
       </div>
       <div class="toolbar">
         <button class="btn" onclick="addVoyage()">Add Voyage</button>
-        <button class="btn btn-ok" id="exportPdfBtn" onclick="generateVoyagePDF()" disabled>Export PDF (Selected Voyage)</button>
-        <span class="hint">Klikk på en rad i tabellen under for å velge aktivt tokt.</span>
+        <button class="btn btn-ok" id="exportPdfBtn" onclick="generateVoyagePDF()" disabled>Export PDF (Selected)</button>
+        <button class="btn btn-secondary" id="sendToFleetBtn" onclick="sendSelectedToFleet()" disabled>Send to Fleet</button>
+        <span class="hint">Click a row below to select the active voyage.</span>
       </div>
     </div>
 
@@ -160,78 +140,70 @@
             <th style="width:44px;">Sel</th>
             <th>Voyage Name</th>
             <th>Start Date</th>
-            <th>End Date</th>
+            <th>Estimated End Date</th>
             <th style="width:180px;">Actions</th>
           </tr>
         </thead>
         <tbody id="voyageBody"></tbody>
       </table>
       <div style="margin-top:10px;" class="hint">
-        <span>Aktivt tokt: </span>
-        <strong id="activeVoyageName" class="badge">Ingen valgt</strong>
+        <span>Active voyage: </span>
+        <strong id="activeVoyageName" class="badge">not selected</strong>
       </div>
     </div>
 
     <!-- Crew Section -->
-    <div class="panel">
+    <div class="panel" id="crewPanel">
       <h2>Crew for Selected Voyage</h2>
-      <p class="hint" id="crewHint">Velg et tokt i tabellen over for å aktivere mannskapslisten.</p>
-
-      <div class="grid grid-2" style="margin-top:10px;">
-        <div>
-          <label for="crewName">Full name</label>
-          <input type="text" id="crewName" placeholder="Full name">
-        </div>
-        <div>
-          <label for="crewNationality">Nationality</label>
-          <input type="text" id="crewNationality" placeholder="Nationality">
-        </div>
-        <div>
-          <label for="crewPhone">Telephone number</label>
-          <input type="tel" id="crewPhone" placeholder="Telephone number">
-        </div>
-        <div>
-          <label for="crewEmail">E-mail</label>
-          <input type="email" id="crewEmail" placeholder="E-mail">
-        </div>
-        <div style="grid-column: 1 / -1;">
-          <label for="crewPosition">Job position</label>
-          <input type="text" id="crewPosition" list="positions" placeholder="Type Job Position">
-          <datalist id="positions">
-            <option value="Captain"></option>
-            <option value="Chief Officer"></option>
-            <option value="Second Officer"></option>
-            <option value="Third Officer"></option>
-            <option value="Deck Cadet"></option>
-            <option value="Chief Engineer"></option>
-            <option value="First Engineer"></option>
-            <option value="Second Engineer"></option>
-            <option value="Third Engineer"></option>
-            <option value="Chief Steward"></option>
-            <option value="Cook"></option>
-            <option value="Stuard"></option>
-            <option value="Fisherman"></option>
-            <option value="Sailor"></option>
-            <option value="Apprentice"></option>
-          </datalist>
-        </div>
-      </div>
+      <p class="hint" id="crewHint">Select a voyage above to activate the crew list.</p>
 
       <div class="toolbar">
-        <button class="btn" id="addCrewBtn" onclick="addCrew()" disabled>Add Crew</button>
-        <button class="btn btn-secondary" id="openImportBtn" onclick="openImportModal()" disabled>Add from Participants</button>
-        <span class="small">Importer flere deltakere fra deltakerlisten i Participants.html</span>
+        <button class="btn btn-secondary" id="openImportBtn" onclick="openImportPicker()" disabled>Add from Participants</button>
+        <span class="hint">Import from participants list</span>
       </div>
 
+      <!-- INLINE IMPORT POPUP (under crew) -->
+      <div id="importInline" class="inline-import" aria-hidden="true">
+        <div class="inline-import-header">
+          <div class="inline-import-title">Add from Participants
+            <span class="small-hint">Select and press “Add Selected”</span>
+          </div>
+          <div>
+            <button class="btn btn-ok minw-110" id="importConfirmBtn" onclick="importSelected()" disabled>Add Selected</button>
+            <span class="close-x" onclick="closeImportPicker()">×</span>
+          </div>
+        </div>
+        <div class="inline-import-body">
+          <div class="search-row">
+            <input type="text" id="participantSearch" placeholder="Search name, nationality, position, phone, email…" oninput="renderParticipantsList()">
+            <button class="btn" onclick="toggleAllParticipants()">Toggle All</button>
+          </div>
+          <div class="scroll-area">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:50px;">Sel</th>
+                  <th>Full name</th>
+                  <th>Nationality</th>
+                  <th>Id/Pn</th>
+                  <th>Phone</th>
+                  <th>Email</th>
+                  <th>Job position</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="participantsList"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Crew table -->
       <div style="margin-top:16px;">
         <table aria-label="Crew table">
           <thead>
             <tr>
-              <th>Full name</th>
-              <th>Nationality</th>
-              <th>Phone</th>
-              <th>Email</th>
-              <th>Job position</th>
+              <th>Full name</th><th>Nationality</th><th>Id/Pn</th><th>Phone</th><th>Email</th><th>Job position</th>
               <th style="width:110px;">Actions</th>
             </tr>
           </thead>
@@ -242,54 +214,18 @@
 
     <!-- Upload Section -->
     <div class="panel">
-      <h2>Upload Inventory Lists</h2>
-      <p class="hint" id="uploadHint">Velg et tokt i tabellen over for å aktivere opplasting.</p>
+      <h2>Upload documents</h2>
+      <p class="hint" id="uploadHint">Select a voyage above to enable uploading.</p>
 
       <label class="dropzone" id="dropzone">
         <input id="fileInput" type="file" multiple
                accept=".pdf,.xlsx,.xls,.csv,.txt,.jpg,.jpeg,.png,.webp,.doc,.docx,.ods,.odt" />
         <div>
-          <strong>Dra og slipp</strong> filer hit eller <span class="badge">klikk for å velge</span><br>
-          <span class="muted">PDF/Excel/CSV/Bilder m.m. lagres på valgt Voyage.</span>
+          <strong>Drag and drop</strong> files here or <span class="badge">click to select</span><br>
+          <span class="hint">PDF/Excel/CSV/Images etc. will be saved to the selected Voyage.</span>
         </div>
       </label>
-
       <div class="uploads" id="uploadList"></div>
-    </div>
-  </div>
-
-  <!-- Import Modal -->
-  <div class="modal-backdrop" id="importBackdrop" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="importTitle">
-      <div class="modal-header">
-        <div class="modal-title" id="importTitle">Add from Participants</div>
-        <div class="modal-actions">
-          <button class="btn btn-ok minw-110" id="importConfirmBtn" onclick="importSelected()" disabled>Add Selected</button>
-          <span class="close-x" onclick="closeImportModal()">×</span>
-        </div>
-      </div>
-
-      <div class="search-row">
-        <input type="text" id="participantSearch" placeholder="Search name, nationality, position, phone, email…" oninput="renderParticipantsList()">
-        <button class="btn" onclick="toggleAllParticipants()">Toggle All</button>
-      </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th style="width:50px;">Sel</th>
-            <th>Full name</th>
-            <th>Nationality</th>
-            <th>Phone</th>
-            <th>Email</th>
-            <th>Job position</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="participantsList"></tbody>
-      </table>
-
-      <p class="small" style="margin-top:10px;">Kilden er <strong>participants_v1</strong> i localStorage (oppdatert av Participants.html).</p>
     </div>
   </div>
 
@@ -301,11 +237,12 @@
     // ------- Storage keys -------
     const VKEY = 'voyages_v1';
     const PKEY = 'participants_v1';
+    const EXPORTKEY = 'fleet_add_voyage'; // Fleet lytter på denne
 
     // ------- State -------
     let voyages = loadVoyages();
     let activeVoyageId = voyages[0]?.id || null;
-    let importSelection = new Set(); // selected participant ids in modal
+    let importSelection = new Set();
 
     // ------- Utils -------
     const $ = (id) => document.getElementById(id);
@@ -316,6 +253,12 @@
       .replaceAll('&','&amp;').replaceAll('<','&lt;')
       .replaceAll('>','&gt;').replaceAll('"','&quot;')
       .replaceAll("'", "&#039;");
+    function loadParticipants() {
+      try {
+        const arr = JSON.parse(localStorage.getItem(PKEY)) || [];
+        return arr.map(p => ({ id: p.id || p.uid || uid(), ...p }));
+      } catch { return []; }
+    }
 
     // ------- Storage -------
     function saveVoyages() {
@@ -330,31 +273,22 @@
         return Array.isArray(parsed.voyages) ? parsed.voyages : [];
       } catch { return []; }
     }
-    function loadParticipants() {
-      try { return JSON.parse(localStorage.getItem(PKEY)) || []; }
-      catch { return []; }
-    }
 
     // ------- Active voyage helpers -------
-    function getActiveVoyage() {
-      return voyages.find(v => v.id === activeVoyageId) || null;
-    }
+    function getActiveVoyage() { return voyages.find(v => v.id === activeVoyageId) || null; }
     function setActiveVoyage(id) {
       activeVoyageId = id;
       saveVoyages();
-      renderVoyages();
-      renderCrew();
-      renderUploads();
-      updateSectionEnabled();
+      renderVoyages(); renderCrew(); renderUploads(); updateSectionEnabled();
     }
     function updateSectionEnabled() {
       const hasActive = !!getActiveVoyage();
       $('activeVoyageName').textContent = hasActive ? getActiveVoyage().name : 'Ingen valgt';
-      $('addCrewBtn').disabled = !hasActive;
       $('openImportBtn').disabled = !hasActive;
       $('exportPdfBtn').disabled = !hasActive;
+      $('sendToFleetBtn').disabled = !hasActive;
       $('crewHint').textContent = hasActive ? 'Legg til mannskap for valgt tokt.' : 'Velg et tokt i tabellen over for å aktivere mannskapslisten.';
-      $('uploadHint').textContent = hasActive ? 'Last opp beholdningslister for valgt tokt.' : 'Velg et tokt i tabellen over for å aktivere opplasting.';
+      $('uploadHint').textContent = hasActive ? 'Last opp dokumenter for valgt tokt.' : 'Velg et tokt i tabellen over for å aktivere opplasting.';
       $('dropzone').style.pointerEvents = hasActive ? 'auto' : 'none';
       $('dropzone').style.opacity = hasActive ? '1' : '.55';
     }
@@ -364,17 +298,13 @@
       const name = $('voyageName').value.trim();
       const start = $('startDate').value;
       const end = $('endDate').value;
-
       if (!name) { alert('Please enter Voyage Name'); return; }
       if (start && end && start > end) { alert('Start Date can’t be after End Date'); return; }
-
       const v = { id: uid(), name, start, end, crew: [], files: [] };
       voyages.push(v);
       activeVoyageId = v.id;
       saveVoyages();
-      $('voyageName').value = '';
-      $('startDate').value = '';
-      $('endDate').value = '';
+      $('voyageName').value=''; $('startDate').value=''; $('endDate').value='';
       renderVoyages(); renderCrew(); renderUploads(); updateSectionEnabled();
     }
     function deleteVoyage(id) {
@@ -407,24 +337,7 @@
       $('activeVoyageName').textContent = getActiveVoyage()?.name || 'Ingen valgt';
     }
 
-    // ------- Crew (manual add) -------
-    function addCrew() {
-      const v = getActiveVoyage();
-      if (!v) return alert('No voyage selected');
-
-      const name = $('crewName').value.trim();
-      const nat  = $('crewNationality').value.trim();
-      const phone = $('crewPhone').value.trim();
-      const email = $('crewEmail').value.trim();
-      const pos  = $('crewPosition').value.trim();
-      if (!name) { alert('Enter crew name'); return; }
-
-      v.crew.push({ id: uid(), name, nationality: nat, phone, email, position: pos });
-      saveVoyages();
-      $('crewName').value = ''; $('crewNationality').value = '';
-      $('crewPhone').value = ''; $('crewEmail').value = ''; $('crewPosition').value = '';
-      renderCrew();
-    }
+    // ------- Crew (import only) -------
     function deleteCrew(id) {
       const v = getActiveVoyage(); if (!v) return;
       v.crew = v.crew.filter(c => c.id !== id);
@@ -439,6 +352,7 @@
         tr.innerHTML = `
           <td>${escapeHtml(c.name)}</td>
           <td>${escapeHtml(c.nationality || '')}</td>
+          <td>${escapeHtml(c.personId || '')}</td>
           <td>${escapeHtml(c.phone || '')}</td>
           <td>${escapeHtml(c.email || '')}</td>
           <td>${escapeHtml(c.position || '')}</td>
@@ -448,21 +362,32 @@
       });
     }
 
-    // ------- Uploads -------
+    // ------- Uploads (persistent DataURL) -------
     const dropzone = $('dropzone'); const fileInput = $('fileInput');
+
+    function isPreviewableType(mime='') {
+      return mime.startsWith('image/') || mime === 'application/pdf' || mime.startsWith('text/');
+    }
+
     function addFilesToVoyage(fileList) {
       const v = getActiveVoyage(); if (!v) return alert('No voyage selected');
       const files = Array.from(fileList || []); if (!files.length) return;
+      let pending = files.length;
       files.forEach(f => {
-        const url = URL.createObjectURL(f);
-        v.files.push({ id: uid(), name: f.name, size: f.size, type: f.type, url });
+        const reader = new FileReader();
+        reader.onload = () => {
+          v.files.push({
+            id: uid(), name: f.name, size: f.size, type: f.type,
+            dataUrl: reader.result, previewable: isPreviewableType(f.type)
+          });
+          if (--pending === 0) { saveVoyages(); renderUploads(); }
+        };
+        reader.onerror = () => { if (--pending === 0) { saveVoyages(); renderUploads(); } };
+        reader.readAsDataURL(f);
       });
-      saveVoyages(); renderUploads();
     }
     function deleteFile(fileId) {
       const v = getActiveVoyage(); if (!v) return;
-      const file = v.files.find(f => f.id === fileId);
-      if (file) URL.revokeObjectURL(file.url);
       v.files = v.files.filter(f => f.id !== fileId);
       saveVoyages(); renderUploads();
     }
@@ -472,56 +397,60 @@
       v.files.forEach(f => {
         const card = document.createElement('div'); card.className = 'upload-card';
         const thumb = document.createElement('div'); thumb.className = 'thumb';
-        if (f.type && f.type.startsWith('image/')) {
-          const img = document.createElement('img'); img.src = f.url; img.alt = f.name; thumb.appendChild(img);
+        if ((f.type||'').startsWith('image/')) {
+          const img = document.createElement('img'); img.src = f.dataUrl; img.alt = f.name; thumb.appendChild(img);
         } else { thumb.innerHTML = '📄'; thumb.style.fontSize = '28px'; }
         const meta = document.createElement('div');
         meta.innerHTML = `<div><strong>${escapeHtml(f.name)}</strong></div>
                           <div class="file-meta">${kb(f.size)} • ${escapeHtml(f.type || 'file')}</div>`;
         const actions = document.createElement('div'); actions.className = 'upload-actions';
-        const a = document.createElement('a'); a.href = f.url; a.download = f.name; a.className = 'file-link'; a.textContent = 'Download';
+        if (f.previewable) {
+          const aPreview = document.createElement('a'); aPreview.href = f.dataUrl; aPreview.target = '_blank'; aPreview.rel = 'noopener';
+          aPreview.className = 'file-link'; aPreview.textContent = 'Open'; actions.appendChild(aPreview);
+        }
+        const aDownload = document.createElement('a'); aDownload.href = f.dataUrl; aDownload.download = f.name;
+        aDownload.className = 'file-link'; aDownload.textContent = 'Download';
         const del = document.createElement('button'); del.className = 'btn btn-danger'; del.textContent = 'Remove';
         del.onclick = () => deleteFile(f.id);
-        actions.appendChild(a); actions.appendChild(del);
-        card.appendChild(thumb); card.appendChild(meta); card.appendChild(actions);
+        actions.append(aDownload, del);
+        card.append(thumb, meta, actions);
         list.appendChild(card);
       });
     }
-    ;['dragenter','dragover'].forEach(ev => {
-      dropzone.addEventListener(ev, (e) => {
-        if (!getActiveVoyage()) return; e.preventDefault(); e.stopPropagation(); dropzone.classList.add('dragover');
-      });
-    });
-    ;['dragleave','drop'].forEach(ev => {
-      dropzone.addEventListener(ev, (e) => {
-        if (!getActiveVoyage()) return; e.preventDefault(); e.stopPropagation(); dropzone.classList.remove('dragover');
-      });
-    });
+    ['dragenter','dragover'].forEach(ev => dropzone.addEventListener(ev, (e) => {
+      if (!getActiveVoyage()) return; e.preventDefault(); e.stopPropagation(); dropzone.classList.add('dragover');
+    }));
+    ['dragleave','drop'].forEach(ev => dropzone.addEventListener(ev, (e) => {
+      if (!getActiveVoyage()) return; e.preventDefault(); e.stopPropagation(); dropzone.classList.remove('dragover');
+    }));
     dropzone.addEventListener('drop', (e) => { if (!getActiveVoyage()) return; addFilesToVoyage(e.dataTransfer.files); });
     dropzone.addEventListener('click', () => { if (!getActiveVoyage()) return; fileInput.click(); });
     fileInput.addEventListener('change', (e) => addFilesToVoyage(e.target.files));
 
-    // ------- Import from Participants -------
-    function openImportModal() {
+    // ------- Inline Import from Participants -------
+    function openImportPicker() {
       importSelection = new Set();
       $('participantSearch').value = '';
       renderParticipantsList();
-      $('importBackdrop').style.display = 'flex';
-      $('importBackdrop').setAttribute('aria-hidden','false');
+      const box = $('importInline');
+      box.style.display = 'block';
+      box.setAttribute('aria-hidden', 'false');
       updateImportButtonState();
+      // Scroll into view hvis nødvendig
+      box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
-    function closeImportModal() {
-      $('importBackdrop').style.display = 'none';
-      $('importBackdrop').setAttribute('aria-hidden','true');
+    function closeImportPicker() {
+      const box = $('importInline');
+      box.style.display = 'none';
+      box.setAttribute('aria-hidden', 'true');
     }
 
     function getFilteredParticipants() {
       const q = $('participantSearch').value.trim().toLowerCase();
       const all = loadParticipants();
       if (!q) return all;
-      return all.filter(p => [
-        p.name, p.nationality, p.position, p.phone, p.email
-      ].some(f => (f||'').toLowerCase().includes(q)));
+      return all.filter(p => [p.name, p.nationality, p.position, p.phone, p.email]
+        .some(f => (f||'').toLowerCase().includes(q)));
     }
 
     function renderParticipantsList() {
@@ -529,7 +458,7 @@
       const arr = getFilteredParticipants();
       if (!arr.length) {
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td colspan="7" class="muted">No participants found</td>`;
+        tr.innerHTML = `<td colspan="8" class="muted">No participants found</td>`;
         list.appendChild(tr);
         return;
       }
@@ -539,6 +468,7 @@
           <td><input type="checkbox" ${importSelection.has(p.id) ? 'checked' : ''} onchange="toggleOne('${p.id}', this.checked)"></td>
           <td>${escapeHtml(p.name)}</td>
           <td>${escapeHtml(p.nationality||'')}</td>
+          <td>${escapeHtml(p.personId||'')}</td>
           <td>${escapeHtml(p.phone||'')}</td>
           <td>${escapeHtml(p.email||'')}</td>
           <td>${escapeHtml(p.position||'')}</td>
@@ -564,8 +494,8 @@
     function toggleAllParticipants() {
       const arr = getFilteredParticipants();
       const allSelected = arr.every(p => importSelection.has(p.id));
-      if (allSelected) { arr.forEach(p => importSelection.delete(p.id)); }
-      else { arr.forEach(p => importSelection.add(p.id)); }
+      if (allSelected) arr.forEach(p => importSelection.delete(p.id));
+      else arr.forEach(p => importSelection.add(p.id));
       renderParticipantsList();
       updateImportButtonState();
     }
@@ -580,9 +510,8 @@
       if (importSelection.size === 0) return;
 
       const source = loadParticipants().filter(p => importSelection.has(p.id));
-      // Unngå duplikater: sjekk på name+email (kan justeres)
-      const key = x => (x.name||'') + '|' + (x.email||'');
-      const existingKeys = new Set(v.crew.map(key));
+      const key = x => (x.name||'') + '|' + (x.email||''); // enkel dedupe
+      const existingKeys = new Set((v.crew||[]).map(key));
       const toAdd = source.filter(p => !existingKeys.has(key(p)));
 
       toAdd.forEach(p => {
@@ -590,55 +519,68 @@
           id: uid(),
           name: p.name,
           nationality: p.nationality,
+          personId: p.personId,
           phone: p.phone,
           email: p.email,
           position: p.position
         });
       });
 
-      saveVoyages();
-      renderCrew();
-      closeImportModal();
-
+      saveVoyages(); renderCrew(); closeImportPicker();
       if (toAdd.length === 0) alert('Ingen nye å legge til (mulige duplikater ble filtrert).');
+    }
+
+    // ------- Export to Fleet (DIRECT) -------
+    function sendSelectedToFleet() {
+      const v = getActiveVoyage();
+      if (!v) { alert('Select a voyage first.'); return; }
+
+      const safeFiles = (v.files || []).map(f => ({
+        id: f.id, name: f.name, type: f.type, size: f.size,
+        dataUrl: f.dataUrl, previewable: !!f.previewable
+      }));
+
+      const payload = {
+        id: v.id, name: v.name, start: v.start, end: v.end,
+        crew: v.crew || [], files: safeFiles,
+        exportedAt: new Date().toISOString()
+        // vesselName kan legges til her når fartøyregistrering er på plass
+      };
+
+      localStorage.setItem(EXPORTKEY, JSON.stringify(payload));
+      alert('Voyage sent to Fleet.');
     }
 
     // ------- PDF Export -------
     async function generateVoyagePDF() {
       const v = getActiveVoyage();
       if (!v) { alert('No voyage selected'); return; }
-
       const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ unit: 'pt', format: 'a4', compress: true }); // portrait A4
-
+      const doc = new jsPDF({ unit: 'pt', format: 'a4', compress: true });
       const left = 40; let y = 52;
 
-      // Header
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(16);
+      doc.setFont('helvetica','bold'); doc.setFontSize(16);
       doc.text('Seavo Nautiq — Voyage Report', left, y); y += 10;
 
-      doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
-      const genAt = new Date().toLocaleString();
-      doc.text(`Generated: ${genAt}`, left, y); y += 20;
+      doc.setFont('helvetica','normal'); doc.setFontSize(10);
+      doc.text(`Generated: ${new Date().toLocaleString()}`, left, y); y += 20;
 
-      // Voyage Info
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
+      doc.setFont('helvetica','bold'); doc.setFontSize(12);
       doc.text('Voyage', left, y); y += 10;
 
-      doc.setFont('helvetica', 'normal'); doc.setFontSize(11);
+      doc.setFont('helvetica','normal'); doc.setFontSize(11);
       [['Name', v.name||'—'],['Start Date', v.start||'—'],['End Date', v.end||'—']]
         .forEach(row => { doc.text(`${row[0]}: ${row[1]}`, left, y); y += 16; });
       y += 8;
 
-      // Crew Table
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
+      doc.setFont('helvetica','bold'); doc.setFontSize(12);
       doc.text('Crew', left, y); y += 6;
 
       doc.autoTable({
         startY: y + 6,
-        head: [['Full name','Nationality','Phone','Email','Position']],
-        body: (v.crew && v.crew.length ? v.crew : [{name:'—',nationality:'—',phone:'—',email:'—',position:'—'}]).map(c => [
-          c.name||'—', c.nationality||'—', c.phone||'—', c.email||'—', c.position||'—'
+        head: [['Full name','Nationality','Id/Pn','Phone','Email','Position']],
+        body: (v.crew && v.crew.length ? v.crew : [{name:'—',nationality:'—',personId:'—',phone:'—',email:'—',position:'—'}]).map(c => [
+          c.name||'—', c.nationality||'—', c.personId||'—', c.phone||'—', c.email||'—', c.position||'—'
         ]),
         styles: { font: 'helvetica', fontSize: 10 },
         headStyles: { fillColor: [33,34,36], textColor: 255 },
@@ -648,8 +590,7 @@
 
       y = doc.lastAutoTable.finalY + 20;
 
-      // Files Table
-      doc.setFont('helvetica', 'bold'); doc.setFontSize(12);
+      doc.setFont('helvetica','bold'); doc.setFontSize(12);
       doc.text('Inventory Files', left, y);
 
       doc.autoTable({
@@ -664,23 +605,16 @@
         margin: { left, right: left },
       });
 
-      // Footer
       const pageCount = doc.getNumberOfPages();
       for (let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
-        const footerText = `Page ${i} of ${pageCount}`;
         doc.setFontSize(9); doc.setTextColor(120);
         const pageWidth = doc.internal.pageSize.getWidth();
-        doc.text(footerText, pageWidth - left, doc.internal.pageSize.getHeight() - 20, { align: 'right' });
+        doc.text(`Page ${i} of ${pageCount}`, pageWidth - left, doc.internal.pageSize.getHeight() - 20, { align: 'right' });
       }
 
-      // krever moderne nettleser (Unicode property escapes)
-   const safeName = (v.name || 'voyage')
-  .trim()
-  .replace(/[^\p{L}\p{N}_-]+/gu, '_')  // behold bokstaver/sifre, _, -
-  .replace(/_+/g, '_')                  // komprimer flere _
-  .replace(/^_+|_+$/g, '');             // fjern _ i kantene
-
+      const safeName = (v.name || 'voyage').trim()
+        .replace(/[^\p{L}\p{N}_-]+/gu, '_').replace(/_+/g, '_').replace(/^_+|_+$/g, '');
       doc.save(`${safeName}_report.pdf`);
     }
 

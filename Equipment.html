@@ -11,7 +11,26 @@
       color: rgb(255, 255, 255);
     }
 
-  
+      .video-header {
+  position: relative;
+  aspect-ratio: 1280 / 99; /* behold riktig proporsjon */
+  overflow: hidden;
+  background-color: #000; /* fallback bakgrunn */
+}
+
+
+.video-header video {
+  width: 100%;
+  height: 200%;
+  object-fit: cover;
+  display: block;
+}
+
+    .gradient-overgang {
+      height: 10px;
+      background: linear-gradient(to left, #62b2e7, #001125);
+      box-shadow: 6px 4px 6px rgba(0, 0, 0, 0.7);
+    }
 
     .category-slider-parts {
       display: flex;
@@ -459,6 +478,18 @@
 
 
 </head>
+
+<header class="video-header">
+  <video autoplay muted loop playsinline>
+    <source src="Video/Ocean-Seavo-Nautiq.mp4" type="video/mp4">
+    
+
+ </video>
+
+  
+</header>
+
+    <div class="gradient-overgang"></div>
 
 
 

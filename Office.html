@@ -11,7 +11,27 @@
       color: rgb(255, 255, 255);
     }
 
-  
+
+      .video-header {
+  position: relative;
+  aspect-ratio: 1280 / 99; /* behold riktig proporsjon */
+  overflow: hidden;
+  background-color: #000; /* fallback bakgrunn */
+}
+
+
+.video-header video {
+  width: 100%;
+  height: 200%;
+  object-fit: cover;
+  display: block;
+}
+
+     .gradient-overgang {
+      height: 10px;
+      background: linear-gradient(to left, #62b2e7, #001125);
+      box-shadow: 6px 4px 6px rgba(0, 0, 0, 0.7);
+    }
 
     .category-slider-office {
       display: flex;
@@ -137,9 +157,19 @@
       font-size: 14px;
     }
 
-    .cell-min {
-      width: 45px;
-    }
+  .cell-min,
+.cell-max {
+  width: 45px;        
+  min-width: 45px;
+  max-width: 45px;
+}
+
+.cell-min input,
+.cell-max input {
+  width: 100%;         
+  box-sizing: border-box;
+}
+
 
     .cell-order {
       width: 40px;
@@ -170,6 +200,8 @@
     .red-warning {
       background: linear-gradient(to right, #ffffff, #fcac01);
     }
+
+    
 
     .add-line {
       padding: 8px 16px;
@@ -278,6 +310,7 @@
       width: 190px;
     }
 
+
     .cell-comment {
      width: 240px;
    }
@@ -383,6 +416,18 @@
   
   </style>
 </head>
+
+<header class="video-header">
+  <video autoplay muted loop playsinline>
+    <source src="Video/Ocean-Seavo-Nautiq.mp4" type="video/mp4">
+    
+
+ </video>
+
+  
+</header>
+
+    <div class="gradient-overgang"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -568,6 +613,17 @@ function scrollSlider(offset) {
   document.getElementById("category-container").scrollLeft += offset;
 }
 
+// Migrering: sørg for at eksisterende rader har 'max'
+Object.values(data).forEach(rows => {
+  (rows || []).forEach(r => {
+    if (r && r.type !== "header" && typeof r.max === "undefined") {
+      r.max = 0; // eller tom streng "" hvis du foretrekker
+    }
+  });
+});
+save();
+
+
 function updateCategories() {
   const container = document.getElementById("categories");
   container.innerHTML = "";
@@ -624,15 +680,16 @@ function showCategory() {
   if (!activeCategory || !data[activeCategory]) return;
 
   const table = document.createElement("table");
-  table.innerHTML = `
-    <thead>
-      <tr>
-        <th>Product/Type</th><th>Start Qty</th><th>Used</th><th>End Qty</th>
-        <th>MIN🔔</th><th>Comments</th><th>Order</th><th>Move</th><th>Delete</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  `;
+table.innerHTML = `
+  <thead>
+    <tr>
+      <th>Product/Type</th><th>Start Qty</th><th>Used</th><th>End Qty</th>
+      <th>MIN🔔</th><th>MAX🔔</th><th>Comments</th><th>Order</th><th>Move</th><th>Delete</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+`;
+
 
   const tbody = table.querySelector("tbody");
 
@@ -664,79 +721,85 @@ function showCategory() {
       return;
     }
 
-    const fields = ['pen, paper, binder etc.', 'start', 'used', 'end', 'min', 'comment', 'order'];
-    const inputs = {};
+const fields = ['pen, paper, binder etc.', 'start', 'used', 'end', 'min', 'max', 'comment', 'order'];
+const inputs = {};
 
-    fields.forEach((key) => {
-      const td = document.createElement("td");
-      
-      if (key === "pen, paper, binder etc.") td.classList.add("cell-product");
-      
-      else if (key === "comment") td.classList.add("cell-comment");
-      else if (key === "min") td.classList.add("cell-min");
-      else if (key === "order") td.classList.add("cell-order");
-      else td.classList.add("cell-small");
+fields.forEach((key) => {
+  const td = document.createElement("td");
 
+  if (key === "pen, paper, binder etc.") td.classList.add("cell-product");
+  else if (key === "comment") td.classList.add("cell-comment");
+  else if (key === "min") td.classList.add("cell-min");
+  else if (key === "max") td.classList.add("cell-max");
+  else if (key === "order") td.classList.add("cell-order");
+  else td.classList.add("cell-small");
 
-      const input = document.createElement("input");
-      input.type = key === "pen, paper, binder etc." || key === "comment" ? "text" : "number";
-      input.value = row[key] || "";
-      input.style.width = "90%";
-      input.style.padding = "4px";
-      input.style.borderRadius = "5px";
-      input.placeholder = key.charAt(0).toUpperCase() + key.slice(1);
-      if (["pen, paper, binder etc.", "comment", "start", "used", "end", "min", "order"].includes(key)) {
-     input.classList.add("large-bold-input");
-     }
+  const input = document.createElement("input");
+  input.type = (key === "pen, paper, binder etc." || key === "comment") ? "text" : "number";
+  input.value = row[key] ?? "";
+  input.style.width = "90%";
+  input.style.padding = "4px";
+  input.style.borderRadius = "5px";
+  input.placeholder = key.charAt(0).toUpperCase() + key.slice(1);
+  if (["pen, paper, binder etc.", "comment", "start", "used", "end", "min", "max", "order"].includes(key)) {
+    input.classList.add("large-bold-input");
+  }
 
+  input.oninput = () => {
+    row[key] = input.value;
 
-      input.oninput = () => {
-        row[key] = input.value;
+    // Re-beregn END = START - USED
+    row.end = (parseFloat(row.start) || 0) - (parseFloat(row.used) || 0);
+    inputs['end'].value = row.end;
 
-        row.end = (parseFloat(row.start) || 0) - (parseFloat(row.used) || 0);
-        inputs['end'].value = row.end;
+    // MIN-varsling: End <= Min -> rød på MIN
+    const endVal = parseFloat(row.end);
+    const minVal = parseFloat(row.min);
+    if (!isNaN(endVal) && !isNaN(minVal) && endVal <= minVal) {
+      inputs['min'].classList.add("red-warning");
+    } else {
+      inputs['min'].classList.remove("red-warning");
+    }
 
-        const endVal = parseFloat(row.end);
-        const minVal = parseFloat(row.min);
-        if (!isNaN(endVal) && !isNaN(minVal) && endVal <= minVal) {
-          inputs['min'].classList.add("red-warning");
-        } else {
-          inputs['min'].classList.remove("red-warning");
-        }
+    // MAX-varsling: Start > Max -> rød på MAX
+    const startVal = parseFloat(row.start);
+    const maxVal = parseFloat(row.max);
+    if (!isNaN(startVal) && !isNaN(maxVal) && startVal > maxVal) {
+      inputs['max'].classList.add("red-warning");
+    } else {
+      inputs['max'].classList.remove("red-warning");
+    }
 
+    save();
+  };
+
+  inputs[key] = input;
+  td.appendChild(input);
+
+  // Fargeknapper i produkt-cellen (uendret)
+  if (key === "pen, paper, binder etc.") {
+    const colorContainer = document.createElement("div");
+    colorContainer.className = "color-buttons";
+    const colors = ["limegreen", "gold", "mediumturquoise", "white"];
+    colors.forEach(color => {
+      const btn = document.createElement("button");
+      btn.className = `color-btn ${color}`;
+      btn.title = `Make ${color}`;
+      btn.onclick = (e) => {
+        e.preventDefault();
+        row.productColor = color === "white" ? null : color;
+        input.style.backgroundColor = row.productColor || "";
         save();
       };
-      inputs[key] = input;
-      td.appendChild(input);
-      if (key === "pen, paper, binder etc.") {
-  // 1. Lag fargeknappene
-  const colorContainer = document.createElement("div");
-  colorContainer.className = "color-buttons";
-
-  const colors = ["limegreen", "gold", "mediumturquoise", "white"];
-  colors.forEach(color => {
-    const btn = document.createElement("button");
-    btn.className = `color-btn ${color}`;
-    btn.title = `Make ${color}`;
-    btn.onclick = (e) => {
-      e.preventDefault();
-      row.productColor = color === "white" ? null : color;
-      input.style.backgroundColor = row.productColor || "";
-      save();
-    };
-    colorContainer.appendChild(btn);
-  });
-
-  td.appendChild(colorContainer);
-
-  // 2. Bruk lagret farge når cellen bygges
-  if (row.productColor) {
-    input.style.backgroundColor = row.productColor || "";
-
-  }
-}
-      tr.appendChild(td);
+      colorContainer.appendChild(btn);
     });
+    td.appendChild(colorContainer);
+    if (row.productColor) input.style.backgroundColor = row.productColor || "";
+  }
+
+  tr.appendChild(td);
+});
+
 
     const tdMove = document.createElement("td");
     tdMove.classList.add("cell-move");
@@ -761,10 +824,19 @@ function showCategory() {
   addLine.className = "add-line";
   addLine.textContent = "+ Add line";
   addLine.onclick = () => {
-    data[activeCategory].push({
-    type: "line", product: "", start: 0, used: 0,
-    comment: "", min: 0, order: 0, end: 0, productColor: null
-  });
+ data[activeCategory].push({
+  type: "line",
+  product: "",
+  start: 0,
+  used: 0,
+  end: 0,
+  min: 0,
+  max: 0,
+  comment: "",
+  order: 0,
+  productColor: null
+});
+
 
     save();
     showCategory();
@@ -812,12 +884,13 @@ function showGlobalOverview() {
   const content = document.getElementById("content");
   content.innerHTML = "<h2>Global overview of the entire inventory</h2>";
   const table = document.createElement("table");
-  table.innerHTML = `
-    <thead>
-      <tr><th>Category</th><th>Product</th><th>Start</th><th>Used</th><th>End</th><th>Min</th><th>Comment</th><th>Order</th></tr>
-    </thead>
-    <tbody></tbody>
-  `;
+table.innerHTML = `
+  <thead>
+    <tr><th>Category</th><th>Product</th><th>Start</th><th>Used</th><th>End</th><th>Min</th><th>Max</th><th>Comment</th><th>Order</th></tr>
+  </thead>
+  <tbody></tbody>
+`;
+
   const tbody = table.querySelector("tbody");
 
   Object.entries(data).forEach(([category, rows]) => {
@@ -828,24 +901,34 @@ function showGlobalOverview() {
       const used = parseInt(row.used) || 0;
       const end = row.end ?? (start - used);
       const min = parseInt(row.min) || 0;
+     const max = parseInt(row.max) || 0;
 
-      const values = [
-        category,
-        row.product || "",
-        start,
-        used,
-        end,
-        min,
-        row.comment || "",
-        row.order || ""
-      ];
+    const values = [
+    category,
+    row.product || "",
+     start,
+     used,
+     end,
+     min,
+     max,
+     row.comment || "",
+     row.order || ""
+  ];
 
-      values.forEach((val, i) => {
-        const td = document.createElement("td");
-        td.textContent = val;
-        if (i === 4 && end <= min) td.classList.add("red-warning");
-        tr.appendChild(td);
-      });
+values.forEach((val, i) => {
+  const td = document.createElement("td");
+  td.textContent = val;
+
+  // Behold eksisterende MIN-varsling (End <= Min)
+  if (i === 4 && end <= min) td.classList.add("red-warning");
+
+  // MAX-varsling (Start > Max) -> markér MAX-cellen
+  if (i === 6 && start > max) td.classList.add("red-warning");
+
+  tr.appendChild(td);
+});
+
+
 
       tbody.appendChild(tr);
     });

@@ -496,7 +496,7 @@
       <button onclick="åpnePopup3()"><img src="icon/Order-black.png" alt="Info" style="height: 32px; vertical-align: middle;"> Orders</button>
       <button onclick="åpnePopup()"><img src="icon/Participants.png" alt="Info" style="height: 32px; vertical-align: middle;"> Participants</button>
       <button onclick="åpnePopup5()"><img src="icon/Voyage.png" alt="Info" style="height: 32px; vertical-align: middle;"> Voyages</button>
-      <button><img src="icon/Fleet.png" alt="Info" style="height: 32px; vertical-align: middle;"> Fleet</button>
+      <button onclick="åpnePopup6()"><img src="icon/Fleet.png" alt="Info" style="height: 32px; vertical-align: middle;"> Fleet</button>
     </div>
   </div>
 
@@ -727,43 +727,52 @@ updateDigitalClock(); // første kall
 
      function åpnePopup() {
       window.open(
-        'participants.html',    // Filnavnet til deltaker-siden
-        'popup',                  // Navn på vinduet
-        'width=1200,height=700'   // Størrelse og evt. tilpasninger
+        'participants.html',    
+        'popup',                  
+        'width=1200,height=700'   
       );
     }
 
       function åpnePopup2() {
       window.open(
-        'Documents.html',    // Filnavnet til deltaker-siden
-        'popup',                  // Navn på vinduet
-        'width=1400,height=800'   // Størrelse og evt. tilpasninger
+        'Documents.html',    
+        'popup',                  
+        'width=1400,height=800'   
       );
     }
 
        function åpnePopup3() {
       window.open(
-        'Orders.html',    // Filnavnet til deltaker-siden
-        'popup',                  // Navn på vinduet
-        'width=1400,height=800'   // Størrelse og evt. tilpasninger
+        'Orders.html',    
+        'popup',                  
+        'width=1400,height=800'   
       );
     }
 
        function åpnePopup4() {
       window.open(
-        'Help.html',    // Filnavnet til deltaker-siden
-        'popup',                  // Navn på vinduet
-        'width=1400,height=800'   // Størrelse og evt. tilpasninger
+        'Help.html',    
+        'popup',                 
+        'width=1400,height=800'  
       );
     }
 
           function åpnePopup5() {
       window.open(
-        'Voyages.html',    // Filnavnet til deltaker-siden
-        'popup',                  // Navn på vinduet
-        'width=1400,height=800'   // Størrelse og evt. tilpasninger
+        'Voyages.html',    
+        'popup',                  
+        'width=1400,height=800'   
       );
     }
+
+              function åpnePopup6() {
+      window.open(
+        'Fleet.html',    
+        'popup',                  
+        'width=1400,height=800'  
+      );
+    }
+
 
 
 </script>

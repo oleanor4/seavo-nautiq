@@ -4,73 +4,59 @@
   <meta charset="UTF-8">
   <title>List of participants</title>
   <style>
-    body {
-      background-color: #0b2d5e;
-      font-family: Arial, sans-serif;
-      margin: 30px;
-      color: rgb(255, 255, 255);
-      font-weight: bold;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 30px;
-      background-color: rgb(93, 94, 95);
-    }
-
-    th, td {
-      border: 1px solid #ddd;
-      padding: 12px;
-      text-align: left;
-    }
-
-    th {
-      background-color: #212224;
-      color: rgb(255, 255, 255);
-      margin-bottom: 10px;
-    }
-
+    body { background-color:#0b2d5e; font-family:Arial,sans-serif; margin:30px; color:#fff; font-weight:bold; }
+    table { width:100%; border-collapse:collapse; margin-bottom:30px; background-color:rgb(93,94,95); }
+    th, td { border:1px solid #ddd; padding:12px; text-align:left; }
+    th { background-color:#212224; color:#fff; margin-bottom:10px; }
     input[type="text"], input[type="email"], input[type="tel"], select, input[list] {
-      width: 100%;
-      padding: 8px;
-      box-sizing: border-box;
-      border-radius: 5px;
+      width:100%; padding:8px; box-sizing:border-box; border-radius:5px;
     }
-
-    .status-valid { background-color: #28e755; color: #000; }
-    .status-warning { background-color: #ecc543; color: #000; }
-    .status-expired { background-color: #f03747; color: #fff; }
+    .status-valid { background-color:#28e755; color:#000; }
+    .status-warning { background-color:#ecc543; color:#000; }
+    .status-expired { background-color:#f03747; color:#fff; }
 
     .add-btn {
-      padding: 10px 20px;
-      font-size: 16px;
-      background: linear-gradient(to right, #007bff, #0056b3);
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+      padding:10px 20px; font-size:16px; background:linear-gradient(to right,#007bff,#0056b3);
+      color:#fff; border:none; border-radius:6px; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,.4);
     }
-    .add-btn:hover { background: #598fc9; }
+    .add-btn:hover { background:#598fc9; }
+    .delete-row-btn { background:#d9534f; color:#fff; border:none; border-radius:5px; padding:6px 10px; cursor:pointer; }
+    .delete-row-btn:hover { opacity:.9; }
 
-    .delete-row-btn {
-      background: #d9534f;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      padding: 6px 10px;
-      cursor: pointer;
+    /* Picker bar */
+    .picker-bar {
+      display:none;
+      background:linear-gradient(to right,#1b75d1,#0e3e86);
+      padding:12px;
+      border-radius:8px;
+      margin:10px 0 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,.25);
     }
-    .delete-row-btn:hover { opacity: .9; }
+    .picker-bar.active { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .picker-info { font-weight:600; }
+    .picker-actions { display:flex; gap:10px; }
+    .btn {
+      padding:10px 14px; font-size:14px; border:none; border-radius:8px; cursor:pointer; color:#fff;
+      background:linear-gradient(to right,#62b2e7,#1b4f8f);
+      box-shadow:0 2px 6px rgba(0,0,0,.35);
+    }
+    .btn:hover { filter: brightness(1.05); }
+    .btn-ghost { background:rgba(0,0,0,.25); }
   </style>
 </head>
 <body>
 
-  <div>
-    <h1 style="text-align: center; color: #fff; margin-top: 20px; font-size: 36px; font-weight: bold; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);">
-      List of participants
-    </h1>
+  <h1 style="text-align:center; margin-top:20px; font-size:36px; font-weight:bold; text-shadow:0 1px 3px rgba(0,0,0,.6);">
+    List of participants
+  </h1>
+
+  <!-- Vises kun i pick=1 modus -->
+  <div id="pickerBar" class="picker-bar">
+    <div class="picker-info">Picker mode: Select participants and send to Supplies.</div>
+    <div class="picker-actions">
+      <button id="sendPicked" class="btn">Send selected to Supplies</button>
+      <button id="cancelPicked" class="btn btn-ghost">Cancel</button>
+    </div>
   </div>
 
   <h2>Registered Participants</h2>
@@ -81,6 +67,7 @@
         <th>✔️</th>
         <th>Participant / Crew</th>
         <th>Nationality</th>
+        <th>Id/Pn</th>
         <th>Phone number</th>
         <th>E-mail</th>
         <th>Status of documents</th>
@@ -88,11 +75,10 @@
         <th>Delete</th>
       </tr>
     </thead>
-    <tbody id="crewBody">
-      <!-- Rader lastes fra localStorage -->
-    </tbody>
+    <tbody id="crewBody"></tbody>
   </table>
-<h2>Register New </h2>
+
+  <h2>Register New</h2>
   <form id="crewForm" onsubmit="return false;">
     <table>
       <tr>
@@ -104,6 +90,10 @@
         <td><input type="text" id="nationality" placeholder="Nationality" required></td>
       </tr>
       <tr>
+        <td><label for="personId">Id/Pn:</label></td>
+        <td><input type="text" id="personId" placeholder="PersonId" required></td>
+      </tr>
+      <tr>
         <td><label for="phone">Telephone number:</label></td>
         <td><input type="tel" id="phone" placeholder="Telephone number" required></td>
       </tr>
@@ -111,7 +101,6 @@
         <td><label for="email">E-mail:</label></td>
         <td><input type="email" id="email" placeholder="E-mail" required></td>
       </tr>
-
       <tr>
         <td><label for="position">Job position:</label></td>
         <td>
@@ -135,14 +124,13 @@
           </datalist>
         </td>
       </tr>
-
       <tr>
-        <td><label for="status">Status:</label></td>
+        <td><label for="status">Status of documents:</label></td>
         <td>
           <select id="status" required>
-            <option value="valid" class="status-valid">✅ Valid</option>
+            <option value="valid" class="status-valid">✅ All valid</option>
             <option value="soon" class="status-warning">⚠️ One or more expires soon</option>
-            <option value="expired" class="status-expired">❌ Expired</option>
+            <option value="expired" class="status-expired">❌ One or more expired</option>
           </select>
         </td>
       </tr>
@@ -153,15 +141,22 @@
 
   <script>
     const PKEY = 'participants_v1';
+    const PICKKEY = 'selected_for_supplies';
+
     const $ = id => document.getElementById(id);
+    const qs = sel => document.querySelector(sel);
+
+    function getQueryParam(name) {
+      const url = new URL(window.location.href);
+      return url.searchParams.get(name);
+    }
+    const isPicker = getQueryParam('pick') === '1';
 
     const loadParticipants = () => {
       try { return JSON.parse(localStorage.getItem(PKEY)) || []; }
       catch { return []; }
     };
-    const saveParticipants = (arr) => {
-      localStorage.setItem(PKEY, JSON.stringify(arr));
-    };
+    const saveParticipants = (arr) => localStorage.setItem(PKEY, JSON.stringify(arr));
 
     let participants = loadParticipants();
 
@@ -171,14 +166,15 @@
       participants.forEach(p => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td><input type="checkbox"></td>
+          <td><input type="checkbox" class="pickbox" data-uid="${p.uid}"></td>
           <td>${escapeHtml(p.name)}</td>
           <td>${escapeHtml(p.nationality)}</td>
+          <td>${escapeHtml(p.personId)}</td>
           <td>${escapeHtml(p.phone)}</td>
           <td>${escapeHtml(p.email)}</td>
           <td class="${statusClass(p.status)}">${statusText(p.status)}</td>
           <td>${escapeHtml(p.position)}</td>
-          <td><button class="delete-row-btn" onclick="deleteRow('${p.id}')">Delete</button></td>
+          <td><button class="delete-row-btn" onclick="deleteRow('${p.uid}')">Delete</button></td>
         `;
         body.appendChild(tr);
       });
@@ -198,19 +194,24 @@
     function addParticipant() {
       const name = $('name').value.trim();
       const nationality = $('nationality').value.trim();
+      const personId = $('personId').value.trim();
       const phone = $('phone').value.trim();
       const email = $('email').value.trim();
       const position = $('position').value.trim();
       const status = $('status').value;
 
-      if (!name || !nationality || !phone || !email || !position || !status) {
+      if (!name || !nationality || !personId || !phone || !email || !position || !status) {
         alert('Vennligst fyll ut alle felt.');
         return;
       }
 
+      if (participants.some(p => p.personId === personId)) {
+        if (!confirm('En deltaker med samme Id/Pn finnes allerede. Legg til likevel?')) return;
+      }
+
       participants.push({
-        id: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2,10),
-        name, nationality, phone, email, position, status
+        uid: (crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2,10)),
+        personId, name, nationality, phone, email, position, status
       });
       saveParticipants(participants);
       renderTable();
@@ -219,8 +220,8 @@
       $('name').focus();
     }
 
-    function deleteRow(id) {
-      participants = participants.filter(p => p.id !== id);
+    function deleteRow(uid) {
+      participants = participants.filter(p => p.uid !== uid);
       saveParticipants(participants);
       renderTable();
     }
@@ -234,8 +235,35 @@
         .replaceAll("'", "&#039;");
     }
 
+    // Picker mode UI
+    function initPickerBar() {
+      const bar = $('pickerBar');
+      if (isPicker) {
+        bar.classList.add('active');
+        $('sendPicked').onclick = sendSelectedToSupplies;
+        $('cancelPicked').onclick = () => window.close();
+      }
+    }
+
+    function sendSelectedToSupplies() {
+      const checks = Array.from(document.querySelectorAll('.pickbox:checked'));
+      if (!checks.length) {
+        alert('Select at least one participant.');
+        return;
+      }
+      const selectedUids = checks.map(c => c.getAttribute('data-uid'));
+      const picked = participants
+        .filter(p => selectedUids.includes(p.uid))
+        .map(p => ({ uid: p.uid, name: p.name }));
+
+      localStorage.setItem(PICKKEY, JSON.stringify(picked));
+      // Lukk vinduet så Supplies kan plukke opp utvalget
+      window.close();
+    }
+
     // Init
     renderTable();
+    initPickerBar();
   </script>
 
 </body>

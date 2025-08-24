@@ -12,57 +12,393 @@
       padding: 20px;
     }
 
-  
-
-  .logo {
-     width: 200px;
-     height: auto;
-     border-radius: 6px;
-     box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-     cursor: pointer;
-     margin-left: 60px;
+    .video-header {
+      position: relative;
+      aspect-ratio: 1280 / 99;
+      overflow: hidden;
+      background-color: #000;
+    }
+    .video-header video {
+      width: 100%;
+      height: 200%;
+      object-fit: cover;
+      display: block;
     }
 
-  .logo:hover {
-    transform: scale(1.08);
-    transition: transform 0.2s ease;
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
-  }
+    .gradient-overgang {
+      height: 10px;
+      background: linear-gradient(to left, #62b2e7, #001125);
+      box-shadow: 6px 4px 6px rgba(0, 0, 0, 0.7);
+    }
+
+    .logo {
+      width: 200px;
+      height: auto;
+      border-radius: 6px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+      cursor: pointer;
+      margin-left: 60px;
+    }
+    .logo:hover {
+      transform: scale(1.08);
+      transition: transform 0.2s ease;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+    }
+
     .Supplies {
       width: 100%;
-     height: 160%;
-     position: absolute;
-     top: 0;
-     left: 0%;
-     z-index: -1;
-     opacity: 0.1;
-     pointer-events: none;
+      height: 160%;
+      position: absolute;
+      top: 0;
+      left: 0%;
+      z-index: -1;
+      opacity: 0.1;
+      pointer-events: none;
     }
 
-</style>
-</head>
-    <body>
-
-
-         <header>
-    <h1 style="text-align: center; color:
-   rgb(218, 215, 215);
-    margin-top: 20px;
-    font-size: 36px;
-    font-weight: bold;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);" >
-    Supplies</h1>
-
-
-   <a href="index.html" class="logo-link">
-  <img src="images/Logo Seavo Nautiq.png" alt="Logo Seavo Nautiq" class="logo"> 
-</a>
-
-
-    <img src="images/Supplies.png" alt="Supplies" class="Supplies"> 
-  </header>
-   </head>
-    </body>
-    </html>
-    
    
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin: 20px 0 10px;
+    }
+    .btn {
+      padding: 10px 16px;
+      font-size: 15px;
+      margin-top: 30px;
+      background: linear-gradient(to right,#62b2e7,#1b4f8f);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,.35);
+    }
+    .btn:hover { filter: brightness(1.05); }
+
+    .cards {
+      display: grid;
+      gap: 16px;
+      margin-top: 10px;
+    }
+    .card {
+      background: rgba(0,0,0,.15);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,.25);
+      padding: 12px;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #e6f0ff;
+      text-shadow: 0 1px 2px rgba(0,0,0,.4);
+    }
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-danger {
+      background: linear-gradient(to right,#f03747,#b61b26);
+    }
+
+    /* Tabell inni kortet */
+    .supply-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 10px;
+      overflow: hidden;
+      table-layout: fixed; /* viktig for faste bredder */
+    }
+    .supply-table th, .supply-table td {
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      padding: 10px;
+      text-align: left;
+    }
+    .supply-table th {
+      background: rgba(0,0,0,.25);
+    }
+
+    /* Faste kolonnebredder som du ønsket */
+    .col-supply { width: 380px; }
+    .col-qty { width: 80px; }
+    .col-voyage { width: 350px; }
+    /* Date tar resten (no fixed width) */
+
+    .row-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .btn-small {
+      padding: 6px 10px;
+      font-size: 13px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-ghost {
+      background: rgba(0,0,0,.2);
+      color: #fff;
+    }
+    .btn-ghost:hover { background: rgba(0,0,0,.3); }
+
+    /* Inputs i tabellen */
+    .supply-input, .qty-input, .voyage-input, .date-input {
+      width: 100%;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,.2);
+      background: rgba(0,0,0,.2);
+      color: #fff;
+      box-sizing: border-box;
+    }
+
+    /* Tom-tilstand */
+    .empty {
+      padding: 10px;
+      opacity: .8;
+      font-style: italic;
+    }
+
+  </style>
+</head>
+<body>
+  <header class="video-header">
+    <video autoplay muted loop playsinline>
+      <source src="Video/Ocean-Seavo-Nautiq.mp4" type="video/mp4">
+    </video>
+  </header>
+  <div class="gradient-overgang"></div>
+
+  <header>
+    <h1 style="text-align:center;color:rgb(218,215,215);margin-top:20px;font-size:36px;font-weight:bold;text-shadow:0 1px 3px rgba(0,0,0,.6);">
+      Supplies
+    </h1>
+
+    <a href="index.html" class="logo-link">
+      <img src="images/Logo Seavo Nautiq.png" alt="Logo Seavo Nautiq" class="logo">
+    </a>
+
+    <img src="images/Supplies.png" alt="Supplies" class="Supplies">
+  </header>
+
+  <div class="toolbar">
+    <button class="btn" id="openPickerBtn">Add Participant</button>
+  </div>
+
+  <div id="cards" class="cards"></div>
+
+  <script>
+    /** KEYS */
+    const PKEY = 'participants_v1';          // fra participants.html
+    const BOXKEY = 'supplies_boxes_v1';      // lagring av kort og rader
+    const PICKKEY = 'selected_for_supplies'; // midlertidig utvalg fra picker
+
+    /** Hjelpere */
+    const $ = sel => document.querySelector(sel);
+    const el = (tag, cls) => { const x = document.createElement(tag); if (cls) x.className = cls; return x; };
+
+    function loadJSON(key, fallback) {
+      try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
+      catch { return fallback; }
+    }
+    function saveJSON(key, val) {
+      localStorage.setItem(key, JSON.stringify(val));
+    }
+
+    /** Dataformat:
+     * boxes = [
+     *  { participantUid, participantName, lines: [{supply, qty, voyage, date}] }
+     * ]
+     */
+    let boxes = loadJSON(BOXKEY, []);
+
+    /** Render hele kortlisten */
+    function renderAll() {
+      const wrap = $('#cards');
+      wrap.innerHTML = '';
+      if (!boxes.length) {
+        const empty = el('div', 'empty');
+        empty.textContent = 'No participants added yet. Click "Add Participant" to begin.';
+        wrap.appendChild(empty);
+        return;
+      }
+      boxes.forEach((box, idx) => wrap.appendChild(renderCard(box, idx)));
+    }
+
+    /** Render ett kort (deltakerboks med tabell) */
+    function renderCard(box, idx) {
+      const card = el('div', 'card');
+
+      // Header
+      const header = el('div', 'card-header');
+      const title = el('div', 'card-title');
+      title.textContent = `Participant: ${box.participantName}`;
+      const actions = el('div', 'card-actions');
+      const addBtn = el('button', 'btn btn-small');
+      addBtn.textContent = 'Add line';
+      addBtn.onclick = () => { addLine(idx); };
+
+      const delBtn = el('button', 'btn btn-small btn-danger');
+      delBtn.textContent = 'Delete participant';
+      delBtn.onclick = () => { deleteCard(idx); };
+
+      actions.append(addBtn, delBtn);
+      header.append(title, actions);
+
+      // Table
+      const table = el('table', 'supply-table');
+      const thead = el('thead');
+      const trh = el('tr');
+
+      trh.innerHTML = `
+        <th class="col-supply">Supply</th>
+        <th class="col-qty">Qty</th>
+        <th class="col-voyage">Voyage name</th>
+        <th>Date</th>
+        <th>Actions</th>
+      `;
+      thead.appendChild(trh);
+      table.appendChild(thead);
+
+      const tbody = el('tbody');
+
+      if (!box.lines || !box.lines.length) {
+        const trEmpty = el('tr');
+        const tdEmpty = el('td');
+        tdEmpty.colSpan = 5;
+        tdEmpty.className = 'empty';
+        tdEmpty.textContent = 'No lines yet. Click "Add line".';
+        trEmpty.appendChild(tdEmpty);
+        tbody.appendChild(trEmpty);
+      } else {
+        box.lines.forEach((ln, ridx) => {
+          const tr = el('tr');
+
+          const tdSupply = el('td');
+          const inpSupply = el('input', 'supply-input');
+          inpSupply.value = ln.supply ?? '';
+          inpSupply.oninput = e => updateCell(idx, ridx, 'supply', e.target.value);
+          tdSupply.appendChild(inpSupply);
+
+          const tdQty = el('td');
+          const inpQty = el('input', 'qty-input');
+          inpQty.type = 'number';
+          inpQty.step = '1';
+          inpQty.min = '0';
+          inpQty.value = ln.qty ?? '';
+          inpQty.oninput = e => updateCell(idx, ridx, 'qty', e.target.value);
+          tdQty.appendChild(inpQty);
+
+          const tdVoy = el('td');
+          const inpVoy = el('input', 'voyage-input');
+          inpVoy.value = ln.voyage ?? '';
+          inpVoy.oninput = e => updateCell(idx, ridx, 'voyage', e.target.value);
+          tdVoy.appendChild(inpVoy);
+
+          const tdDate = el('td');
+          const inpDate = el('input', 'date-input');
+          inpDate.type = 'date';
+          inpDate.value = ln.date ?? '';
+          inpDate.oninput = e => updateCell(idx, ridx, 'date', e.target.value);
+          tdDate.appendChild(inpDate);
+
+          const tdAct = el('td');
+          const rowBtns = el('div', 'row-actions');
+          const delRow = el('button', 'btn-small btn-ghost');
+          delRow.textContent = 'Delete';
+          delRow.onclick = () => deleteLine(idx, ridx);
+          rowBtns.appendChild(delRow);
+          tdAct.appendChild(rowBtns);
+
+          tr.append(tdSupply, tdQty, tdVoy, tdDate, tdAct);
+          tbody.appendChild(tr);
+        });
+      }
+      table.appendChild(tbody);
+
+      card.append(header, table);
+      return card;
+    }
+
+    function addLine(cardIndex) {
+      boxes[cardIndex].lines = boxes[cardIndex].lines || [];
+      boxes[cardIndex].lines.push({ supply: '', qty: '', voyage: '', date: '' });
+      persistAndRender();
+    }
+    function deleteLine(cardIndex, rowIndex) {
+      boxes[cardIndex].lines.splice(rowIndex, 1);
+      persistAndRender();
+    }
+    function deleteCard(cardIndex) {
+      if (!confirm('Delete this participant and all lines?')) return;
+      boxes.splice(cardIndex, 1);
+      persistAndRender();
+    }
+    function updateCell(cardIndex, rowIndex, key, val) {
+      boxes[cardIndex].lines[rowIndex][key] = val;
+      saveJSON(BOXKEY, boxes);
+    }
+    function persistAndRender() {
+      saveJSON(BOXKEY, boxes);
+      renderAll();
+    }
+
+    /** Åpne picker (participants.html i plukkemodus) */
+    $('#openPickerBtn').addEventListener('click', () => {
+      // rydd forrige utvalg
+      localStorage.removeItem(PICKKEY);
+      // åpne i nytt vindu fanefritt (kan også bruke modal om ønskelig)
+      window.open('participants.html?pick=1', 'participantPicker',
+        'width=1000,height=800,noopener=yes');
+      // Poll etter resultatet lagt i localStorage av picker
+      waitForPicked();
+    });
+
+    /** Poller lokalStorage etter valgt liste */
+    function waitForPicked() {
+      const start = Date.now();
+      const timer = setInterval(() => {
+        const raw = localStorage.getItem(PICKKEY);
+        if (raw) {
+          clearInterval(timer);
+          const picked = JSON.parse(raw);
+          localStorage.removeItem(PICKKEY);
+          addPickedParticipants(picked);
+        } else {
+          // fail-safe: stopp etter 5 minutter
+          if (Date.now() - start > 5 * 60 * 1000) clearInterval(timer);
+        }
+      }, 500);
+    }
+
+    /** Legg til valgte deltakere som nye kort (unngå duplikater) */
+    function addPickedParticipants(pickedArr) {
+      if (!Array.isArray(pickedArr)) return;
+      pickedArr.forEach(p => {
+        if (!boxes.some(b => b.participantUid === p.uid)) {
+          boxes.push({
+            participantUid: p.uid,
+            participantName: p.name,
+            lines: []
+          });
+        }
+      });
+      persistAndRender();
+    }
+
+    // Init
+    renderAll();
+  </script>
+</body>
+</html>

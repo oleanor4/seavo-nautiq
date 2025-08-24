@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fleet – Seavo Nautiq</title>
+  <style>
+    body { background-color: #12315c; font-family: Arial, sans-serif; margin: 0; color: #fff; }
+    .video-header { position: relative; aspect-ratio: 1280 / 99; overflow: hidden; background:#000; }
+    .video-header video { width: 100%; height: 200%; object-fit: cover; display: block; }
+    .gradient-overgang { height: 10px; background: linear-gradient(to left, #62b2e7, #001125); box-shadow: 6px 4px 6px rgba(0,0,0,.7); }
+
+    .container { padding: 20px 24px 60px; max-width: 1200px; margin: 0 auto; }
+    h1 { margin: 16px 0 8px; text-shadow: 0 1px 2px rgba(0,0,0,.35); }
+    .hint { color:#bcd3f1; font-size:.95rem; margin: 6px 0 16px; }
+
+    .cards { display:grid; gap:16px; }
+    .card {
+      background: rgba(0,0,0,.15);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.35);
+      padding: 14px;
+    }
+    .card-header { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .title { font-size:18px; font-weight:700; color:#e6f0ff; text-shadow:0 1px 2px rgba(0,0,0,.4); }
+    .meta { color:#bcd3f1; font-size:0.95rem; }
+    .section { margin-top:10px; }
+    .section h3 { margin: 10px 0 6px; font-size:1.05rem; }
+    .list { background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.15); border-radius:10px; overflow:hidden; }
+    .list table { width:100%; border-collapse:collapse; }
+    .list th, .list td { padding:10px; border-bottom:1px solid rgba(255,255,255,.12); text-align:left; }
+    .list th { background:#212224; }
+    .file-grid { display:grid; gap:10px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+    .file-card { border:1px solid rgba(255,255,255,.15); border-radius:10px; background: rgba(0,0,0,.2); padding:10px; display:grid; gap:8px; }
+    .file-name { font-weight:600; }
+    .file-actions { display:flex; gap:8px; }
+    .btn { padding: 8px 12px; border:none; border-radius:8px; cursor:pointer; font-weight:600; color:#fff; background:linear-gradient(90deg,#62b2e7,#1b4f8f); box-shadow:0 2px 8px rgba(0,0,0,.35); }
+    .btn-danger { background: linear-gradient(90deg,#f14b53,#b82127); }
+    .badge { display:inline-block; padding:2px 8px; border-radius:999px; background:rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.2); font-size:.85rem; }
+
+    /* Viewer modal */
+    .backdrop { position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.6); z-index:9999; }
+    .viewer { width:min(90vw,1100px); height:min(85vh,800px); background:#0f274a; border:1px solid rgba(255,255,255,.2); border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,.6); padding:8px; }
+    .viewer-head { display:flex; align-items:center; justify-content:space-between; padding:4px 8px; color:#bcd3f1; }
+    .viewer-body { height: calc(100% - 40px); overflow:auto; display:grid; place-items:center; background:#081a33; border-radius:8px; }
+    .viewer img { max-width:100%; max-height:100%; display:block; }
+    .viewer object { width:100%; height:100%; border:none; }
+    .close-x { cursor:pointer; font-size:20px; padding:6px 10px; border-radius:8px; background:rgba(255,255,255,.1); }
+  </style>
+</head>
+<body>
+  <header class="video-header">
+    <video autoplay muted loop playsinline>
+      <source src="Video/Ocean-Seavo-Nautiq.mp4" type="video/mp4">
+    </video>
+  </header>
+  <div class="gradient-overgang"></div>
+
+  <div class="container">
+    <h1>Fleet</h1>
+    <div class="hint">Tip: Go to <strong>Voyages</strong> and press <strong>Send to Fleet</strong> on the active voyage. It will appear here automatically.</div>
+    <div class="cards" id="cards"></div>
+  </div>
+
+  <!-- Viewer Modal -->
+  <div class="backdrop" id="viewerBackdrop" aria-hidden="true">
+    <div class="viewer" role="dialog" aria-modal="true">
+      <div class="viewer-head">
+        <div id="viewerTitle" class="meta">Preview</div>
+        <div class="close-x" onclick="closeViewer()">×</div>
+      </div>
+      <div class="viewer-body" id="viewerBody"></div>
+    </div>
+  </div>
+
+  <script>
+    // Keys
+    const FLEETKEY = 'fleet_voyages_v1';
+    const EXPORTKEY = 'fleet_add_voyage';
+
+    // State
+    let fleet = loadFleet();
+
+    // Utils
+    const qs = sel => document.querySelector(sel);
+    const el = (t,c) => { const n = document.createElement(t); if(c) n.className=c; return n; };
+    function loadFleet(){ try{ return JSON.parse(localStorage.getItem(FLEETKEY)) || []; } catch { return []; } }
+    function saveFleet(){ localStorage.setItem(FLEETKEY, JSON.stringify(fleet)); }
+    function bytes(b){ if(!b && b!==0) return '—'; const kb=(b/1024).toFixed(1); return `${kb} KB`; }
+    function esc(s=''){ return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#039;"); }
+
+    // Inngangspunkt: sjekk om Voyages allerede har lagt en eksport i storage
+    handlePendingExport();
+    // Lytt sanntid mens Fleet er åpen (andre fane endrer localStorage)
+    window.addEventListener('storage', (e) => {
+      if (e.key === EXPORTKEY && e.newValue) {
+        try {
+          const obj = JSON.parse(e.newValue);
+          localStorage.removeItem(EXPORTKEY); // konsumer
+          addFleetCard(obj);
+        } catch {}
+      }
+    });
+
+    function handlePendingExport() {
+      const raw = localStorage.getItem(EXPORTKEY);
+      if (!raw) return;
+      try {
+        const obj = JSON.parse(raw);
+        localStorage.removeItem(EXPORTKEY);
+        addFleetCard(obj);
+      } catch {}
+    }
+
+    function addFleetCard(v) {
+      // Dedupe på vessel|name|start|end (tilpass etter behov)
+      const key = (x) => (x.vesselName||'') + '|' + (x.name||'') + '|' + (x.start||'') + '|' + (x.end||'');
+      const exists = new Set(fleet.map(key));
+      if (!exists.has(key(v))) {
+        fleet.push(v);
+        saveFleet();
+        renderAll();
+      } else {
+        alert('This voyage already exists in Fleet.');
+      }
+    }
+
+    function deleteCard(idx) {
+      if (!confirm('Remove this voyage from Fleet?')) return;
+      fleet.splice(idx,1);
+      saveFleet();
+      renderAll();
+    }
+
+    function renderAll() {
+      const wrap = qs('#cards'); wrap.innerHTML = '';
+      if (!fleet.length) {
+        const empty = el('div','meta');
+        empty.textContent = 'No voyages in Fleet yet. Use “Send to Fleet” from Voyages.';
+        wrap.appendChild(empty);
+        return;
+      }
+      fleet.forEach((v, idx) => wrap.appendChild(renderCard(v, idx)));
+    }
+
+    function renderCard(v, idx) {
+      const card = el('div','card');
+
+      // Header
+      const head = el('div','card-header');
+      const title = el('div','title');
+      const vesselLabel = v.vesselName ? `Vessel: ${v.vesselName}` : 'Vessel: —';
+      title.textContent = `${vesselLabel}  •  Voyage: ${v.name || '—'}`;
+      const actions = el('div');
+      const del = el('button','btn btn-danger'); del.textContent = 'Delete'; del.onclick = () => deleteCard(idx);
+      actions.appendChild(del);
+      head.append(title, actions);
+
+      // Meta
+      const meta = el('div','meta');
+      meta.textContent = `Start: ${v.start || '—'}   •   End: ${v.end || '—'}`;
+
+      // Crew
+      const crewSec = el('div','section');
+      const h3c = el('h3'); h3c.textContent = 'Participants';
+      const crewList = el('div','list');
+      const ctable = el('table');
+      ctable.innerHTML = `
+        <thead><tr>
+          <th>Full name</th><th>Nationality</th><th>Id/Pn</th><th>Phone</th><th>Email</th><th>Position</th>
+        </tr></thead>
+        <tbody>${(v.crew||[]).map(c => `
+          <tr>
+            <td>${esc(c.name)}</td>
+            <td>${esc(c.nationality||'')}</td>
+            <td>${esc(c.personId||'')}</td>
+            <td>${esc(c.phone||'')}</td>
+            <td>${esc(c.email||'')}</td>
+            <td>${esc(c.position||'')}</td>
+          </tr>
+        `).join('') || `<tr><td colspan="6">—</td></tr>`}</tbody>`;
+      crewList.appendChild(ctable);
+      crewSec.append(h3c, crewList);
+
+      // Files
+      const fileSec = el('div','section');
+      const h3f = el('h3'); h3f.textContent = 'Files (view-only)';
+      const grid = el('div','file-grid');
+      (v.files||[]).forEach(f => grid.appendChild(renderFileCard(f)));
+      if (!(v.files||[]).length) {
+        const none = el('div','meta'); none.textContent = 'No files.';
+        fileSec.append(h3f, none);
+      } else {
+        fileSec.append(h3f, grid);
+      }
+
+      card.append(head, meta, crewSec, fileSec);
+      return card;
+    }
+
+    function renderFileCard(f) {
+      const card = el('div','file-card');
+      const name = el('div','file-name'); name.textContent = f.name || 'file';
+      const meta = el('div','meta'); meta.textContent = `${(f.type||'file')} • ${bytes(f.size)}`;
+      const actions = el('div','file-actions');
+
+      const canView = (f.type||'').startsWith('image/') || (f.type === 'application/pdf');
+      const viewBtn = el('button','btn'); viewBtn.textContent = canView ? 'View' : 'Not viewable';
+      if (canView) viewBtn.onclick = () => openViewer(f);
+      else viewBtn.disabled = true;
+
+      actions.appendChild(viewBtn);
+      card.append(name, meta, actions);
+      return card;
+    }
+
+    // Viewer
+    function openViewer(f) {
+      const bd = qs('#viewerBackdrop'); const body = qs('#viewerBody'); const title = qs('#viewerTitle');
+      title.textContent = f.name || 'Preview';
+      body.innerHTML = '';
+      if ((f.type||'').startsWith('image/')) {
+        const img = new Image(); img.src = f.dataUrl; body.appendChild(img);
+      } else if (f.type === 'application/pdf') {
+        const obj = document.createElement('object'); obj.type = 'application/pdf'; obj.data = f.dataUrl;
+        body.appendChild(obj);
+      }
+      bd.style.display = 'flex'; bd.setAttribute('aria-hidden','false');
+    }
+    function closeViewer() {
+      const bd = qs('#viewerBackdrop'); const body = qs('#viewerBody');
+      body.innerHTML = ''; bd.style.display='none'; bd.setAttribute('aria-hidden','true');
+    }
+
+    // Init
+    renderAll();
+  </script>
+</body>
+</html>

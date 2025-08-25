@@ -4,995 +4,428 @@
   <meta charset="UTF-8">
   <title>Seavo Nautiq-Office</title>
   <style>
-    body {
-      background-color: #12315c;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      color: rgb(255, 255, 255);
-    }
-
-
-      .video-header {
-  position: relative;
-  aspect-ratio: 1280 / 99; /* behold riktig proporsjon */
-  overflow: hidden;
-  background-color: #000; /* fallback bakgrunn */
+    body { background-color:#12315c; font-family:Arial,sans-serif; margin:0; color:#fff; }
+    .video-header{position:relative; aspect-ratio:1280/99; overflow:hidden; background:#000;}
+    .video-header video{width:100%; height:200%; object-fit:cover; display:block;}
+    .gradient-overgang{height:10px; background:linear-gradient(to left,#62b2e7,#001125); box-shadow:6px 4px 6px rgba(0,0,0,.7)}
+    .category-slider-office{display:flex; align-items:center; justify-content:center; background:linear-gradient(to right,#041425,#3b7fbe); padding:20px; overflow-x:auto; margin-bottom:-10px; width:90%; margin-left:70px; border-radius:12px;}
+    .category-item{display:flex; align-items:center; margin:0 6px;}
+    .category-button,.add-category{padding:10px 20px; background:linear-gradient(to right,#00b7ff,#326fa8); color:#fff; border-radius:6px; cursor:pointer; font-size:16px; margin-left:20px;}
+    .category-button.active{background:#9ccdfa; font-weight:bold;}
+    .category-button:hover,.add-category:hover{background:#56bafd; color:#fff;}
+    .delete-category{color:#f00; font-size:20px; margin-left:20px; cursor:pointer;}
+    .arrow{font-size:20px; font-weight:bold; padding:5px 10px; background:transparent; color:#fff; border-radius:6px; cursor:pointer; width:60px; box-shadow:0 0 10px rgba(0,0,0,.6); margin-left:40px;}
+    .arrow:hover{background:#326fa8; color:#fff;}
+    #content{padding:60px;}
+    .logo{width:200px; height:auto; border-radius:6px; box-shadow:0 0 10px rgba(0,0,0,.6); cursor:pointer; margin-left:60px;}
+    .logo:hover{transform:scale(1.08); transition:transform .2s ease; box-shadow:0 0 30px rgba(255,255,255,.8);}
+    #searchBox{width:200px; padding:10px; border-radius:6px; border:1px solid #000; box-shadow:0 0 10px rgba(0,0,0,.6); margin-left:60px; margin-top:50px; margin-bottom:20px; font-weight:bold;}
+    .office{width:100%; height:130%; position:absolute; top:0; left:0; z-index:-1; opacity:.1; pointer-events:none;}
+    table{width:100%; border-collapse:collapse; background-color:#1f3b66; color:#000; margin-bottom:20px; box-shadow:0 0 10px rgba(0,0,0,.6);}
+    .large-bold-input{font-weight:bold; font-size:14px;}
+    .cell-min,.cell-max{width:45px; min-width:45px; max-width:45px;}
+    .cell-min input,.cell-max input{width:100%; box-sizing:border-box;}
+    .cell-order{width:40px;}
+    .cell-move{width:60px;}
+    th,td{border:1px solid #112036; padding:5px; text-align:center; font-size:18px;}
+    th{background-color:#13a2e4; color:#000; border-radius:5px;}
+    td.min-col input{width:60px;}
+    /* Alarmfarger */
+    .min-alarm {
+      background: linear-gradient(to right, #ffffff, #fcac01) !important; /* gulaktig */
+}
+    .max-alarm {
+  background: linear-gradient(to right, #ffffff, #c8ff02) !important; /* grønnaktig */
 }
 
-
-.video-header video {
-  width: 100%;
-  height: 200%;
-  object-fit: cover;
-  display: block;
-}
-
-     .gradient-overgang {
-      height: 10px;
-      background: linear-gradient(to left, #62b2e7, #001125);
-      box-shadow: 6px 4px 6px rgba(0, 0, 0, 0.7);
-    }
-
-    .category-slider-office {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(to right, #041425, #3b7fbe);
-      padding: 20px;
-      overflow-x: auto;
-      margin-bottom: -10px;
-      width: 90%;
-      margin-left: 70px;
-      border-radius: 12px;
-    }
-
-    .category-item {
-      display: flex;
-      align-items: center;
-      margin: 0 6px;
-    }
-
-    .category-button, .add-category {
-      padding: 10px 20px;
-      background: linear-gradient(to right, #00b7ff, #326fa8);
-      color: rgb(255, 255, 255);
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 16px;  
-      margin-left: 20px;
-    }
-
-    .category-button.active {
-      background: #9ccdfa;
-      font-weight: bold;
-    }
-    
-    .category-button:hover, .add-category:hover {
-      background: #56bafd;
-      color: white;
-    }
-
-    .delete-category {
-      color: rgb(255, 0, 0);
-      font-size:20px;
-      margin-left: 20px;
-      cursor: pointer;
-    }
-
-    .arrow {
-      font-size: 20px;
-      font-weight: bold;
-      padding: 5px 10px;
-      background: transparent;
-      color: rgb(255, 255, 255);
-      border-radius: 6px;
-      cursor: pointer;
-      width: 60px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-      margin-left: 40px;
-    }
-
-    .arrow:hover {
-      background: #326fa8;
-      color: rgb(255, 255, 255);
-    }
-
-    #content {
-      padding: 60px;
-    }
-
-
-
-.logo {
-  width: 200px;
-  height: auto;
-  border-radius: 6px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-  cursor: pointer;
-  margin-left: 60px;
-}
-
-.logo:hover {
-  transform: scale(1.08);
-  transition: transform 0.2s ease;
-  box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
-}
-
-    #searchBox {
-      width: 200px;
-      padding: 10px;
-      border-radius: 6px;
-      border:  1px solid #000000;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-      margin-left: 60px;
-      margin-top: 50px;
-      margin-bottom: 20px;
-      font-weight: bold;
-    }
-
-    .office {
-     width: 100%;
-     height: 130%;
-     position: absolute;
-     top: 0;
-     left: 0;
-     z-index: -1;
-     opacity: 0.1;
-     pointer-events: none;
-    }
-
-
-    table { 
-      width: 100%;
-      border-collapse: collapse;
-      background-color: rgb(31, 59, 102);
-      color: rgb(0, 0, 0);
-      margin-bottom: 20px;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
-    }
-
-
-    .large-bold-input {
-      font-weight: bold;
-      font-size: 14px;
-    }
-
-  .cell-min,
-.cell-max {
-  width: 45px;        
-  min-width: 45px;
-  max-width: 45px;
-}
-
-.cell-min input,
-.cell-max input {
-  width: 100%;         
-  box-sizing: border-box;
-}
-
-
-    .cell-order {
-      width: 40px;
-    }
-
-    .cell-move {
-      width: 60px;
-    }
-
-
-    th, td {
-      border: 1px solid #112036;
-      padding: 5px;
-      text-align: center;
-      font-size: 18px;
-    }
-
-    th {
-      background-color:  #13a2e4;
-      color: rgb(0, 0, 0);
-      border-radius: 5px;
-    }
-
-    td.min-col input {
-      width: 60px;
-    }
-
-    .red-warning {
-      background: linear-gradient(to right, #ffffff, #fcac01);
-    }
-
-    
-
-    .add-line {
-      padding: 8px 16px;
-      margin: 5px 10px 20px 0;
-      font-size: 15px;
-      font-weight: bold;
-      border-radius: 10px;
-      background: linear-gradient(to right, #00b7ff, #326fa8);
-      cursor: pointer;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-    }
-
-    .add-line:hover {
-      background: #56bafd;
-      color: white;
-    }
-
-    .color-btn.limegreen { background-color: #36d131; }   
-    .color-btn.gold { background-color: #ffd036; }  
-    .color-btn.mediumturquoise { background-color: #40e0d0; }
-    .color-btn.white { background-color: #ffffff; }
-
-    .color-btn {
-      width: 18px;      
-      height: 10px;
-      border-radius: 30%;
-      cursor: pointer;
-    }
-
-    .color-btn:hover {
-      outline: 1px solid #fff;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
-    }
-
-
-    .color-buttons {
-      display: inline-flex;
-      flex-direction: column;
-      gap: 1px;
-      margin-left: 2px;
-      vertical-align: middle;
-      transform: translateY( 0px); 
-    }
-
-
-    .header-row td {
-      background: linear-gradient(to left, #12315c, #79acee);
-      font-weight: bold;;
-      text-align: left;
-      border-radius: 5px;
-      border-color: black;
-    }
-
-    .header-row td span {
-      display: inline-block;
-      width: 60%;
-    }
-
-    .delete-button {
-      color: rgb(0, 0, 0);
-      cursor: pointer;
-      font-size: 20px;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
-    }
-
-    .delete-button:hover {
-      background-color: rgba(0, 0, 0, 0.3); 
-      border-radius: 50px; 
-      padding:0px 5px;
-    }
-
-    td:last-child {
-      width: 50px; 
-      background: linear-gradient(to right, #4e9bce, #1b3863);
-    }
-
-
-      button img {
-      width: 40px;
-      height: 40px;
-      padding-left: 55px;
-      margin-top: 20px;
-    }
-
-
-    .global-button {
-      background: linear-gradient(to right, #00b7ff, #326fa8);
-      color: rgb(255, 255, 255);
-      padding: 20px 15px;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-      margin: 10px 60px;
-      border-radius: 16px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-    }
-
-    .global-button:hover {
-      background: linear-gradient(to right, #56bafd, #0e385f);
-      color: white;
-    }
-
-
-
-    .cell-product {
-      width: 190px;
-    }
-
-
-    .cell-comment {
-     width: 240px;
-   }
-
-   .cell-small {
-   width: 80px;
-   }
-
-    .cell-move {
-      width: 60px;
-      button {
-        width: 40px;
-        height: 35px;
-        background: linear-gradient(to right, #00b7ff, #326fa8);
-        color: rgb(255, 255, 255);
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 18px;
-      }
-      button:hover {
-        background: #87cfff;
-        color: white;
-      }
-    }
-
-
-    #sidePanel {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 180px;
-  height: 32%;
-  background: linear-gradient(to left, #072446, #306cc7);
-  color: rgb(0, 0, 0);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px 10px;
-  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
-  transition: right 0.5s ease;
-  z-index: 999;
-  border-radius: 16px;
-  border: 2px solid #3994e9;
-}
-
-#sidePanel.hidden {
-  right: -160px;
-}
-
-#sidePanel button {
-  margin: 4px 0;
-  padding: 10px 20px;
-  width: 100%;
-  background: linear-gradient(to right, #123981, #1994db);
-  color: rgb(0, 0, 0);
-  font-weight: bold;
-
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
-}
-
-#sidePanel button:hover {
-  background: #56bafd;
-}
-
-#signOutBtn {
-  margin-top: 40px;
-}
-
-#bottomButtons {
-  margin-top: auto;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-#togglePanelBtn {
-  position: fixed;
-  top: 10%;
-  right: 150px;
-  transform: translateY(-50%);
-  background: #1a4ca8;
-  color: rgb(255, 255, 255);
-  border-radius: 0 10px 10px 0;
-  padding: 4px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 35px;
-  z-index: 1000;
-  box-shadow: -8px 0 8px rgba(0, 0, 0, 0.3);
-}
-
-#togglePanelBtn:hover {
-  background: #96bad1;
-}
-
-
-
-
-  
+    .add-line{padding:8px 16px; margin:5px 10px 20px 0; font-size:15px; font-weight:bold; border-radius:10px; background:linear-gradient(to right,#00b7ff,#326fa8); cursor:pointer; box-shadow:0 0 10px rgba(0,0,0,.6);}
+    .add-line:hover{background:#56bafd; color:#fff;}
+    .color-btn.limegreen{background-color:#36d131;}
+    .color-btn.gold{background-color:#ffd036;}
+    .color-btn.mediumturquoise{background-color:#40e0d0;}
+    .color-btn.white{background-color:#ffffff;}
+    .color-btn{width:18px; height:10px; border-radius:30%; cursor:pointer;}
+    .color-btn:hover{outline:1px solid #fff; box-shadow:0 0 5px rgba(0,0,0,.6);}
+    .color-buttons{display:inline-flex; flex-direction:column; gap:1px; margin-left:2px; vertical-align:middle;}
+    .header-row td{background:linear-gradient(to left,#12315c,#79acee); font-weight:bold; text-align:left; border-radius:5px; border-color:black;}
+    .header-row td span{display:inline-block; width:60%;}
+    .delete-button{color:#000; cursor:pointer; font-size:20px; text-shadow:0 1px 3px rgba(0,0,0,.9);}
+    .delete-button:hover{background-color:rgba(0,0,0,.3); border-radius:50px; padding:0 5px;}
+    td:last-child{width:50px; background:linear-gradient(to right,#4e9bce,#1b3863);}
+    button img{width:40px; height:40px; padding-left:55px; margin-top:20px;}
+    .global-button{background:linear-gradient(to right,#00b7ff,#326fa8); color:#fff; padding:20px 15px; font-size:15px; font-weight:bold; cursor:pointer; margin:10px 60px; border-radius:16px; box-shadow:0 0 10px rgba(0,0,0,.6);}
+    .global-button:hover{background:linear-gradient(to right,#56bafd,#0e385f); color:#fff;}
+    .cell-product{width:190px;}
+    .cell-comment{width:240px;}
+    .cell-small{width:80px;}
+    .cell-move{width:60px;}
+    .cell-move button{width:40px; height:35px; background:linear-gradient(to right,#00b7ff,#326fa8); color:#fff; border-radius:6px; cursor:pointer; font-size:18px;}
+    .cell-move button:hover{background:#87cfff; color:#fff;}
+    #sidePanel{position:fixed; top:0; right:0; width:180px; height:32%; background:linear-gradient(to left,#072446,#306cc7); color:#000; display:flex; flex-direction:column; align-items:center; padding:20px 10px; box-shadow:-2px 0 10px rgba(0,0,0,.5); transition:right .5s ease; z-index:999; border-radius:16px; border:2px solid #3994e9;}
+    #sidePanel.hidden{right:-160px;}
+    #sidePanel button{margin:4px 0; padding:10px 20px; width:100%; background:linear-gradient(to right,#123981,#1994db); color:#000; font-weight:bold; border-radius:8px; cursor:pointer; font-size:16px; box-shadow:0 0 8px rgba(0,0,0,.5);}
+    #sidePanel button:hover{background:#56bafd;}
+    #signOutBtn{margin-top:40px;}
+    #bottomButtons{margin-top:auto; width:100%; display:flex; flex-direction:column; gap:2px;}
+    #togglePanelBtn{position:fixed; top:10%; right:150px; transform:translateY(-50%); background:#1a4ca8; color:#fff; border-radius:0 10px 10px 0; padding:4px; cursor:pointer; font-weight:bold; font-size:35px; z-index:1000; box-shadow:-8px 0 8px rgba(0,0,0,.3);}
+    #togglePanelBtn:hover{background:#96bad1;}
+    .highlight{background-color:rgb(240,138,42); font-weight:bold;}
+    .highlight-input{background-color:yellow; font-weight:bold;}
   </style>
 </head>
 
 <header class="video-header">
   <video autoplay muted loop playsinline>
     <source src="Video/Ocean-Seavo-Nautiq.mp4" type="video/mp4">
-    
-
- </video>
-
-  
+  </video>
 </header>
-
-    <div class="gradient-overgang"></div>
+<div class="gradient-overgang"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-
 <body>
-
 <header>
-  <h1 style="text-align: center; color:
-   rgb(218, 215, 215);
-    margin-top: 20px;
-    font-size: 36px;
-    font-weight: bold;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);" >
- Office</h1>
- 
-   <a href="index.html" class="logo-link">
-  <img src="images/Logo Seavo Nautiq.png" alt="Logo Seavo Nautiq" class="logo"> 
-</a> 
-
- 
+  <h1 style="text-align:center; color:#dad7d7; margin-top:20px; font-size:36px; font-weight:bold; text-shadow:0 1px 3px rgba(0,0,0,.6);">Office</h1>
+  <a href="index.html" class="logo-link"><img src="images/Logo Seavo Nautiq.png" alt="Logo Seavo Nautiq" class="logo"></a>
 
   <div id="sidePanel" class="hidden">
-  <button>Information</button>
-  <button>Documents</button>
-  <button>Shared Content</button>
-  <button>Settings</button>
-  <button id="signOutBtn">Sign Out</button>
-
-  <div id="bottomButtons">
-    <button>🧮 Calculator</button>
-    <button>📝 Notepad</button>
+    <button>Information</button>
+    <button>Documents</button>
+    <button>Shared Content</button>
+    <button>Settings</button>
+    <button id="signOutBtn">Sign Out</button>
+    <div id="bottomButtons">
+      <button>🧮 Calculator</button>
+      <button>📝 Notepad</button>
+    </div>
   </div>
-</div>
-
-<button id="togglePanelBtn" onclick="toggleSidePanel()">⫷</button>
-
-
-
- 
-
+  <button id="togglePanelBtn" onclick="toggleSidePanel()">⫷</button>
 </header>
-  <input type="text" id="searchBox" placeholder="Search inventory..." oninput="searchInPage()">
 
-<style>
-.highlight {
-  background-color: rgb(240, 138, 42);
-  font-weight: bold;
-}
-
-.highlight-input {
-  background-color: yellow;
-  font-weight: bold;
-}
-</style>
-
-
-
+<input type="text" id="searchBox" placeholder="Search inventory..." oninput="searchInPage()">
 
 <div class="category-slider-office">
   <button class="arrow" onclick="scrollSlider(-100)">←</button>
-  <div id="category-container" style="display: flex; overflow-x: auto; max-width: 50%; scroll-behavior: smooth;">
-    <div id="categories" style="display: flex; gap: 8px;"></div>
+  <div id="category-container" style="display:flex; overflow-x:auto; max-width:50%; scroll-behavior:smooth;">
+    <div id="categories" style="display:flex; gap:8px;"></div>
   </div>
   <button class="arrow" onclick="scrollSlider(100)">→</button>
   <button class="add-category" onclick="addCategory()">+ Category</button>
 </div>
 
-<div>
-
-  <img src="images/Office.PNG" alt="Office" class="office">
-  
-
-
-
-
-</div>
-
+<div><img src="images/Office.PNG" alt="Office" class="office"></div>
 
 <div id="content"></div>
 
-
 <button id="globalToggleButton" class="global-button" onclick="toggleGlobalView()">📋 Global Overview</button>
-
 <div>
-
-</button>
-<button class="global-button" onclick="generatePDF()">📄 Generate PDF</button>
-
+  <button class="global-button" onclick="generatePDF()">📄 Generate PDF</button>
 </div>
 <div>
   <button class="global-button" onclick="save()">💾 Save</button>
 </div>
 
 <script>
-
-function toggleSidePanel() {
-  const panel = document.getElementById("sidePanel");
-  const toggleBtn = document.getElementById("togglePanelBtn");
-
-  if (panel.classList.contains("hidden")) {
-    panel.classList.remove("hidden");
-    toggleBtn.style.right = "220px";
-    toggleBtn.textContent = "⫸";
-  } else {
-    panel.classList.add("hidden");
-    toggleBtn.style.right = "0px";
-    toggleBtn.textContent = "⫷";
+function toggleSidePanel(){
+  const panel=document.getElementById("sidePanel");
+  const toggleBtn=document.getElementById("togglePanelBtn");
+  if(panel.classList.contains("hidden")){
+    panel.classList.remove("hidden"); toggleBtn.style.right="220px"; toggleBtn.textContent="⫸";
+  }else{
+    panel.classList.add("hidden"); toggleBtn.style.right="0px"; toggleBtn.textContent="⫷";
   }
 }
 
-
-
-
-
-
-function searchInPage() {
-  const term = document.getElementById("searchBox").value.trim().toLowerCase();
-  removeHighlights();
-  if (term === "") return;
-
-  let firstMatch = null;
-
-  // 1. Søk i headers (span-elementer)
-  document.querySelectorAll("td span").forEach(span => {
-    const content = span.textContent.toLowerCase();
-    if (content.includes(term)) {
-      const index = content.indexOf(term);
-      const original = span.textContent;
-      const before = original.slice(0, index);
-      const match = original.slice(index, index + term.length);
-      const after = original.slice(index + term.length);
-      span.innerHTML = `${before}<span class="highlight">${match}</span>${after}`;
-      if (!firstMatch) firstMatch = span;
+function searchInPage(){
+  const term=document.getElementById("searchBox").value.trim().toLowerCase();
+  removeHighlights(); if(term==="") return;
+  let firstMatch=null;
+  document.querySelectorAll("td span").forEach(span=>{
+    const content=span.textContent.toLowerCase();
+    if(content.includes(term)){
+      const index=content.indexOf(term);
+      const original=span.textContent;
+      const before=original.slice(0,index);
+      const match=original.slice(index,index+term.length);
+      const after=original.slice(index+term.length);
+      span.innerHTML=`${before}<span class="highlight">${match}</span>${after}`;
+      if(!firstMatch) firstMatch=span;
     }
   });
-
-  // 2. Søk i input-feltene
-  document.querySelectorAll("input").forEach(input => {
-    if (input.value.toLowerCase().includes(term)) {
+  document.querySelectorAll("input").forEach(input=>{
+    if(input.value.toLowerCase().includes(term)){
       input.classList.add("highlight-input");
-      if (!firstMatch) firstMatch = input;
+      if(!firstMatch) firstMatch=input;
     }
   });
-
-  // Scroll til første treff
-  if (firstMatch) {
-    setTimeout(() => {
-      firstMatch.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 100); // vent litt så tabellen rekker å tegne seg
-  }
+  if(firstMatch){ setTimeout(()=>{ firstMatch.scrollIntoView({behavior:"smooth", block:"center"}); },100); }
 }
-
-function removeHighlights() {
-  // Fjern <span class="highlight"> fra header
-  document.querySelectorAll("span .highlight").forEach(el => {
-    const parent = el.parentNode;
-    parent.replaceChild(document.createTextNode(el.textContent), el);
-    parent.normalize();
+function removeHighlights(){
+  document.querySelectorAll("span .highlight").forEach(el=>{
+    const parent=el.parentNode; parent.replaceChild(document.createTextNode(el.textContent), el); parent.normalize();
   });
-
-  // Fjern gul markering fra input
-  document.querySelectorAll(".highlight-input").forEach(input => {
-    input.classList.remove("highlight-input");
-  });
+  document.querySelectorAll(".highlight-input").forEach(input=> input.classList.remove("highlight-input"));
 }
-
-
 </script>
-
-
-
 
 <script>
 let data = JSON.parse(localStorage.getItem("lagerDataV3")) || {};
 let activeCategory = Object.keys(data)[0] || "Standard";
 
-function save() {
-  localStorage.setItem("lagerDataV3", JSON.stringify(data));
-}
+function save(){ localStorage.setItem("lagerDataV3", JSON.stringify(data)); }
+function scrollSlider(offset){ document.getElementById("category-container").scrollLeft += offset; }
 
-function scrollSlider(offset) {
-  document.getElementById("category-container").scrollLeft += offset;
-}
-
-// Migrering: sørg for at eksisterende rader har 'max'
-Object.values(data).forEach(rows => {
-  (rows || []).forEach(r => {
-    if (r && r.type !== "header" && typeof r.max === "undefined") {
-      r.max = 0; // eller tom streng "" hvis du foretrekker
-    }
+// Migrering: sikre at rader har max-felt
+Object.values(data).forEach(rows=>{
+  (rows||[]).forEach(r=>{
+    if(r && r.type!=="header" && typeof r.max==="undefined"){ r.max=0; }
   });
 });
 save();
 
-
-function updateCategories() {
-  const container = document.getElementById("categories");
-  container.innerHTML = "";
-
-  Object.keys(data).forEach(name => {
-    const wrapper = document.createElement("div");
-    wrapper.className = "category-item";
-    wrapper.style.display = "flex";
-    wrapper.style.alignItems = "center";
-
-    const btn = document.createElement("button");
-    btn.className = "category-button";
-    btn.textContent = name;
-    if (name === activeCategory) btn.classList.add("active");
-    btn.onclick = () => {
-      activeCategory = name;
-      showCategory();
-      updateCategories();
-    };
-
-    const del = document.createElement("span");
-    del.className = "delete-category";
-    del.textContent = "🗑️";
-    del.onclick = () => {
-      if (confirm(`Do you want to delete the category "${name}"?`)) {
-        delete data[name];
-        activeCategory = Object.keys(data)[0] || null;
-        save();
-        updateCategories();
-        showCategory();
+function updateCategories(){
+  const container=document.getElementById("categories");
+  container.innerHTML="";
+  Object.keys(data).forEach(name=>{
+    const wrapper=document.createElement("div"); wrapper.className="category-item"; wrapper.style.display="flex"; wrapper.style.alignItems="center";
+    const btn=document.createElement("button"); btn.className="category-button"; btn.textContent=name;
+    if(name===activeCategory) btn.classList.add("active");
+    btn.onclick=()=>{ activeCategory=name; showCategory(); updateCategories(); };
+    const del=document.createElement("span"); del.className="delete-category"; del.textContent="🗑️";
+    del.onclick=()=>{
+      if(confirm(`Do you want to delete the category "${name}"?`)){
+        delete data[name]; activeCategory=Object.keys(data)[0]||null; save(); updateCategories(); showCategory();
       }
     };
-
-    wrapper.appendChild(btn);
-    wrapper.appendChild(del);
-    container.appendChild(wrapper);
+    wrapper.appendChild(btn); wrapper.appendChild(del); container.appendChild(wrapper);
   });
 }
 
-function addCategory() {
-  const name = prompt("New category:");
-  if (name && !data[name]) {
-    data[name] = [];
-    activeCategory = name;
-    save();
-    updateCategories();
-    showCategory();
-  }
+function addCategory(){
+  const name=prompt("New category:");
+  if(name && !data[name]){ data[name]=[]; activeCategory=name; save(); updateCategories(); showCategory(); }
 }
-function showCategory() {
-  const content = document.getElementById("content");
-  content.innerHTML = "";
 
-  if (!activeCategory || !data[activeCategory]) return;
+function showCategory(){
+  const content=document.getElementById("content");
+  content.innerHTML="";
+  if(!activeCategory || !data[activeCategory]) return;
 
-  const table = document.createElement("table");
-table.innerHTML = `
-  <thead>
-    <tr>
-      <th>Product/Type</th><th>Start Qty</th><th>Used</th><th>End Qty</th>
-      <th>MIN🔔</th><th>MAX🔔</th><th>Comments</th><th>Order</th><th>Move</th><th>Delete</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-`;
+  const table=document.createElement("table");
+  table.innerHTML=`
+    <thead>
+      <tr>
+        <th>Product/Type</th><th>Start Qty</th><th>Used</th><th>End Qty</th>
+        <th>MIN🔔</th><th>MAX🔔</th><th>Comments</th><th>Order</th><th>Move</th><th>Delete</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  `;
+  const tbody=table.querySelector("tbody");
 
+  data[activeCategory].forEach((row,i)=>{
+    const tr=document.createElement("tr");
+    if(row.type==="header"){
+      tr.className="header-row";
+      const td=document.createElement("td"); td.colSpan=8;
+      const span=document.createElement("span"); span.contentEditable=true; span.textContent=row.text||"Section / Header";
+      span.oninput=()=>{ row.text=span.textContent; save(); };
+      td.appendChild(span); tr.appendChild(td);
+      const del=document.createElement("td"); del.style.textAlign="center";
+      del.innerHTML=`<span class="delete-button" onclick="deleteRow(${i})" style="cursor:pointer;">🗑️</span>`;
+      tr.appendChild(del); tbody.appendChild(tr); return;
+    }
 
-  const tbody = table.querySelector("tbody");
+    // Sikre standardobjekt for linjer
+    row.product ??= ""; row.start ??= 0; row.used ??= 0; row.end ??= (parseFloat(row.start)||0)-(parseFloat(row.used)||0);
+    row.min ??= 0; row.max ??= 0; row.comment ??= ""; row.order ??= 0;
 
-  data[activeCategory].forEach((row, i) => {
-    const tr = document.createElement("tr");
+    const fields=['product','start','used','end','min','max','comment','order'];
+    const inputs={};
+    let tdMinRef=null, tdMaxRef=null;
 
-    
+    fields.forEach((key)=>{
+      const td=document.createElement("td");
 
-    if (row.type === "header") {
-      tr.className = "header-row";
-      const td = document.createElement("td");
-      td.colSpan = 8;
-      const span = document.createElement("span");
-      span.contentEditable = true;
-      span.textContent = row.text || "Section / Header";
-      span.oninput = () => {
-        row.text = span.textContent;
+      if(key==='product') td.classList.add("cell-product");
+      else if(key==='comment') td.classList.add("cell-comment");
+      else if(key==='min') { td.classList.add("cell-min"); tdMinRef=td; }
+      else if(key==='max') { td.classList.add("cell-max"); tdMaxRef=td; }
+      else if(key==='order') td.classList.add("cell-order");
+      else td.classList.add("cell-small");
+
+      const input=document.createElement("input");
+      input.type=(key==='product' || key==='comment') ? "text" : "number";
+      input.value = row[key] ?? "";
+      input.style.width="90%"; input.style.padding="4px"; input.style.borderRadius="5px";
+      input.placeholder = key.charAt(0).toUpperCase() + key.slice(1);
+      input.classList.add("large-bold-input");
+
+      if(key==='end'){ input.readOnly=true; }
+
+      input.oninput=()=>{
+        // lagre verdi
+        row[key]=input.type==="number" ? input.value : input.value;
+
+        // beregn end på nytt
+        const startVal=parseFloat(row.start)||0;
+        const usedVal =parseFloat(row.used)||0;
+        row.end = startVal - usedVal;
+        inputs['end'].value = row.end;
+
+        // oppdatér alarmer
+        updateAlarms();
+
         save();
       };
-      td.appendChild(span);
+
+      inputs[key]=input;
+      td.appendChild(input);
+
+      // fargeknapper i product-cellen
+      if(key==='product'){
+        const colorContainer=document.createElement("div"); colorContainer.className="color-buttons";
+        ["limegreen","gold","mediumturquoise","white"].forEach(color=>{
+          const btn=document.createElement("button"); btn.className=`color-btn ${color}`; btn.title=`Make ${color}`;
+          btn.onclick=(e)=>{ e.preventDefault(); row.productColor = (color==="white")? null : color; input.style.backgroundColor=row.productColor || ""; save(); };
+          colorContainer.appendChild(btn);
+        });
+        td.appendChild(colorContainer);
+        if(row.productColor) input.style.backgroundColor=row.productColor || "";
+      }
+
       tr.appendChild(td);
-
-      const del = document.createElement("td");
-      del.style.textAlign = "center";
-      del.innerHTML = `<span class="delete-button" onclick="deleteRow(${i})" style="cursor:pointer;">🗑️</span>`;
-
-      tr.appendChild(del);
-      tbody.appendChild(tr);
-      return;
-    }
-
-const fields = ['pen, paper, binder etc.', 'start', 'used', 'end', 'min', 'max', 'comment', 'order'];
-const inputs = {};
-
-fields.forEach((key) => {
-  const td = document.createElement("td");
-
-  if (key === "pen, paper, binder etc.") td.classList.add("cell-product");
-  else if (key === "comment") td.classList.add("cell-comment");
-  else if (key === "min") td.classList.add("cell-min");
-  else if (key === "max") td.classList.add("cell-max");
-  else if (key === "order") td.classList.add("cell-order");
-  else td.classList.add("cell-small");
-
-  const input = document.createElement("input");
-  input.type = (key === "pen, paper, binder etc." || key === "comment") ? "text" : "number";
-  input.value = row[key] ?? "";
-  input.style.width = "90%";
-  input.style.padding = "4px";
-  input.style.borderRadius = "5px";
-  input.placeholder = key.charAt(0).toUpperCase() + key.slice(1);
-  if (["pen, paper, binder etc.", "comment", "start", "used", "end", "min", "max", "order"].includes(key)) {
-    input.classList.add("large-bold-input");
-  }
-
-  input.oninput = () => {
-    row[key] = input.value;
-
-    // Re-beregn END = START - USED
-    row.end = (parseFloat(row.start) || 0) - (parseFloat(row.used) || 0);
-    inputs['end'].value = row.end;
-
-    // MIN-varsling: End <= Min -> rød på MIN
-    const endVal = parseFloat(row.end);
-    const minVal = parseFloat(row.min);
-    if (!isNaN(endVal) && !isNaN(minVal) && endVal <= minVal) {
-      inputs['min'].classList.add("red-warning");
-    } else {
-      inputs['min'].classList.remove("red-warning");
-    }
-
-    // MAX-varsling: Start > Max -> rød på MAX
-    const startVal = parseFloat(row.start);
-    const maxVal = parseFloat(row.max);
-    if (!isNaN(startVal) && !isNaN(maxVal) && startVal > maxVal) {
-      inputs['max'].classList.add("red-warning");
-    } else {
-      inputs['max'].classList.remove("red-warning");
-    }
-
-    save();
-  };
-
-  inputs[key] = input;
-  td.appendChild(input);
-
-  // Fargeknapper i produkt-cellen (uendret)
-  if (key === "pen, paper, binder etc.") {
-    const colorContainer = document.createElement("div");
-    colorContainer.className = "color-buttons";
-    const colors = ["limegreen", "gold", "mediumturquoise", "white"];
-    colors.forEach(color => {
-      const btn = document.createElement("button");
-      btn.className = `color-btn ${color}`;
-      btn.title = `Make ${color}`;
-      btn.onclick = (e) => {
-        e.preventDefault();
-        row.productColor = color === "white" ? null : color;
-        input.style.backgroundColor = row.productColor || "";
-        save();
-      };
-      colorContainer.appendChild(btn);
     });
-    td.appendChild(colorContainer);
-    if (row.productColor) input.style.backgroundColor = row.productColor || "";
-  }
 
-  tr.appendChild(td);
-});
+    // hjelpefunksjon for alarm
+ function updateAlarms(){
+  const startVal = parseFloat(inputs['start'].value);
+  const usedVal  = parseFloat(inputs['used'].value);
+  const endVal   = (isNaN(startVal)?0:startVal) - (isNaN(usedVal)?0:usedVal);
+  inputs['end'].value = endVal;
 
+  const minVal   = parseFloat(inputs['min'].value);
+  const maxVal   = parseFloat(inputs['max'].value);
 
-    const tdMove = document.createElement("td");
-    tdMove.classList.add("cell-move");
-    tdMove.innerHTML = `
-     <button onclick="moveRow(${i}, -1)">⬆️</button>
-     <button onclick="moveRow(${i}, 1)">⬇️</button>
-    `;
-
-    const tdDel = document.createElement("td");
-    tdDel.innerHTML = `<span class="delete-button" onclick="deleteRow(${i})">🗑️</span>`
-
-
-    tr.appendChild(tdMove);  
-    tr.appendChild(tdDel);
-    tbody.appendChild(tr);
-    
-  });
-
-  content.appendChild(table);
-
-  const addLine = document.createElement("button");
-  addLine.className = "add-line";
-  addLine.textContent = "+ Add line";
-  addLine.onclick = () => {
- data[activeCategory].push({
-  type: "line",
-  product: "",
-  start: 0,
-  used: 0,
-  end: 0,
-  min: 0,
-  max: 0,
-  comment: "",
-  order: 0,
-  productColor: null
-});
-
-
-    save();
-    showCategory();
-  };
-
-  const addHeader = document.createElement("button");
-  addHeader.className = "add-line";
-  addHeader.textContent = "+ Add header/section";
-  addHeader.onclick = () => {
-    data[activeCategory].push({ type: "header", text: "New Header" });
-    save();
-    showCategory();
-  };
-
-  content.appendChild(addLine);
-  content.appendChild(addHeader);
-  searchInPage(); // kjør søket igjen etter innhold er bygd opp
-
-}
-
-function deleteRow(index) {
-  data[activeCategory].splice(index, 1);
-  save();
-  showCategory();
-}
-
-function moveRow(index, direction) {
-  const list = data[activeCategory];
-  const newIndex = index + direction;
-
-  // Hindrer at den flyttes utenfor grensene
-  if (newIndex < 0 || newIndex >= list.length) return;
-
-  // Bytter plass på radene
-  const temp = list[index];
-  list[index] = list[newIndex];
-  list[newIndex] = temp;
-
-  save();
-  showCategory(); // Tegner tabellen på nytt
-}
-
-
-function showGlobalOverview() {
-  const content = document.getElementById("content");
-  content.innerHTML = "<h2>Global overview of the entire inventory</h2>";
-  const table = document.createElement("table");
-table.innerHTML = `
-  <thead>
-    <tr><th>Category</th><th>Product</th><th>Start</th><th>Used</th><th>End</th><th>Min</th><th>Max</th><th>Comment</th><th>Order</th></tr>
-  </thead>
-  <tbody></tbody>
-`;
-
-  const tbody = table.querySelector("tbody");
-
-  Object.entries(data).forEach(([category, rows]) => {
-    rows.forEach(row => {
-      if (row.type === "header") return;
-      const tr = document.createElement("tr");
-      const start = parseInt(row.start) || 0;
-      const used = parseInt(row.used) || 0;
-      const end = row.end ?? (start - used);
-      const min = parseInt(row.min) || 0;
-     const max = parseInt(row.max) || 0;
-
-    const values = [
-    category,
-    row.product || "",
-     start,
-     used,
-     end,
-     min,
-     max,
-     row.comment || "",
-     row.order || ""
-  ];
-
-values.forEach((val, i) => {
-  const td = document.createElement("td");
-  td.textContent = val;
-
-  // Behold eksisterende MIN-varsling (End <= Min)
-  if (i === 4 && end <= min) td.classList.add("red-warning");
-
-  // MAX-varsling (Start > Max) -> markér MAX-cellen
-  if (i === 6 && start > max) td.classList.add("red-warning");
-
-  tr.appendChild(td);
-});
-
-
-
-      tbody.appendChild(tr);
-    });
-  });
-
-  content.appendChild(table);
-}
-
-if (!data[activeCategory]) {
-  data[activeCategory] = [];
-  save();
-}
-
-let isGlobalView = false;
-
-function toggleGlobalView() {
-  const button = document.getElementById("globalToggleButton");
-
-  if (!isGlobalView) {
-    // Vis global oversikt
-    showGlobalOverview();
-    button.textContent = "🔙 Back to Table";
+  // MIN alarm: end <= min
+  if(!isNaN(endVal) && !isNaN(minVal) && endVal <= minVal){
+    inputs['min'].classList.add("min-alarm");
   } else {
-    // Gå tilbake til aktiv kategori
-    showCategory();
-    button.textContent = "📋 Global Overview";
+    inputs['min'].classList.remove("min-alarm");
   }
 
-  isGlobalView = !isGlobalView;
+  // MAX alarm: start > max
+  if(!isNaN(startVal) && !isNaN(maxVal) && startVal > maxVal){
+    inputs['max'].classList.add("max-alarm");
+  } else {
+    inputs['max'].classList.remove("max-alarm");
+  }
+}
+
+
+    // initial alarm-evaluering
+    updateAlarms();
+
+    // Move/Del
+    const tdMove=document.createElement("td"); tdMove.classList.add("cell-move");
+    tdMove.innerHTML=`<button onclick="moveRow(${i},-1)">⬆️</button> <button onclick="moveRow(${i},1)">⬇️</button>`;
+    const tdDel=document.createElement("td"); tdDel.innerHTML=`<span class="delete-button" onclick="deleteRow(${i})">🗑️</span>`;
+    tr.appendChild(tdMove); tr.appendChild(tdDel);
+    tbody.appendChild(tr);
+  });
+
+  content.appendChild(table);
+
+  const addLine=document.createElement("button");
+  addLine.className="add-line"; addLine.textContent="+ Add line";
+  addLine.onclick=()=>{
+    data[activeCategory].push({
+      type:"line", product:"", start:0, used:0, end:0, min:0, max:0, comment:"", order:0, productColor:null
+    });
+    save(); showCategory();
+  };
+
+  const addHeader=document.createElement("button");
+  addHeader.className="add-line"; addHeader.textContent="+ Add header/section";
+  addHeader.onclick=()=>{ data[activeCategory].push({type:"header", text:"New Header"}); save(); showCategory(); };
+
+  content.appendChild(addLine); content.appendChild(addHeader);
+  searchInPage();
+}
+
+function deleteRow(index){ data[activeCategory].splice(index,1); save(); showCategory(); }
+
+function moveRow(index, direction){
+  const list=data[activeCategory]; const newIndex=index+direction;
+  if(newIndex<0 || newIndex>=list.length) return;
+  const temp=list[index]; list[index]=list[newIndex]; list[newIndex]=temp;
+  save(); showCategory();
+}
+
+function showGlobalOverview(){
+  const content=document.getElementById("content");
+  content.innerHTML="<h2>Global overview of the entire inventory</h2>";
+  const table=document.createElement("table");
+  table.innerHTML=`
+    <thead>
+      <tr><th>Category</th><th>Product</th><th>Start</th><th>Used</th><th>End</th><th>Min</th><th>Max</th><th>Comment</th><th>Order</th></tr>
+    </thead>
+    <tbody></tbody>
+  `;
+  const tbody=table.querySelector("tbody");
+  Object.entries(data).forEach(([category, rows])=>{
+    rows.forEach(row=>{
+      if(row.type==="header") return;
+      const tr=document.createElement("tr");
+      const start=parseFloat(row.start)||0;
+      const used =parseFloat(row.used)||0;
+      const end  = (typeof row.end!=="undefined") ? row.end : (start - used);
+      const min  = parseFloat(row.min)||0;
+      const max  = parseFloat(row.max)||0;
+
+      const values=[category, row.product||"", start, used, end, min, max, row.comment||"", row.order||""];
+      values.forEach((val,i)=>{
+        const td=document.createElement("td"); td.textContent=val;
+        if(i===4 && end <= min) td.classList.add("red-warning-min"); // End
+        if(i===6 && start > max) td.classList.add("red-warning-max"); // Max
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+  });
+  content.appendChild(table);
+}
+
+if(!data[activeCategory]){ data[activeCategory]=[]; save(); }
+
+let isGlobalView=false;
+function toggleGlobalView(){
+  const button=document.getElementById("globalToggleButton");
+  if(!isGlobalView){ showGlobalOverview(); button.textContent="🔙 Back to Table"; }
+  else { showCategory(); button.textContent="📋 Global Overview"; }
+  isGlobalView=!isGlobalView;
 }
 
 updateCategories();
 showCategory();
 
-async function generatePDF() {
+async function generatePDF(){
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF('p', 'mm', 'a4');
-
-  
-  const logoImg = new Image();
-  logoImg.src = "images/Logo Seavo Nautiq.png"; 
-  await new Promise(resolve => { logoImg.onload = resolve; });
-
-  doc.addImage(logoImg, 'PNG', 10, 10, 60, 35); // (x, y, width, height)
-
-  // Ta skjermbilde av innhold
-  const content = document.getElementById("content");
-
-  await html2canvas(content, {
-    backgroundColor: "#ffffff"
-  }).then(canvas => {
-    const imgData = canvas.toDataURL('image/png');
-    const imgProps = doc.getImageProperties(imgData);
-    const pdfWidth = doc.internal.pageSize.getWidth() - 20;
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-    doc.addImage(imgData, 'PNG', 13, 35, pdfWidth, pdfHeight);
+  const doc=new jsPDF('p','mm','a4');
+  const logoImg=new Image(); logoImg.src="images/Logo Seavo Nautiq.png";
+  await new Promise(resolve=>{ logoImg.onload=resolve; });
+  doc.addImage(logoImg,'PNG',10,10,60,35);
+  const content=document.getElementById("content");
+  await html2canvas(content,{backgroundColor:"#ffffff"}).then(canvas=>{
+    const imgData=canvas.toDataURL('image/png');
+    const imgProps=doc.getImageProperties(imgData);
+    const pdfWidth=doc.internal.pageSize.getWidth()-20;
+    const pdfHeight=(imgProps.height*pdfWidth)/imgProps.width;
+    doc.addImage(imgData,'PNG',13,35,pdfWidth,pdfHeight);
     doc.save("SeavoNautiq_Inventory.pdf");
   });
 }
-
-
-
-
 </script>
 </body>
 </html>

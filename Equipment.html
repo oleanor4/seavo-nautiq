@@ -161,10 +161,14 @@
       font-size: 14px;
     }
 
-    .cell-min {
-      width: 80px;
+      .cell-min,
+      .cell-max {
+       width: 66px;        
+       min-width: 66px;
+       max-width: 66px;
     }
 
+ 
     .cell-order {
       width: 100px;
     }
@@ -204,9 +208,14 @@
       width: 60px;
     }
 
-    .red-warning {
-      background: linear-gradient(to right, #ffffff, #fcac01);
-    }
+    /* Alarmfarger på input-feltene */
+   .min-alarm {
+     background: linear-gradient(to right, #ffffff, #fcac01) !important; /* gul/oransje for MIN */
+  }
+   .max-alarm {
+      background: linear-gradient(to right, #ffffff, #c8ff02) !important; /* gulgrønn for MAX */
+  }
+
 
     .add-line {
       padding: 8px 16px;
@@ -776,7 +785,7 @@ function showCategory() {
     <thead>
       <tr>
         <th>Product/Type</th><th>Start Qty</th><th>Used</th><th>End Qty</th>
-        <th>MIN🔔</th><th>Image<th>Comments</th><th>Order</th><th>Move</th><th>Delete</th>
+        <th>MIN🔔</th><th>MAX🔔</th><th>Image<th>Comments</th><th>Order</th><th>Move</th><th>Delete</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -812,7 +821,7 @@ function showCategory() {
       return;
     }
 
-    const fields = ['Equipment', 'start', 'used', 'end', 'min', 'image', 'comment', 'order'];
+    const fields = ['Equipment', 'start', 'used', 'end', 'min', 'max', 'image', 'comment', 'order'];
     const inputs = {};
 
     fields.forEach((key) => {
@@ -883,6 +892,7 @@ function showCategory() {
       if (key === "Equipment") td.classList.add("cell-product");
       else if (key === "comment") td.classList.add("cell-comment");
       else if (key === "min") td.classList.add("cell-min");
+      else if (key === "max") td.classList.add("cell-max");
       else if (key === "order") td.classList.add("cell-order");
       else td.classList.add("cell-small");
 
@@ -894,9 +904,9 @@ function showCategory() {
       input.style.padding = "4px";
       input.style.borderRadius = "5px";
       input.placeholder = key.charAt(0).toUpperCase() + key.slice(1);
-      if (["Equipment", "comment", "start", "used", "end", "min", "order"].includes(key)) {
-     input.classList.add("large-bold-input");
-     }
+      if (["Equipment", "comment", "start", "used", "end", "min", "max", "order"].includes(key)) {
+        input.classList.add("large-bold-input");
+      }
 
 
       input.oninput = () => {
@@ -911,6 +921,12 @@ function showCategory() {
           inputs['min'].classList.add("red-warning");
         } else {
           inputs['min'].classList.remove("red-warning");
+        }
+        const maxVal = parseFloat(row.max);
+        if (!isNaN(endVal) && !isNaN(maxVal) && endVal >= maxVal) {
+          inputs['max'].classList.add("red-warning");
+        } else {
+          inputs['max'].classList.remove("red-warning");
         }
 
         save();
@@ -1023,7 +1039,7 @@ function showGlobalOverview() {
   const table = document.createElement("table");
   table.innerHTML = `
     <thead>
-      <tr><th>Category</th><th>Product</th><th>Start</th><th>Used</th><th>End</th><th>Min</th><th>Comment</th><th>Order</th></tr>
+      <tr><th>Category</th><th>Product</th><th>Start</th><th>Used</th><th>End</th><th>Min</th><th>Max</th><th>Comment</th><th>Order</th></tr>
     </thead>
     <tbody></tbody>
   `;
@@ -1045,6 +1061,7 @@ function showGlobalOverview() {
         used,
         end,
         min,
+        max,
         row.comment || "",
         row.order || ""
       ];

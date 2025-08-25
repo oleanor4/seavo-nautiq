@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Medicine – Seavo Nautiq</title>
+  <style>
+    body {
+      background-color: #12315c;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      color: #fff;
+    }
+
+    .video-header {
+      position: relative;
+      aspect-ratio: 1280 / 99;
+      overflow: hidden;
+      background-color: #000;
+    }
+    .video-header video {
+      width: 100%;
+      height: 200%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .gradient-overgang {
+      height: 10px;
+      background: linear-gradient(to left, #62b2e7, #001125);
+      box-shadow: 6px 4px 6px rgba(0,0,0,.7);
+    }
+
+    h1 {
+      text-align:center;
+      margin-top:20px;
+      font-size:36px;
+      font-weight:bold;
+      text-shadow:0 1px 3px rgba(0,0,0,.6);
+    }
+
+    .panel {
+      background: rgba(0,0,0,.2);
+      padding: 16px;
+      margin: 20px auto;
+      max-width: 1100px;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0,0,0,.5);
+    }
+
+    .panel h2 { margin-top:0; }
+
+    table {
+      width:100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      background: rgba(255,255,255,.05);
+    }
+    th, td {
+      border:1px solid rgba(255,255,255,.2);
+      padding:8px;
+      text-align:center;
+    }
+    th {
+      background:#0e3a66;
+      font-weight:bold;
+    }
+
+    input[type="text"], input[type="number"], input[type="date"] {
+      width:95%;
+      padding:6px;
+      border-radius:6px;
+      border:none;
+    }
+
+    .btn {
+      padding:8px 14px;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+      font-weight:bold;
+    }
+    .btn-add { background:linear-gradient(to right,#00b7ff,#326fa8); color:#fff; }
+    .btn-add:hover { background:#56bafd; }
+    .btn-del { background:linear-gradient(to right,#f14b53,#b82127); color:#fff; }
+    .btn-del:hover { opacity:.9; }
+    .btn-pdf { background:linear-gradient(to right,#6c757d,#495057); color:#fff; }
+
+    /* Alarmer (visuelt i UI – PDF er uansett svart/hvitt) */
+    .min-alarm { background: linear-gradient(to right,#fff,#fcac01) !important; }
+    .expiry-green { background:#c8f7c5 !important; }
+    .expiry-warning { background:#ffe97a !important; }
+    .expiry-expired { background:#f77 !important; color:#000; }
+  </style>
+</head>
+<body>
+<header class="video-header">
+  <video autoplay muted loop playsinline>
+    <source src="Video/Ocean-Seavo-Nautiq.mp4" type="video/mp4">
+  </video>
+</header>
+<div class="gradient-overgang"></div>
+
+<h1>Medicine</h1>
+
+<div id="printArea">
+  <div class="panel">
+    <h2>Registration</h2>
+    <table>
+      <tr>
+        <td><label>Registration Date<br><input type="date" id="regDate"></label></td>
+        <td><label>Expiry Date<br><input type="date" id="regExpiry"></label></td>
+        <td><label>Medicine Issuer<br><input type="text" id="issuer" placeholder="Company / Clinic"></label></td>
+        <td><label>Responsible Officer<br><input type="text" id="officer" placeholder="Name/Role"></label></td>
+        <td><label>Notes<br><input type="text" id="notes" placeholder="Optional notes"></label></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="panel">
+    <h2>Medicine Chest</h2>
+    <table id="medicineTable">
+      <thead>
+        <tr>
+          <th>Medical equipment</th>
+          <th>Qty</th>
+          <th>MIN🔔</th>
+          <th>Expiry date</th>
+          <th>Comments</th>
+          <th>Order</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="btn btn-add" onclick="addMedicineLine()">+ Add Line</button>
+      <button class="btn btn-pdf" onclick="generatePDF()">📄 Generate PDF (B/W)</button>
+    </div>
+  </div>
+</div>
+
+<!-- jsPDF + AutoTable for ren s/h-rapport -->
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+function addMedicineLine(){
+  const tbody = document.querySelector("#medicineTable tbody");
+  const tr = document.createElement("tr");
+
+  const tdEquip = document.createElement("td");
+  const equip = document.createElement("input");
+  equip.type = "text"; equip.placeholder="Name";
+  tdEquip.appendChild(equip);
+
+  const tdQty = document.createElement("td");
+  const qty = document.createElement("input");
+  qty.type="number"; qty.value=0;
+  tdQty.appendChild(qty);
+
+  const tdMin = document.createElement("td");
+  const min = document.createElement("input");
+  min.type="number"; min.value=0;
+  tdMin.appendChild(min);
+
+  const tdExp = document.createElement("td");
+  const exp = document.createElement("input");
+  exp.type="date";
+  tdExp.appendChild(exp);
+
+  const tdCom = document.createElement("td");
+  const com = document.createElement("input");
+  com.type="text"; com.placeholder="Comments";
+  tdCom.appendChild(com);
+
+  const tdOrder = document.createElement("td");
+  const order = document.createElement("input");
+  order.type="number"; order.value=0;
+  tdOrder.appendChild(order);
+
+  const tdDel = document.createElement("td");
+  const delBtn = document.createElement("button");
+  delBtn.textContent="🗑️";
+  delBtn.className="btn btn-del";
+  delBtn.onclick=()=> tr.remove();
+  tdDel.appendChild(delBtn);
+
+  tr.append(tdEquip, tdQty, tdMin, tdExp, tdCom, tdOrder, tdDel);
+  tbody.appendChild(tr);
+
+  // --- alarm checks (UI) ---
+  function checkAlarms(){
+    const q = parseFloat(qty.value)||0;
+    const m = parseFloat(min.value)||0;
+    if(q <= m){ min.classList.add("min-alarm"); } else { min.classList.remove("min-alarm"); }
+
+    if(exp.value){
+      const today = new Date(); today.setHours(0,0,0,0);
+      const expDate = new Date(exp.value); expDate.setHours(0,0,0,0);
+      const diffDays = Math.ceil((expDate - today)/(1000*60*60*24));
+      exp.classList.remove("expiry-green","expiry-warning","expiry-expired");
+      if(diffDays < 0){ exp.classList.add("expiry-expired"); }
+      else if(diffDays <=7){ exp.classList.add("expiry-warning"); }
+      else { exp.classList.add("expiry-green"); }
+    } else {
+      exp.classList.remove("expiry-green","expiry-warning","expiry-expired");
+    }
+  }
+
+  qty.oninput=checkAlarms;
+  min.oninput=checkAlarms;
+  exp.oninput=checkAlarms;
+}
+
+// ---- PDF (svart/hvitt) med jsPDF AutoTable ----
+async function generatePDF(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+  const left = 40;
+
+  // Tittel
+  doc.setFont('helvetica','bold'); doc.setFontSize(16);
+  doc.text('Seavo Nautiq — Medicine Register', left, 50);
+
+  // Registreringsfelt (tekstlinjer)
+  doc.setFont('helvetica','normal'); doc.setFontSize(11);
+  let y = 75;
+  const reg = {
+    'Registration Date': document.getElementById('regDate').value || '—',
+    'Expiry Date': document.getElementById('regExpiry').value || '—',
+    'Medicine Issuer': document.getElementById('issuer').value || '—',
+    'Responsible Officer': document.getElementById('officer').value || '—',
+    'Notes': document.getElementById('notes').value || '—'
+  };
+  Object.entries(reg).forEach(([k,v]) => { doc.text(`${k}: ${v}`, left, y); y += 16; });
+
+  // Tabell-data (les fra DOM)
+  const rows = [];
+  document.querySelectorAll('#medicineTable tbody tr').forEach(tr => {
+    const tds = tr.querySelectorAll('td');
+    const getVal = (tdIndex) => (tds[tdIndex]?.querySelector('input')?.value || '').trim();
+    rows.push([
+      getVal(0), // Medical equipment
+      getVal(1), // Qty
+      getVal(2), // MIN
+      getVal(3), // Expiry
+      getVal(4), // Comments
+      getVal(5)  // Order
+    ]);
+  });
+
+  // AutoTable i svart/hvitt (ingen farger brukes)
+  doc.autoTable({
+    startY: y + 6,
+    head: [['Medical equipment','Qty','MIN','Expiry date','Comments','Order']],
+    body: rows.length ? rows : [['—','—','—','—','—','—']],
+    styles: { font: 'helvetica', fontSize: 10, textColor: [0,0,0], lineColor: [0,0,0], lineWidth: 0.5 },
+    headStyles: { fillColor: [255,255,255], textColor: [0,0,0] },
+    alternateRowStyles: { fillColor: [245,245,245] },
+    margin: { left, right: left }
+  });
+
+  // Footer med sidetall
+  const pageCount = doc.getNumberOfPages();
+  for(let i=1;i<=pageCount;i++){
+    doc.setPage(i);
+    doc.setFontSize(9);
+    doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.getWidth()-left, doc.internal.pageSize.getHeight()-20, { align: 'right' });
+  }
+
+  doc.save('Medicine_Register.pdf');
+}
+</script>
+</body>
+</html>

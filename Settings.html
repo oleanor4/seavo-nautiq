@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <title>Settings</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg:#0b2d5e;
+      --panel: rgba(255,255,255,.08);
+      --panel-2: rgba(0,0,0,.15);
+      --text:#fff;
+      --muted:#bcd3f1;
+      --accent:#62b2e7;
+      --danger:#f24b5d;
+      --ok:#28e755;
+      --warn:#f6c945;
+      --radius:12px;
+    }
+
+    /* Base */
+    *{box-sizing:border-box}
+    body{
+      background-color: var(--bg);
+      font-family: Arial, sans-serif;
+      margin: 0;
+      color: var(--text);
+      font-weight: bold;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(to right, #145aa0, #7295ca);
+      padding: 12px 20px;
+      border-radius: 0 0 8px 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header h1{
+      text-align: center; 
+      margin: 10px 0; 
+      font-size: 36px; 
+      font-weight: bold; 
+      text-shadow: 0 1px 3px rgba(0,0,0,.6);
+    }
+
+    /* Layout */
+    .container{
+      padding: 20px 24px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .grid{
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+    .card{
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: var(--radius);
+      padding: 16px;
+      backdrop-filter: blur(2px);
+    }
+    .span-6{ grid-column: span 6; }
+    .span-4{ grid-column: span 4; }
+    .span-8{ grid-column: span 8; }
+    .span-12{ grid-column: span 12; }
+
+    @media (max-width: 900px){
+      .span-6, .span-8, .span-4 { grid-column: span 12; }
+    }
+
+    .card h2{
+      margin: 0 0 12px 0;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: bold;
+    }
+    .subtle{ color: var(--muted); font-weight: normal; }
+
+    /* Controls */
+    .row{
+      display: grid;
+      grid-template-columns: 220px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px dashed rgba(255,255,255,.12);
+    }
+    .row:last-child{ border-bottom: none; }
+    label{ font-weight: bold; }
+    .desc{ color: var(--muted); font-weight: normal; font-size: 12px; }
+
+    select, input[type="text"], input[type="number"], input[type="password"]{
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.2);
+      color: var(--text);
+      outline: none;
+    }
+    input[type="checkbox"]{ transform: scale(1.2); }
+
+    .btn{
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: var(--panel-2);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .btn:hover{ filter: brightness(1.1); }
+    .btn-accent{ background: linear-gradient(to right, #4aa6e5, #2573c9); }
+    .btn-danger{ background: linear-gradient(to right, #ff6b7a, #e43d4f); }
+    .btn-outline{ background: transparent; }
+
+    .tog{
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+
+    /* Section helpers */
+    .hint{
+      margin-top: 6px; color: var(--muted); font-weight: normal; font-size: 12px;
+    }
+    .preview{
+      border-radius: 10px;
+      height: 44px;
+      border: 1px dashed rgba(255,255,255,.25);
+      display: grid; grid-template-columns: 1fr 120px;
+      overflow: hidden;
+    }
+    .preview .bar{
+      background: linear-gradient(90deg, rgba(255,255,255,.06), rgba(0,0,0,.2));
+    }
+    .preview .chip{
+      display: grid; place-items: center; font-weight: bold;
+      background: var(--accent);
+      color: #00243f;
+    }
+
+    /* Toast */
+    .toast{
+      position: fixed; bottom: 16px; right: 16px;
+      background: rgba(0,0,0,.7); color: #fff; padding: 10px 14px;
+      border-radius: 12px; border: 1px solid rgba(255,255,255,.15);
+      opacity: 0; transform: translateY(8px); pointer-events: none;
+      transition: all .25s ease;
+      z-index: 20;
+      font-weight: bold;
+    }
+    .toast.show{ opacity: 1; transform: translateY(0); }
+
+    /* Small helper badges */
+    .badge{
+      display:inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: bold;
+      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18); color: var(--muted);
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Settings</h1>
+  </header>
+
+  <main class="container">
+    <div class="grid">
+
+      <!-- Generelt -->
+      <section class="card span-6">
+        <h2>🌍 Generelt <span class="badge">Bruker</span></h2>
+        <div class="row">
+          <label for="language">Språk</label>
+          <select id="language">
+            <option value="no">Norsk (NO)</option>
+            <option value="en">English (EN)</option>
+            <option value="ru">Русский (RU)</option>
+          </select>
+          <div class="desc">Velg språk for UI og rapporter</div>
+        </div>
+        <div class="row">
+          <label for="timezone">Tidssone</label>
+          <select id="timezone">
+            <option value="Europe/Oslo">Europe/Oslo</option>
+            <option value="UTC">UTC</option>
+            <option value="Europe/London">Europe/London</option>
+            <option value="America/New_York">America/New_York</option>
+          </select>
+          <div class="desc">Bruk lokal tid i lister, alarmer og PDF</div>
+        </div>
+        <div class="row">
+          <label for="dateFormat">Datoformat</label>
+          <select id="dateFormat">
+            <option value="dd.MM.yyyy">dd.MM.yyyy</option>
+            <option value="yyyy-MM-dd">yyyy-MM-dd</option>
+            <option value="MM/dd/yyyy">MM/dd/yyyy</option>
+          </select>
+          <div class="desc">Velg format for utløpsdatoer m.m.</div>
+        </div>
+        <div class="row">
+          <label for="timeFormat">Tidsformat</label>
+          <select id="timeFormat">
+            <option value="24h">24-timer</option>
+            <option value="12h">12-timer (AM/PM)</option>
+          </select>
+          <div class="desc">Visning i logger og eksport</div>
+        </div>
+        <div class="row">
+          <label for="units">Måleenheter</label>
+          <select id="units">
+            <option value="metric">Metrisk (kg, liter)</option>
+            <option value="imperial">Imperial (lbs, gallon)</option>
+          </select>
+          <div class="desc">Standard for kvantum og forbruk</div>
+        </div>
+      </section>
+
+      <!-- Tema / visning -->
+      <section class="card span-6">
+        <h2>🎨 Tema & visning <span class="badge">UI</span></h2>
+        <div class="row">
+          <label for="themeMode">Tema</label>
+          <select id="themeMode">
+            <option value="dark">Mørk</option>
+            <option value="light">Lys</option>
+            <option value="system">System</option>
+          </select>
+          <button class="btn btn-outline" id="previewTheme">Forhåndsvis</button>
+        </div>
+        <div class="row">
+          <label for="accent">Aksentfarge</label>
+          <select id="accent">
+            <option value="#62b2e7">Havblå (standard)</option>
+            <option value="#4ee0a8">Turkis</option>
+            <option value="#f6c945">Gul</option>
+            <option value="#f24b5d">Rød</option>
+            <option value="#b784f7">Lilla</option>
+          </select>
+          <div class="desc">Brukes i knapper, markeringer og chips</div>
+        </div>
+        <div class="row">
+          <label for="density">Tabelltetthet</label>
+          <select id="density">
+            <option value="comfortable">Komfort</option>
+            <option value="compact">Kompakt</option>
+            <option value="spacious">Luftig</option>
+          </select>
+          <div class="desc">Rad-høyde for tabeller</div>
+        </div>
+        <div class="row">
+          <label>Forhåndsvisning</label>
+          <div class="preview">
+            <div class="bar"></div>
+            <div class="chip" id="accentChip">Aksent</div>
+          </div>
+          <div class="desc">Se aksentfargen i praksis</div>
+        </div>
+      </section>
+
+      <!-- Varsler -->
+      <section class="card span-8">
+        <h2>🔔 Varsler & alarmer <span class="badge">Drift</span></h2>
+        <div class="row">
+          <label for="notifyMin">MIN-alarm</label>
+          <div class="tog">
+            <input id="notifyMin" type="checkbox" />
+            <span>Varsle når beholdning ≤ MIN</span>
+          </div>
+          <div class="desc">Farge i celler + valgfri lyd</div>
+        </div>
+        <div class="row">
+          <label for="notifyExpiry">Utløpsdato</label>
+          <div class="tog">
+            <input id="notifyExpiry" type="checkbox" />
+            <span>Varsle når utløp ≤ 7 dager</span>
+          </div>
+          <div class="desc">Grønn → gul (7d) → rød (utløpt)</div>
+        </div>
+        <div class="row">
+          <label for="soundEnabled">Lydvarsel</label>
+          <div class="tog">
+            <input id="soundEnabled" type="checkbox" />
+            <span>Aktiver lyd</span>
+          </div>
+          <button class="btn" id="testBeep">Test varsel-lyd</button>
+        </div>
+        <div class="row">
+          <label for="emailNotify">E-post</label>
+          <div class="tog">
+            <input id="emailNotify" type="checkbox" />
+            <span>Send e-post ved kritiske alarmer</span>
+          </div>
+          <input id="emailAddress" type="text" placeholder="din@epost.no" />
+        </div>
+      </section>
+
+      <!-- Lagring / eksport -->
+      <section class="card span-4">
+        <h2>💾 Lagring & eksport</h2>
+        <div class="row">
+          <label for="autosave">Autolagring</label>
+          <select id="autosave">
+            <option value="off">Av</option>
+            <option value="15">Hvert 15. sekund</option>
+            <option value="30">Hvert 30. sekund</option>
+            <option value="60">Hvert 60. sekund</option>
+          </select>
+          <div class="desc">Lagrer lokalt mellom besøk</div>
+        </div>
+        <div class="row">
+          <label for="exportFormat">Standard eksport</label>
+          <select id="exportFormat">
+            <option value="pdf">PDF</option>
+            <option value="xlsx">Excel (.xlsx)</option>
+            <option value="csv">CSV</option>
+          </select>
+          <div class="desc">Brukes i “Generer rapport”</div>
+        </div>
+        <div class="row">
+          <label for="defaultSort">Standard sortering</label>
+          <select id="defaultSort">
+            <option value="expiry">Utløpsdato (stigende)</option>
+            <option value="min">Lavest beholdning først</option>
+            <option value="name">Navn A→Å</option>
+          </select>
+          <div class="desc">Gjelder tabeller som Medicine, Provisions, osv.</div>
+        </div>
+      </section>
+
+      <!-- Sikkerhet -->
+      <section class="card span-12">
+        <h2>🔐 Sikkerhet & tilgang <span class="badge">Konto</span></h2>
+        <div class="row">
+          <label for="role">Rolle</label>
+          <select id="role">
+            <option value="crew">Crew (begrensede rettigheter)</option>
+            <option value="officer">Officer (full tilgang)</option>
+          </select>
+          <div class="desc">Styrer hva som kan redigeres</div>
+        </div>
+        <div class="row">
+          <label for="pin">PIN-kode</label>
+          <input id="pin" type="password" inputmode="numeric" minlength="4" maxlength="6" placeholder="****" />
+          <div class="desc">Bruk 4–6 siffer. Kreves for kritiske handlinger</div>
+        </div>
+        <div class="row">
+          <label for="twofa">Tofaktor (2FA)</label>
+          <div class="tog">
+            <input id="twofa" type="checkbox" />
+            <span>Påkrevd ved innlogging</span>
+          </div>
+          <button class="btn btn-outline" id="manageDevices">Administrer enheter</button>
+        </div>
+        <div class="row">
+          <label>Handlinger</label>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn btn-accent" id="saveNow">Lagre nå</button>
+            <button class="btn" id="exportSettings">Eksporter innstillinger</button>
+            <button class="btn" id="importSettings">Importer innstillinger</button>
+            <button class="btn btn-danger" id="resetAll">Tilbakestill til standard</button>
+          </div>
+          <div class="desc">Eksport/import lagrer kun preferanser, ikke data</div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">Lagret</div>
+
+  <script>
+    const $$ = (id)=>document.getElementById(id);
+    const STORAGE_KEY = "seavoSettings";
+
+    const defaults = {
+      language: "no",
+      timezone: "Europe/Oslo",
+      dateFormat: "dd.MM.yyyy",
+      timeFormat: "24h",
+      units: "metric",
+      themeMode: "dark",
+      accent: "#62b2e7",
+      density: "comfortable",
+      notifyMin: true,
+      notifyExpiry: true,
+      soundEnabled: true,
+      emailNotify: false,
+      emailAddress: "",
+      autosave: "30",
+      exportFormat: "pdf",
+      defaultSort: "expiry",
+      role: "officer",
+      pin: "",
+      twofa: false
+    };
+
+    function showToast(msg="Lagret"){
+      const t = $$("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(()=>t.classList.remove("show"), 1200);
+    }
+
+    function loadSettings(){
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? { ...defaults, ...JSON.parse(raw) } : { ...defaults };
+    }
+
+    function saveSettings(partial){
+      const current = loadSettings();
+      const next = { ...current, ...partial };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      updateUIFrom(next);
+      showToast();
+      return next;
+    }
+
+    function updateUIFrom(s){
+      // Map values to controls
+      $$("language").value = s.language;
+      $$("timezone").value = s.timezone;
+      $$("dateFormat").value = s.dateFormat;
+      $$("timeFormat").value = s.timeFormat;
+      $$("units").value = s.units;
+
+      $$("themeMode").value = s.themeMode;
+      $$("accent").value = s.accent;
+      $$("density").value = s.density;
+
+      $$("notifyMin").checked = s.notifyMin;
+      $$("notifyExpiry").checked = s.notifyExpiry;
+      $$("soundEnabled").checked = s.soundEnabled;
+      $$("emailNotify").checked = s.emailNotify;
+      $$("emailAddress").value = s.emailAddress;
+
+      $$("autosave").value = s.autosave;
+      $$("exportFormat").value = s.exportFormat;
+      $$("defaultSort").value = s.defaultSort;
+
+      $$("role").value = s.role;
+      $$("pin").value = s.pin;
+      $$("twofa").checked = s.twofa;
+
+      // Apply accent to preview chip
+      document.documentElement.style.setProperty('--accent', s.accent);
+
+      // Apply theme preview to page background (only a visual hint)
+      if(s.themeMode === "light"){
+        document.documentElement.style.setProperty('--bg', '#e9f2ff');
+        document.documentElement.style.setProperty('--text', '#001833');
+      }else{
+        document.documentElement.style.setProperty('--bg', '#0b2d5e');
+        document.documentElement.style.setProperty('--text', '#ffffff');
+      }
+    }
+
+    function bindAutoSave(){
+      const inputs = [
+        "language","timezone","dateFormat","timeFormat","units",
+        "themeMode","accent","density",
+        "notifyMin","notifyExpiry","soundEnabled",
+        "emailNotify","emailAddress",
+        "autosave","exportFormat","defaultSort",
+        "role","pin","twofa"
+      ].map($$);
+
+      inputs.forEach(el=>{
+        const evt = (el.type === "checkbox" || el.tagName === "SELECT") ? "change" : "input";
+        el.addEventListener(evt, ()=>{
+          const patch = {};
+          if(el.type === "checkbox"){ patch[el.id] = el.checked; }
+          else { patch[el.id] = el.value; }
+          saveSettings(patch);
+        });
+      });
+    }
+
+    // Simple sonar/beep tone
+    function playBeep(){
+      try{
+        const ac = new (window.AudioContext || window.webkitAudioContext)();
+        const o = ac.createOscillator();
+        const g = ac.createGain();
+        o.type = "sine";
+        o.frequency.value = 880; // A5
+        g.gain.value = 0.0001;
+        o.connect(g); g.connect(ac.destination);
+        o.start();
+
+        // envelope: quick fade in/out with a little pulse
+        const now = ac.currentTime;
+        g.gain.exponentialRampToValueAtTime(0.2, now + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+        setTimeout(()=>{ o.stop(); ac.close(); }, 300);
+      }catch(e){}
+    }
+
+    // Preview theme button
+    $$("previewTheme").addEventListener("click", ()=>{
+      const cur = loadSettings();
+      const nextMode = cur.themeMode === "dark" ? "light" : "dark";
+      saveSettings({ themeMode: nextMode });
+      showToast(`Tema: ${nextMode === "dark" ? "Mørk" : "Lys"}`);
+    });
+
+    // Test beep
+    $$("testBeep").addEventListener("click", ()=>{
+      const s = loadSettings();
+      if(s.soundEnabled) playBeep();
+      else showToast("Lydvarsel er av");
+    });
+
+    // Save now
+    $$("saveNow").addEventListener("click", ()=>{
+      const s = loadSettings();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+      showToast("Innstillinger lagret");
+    });
+
+    // Export/import
+    $$("exportSettings").addEventListener("click", ()=>{
+      const blob = new Blob([localStorage.getItem(STORAGE_KEY) ?? "{}"], {type:"application/json"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "seavo-settings.json";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+    $$("importSettings").addEventListener("click", ()=>{
+      const inp = document.createElement("input");
+      inp.type = "file";
+      inp.accept = "application/json";
+      inp.onchange = (e)=>{
+        const f = e.target.files[0];
+        if(!f) return;
+        const reader = new FileReader();
+        reader.onload = ()=>{
+          try{
+            const obj = JSON.parse(reader.result);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...defaults, ...obj }));
+            updateUIFrom(loadSettings());
+            showToast("Importert");
+          }catch(err){
+            showToast("Kunne ikke importere");
+          }
+        };
+        reader.readAsText(f);
+      };
+      inp.click();
+    });
+
+    // Manage devices (placeholder)
+    $$("manageDevices").addEventListener("click", ()=>{
+      showToast("Enhetsadministrasjon kommer senere");
+    });
+
+    // Reset
+    $$("resetAll").addEventListener("click", ()=>{
+      if(confirm("Tilbakestille alle innstillinger til standard?")){
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(defaults));
+        updateUIFrom(loadSettings());
+        showToast("Tilbakestilt");
+      }
+    });
+
+    // Live accent preview
+    $$("accent").addEventListener("change", ()=>{
+      document.documentElement.style.setProperty('--accent', $$("accent").value);
+      $$("accentChip").textContent = "Aksent";
+    });
+
+    // Init
+    (function init(){
+      const s = loadSettings();
+      updateUIFrom(s);
+      bindAutoSave();
+    })();
+  </script>
+</body>
+</html>

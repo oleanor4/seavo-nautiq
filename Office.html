@@ -61,14 +61,78 @@
     .cell-move{width:60px;}
     .cell-move button{width:40px; height:35px; background:linear-gradient(to right,#00b7ff,#326fa8); color:#fff; border-radius:6px; cursor:pointer; font-size:18px;}
     .cell-move button:hover{background:#87cfff; color:#fff;}
-    #sidePanel{position:fixed; top:0; right:0; width:180px; height:32%; background:linear-gradient(to left,#072446,#306cc7); color:#000; display:flex; flex-direction:column; align-items:center; padding:20px 10px; box-shadow:-2px 0 10px rgba(0,0,0,.5); transition:right .5s ease; z-index:999; border-radius:16px; border:2px solid #3994e9;}
-    #sidePanel.hidden{right:-160px;}
-    #sidePanel button{margin:4px 0; padding:10px 20px; width:100%; background:linear-gradient(to right,#123981,#1994db); color:#000; font-weight:bold; border-radius:8px; cursor:pointer; font-size:16px; box-shadow:0 0 8px rgba(0,0,0,.5);}
-    #sidePanel button:hover{background:#56bafd;}
-    #signOutBtn{margin-top:40px;}
-    #bottomButtons{margin-top:auto; width:100%; display:flex; flex-direction:column; gap:2px;}
-    #togglePanelBtn{position:fixed; top:10%; right:150px; transform:translateY(-50%); background:#1a4ca8; color:#fff; border-radius:0 10px 10px 0; padding:4px; cursor:pointer; font-weight:bold; font-size:35px; z-index:1000; box-shadow:-8px 0 8px rgba(0,0,0,.3);}
-    #togglePanelBtn:hover{background:#96bad1;}
+    :root{
+  --panel-w: 180px;        /* bredde på sidepanel */
+  --panel-h: 32vh;         /* høyde på sidepanel (lik din tidligere ~32%) */
+  --handle-w: 28px;        /* bredde på "toggle"-håndtaket som stikker ut */
+}
+
+#sidePanel{
+  position: fixed;
+  overflow: visible;
+  top: 180px;
+  right: 0;                              /* synlig posisjon */
+  width: var(--panel-w);
+  height: var(--panel-h);
+  background: linear-gradient(to left,#072446,#306cc7);
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 10px;
+  box-shadow: -2px 0 10px rgba(0,0,0,.5);
+  transition: right .5s ease;
+  z-index: 999;
+  border-radius: 16px;
+  border: 2px solid #13192c;
+}
+
+/* Skyv panelet nesten helt ut, men la håndtaket vises */
+#sidePanel.hidden{
+  right: calc(-1 * (var(--panel-w) - var(--handle-w)));
+}
+
+#togglePanelBtn{
+  position: absolute;
+  left: 0;                   /* anker i panelkanten */
+  top: 50%;
+  transform: translate(-100%, -50%);  /* flytt UT av panelet = null overlap */
+  width: var(--handle-w);
+  height: clamp(96px, 50%, 180px);     /* ca. halv panelhøyde, med min/max */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: linear-gradient(to bottom,#1a4ca8,#0d2c66);
+  color: #fff;
+  font-weight: bold;
+  font-size: 26px;
+  border-radius: 12px 0 0 12px;        /* rund kun venstresiden */
+  cursor: pointer;
+  box-shadow: -8px 0 8px rgba(0,0,0,.3);
+  user-select: none;
+  z-index: 1000;                       /* over bakgrunn, men utenpå panelet */
+}
+#togglePanelBtn:hover{ background:#96bad1; }
+
+
+#sidePanel button:not(#togglePanelBtn) {
+  margin: 4px 0;
+  padding: 12px 20px;
+  width: 100%;
+  background: linear-gradient(to right, #123981, #1994db);
+  color: #000;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+#sidePanel button:not(#togglePanelBtn):hover {
+  background: #56bafd;
+}
+
     .highlight{background-color:rgb(240,138,42); font-weight:bold;}
     .highlight-input{background-color:yellow; font-weight:bold;}
   </style>
@@ -89,18 +153,25 @@
   <h1 style="text-align:center; color:#dad7d7; margin-top:20px; font-size:36px; font-weight:bold; text-shadow:0 1px 3px rgba(0,0,0,.6);">Office</h1>
   <a href="index.html" class="logo-link"><img src="images/Logo Seavo Nautiq.png" alt="Logo Seavo Nautiq" class="logo"></a>
 
-  <div id="sidePanel" class="hidden">
-    <button>Information</button>
-    <button>Documents</button>
-    <button>Shared Content</button>
-    <button>Settings</button>
-    <button id="signOutBtn">Sign Out</button>
-    <div id="bottomButtons">
-      <button>🧮 Calculator</button>
-      <button>📝 Notepad</button>
-    </div>
+ <div id="sidePanel" class="hidden">
+  <button>Information</button>
+  <button>Documents</button>
+  <button>Shared Content</button>
+  <button>Settings</button>
+  <button id="signOutBtn">Sign Out</button>
+  <div id="bottomButtons">
+    <button>🧮 Calculator</button>
+    <button>📝 Notepad</button>
   </div>
+
+   <!-- NY plassering: håndtaket festet til panelet -->
   <button id="togglePanelBtn" onclick="toggleSidePanel()">⫷</button>
+</div>
+
+
+ 
+
+
 </header>
 
 <input type="text" id="searchBox" placeholder="Search inventory..." oninput="searchInPage()">
@@ -128,13 +199,11 @@
 
 <script>
 function toggleSidePanel(){
-  const panel=document.getElementById("sidePanel");
-  const toggleBtn=document.getElementById("togglePanelBtn");
-  if(panel.classList.contains("hidden")){
-    panel.classList.remove("hidden"); toggleBtn.style.right="220px"; toggleBtn.textContent="⫸";
-  }else{
-    panel.classList.add("hidden"); toggleBtn.style.right="0px"; toggleBtn.textContent="⫷";
-  }
+  const panel = document.getElementById("sidePanel");
+  const btn   = document.getElementById("togglePanelBtn");
+  const nowHidden = panel.classList.toggle("hidden");
+  
+  btn.textContent = nowHidden ? "⫷" : "⫸";
 }
 
 function searchInPage(){

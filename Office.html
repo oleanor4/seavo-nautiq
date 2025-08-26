@@ -1,140 +1,468 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Seavo Nautiq-Office</title>
-  <style>
-    body { background-color:#12315c; font-family:Arial,sans-serif; margin:0; color:#fff; }
-    .video-header{position:relative; aspect-ratio:1280/99; overflow:hidden; background:#000;}
-    .video-header video{width:100%; height:200%; object-fit:cover; display:block;}
-    .gradient-overgang{height:10px; background:linear-gradient(to left,#62b2e7,#001125); box-shadow:6px 4px 6px rgba(0,0,0,.7)}
-    .category-slider-office{display:flex; align-items:center; justify-content:center; background:linear-gradient(to right,#041425,#3b7fbe); padding:20px; overflow-x:auto; margin-bottom:-10px; width:90%; margin-left:70px; border-radius:12px;}
-    .category-item{display:flex; align-items:center; margin:0 6px;}
-    .category-button,.add-category{padding:10px 20px; background:linear-gradient(to right,#00b7ff,#326fa8); color:#fff; border-radius:6px; cursor:pointer; font-size:16px; margin-left:20px;}
-    .category-button.active{background:#9ccdfa; font-weight:bold;}
-    .category-button:hover,.add-category:hover{background:#56bafd; color:#fff;}
-    .delete-category{color:#f00; font-size:20px; margin-left:20px; cursor:pointer;}
-    .arrow{font-size:20px; font-weight:bold; padding:5px 10px; background:transparent; color:#fff; border-radius:6px; cursor:pointer; width:60px; box-shadow:0 0 10px rgba(0,0,0,.6); margin-left:40px;}
-    .arrow:hover{background:#326fa8; color:#fff;}
-    #content{padding:60px;}
-    .logo{width:200px; height:auto; border-radius:6px; box-shadow:0 0 10px rgba(0,0,0,.6); cursor:pointer; margin-left:60px;}
-    .logo:hover{transform:scale(1.08); transition:transform .2s ease; box-shadow:0 0 30px rgba(255,255,255,.8);}
-    #searchBox{width:200px; padding:10px; border-radius:6px; border:1px solid #000; box-shadow:0 0 10px rgba(0,0,0,.6); margin-left:60px; margin-top:50px; margin-bottom:20px; font-weight:bold;}
-    .office{width:100%; height:130%; position:absolute; top:0; left:0; z-index:-1; opacity:.1; pointer-events:none;}
-    table{width:100%; border-collapse:collapse; background-color:#1f3b66; color:#000; margin-bottom:20px; box-shadow:0 0 10px rgba(0,0,0,.6);}
-    .large-bold-input{font-weight:bold; font-size:14px;}
-    .cell-min,.cell-max{width:45px; min-width:45px; max-width:45px;}
-    .cell-min input,.cell-max input{width:100%; box-sizing:border-box;}
-    .cell-order{width:40px;}
-    .cell-move{width:60px;}
-    th,td{border:1px solid #112036; padding:5px; text-align:center; font-size:18px;}
-    th{background-color:#13a2e4; color:#000; border-radius:5px;}
-    td.min-col input{width:60px;}
-    /* Alarmfarger */
-    .min-alarm {
-      background: linear-gradient(to right, #ffffff, #fcac01) !important; /* gulaktig */
-}
-    .max-alarm {
-  background: linear-gradient(to right, #ffffff, #c8ff02) !important; /* grønnaktig */
-}
+<!DOCTYPE html> 
+<html lang="en"> 
+  <head> 
+    <meta charset="UTF-8"> 
+    <title>Seavo Nautiq-Office</title>
 
-    .add-line{padding:8px 16px; margin:5px 10px 20px 0; font-size:15px; font-weight:bold; border-radius:10px; background:linear-gradient(to right,#00b7ff,#326fa8); cursor:pointer; box-shadow:0 0 10px rgba(0,0,0,.6);}
-    .add-line:hover{background:#56bafd; color:#fff;}
-    .color-btn.limegreen{background-color:#36d131;}
-    .color-btn.gold{background-color:#ffd036;}
-    .color-btn.mediumturquoise{background-color:#40e0d0;}
-    .color-btn.white{background-color:#ffffff;}
-    .color-btn{width:18px; height:10px; border-radius:30%; cursor:pointer;}
-    .color-btn:hover{outline:1px solid #fff; box-shadow:0 0 5px rgba(0,0,0,.6);}
-    .color-buttons{display:inline-flex; flex-direction:column; gap:1px; margin-left:2px; vertical-align:middle;}
-    .header-row td{background:linear-gradient(to left,#12315c,#79acee); font-weight:bold; text-align:left; border-radius:5px; border-color:black;}
-    .header-row td span{display:inline-block; width:60%;}
-    .delete-button{color:#000; cursor:pointer; font-size:20px; text-shadow:0 1px 3px rgba(0,0,0,.9);}
-    .delete-button:hover{background-color:rgba(0,0,0,.3); border-radius:50px; padding:0 5px;}
-    td:last-child{width:50px; background:linear-gradient(to right,#4e9bce,#1b3863);}
-    button img{width:40px; height:40px; padding-left:55px; margin-top:20px;}
-    .global-button{background:linear-gradient(to right,#00b7ff,#326fa8); color:#fff; padding:20px 15px; font-size:15px; font-weight:bold; cursor:pointer; margin:10px 60px; border-radius:16px; box-shadow:0 0 10px rgba(0,0,0,.6);}
-    .global-button:hover{background:linear-gradient(to right,#56bafd,#0e385f); color:#fff;}
-    .cell-product{width:190px;}
-    .cell-comment{width:240px;}
-    .cell-small{width:80px;}
-    .cell-move{width:60px;}
-    .cell-move button{width:40px; height:35px; background:linear-gradient(to right,#00b7ff,#326fa8); color:#fff; border-radius:6px; cursor:pointer; font-size:18px;}
-    .cell-move button:hover{background:#87cfff; color:#fff;}
-    :root{
-  --panel-w: 180px;        /* bredde på sidepanel */
-  --panel-h: 32vh;         /* høyde på sidepanel (lik din tidligere ~32%) */
-  --handle-w: 28px;        /* bredde på "toggle"-håndtaket som stikker ut */
-}
+    <style>
+      
+  body {
+    background-color: #12315c;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    color: #fff;
+  }
 
-#sidePanel{
-  position: fixed;
-  overflow: visible;
-  top: 180px;
-  right: 0;                              /* synlig posisjon */
-  width: var(--panel-w);
-  height: var(--panel-h);
-  background: linear-gradient(to left,#072446,#306cc7);
-  color: #000;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px 10px;
-  box-shadow: -2px 0 10px rgba(0,0,0,.5);
-  transition: right .5s ease;
-  z-index: 999;
-  border-radius: 16px;
-  border: 2px solid #13192c;
-}
+  .video-header {
+    position: relative;
+    aspect-ratio: 1280/99;
+    overflow: hidden;
+    background: #000;
+  }
 
-/* Skyv panelet nesten helt ut, men la håndtaket vises */
-#sidePanel.hidden{
-  right: calc(-1 * (var(--panel-w) - var(--handle-w)));
-}
+  .video-header video {
+    width: 100%;
+    height: 200%;
+    object-fit: cover;
+    display: block;
+  }
 
-#togglePanelBtn{
-  position: absolute;
-  left: 0;                   /* anker i panelkanten */
-  top: 50%;
-  transform: translate(-100%, -50%);  /* flytt UT av panelet = null overlap */
-  width: var(--handle-w);
-  height: clamp(96px, 50%, 180px);     /* ca. halv panelhøyde, med min/max */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  background: linear-gradient(to bottom,#1a4ca8,#0d2c66);
-  color: #fff;
-  font-weight: bold;
-  font-size: 26px;
-  border-radius: 12px 0 0 12px;        /* rund kun venstresiden */
-  cursor: pointer;
-  box-shadow: -8px 0 8px rgba(0,0,0,.3);
-  user-select: none;
-  z-index: 1000;                       /* over bakgrunn, men utenpå panelet */
-}
-#togglePanelBtn:hover{ background:#96bad1; }
+  .gradient-overgang {
+    height: 10px;
+    background: linear-gradient(to left, #62b2e7, #001125);
+    box-shadow: 6px 4px 6px rgba(0, 0, 0, .7)
+  }
+
+  .category-slider-office {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to right, #041425, #3b7fbe);
+    padding: 20px;
+    overflow-x: auto;
+    margin-bottom: -10px;
+    width: 90%;
+    margin-left: 70px;
+    border-radius: 12px;
+  }
+
+  .category-item {
+    display: flex;
+    align-items: center;
+    margin: 0 6px;
+  }
+
+  .category-button,
+  .add-category {
+    padding: 10px 20px;
+    background: linear-gradient(to right, #00b7ff, #326fa8);
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 20px;
+  }
+
+  .category-button.active {
+    background: #9ccdfa;
+    font-weight: bold;
+  }
+
+  .category-button:hover,
+  .add-category:hover {
+    background: #56bafd;
+    color: #fff;
+  }
+
+  .delete-category {
+    color: #f00;
+    font-size: 20px;
+    margin-left: 20px;
+    cursor: pointer;
+  }
+
+  .arrow {
+    font-size: 20px;
+    font-weight: bold;
+    padding: 5px 10px;
+    background: transparent;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 60px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .6);
+    margin-left: 40px;
+  }
+
+  .arrow:hover {
+    background: #326fa8;
+    color: #fff;
+  }
+
+  #content {
+    padding: 60px;
+  }
+
+  .logo {
+    width: 200px;
+    height: auto;
+    border-radius: 6px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .6);
+    cursor: pointer;
+    margin-left: 60px;
+  }
+
+  .logo:hover {
+    transform: scale(1.08);
+    transition: transform .2s ease;
+    box-shadow: 0 0 30px rgba(255, 255, 255, .8);
+  }
+
+  #searchBox {
+    width: 200px;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #000;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .6);
+    margin-left: 60px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+
+  .office {
+    width: 100%;
+    height: 130%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    opacity: .1;
+    pointer-events: none;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #1f3b66;
+    color: #000;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .6);
+  }
+
+  .large-bold-input {
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  .cell-min,
+  .cell-max {
+    width: 45px;
+    min-width: 45px;
+    max-width: 45px;
+  }
+
+  .cell-min input,
+  .cell-max input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .cell-order {
+    width: 40px;
+  }
+
+  .cell-move {
+    width: 60px;
+  }
+
+  th,
+  td {
+    border: 1px solid #112036;
+    padding: 5px;
+    text-align: center;
+    font-size: 18px;
+  }
+
+  th {
+    background-color: #13a2e4;
+    color: #000;
+    border-radius: 5px;
+  }
+
+  td.min-col input {
+    width: 60px;
+  }
+
+  /* Alarmfarger */
+  .min-alarm {
+    background: linear-gradient(to right, #ffffff, #fcac01) !important; /* gulaktig */
+  }
+
+  .max-alarm {
+    background: linear-gradient(to right, #ffffff, #c8ff02) !important; /* grønnaktig */
+  }
+
+  .add-line {
+    padding: 8px 16px;
+    margin: 5px 10px 20px 0;
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 10px;
+    background: linear-gradient(to right, #00b7ff, #326fa8);
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .6);
+  }
+
+  .add-line:hover {
+    background: #56bafd;
+    color: #fff;
+  }
+
+  .color-btn.limegreen {
+    background-color: #36d131;
+  }
+
+  .color-btn.gold {
+    background-color: #ffd036;
+  }
+
+  .color-btn.mediumturquoise {
+    background-color: #40e0d0;
+  }
+
+  .color-btn.white {
+    background-color: #ffffff;
+  }
+
+  .color-btn {
+    width: 18px;
+    height: 10px;
+    border-radius: 30%;
+    cursor: pointer;
+  }
+
+  .color-btn:hover {
+    outline: 1px solid #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, .6);
+  }
+
+  .color-buttons {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 1px;
+    margin-left: 2px;
+    vertical-align: middle;
+  }
+
+  .header-row td {
+    background: linear-gradient(to left, #12315c, #79acee);
+    font-weight: bold;
+    text-align: left;
+    border-radius: 5px;
+    border-color: black;
+  }
+
+  .header-row td span {
+    display: inline-block;
+    width: 60%;
+  }
+
+  .delete-button {
+    color: #000;
+    cursor: pointer;
+    font-size: 20px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, .9);
+  }
+
+  .delete-button:hover {
+    background-color: rgba(0, 0, 0, .3);
+    border-radius: 50px;
+    padding: 0 5px;
+  }
+
+  td:last-child {
+    width: 50px;
+    background: linear-gradient(to right, #4e9bce, #1b3863);
+  }
+
+  button img {
+    width: 40px;
+    height: 40px;
+    padding-left: 55px;
+    margin-top: 20px;
+  }
+
+  .global-button {
+    background: linear-gradient(to right, #00b7ff, #326fa8);
+    color: #fff;
+    padding: 20px 15px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 10px 60px;
+    border-radius: 16px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .6);
+  }
+
+  .global-button:hover {
+    background: linear-gradient(to right, #56bafd, #0e385f);
+    color: #fff;
+  }
+
+  .cell-product {
+    width: 190px;
+  }
+
+  .cell-comment {
+    width: 240px;
+  }
+
+  .cell-small {
+    width: 80px;
+  }
+
+  .cell-move {
+    width: 60px;
+  }
+
+  .cell-move button {
+    width: 40px;
+    height: 35px;
+    background: linear-gradient(to right, #00b7ff, #326fa8);
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 18px;
+  }
+
+  .cell-move button:hover {
+    background: #87cfff;
+    color: #fff;
+  }
+
+  :root {
+    --panel-w: 180px; /* bredde på sidepanel */
+    --panel-h: 32vh;  /* høyde på sidepanel (lik din tidligere ~32%) */
+    --handle-w: 28px; /* bredde på "toggle"-håndtaket som stikker ut */
+  }
 
 
-#sidePanel button:not(#togglePanelBtn) {
-  margin: 4px 0;
-  padding: 12px 20px;
-  width: 100%;
-  background: linear-gradient(to right, #123981, #1994db);
-  color: #000;
-  font-weight: bold;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
-}
 
-#sidePanel button:not(#togglePanelBtn):hover {
-  background: #56bafd;
-}
+    #sidePanel{
+      position: fixed;
+      overflow: visible;
+      top: 180px;
+      right: 0;
+      width: var(--panel-w);
+      height: var(--panel-h);
+      background: linear-gradient(to left,#072446,#306cc7);
+      color: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 10px;
+      box-shadow: -2px 0 10px rgba(0,0,0,.5);
+      transition: right .5s ease;
+      z-index: 999;
+      border-radius: 16px;
+      border: 2px solid #13192c;
+    }
+    #sidePanel.hidden{ right: calc(-1 * (var(--panel-w) - var(--handle-w))); }
+
+    /* Håndtaket, utenfor panelet */
+    #togglePanelBtn{
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translate(-100%, -50%);
+      width: var(--handle-w);
+      height: clamp(96px, 50%, 180px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      background: linear-gradient(to bottom,#1a4ca8,#0d2c66);
+      color: #fff;
+      font-weight: bold;
+      font-size: 26px;
+      border-radius: 12px 0 0 12px;
+      cursor: pointer;
+      box-shadow: -8px 0 8px rgba(0,0,0,.3);
+      user-select: none;
+      z-index: 1000;
+    }
+    #togglePanelBtn:hover{ background:#96bad1; }
+
+    #bottomButtons {
+      margin-top: auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    /* Panelknapper – ekskluder toggle-handle */
+    #sidePanel button:not(#togglePanelBtn) {
+      margin: 4px 0;
+      padding: 12px 20px;
+      width: 100%;
+      background: linear-gradient(to right, #123981, #1994db);
+      color: #000;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+    }
+    #sidePanel button:not(#togglePanelBtn):hover { background:#56bafd; }
 
     .highlight{background-color:rgb(240,138,42); font-weight:bold;}
     .highlight-input{background-color:yellow; font-weight:bold;}
+
+    /* Modal overlay og vindu */
+    .modal{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.35);
+      display: none; /* vises av open*() */
+      z-index: 1500; /* over sidepanel */
+    }
+    .modal-innhold{
+      position: absolute;
+      left: 300px;
+      top: 200px;
+      transform: translate(0, 0);
+      background: linear-gradient(to right, #041425, #10395f);
+      padding: 15px;
+      width: 260px;
+      border-radius: 18px;
+      box-shadow: 0 0 12px #000;
+      text-align: center;
+      z-index: 1501;
+    }
+    .calculator-header {
+      background: linear-gradient(to right, #104f68, #326fa8);
+      color: white;
+      padding: 5px;
+      cursor: move;
+      border-radius: 10px 10px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .lukk { font-weight: bold; font-size: 25px; cursor: pointer; }
+
+    #calc-buttons button {
+      width: 36px;
+      height: 30px;
+      font-size: 18px;
+      margin: 3px;
+      background: linear-gradient(to right, #00b7ff, #326fa8);
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
   </style>
 </head>
 
@@ -153,25 +481,21 @@
   <h1 style="text-align:center; color:#dad7d7; margin-top:20px; font-size:36px; font-weight:bold; text-shadow:0 1px 3px rgba(0,0,0,.6);">Office</h1>
   <a href="index.html" class="logo-link"><img src="images/Logo Seavo Nautiq.png" alt="Logo Seavo Nautiq" class="logo"></a>
 
- <div id="sidePanel" class="hidden">
-  <button>Information</button>
-  <button>Documents</button>
-  <button>Shared Content</button>
-  <button>Settings</button>
-  <button id="signOutBtn">Sign Out</button>
-  <div id="bottomButtons">
-    <button>🧮 Calculator</button>
-    <button>📝 Notepad</button>
+  <div id="sidePanel" class="hidden">
+    <button>Help</button>
+    <button>Documents</button>
+    <button>Shared Content</button>
+    <button>Settings</button>
+    <button id="signOutBtn">Sign Out</button>
+
+    <div id="bottomButtons">
+      <button id="openCalculatorBtn">🧮 Calculator</button>
+      <button id="openNotepadBtn">📝 Notepad</button>
+    </div>
+
+    <!-- Håndtaket -->
+    <button id="togglePanelBtn" onclick="toggleSidePanel()">⫷</button>
   </div>
-
-   <!-- NY plassering: håndtaket festet til panelet -->
-  <button id="togglePanelBtn" onclick="toggleSidePanel()">⫷</button>
-</div>
-
-
- 
-
-
 </header>
 
 <input type="text" id="searchBox" placeholder="Search inventory..." oninput="searchInPage()">
@@ -197,15 +521,67 @@
   <button class="global-button" onclick="save()">💾 Save</button>
 </div>
 
+<!-- ====== MODALS (UTENFOR panelet) ====== -->
+
+<!-- CALCULATOR MODAL -->
+<div id="calculatorModal" class="modal" style="display:none;">
+  <div class="modal-innhold" id="calculatorWindow">
+    <div class="calculator-header" id="calcDragHandle">
+      <h2 style="margin: 0; font-size: 15px;">Calculator</h2>
+      <span class="lukk" onclick="closeCalculator()">×</span>
+    </div>
+    <input id="calc-display" type="text" readonly style="width: 90%; padding: 10px; font-size: 25px; text-align: right; margin-top: 10px;"><br><br>
+    <div id="calc-buttons">
+      <button onclick="appendCalc('7')">7</button>
+      <button onclick="appendCalc('8')">8</button>
+      <button onclick="appendCalc('9')">9</button>
+      <button onclick="appendCalc('/')">÷</button><br>
+      <button onclick="appendCalc('4')">4</button>
+      <button onclick="appendCalc('5')">5</button>
+      <button onclick="appendCalc('6')">6</button>
+      <button onclick="appendCalc('*')">×</button><br>
+      <button onclick="appendCalc('1')">1</button>
+      <button onclick="appendCalc('2')">2</button>
+      <button onclick="appendCalc('3')">3</button>
+      <button onclick="appendCalc('-')">−</button><br>
+      <button onclick="appendCalc('0')">0</button>
+      <button onclick="appendCalc('.')">.</button>
+      <button onclick="calculateResult()">=</button>
+      <button onclick="appendCalc('+')">+</button><br>
+      <button onclick="appendCalc('%')">%</button>
+      <button onclick="deleteLast()" style="width: 30%;">DEL</button><br>
+      <button onclick="clearCalc()" style="width: 90%">C</button>
+    </div>
+  </div>
+</div>
+
+<!-- NOTEPAD MODAL -->
+<div id="notepadModal" class="modal" style="display:none;">
+  <div class="modal-innhold" id="notepadWindow">
+    <div class="calculator-header" id="noteDragHandle">
+      <h2 style="margin:0; font-size:15px;">Notepad</h2>
+      <span class="lukk" onclick="closeNotepad()">×</span>
+    </div>
+    <textarea id="noteArea" style="width:100%; height:260px; margin-top:10px; border-radius:10px;"></textarea>
+    <div style="margin-top:10px; display:flex; gap:8px; justify-content:center;">
+      <button onclick="saveNote()" style="padding:8px 12px;">Save</button>
+      <button onclick="clearNote()" style="padding:8px 12px;">Clear</button>
+    </div>
+  </div>
+</div>
+
+</body>
+
 <script>
+/* ===== Sidepanel toggle ===== */
 function toggleSidePanel(){
   const panel = document.getElementById("sidePanel");
   const btn   = document.getElementById("togglePanelBtn");
   const nowHidden = panel.classList.toggle("hidden");
-  
   btn.textContent = nowHidden ? "⫷" : "⫸";
 }
 
+/* ===== Søk/markering ===== */
 function searchInPage(){
   const term=document.getElementById("searchBox").value.trim().toLowerCase();
   removeHighlights(); if(term==="") return;
@@ -236,16 +612,13 @@ function removeHighlights(){
   });
   document.querySelectorAll(".highlight-input").forEach(input=> input.classList.remove("highlight-input"));
 }
-</script>
 
-<script>
+/* ===== Data/setup for tabeller (uendret logikk) ===== */
 let data = JSON.parse(localStorage.getItem("lagerDataV3")) || {};
 let activeCategory = Object.keys(data)[0] || "Standard";
 
 function save(){ localStorage.setItem("lagerDataV3", JSON.stringify(data)); }
 function scrollSlider(offset){ document.getElementById("category-container").scrollLeft += offset; }
-
-// Migrering: sikre at rader har max-felt
 Object.values(data).forEach(rows=>{
   (rows||[]).forEach(r=>{
     if(r && r.type!=="header" && typeof r.max==="undefined"){ r.max=0; }
@@ -306,21 +679,19 @@ function showCategory(){
       tr.appendChild(del); tbody.appendChild(tr); return;
     }
 
-    // Sikre standardobjekt for linjer
     row.product ??= ""; row.start ??= 0; row.used ??= 0; row.end ??= (parseFloat(row.start)||0)-(parseFloat(row.used)||0);
     row.min ??= 0; row.max ??= 0; row.comment ??= ""; row.order ??= 0;
 
     const fields=['product','start','used','end','min','max','comment','order'];
     const inputs={};
-    let tdMinRef=null, tdMaxRef=null;
 
     fields.forEach((key)=>{
       const td=document.createElement("td");
 
       if(key==='product') td.classList.add("cell-product");
       else if(key==='comment') td.classList.add("cell-comment");
-      else if(key==='min') { td.classList.add("cell-min"); tdMinRef=td; }
-      else if(key==='max') { td.classList.add("cell-max"); tdMaxRef=td; }
+      else if(key==='min') td.classList.add("cell-min");
+      else if(key==='max') td.classList.add("cell-max");
       else if(key==='order') td.classList.add("cell-order");
       else td.classList.add("cell-small");
 
@@ -334,25 +705,18 @@ function showCategory(){
       if(key==='end'){ input.readOnly=true; }
 
       input.oninput=()=>{
-        // lagre verdi
         row[key]=input.type==="number" ? input.value : input.value;
-
-        // beregn end på nytt
         const startVal=parseFloat(row.start)||0;
         const usedVal =parseFloat(row.used)||0;
         row.end = startVal - usedVal;
         inputs['end'].value = row.end;
-
-        // oppdatér alarmer
         updateAlarms();
-
         save();
       };
 
       inputs[key]=input;
       td.appendChild(input);
 
-      // fargeknapper i product-cellen
       if(key==='product'){
         const colorContainer=document.createElement("div"); colorContainer.className="color-buttons";
         ["limegreen","gold","mediumturquoise","white"].forEach(color=>{
@@ -363,40 +727,27 @@ function showCategory(){
         td.appendChild(colorContainer);
         if(row.productColor) input.style.backgroundColor=row.productColor || "";
       }
-
       tr.appendChild(td);
     });
 
-    // hjelpefunksjon for alarm
- function updateAlarms(){
-  const startVal = parseFloat(inputs['start'].value);
-  const usedVal  = parseFloat(inputs['used'].value);
-  const endVal   = (isNaN(startVal)?0:startVal) - (isNaN(usedVal)?0:usedVal);
-  inputs['end'].value = endVal;
+    function updateAlarms(){
+      const startVal = parseFloat(inputs['start'].value);
+      const usedVal  = parseFloat(inputs['used'].value);
+      const endVal   = (isNaN(startVal)?0:startVal) - (isNaN(usedVal)?0:usedVal);
+      inputs['end'].value = endVal;
+      const minVal   = parseFloat(inputs['min'].value);
+      const maxVal   = parseFloat(inputs['max'].value);
 
-  const minVal   = parseFloat(inputs['min'].value);
-  const maxVal   = parseFloat(inputs['max'].value);
+      if(!isNaN(endVal) && !isNaN(minVal) && endVal <= minVal){
+        inputs['min'].classList.add("min-alarm");
+      } else { inputs['min'].classList.remove("min-alarm"); }
 
-  // MIN alarm: end <= min
-  if(!isNaN(endVal) && !isNaN(minVal) && endVal <= minVal){
-    inputs['min'].classList.add("min-alarm");
-  } else {
-    inputs['min'].classList.remove("min-alarm");
-  }
-
-  // MAX alarm: start > max
-  if(!isNaN(startVal) && !isNaN(maxVal) && startVal > maxVal){
-    inputs['max'].classList.add("max-alarm");
-  } else {
-    inputs['max'].classList.remove("max-alarm");
-  }
-}
-
-
-    // initial alarm-evaluering
+      if(!isNaN(startVal) && !isNaN(maxVal) && startVal > maxVal){
+        inputs['max'].classList.add("max-alarm");
+      } else { inputs['max'].classList.remove("max-alarm"); }
+    }
     updateAlarms();
 
-    // Move/Del
     const tdMove=document.createElement("td"); tdMove.classList.add("cell-move");
     tdMove.innerHTML=`<button onclick="moveRow(${i},-1)">⬆️</button> <button onclick="moveRow(${i},1)">⬇️</button>`;
     const tdDel=document.createElement("td"); tdDel.innerHTML=`<span class="delete-button" onclick="deleteRow(${i})">🗑️</span>`;
@@ -409,9 +760,7 @@ function showCategory(){
   const addLine=document.createElement("button");
   addLine.className="add-line"; addLine.textContent="+ Add line";
   addLine.onclick=()=>{
-    data[activeCategory].push({
-      type:"line", product:"", start:0, used:0, end:0, min:0, max:0, comment:"", order:0, productColor:null
-    });
+    data[activeCategory].push({ type:"line", product:"", start:0, used:0, end:0, min:0, max:0, comment:"", order:0, productColor:null });
     save(); showCategory();
   };
 
@@ -424,7 +773,6 @@ function showCategory(){
 }
 
 function deleteRow(index){ data[activeCategory].splice(index,1); save(); showCategory(); }
-
 function moveRow(index, direction){
   const list=data[activeCategory]; const newIndex=index+direction;
   if(newIndex<0 || newIndex>=list.length) return;
@@ -456,8 +804,8 @@ function showGlobalOverview(){
       const values=[category, row.product||"", start, used, end, min, max, row.comment||"", row.order||""];
       values.forEach((val,i)=>{
         const td=document.createElement("td"); td.textContent=val;
-        if(i===4 && end <= min) td.classList.add("red-warning-min"); // End
-        if(i===6 && start > max) td.classList.add("red-warning-max"); // Max
+        if(i===4 && end <= min) td.classList.add("red-warning-min");
+        if(i===6 && start > max) td.classList.add("red-warning-max");
         tr.appendChild(td);
       });
       tbody.appendChild(tr);
@@ -495,6 +843,105 @@ async function generatePDF(){
     doc.save("SeavoNautiq_Inventory.pdf");
   });
 }
+
+/* ====== Calculator / Notepad logikk ====== */
+function openCalculator(){ document.getElementById("calculatorModal").style.display = "block"; }
+function closeCalculator(){ document.getElementById("calculatorModal").style.display = "none"; }
+function openNotepad(){ document.getElementById("notepadModal").style.display = "block"; }
+function closeNotepad(){ document.getElementById("notepadModal").style.display = "none"; }
+
+/* Kalkulator-funksjoner */
+function appendCalc(val){
+  const d = document.getElementById('calc-display');
+  d.value += val;
+}
+function deleteLast(){
+  const d = document.getElementById('calc-display');
+  d.value = d.value.slice(0,-1);
+}
+function clearCalc(){
+  document.getElementById('calc-display').value = '';
+}
+function calculateResult(){
+  const d = document.getElementById('calc-display');
+  try{
+    // erstatt × og ÷ hvis bruker har klikket knappene
+    const expr = d.value.replace(/×/g,'*').replace(/÷/g,'/');
+    // prosent: 50% => 0.5
+    const expr2 = expr.replace(/(\d+(\.\d+)?)%/g, (_,n)=> String(parseFloat(n)/100));
+    d.value = String(Function(`"use strict";return (${expr2})`)());
+  }catch{
+    d.value = 'Error';
+  }
+}
+
+/* Notepad-funksjoner (lagres lokalt) */
+function saveNote(){
+  localStorage.setItem('seavo_note', document.getElementById('noteArea').value);
+}
+function clearNote(){
+  document.getElementById('noteArea').value = '';
+  localStorage.removeItem('seavo_note');
+}
+
+/* Drag-n-drop for modal-vinduer */
+function makeDraggable(handleId, windowId){
+  const handle = document.getElementById(handleId);
+  const win = document.getElementById(windowId);
+  if(!handle || !win) return;
+
+  let offsetX=0, offsetY=0, dragging=false;
+
+  handle.addEventListener('mousedown', (e)=>{
+    dragging=true;
+    const rect = win.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+    document.body.style.userSelect='none';
+  });
+
+  window.addEventListener('mousemove', (e)=>{
+    if(!dragging) return;
+    win.style.left = (e.clientX - offsetX) + 'px';
+    win.style.top  = (e.clientY - offsetY) + 'px';
+  });
+
+  window.addEventListener('mouseup', ()=>{
+    dragging=false;
+    document.body.style.userSelect='';
+  });
+}
+
+/* Koble knapper og modal oppførsel */
+document.addEventListener("DOMContentLoaded", () => {
+  const openCalcBtn = document.getElementById("openCalculatorBtn");
+  const openNoteBtn = document.getElementById("openNotepadBtn");
+  const calcModal   = document.getElementById("calculatorModal");
+  const noteModal   = document.getElementById("notepadModal");
+
+  openCalcBtn?.addEventListener("click", openCalculator);
+  openNoteBtn?.addEventListener("click", openNotepad);
+
+  // Lukk ved klikk på bakgrunnen
+  function backdropClose(e){
+    if(e.target === calcModal) closeCalculator();
+    if(e.target === noteModal) closeNotepad();
+  }
+  calcModal?.addEventListener("click", backdropClose);
+  noteModal?.addEventListener("click", backdropClose);
+
+  // ESC for å lukke
+  document.addEventListener("keydown", (e)=>{
+    if(e.key === "Escape"){ closeCalculator(); closeNotepad(); }
+  });
+
+  // Last notat om det finnes
+  const saved = localStorage.getItem('seavo_note');
+  if(saved) document.getElementById('noteArea').value = saved;
+
+  // Gjør vinduer flyttbare
+  makeDraggable('calcDragHandle', 'calculatorWindow');
+  makeDraggable('noteDragHandle', 'notepadWindow');
+});
 </script>
-</body>
 </html>

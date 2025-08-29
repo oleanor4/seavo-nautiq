@@ -311,11 +311,13 @@
   }
 
   .cell-product {
-    width: 190px;
+    width: 220px;
   }
 
+
+
   .cell-comment {
-    width: 240px;
+    width: 200px;
   }
 
   .cell-small {
@@ -454,8 +456,8 @@
     .lukk { font-weight: bold; font-size: 25px; cursor: pointer; }
 
     #calc-buttons button {
-      width: 36px;
-      height: 30px;
+      width: 46px;
+      height: 40px;
       font-size: 18px;
       margin: 3px;
       background: linear-gradient(to right, #00b7ff, #326fa8);
@@ -463,6 +465,50 @@
       border-radius: 6px;
       cursor: pointer;
     }
+
+    #calc-buttons button:hover {
+      background: #87cfff;
+      color: white;
+      
+    }
+
+    .product-color-wrap {
+  display: grid !important;
+  grid-template-columns: 1fr auto; /* input | chip */
+  align-items: center;
+  column-gap: 6px;
+  width: 100%;
+}
+
+.product-color-wrap input {
+  width: 100% !important;
+  min-width: 0;
+}
+
+
+    .product-color-wrap { display:inline-flex; align-items:center; gap:6px; position: relative; }
+.color-chip {
+  background-color: #34d469;
+  width: 16px; height: 16px; border-radius: 4px;
+  border: 1px solid rgba(0,0,0,.35); cursor: pointer; box-shadow: 0 0 4px rgba(0,0,0,.25);
+}
+.color-popover {
+  position: absolute; top: 28px; left: 0px;
+  display: grid; grid-template-columns: repeat(4, 18px); gap: 6px;
+  background: #0d1d31; padding: 10px; border-radius: 10px;
+  border: 1px solid #1c3e6e; box-shadow: 0 6px 20px rgba(0,0,0,.45); z-index: 2000;
+}
+.color-popover.hidden { display: none; }
+.color-option {
+  width: 18px; height: 18px; border-radius: 4px; cursor: pointer;
+  border: 1px solid rgba(0,0,0,.35); box-shadow: 0 0 3px rgba(0,0,0,.25);
+}
+.color-option.clear {
+  background: linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 50%, #ccc 50%, #ccc 75%, transparent 75%, transparent);
+  background-size: 8px 8px;
+}
+
+.color-option:hover, .color-chip:hover { outline: 1px solid #ffffff; }
   </style>
 </head>
 
@@ -649,6 +695,95 @@ function addCategory(){
   if(name && !data[name]){ data[name]=[]; activeCategory=name; save(); updateCategories(); showCategory(); }
 }
 
+
+// Palett (kan utvides)
+const PRODUCT_COLORS = [
+  "#36d131", "#ffd036", "#40e0d0", "#ffffff",
+  "#ff6b6b", "#4da3ff", "#ffa94d", "#a78bfa",
+  "#94a3b8", "#000000", "#f472b6", "#14b8a6",
+  "#1f2937", "#84cc16", "#b45309", "#c0c0c0"
+];
+
+function luminance(hex){
+  const c = hex.replace('#','');
+  const r = parseInt(c.substr(0,2),16)/255, g = parseInt(c.substr(2,2),16)/255, b = parseInt(c.substr(4,2),16)/255;
+  const a = [r,g,b].map(v => v <= .03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4));
+  return 0.2126*a[0] + 0.7152*a[1] + 0.0722*a[2];
+}
+function bestTextColor(bg){
+  if(!bg || bg.toLowerCase()==="#ffffff") return "#000";
+  return luminance(bg) > 0.55 ? "#000" : "#fff";
+}
+
+function buildProductColorPicker(td, input, row){
+  // wrapper rundt input + chip
+  const wrap = document.createElement('span');
+  wrap.className = 'product-color-wrap';
+
+  // flytt input inn i wrap
+  td.removeChild(input);
+  wrap.appendChild(input);
+
+  // chip (viser valgt farge, åpner popover)
+  const chip = document.createElement('span');
+  chip.className = 'color-chip';
+  chip.title = 'Pick color';
+  if(row.productColor){
+    chip.style.background = row.productColor;
+    input.style.backgroundColor = row.productColor;
+    input.style.color = bestTextColor(row.productColor);
+  }
+  wrap.appendChild(chip);
+
+  // popover
+  const pop = document.createElement('div');
+  pop.className = 'color-popover hidden';
+
+  // “Clear”
+  const clear = document.createElement('div');
+  clear.className = 'color-option clear';
+  clear.title = 'Clear';
+  clear.onclick = (e)=>{ e.stopPropagation();
+    row.productColor = null;
+    input.style.backgroundColor = '';
+    input.style.color = '';
+    chip.style.background = '';
+    save?.();
+    pop.classList.add('hidden');
+  };
+  pop.appendChild(clear);
+
+  // fargevalg
+  PRODUCT_COLORS.forEach(col=>{
+    const sw = document.createElement('div');
+    sw.className = 'color-option';
+    sw.style.background = col;
+    sw.title = col;
+    sw.onclick = (e)=>{ e.stopPropagation();
+      row.productColor = col;
+      input.style.backgroundColor = col;
+      input.style.color = bestTextColor(col);
+      chip.style.background = col;
+      save?.();
+      pop.classList.add('hidden');
+    };
+    pop.appendChild(sw);
+  });
+
+  wrap.appendChild(pop);
+  td.appendChild(wrap);
+
+  // toggle popover
+  chip.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    pop.classList.toggle('hidden');
+  });
+
+  // klikk utenfor => lukk
+  document.addEventListener('click', ()=> pop.classList.add('hidden'));
+}
+
+
 function showCategory(){
   const content=document.getElementById("content");
   content.innerHTML="";
@@ -717,16 +852,10 @@ function showCategory(){
       inputs[key]=input;
       td.appendChild(input);
 
-      if(key==='product'){
-        const colorContainer=document.createElement("div"); colorContainer.className="color-buttons";
-        ["limegreen","gold","mediumturquoise","white"].forEach(color=>{
-          const btn=document.createElement("button"); btn.className=`color-btn ${color}`; btn.title=`Make ${color}`;
-          btn.onclick=(e)=>{ e.preventDefault(); row.productColor = (color==="white")? null : color; input.style.backgroundColor=row.productColor || ""; save(); };
-          colorContainer.appendChild(btn);
-        });
-        td.appendChild(colorContainer);
-        if(row.productColor) input.style.backgroundColor=row.productColor || "";
-      }
+    if (key === 'product') {
+      buildProductColorPicker(td, input, row);
+    }
+
       tr.appendChild(td);
     });
 

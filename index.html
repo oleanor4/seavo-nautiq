@@ -112,10 +112,11 @@
 }
 
  #forsidebilde {
-  width: 100%;
-  max-width: 500px;
+  width: 200%;
+  max-width: 700px;
   border-radius: 20px;
   box-shadow: #000000 0px 0px 10px 3px;
+ 
 }
 
 
@@ -126,19 +127,6 @@
   gap: 30px;
 }
 
-#mobilpicture {
-  width: 80%;
-  max-width: 250px;
-  border-radius: 20px;
-  box-shadow: #000000 0px 0px 10px 3px;
-  transition: transform 0.3s ease;
-  cursor: pointer;
-}
-
-#mobilpicture:hover {
-  transform: scale(1.05);
-  box-shadow: #39addb 0px 0px 15px 5px;
-}
 
 
 
@@ -257,6 +245,7 @@
       box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.6);
       padding: 20px;
       margin-top: 5px;
+      opacity: 0.7;
     }
 
 
@@ -264,7 +253,7 @@
       margin-top: 20px;
       margin-left: -20px;
       width: 250px;
-      height: 220px;
+      height: 280px;
       padding: 20px;
       background: linear-gradient(to left, #12315c, #215db1); 
       border-radius: 40px;
@@ -283,6 +272,7 @@
       border-radius: 40px;
       color: white;
       box-shadow: 6px 6px 6px rgba(0,0,0,0.6);
+      opacity: 0.7;
     }
 
     
@@ -294,6 +284,7 @@
       box-shadow: 6px 6px 6px rgba(0,0,0,0.6);
       padding: 20px;
       margin-top: 20px;
+      opacity: 0.7;
     }
 
 
@@ -357,7 +348,7 @@
 
 
     #info-text-utenfor {
-      margin-top: 220px;
+      margin-top: 280px;
       left: 0px;
       right: 0px;
       bottom: 0px;
@@ -389,13 +380,7 @@
       color: #ffffff;
     }
 
- #forsidebilde {
-    max-width: 90%;
-  }
-
-  #mobilpicture {
-    max-width: 55%;
-  }
+ 
 
   @media (max-width: 768px) {
   table, thead, tbody, th, td, tr {
@@ -493,10 +478,11 @@
     <button onclick="window.open('disposal.html', '_blank')">Disposal</button>
 
     <div class="ny-container">
-      <button onclick="åpnePopup3()"><img src="icon/Order-black.png" alt="Info" style="height: 32px; vertical-align: middle;"> Orders</button>
-      <button onclick="åpnePopup()"><img src="icon/Participants.png" alt="Info" style="height: 32px; vertical-align: middle;"> Participants</button>
-      <button onclick="åpnePopup5()"><img src="icon/Voyage.png" alt="Info" style="height: 32px; vertical-align: middle;"> Voyages</button>
-      <button onclick="åpnePopup6()"><img src="icon/Fleet.png" alt="Info" style="height: 32px; vertical-align: middle;"> Fleet</button>
+      <button onclick="åpnePopup8()"><img src="icon/Maintenance.png" alt="info" style="height: 32px; vertical-align: middle; float: left;"> Maintenance</button>
+      <button onclick="åpnePopup3()"><img src="icon/Order-black.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Orders</button>
+      <button onclick="åpnePopup()"><img src="icon/Participants.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Participants</button>
+      <button onclick="åpnePopup5()"><img src="icon/Voyage.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Voyages</button>
+      <button onclick="åpnePopup6()"><img src="icon/Fleet.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Fleet</button>
     </div>
   </div>
 
@@ -511,7 +497,7 @@
 
 
  <div class="seavo-right">
-      <img src="images/mobile.png" alt="mobilpicture" id="mobilpicture">
+      
   
       
     </div>
@@ -527,11 +513,11 @@
 
     <div class="hoyre-container">
 
-      <button onclick="åpnePopup4()"><img src="icon/info.png" alt="Info" style="height: 32px; vertical-align: middle;">Help</button>
-      <button onclick="åpnePopup2()"><img src="icon/Doc-black.png" alt="Info" style="height: 32px; vertical-align: middle;"> Documents</button>
-      <button><img src="icon/Share-black.png" alt="Info" style="height: 32px; vertical-align: middle;"> Shared content</button>
-      <button onclick="åpnePopup7()"><img src="icon/Settings.png" alt="Info" style="height: 32px; vertical-align: middle;"> Settings</button>
-      <button><img src="icon/Sign out.png" alt="Info" style="height: 32px; vertical-align: middle;"> Sign out</button>
+      <button onclick="åpnePopup4()"><img src="icon/info.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;">Help</button>
+      <button onclick="åpnePopup2()"><img src="icon/Doc-black.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Documents</button>
+      <button><img src="icon/Share-black.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Shared content</button>
+      <button onclick="åpnePopup7()"><img src="icon/Settings.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Settings</button>
+      <button><img src="icon/Sign out.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Sign out</button>
     </div>
 
     
@@ -776,6 +762,14 @@ updateDigitalClock(); // første kall
                  function åpnePopup7() {
       window.open(
         'Settings.html',    
+        'popup',                  
+        'width=1400,height=800'  
+      );
+    }
+
+                function åpnePopup8() {
+      window.open(
+        'Maintenance.html',    
         'popup',                  
         'width=1400,height=800'  
       );

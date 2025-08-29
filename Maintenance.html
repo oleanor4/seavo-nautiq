@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Seavo Nautiq-Maintenance</title>
+  <style>
+    :root{
+      --bg:#12315c; --panel:rgba(0,0,0,.15); --panel-2:rgba(255,255,255,.08);
+      --text:#fff; --muted:#bcd3f1; --accent:#62b2e7; --danger:#f03747; --warn:#ecc543; --ok:#28e755;
+    }
+    *{box-sizing:border-box}
+    body{background-color:var(--bg); font-family:Arial,sans-serif; margin:0; color:var(--text)}
+    .video-header{position:relative; aspect-ratio:1280/99; overflow:hidden; background:#000}
+    .video-header video{width:100%; height:200%; object-fit:cover; display:block}
+    .gradient-overgang{height:10px; background:linear-gradient(to left,#62b2e7,#001125); box-shadow:6px 4px 6px rgba(0,0,0,.7)}
+    h1{font-size:2.5rem; color:#7ddbf3; margin:20px 0; text-align:center; text-shadow:2px 2px 4px rgba(0,0,0,.5)}
+
+    .container{max-width:1200px; margin:0 auto; padding:16px}
+    .toolbar{display:flex; gap:12px; justify-content:center; margin:12px 0 12px; flex-wrap:wrap}
+    .btn{
+      padding:10px 16px; border:none; border-radius:10px; color:#fff; cursor:pointer;
+      background:linear-gradient(to right,#1b75d1,#0e3e86); box-shadow:0 2px 8px rgba(0,0,0,.35); font-weight:600
+    }
+    .btn.ghost{background:rgba(0,0,0,.25)}
+    .btn.danger{background:linear-gradient(to right,#f13e4e,#a31621)}
+    .btn.ok{background:linear-gradient(to right,#18b857,#0a7c36)}
+    .btn:disabled{opacity:.6; cursor:not-allowed}
+
+    .filters{
+      display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:0 0 18px;
+    }
+    .filters select{padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,.25); background:rgba(0,0,0,.25); color:#fff; min-width:200px}
+
+    /* Table */
+    table{width:100%; border-collapse:collapse; background:rgba(0,0,0,.15); border-radius:12px; overflow:hidden}
+    th,td{padding:12px 10px; border-bottom:1px solid rgba(255,255,255,.12); text-align:left; vertical-align:top}
+    th{background:rgba(0,0,0,.25)}
+    tr.disabled{opacity:.4}
+    .cell-muted{color:var(--muted); font-size:.9rem}
+
+    /* Dots */
+    .dot{display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; vertical-align:middle}
+    .dot.yellow{background:var(--warn)}
+    .dot.red{background:var(--danger)}
+    .dot-stack{display:inline-flex; gap:4px; margin-right:6px}
+
+    /* Modals */
+    .modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.55); z-index:40}
+    .modal.show{display:flex}
+    .card{width:min(900px,92vw); background:rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.12); border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,.5)}
+    .card header{display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid rgba(255,255,255,.1); background:rgba(0,0,0,.2); border-radius:16px 16px 0 0}
+    .card header h3{margin:0; font-size:1.1rem}
+    .card .body{padding:16px}
+    .grid{display:grid; gap:12px}
+    .grid.cols-2{grid-template-columns:1fr 1fr}
+    .grid.cols-3{grid-template-columns:1fr 1fr 1fr}
+    @media(max-width:900px){.grid.cols-3{grid-template-columns:1fr;}.grid.cols-2{grid-template-columns:1fr}}
+    label{display:block; font-weight:700; margin-bottom:6px}
+    input[type="text"], input[type="number"], input[type="date"], input[type="datetime-local"], select, textarea{
+      width:100%; padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,.2); background:rgba(0,0,0,.2); color:#fff;
+    }
+    textarea{min-height:100px; resize:vertical}
+    .hint{font-size:.85rem; color:var(--muted); margin-top:4px}
+    .preview-line{padding:10px 12px; background:rgba(0,0,0,.2); border:1px dashed rgba(255,255,255,.2); border-radius:10px}
+
+    /* Upload */
+    .upload{border:2px dashed rgba(255,255,255,.25); border-radius:12px; padding:12px}
+    .thumbs{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
+    .thumb{width:80px; height:80px; border-radius:10px; background:#0b1423; display:grid; place-items:center; overflow:hidden; border:1px solid rgba(255,255,255,.12)}
+    .thumb img{width:100%; height:100%; object-fit:cover}
+
+    /* Tags / chips */
+    .tag{display:inline-block; padding:2px 8px; border-radius:999px; font-size:.8rem; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.15); margin-right:6px}
+    .chip-btn{display:inline-block; padding:4px 10px; border-radius:999px; font-size:.8rem; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.15); margin:0 6px 6px 0; cursor:pointer}
+    .chip-btn:hover{filter:brightness(1.08)}
+
+    /* History row */
+    .hist-wrap{padding:10px 6px}
+    .hist-item{padding:10px; border:1px solid rgba(255,255,255,.15); border-radius:10px; background:rgba(0,0,0,.18); margin-bottom:8px}
+    .hist-head{font-weight:700; margin-bottom:6px}
+    .hist-meta{font-size:.9rem; color:var(--muted); margin-bottom:6px}
+
+    /* File viewer modal */
+    .filebox{max-width:90vw; max-height:80vh}
+    .filebox img{max-width:100%; height:auto; display:block}
+    .filebox iframe{width:min(900px,90vw); height:70vh; border:none; background:#fff}
+  </style>
+</head>
+<body>
+  <header class="video-header">
+    <video autoplay muted loop playsinline>
+      <source src="Video/Ocean-Seavo-Nautiq.mp4" type="video/mp4">
+    </video>
+  </header>
+  <div class="gradient-overgang"></div>
+
+  <h1>Maintenance</h1>
+
+  <div class="container">
+    <div class="toolbar">
+      <button id="newTaskBtn" class="btn">➕ New Task</button>
+    </div>
+
+    <div class="filters">
+      <select id="filterStatus">
+        <option value="all">All statuses</option>
+        <option value="ok">OK (&gt;10d)</option>
+        <option value="warn">Warning (10–3d)</option>
+        <option value="due">Due soon (2–0d)</option>
+        <option value="overdue">Overdue (&lt;0d)</option>
+        <option value="disabled">Disabled</option>
+      </select>
+      <select id="sortBy">
+        <option value="expiryAsc">Days to expiry ↑</option>
+        <option value="expiryDesc">Days to expiry ↓</option>
+        <option value="severity">Severity (high → low)</option>
+        <option value="nameAsc">Name A–Z</option>
+        <option value="lastNew">Last performed (newest)</option>
+        <option value="lastOld">Last performed (oldest)</option>
+      </select>
+      <button id="resetFilters" class="btn ghost">Reset</button>
+    </div>
+
+    <table id="taskTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type of work</th>
+          <th>Responsible officer</th>
+          <th>Location</th>
+          <th>Interval (days)</th>
+          <th>Days to expire</th>
+          <th>Last performed</th>
+          <th>Files</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="taskBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Create Task Modal -->
+  <div id="createModal" class="modal" role="dialog" aria-modal="true">
+    <div class="card">
+      <header>
+        <h3>Create maintenance task</h3>
+        <button class="btn ghost" onclick="closeCreate()">✖</button>
+      </header>
+      <div class="body">
+        <div class="grid cols-3">
+          <div>
+            <label for="tName">Name of task</label>
+            <input id="tName" type="text" placeholder="e.g., Inspect liferafts">
+          </div>
+          <div>
+            <label for="tType">Type of work</label>
+            <select id="tType">
+              <option>Control</option>
+              <option>Service</option>
+              <option>Test</option>
+              <option>Cleaning</option>
+            </select>
+          </div>
+          <div>
+            <label for="tOfficer">Responsible officer</label>
+            <input id="tOfficer" type="text" placeholder="e.g., Chief Officer">
+          </div>
+          <div>
+            <label for="tLocation">Location</label>
+            <select id="tLocation">
+              <option>Bridge</option>
+              <option>Engine room</option>
+              <option>Deck</option>
+              <option>Cargo hold</option>
+              <option>Other area</option>
+            </select>
+          </div>
+          <div>
+            <label for="tInterval">Interval (days)</label>
+            <input id="tInterval" type="number" min="1" value="30">
+          </div>
+          <div>
+            <label for="tLast">Last performed</label>
+            <input id="tLast" type="date">
+            <div class="hint">Set last performed date; expiry preview below updates automatically.</div>
+          </div>
+        </div>
+
+        <div style="margin-top:10px" class="preview-line" id="expiryPreview">
+          <strong>Expiry preview:</strong> <span id="previewText" class="cell-muted">—</span>
+        </div>
+
+        <div class="grid cols-2" style="margin-top:12px">
+          <div>
+            <label for="tDesc">Work description / notes</label>
+            <textarea id="tDesc" placeholder="Describe the work to be carried out..."></textarea>
+          </div>
+          <div>
+            <label>Attach file / image</label>
+            <div class="upload">
+              <input id="tFile" type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx">
+              <div class="hint">Images will show as thumbnails. Other files are stored and listed by name.</div>
+              <div id="tThumbs" class="thumbs"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="toolbar" style="justify-content:flex-end; margin-top:16px">
+          <button class="btn ghost" onclick="closeCreate()">Cancel</button>
+          <button class="btn ok" onclick="createTask()">Create task</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Perform Modal -->
+  <div id="performModal" class="modal" role="dialog" aria-modal="true">
+    <div class="card">
+      <header>
+        <h3>Perform task</h3>
+        <button class="btn ghost" onclick="closePerform()">✖</button>
+      </header>
+      <div class="body">
+        <div class="row-sub" id="perfTaskName"></div>
+        <div class="grid cols-3" style="margin-top:10px">
+          <div>
+            <label for="pWhen">Performed at</label>
+            <input id="pWhen" type="datetime-local">
+          </div>
+          <div>
+            <label>Performed by (from Participants)</label>
+            <div id="pPeopleArea" class="preview-line">
+              <span id="pPeople" class="cell-muted">No one selected.</span>
+            </div>
+            <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap">
+              <button class="btn" onclick="openPicker()">Pick participants</button>
+              <!-- Load selection removed; auto-loads via 'Send to Maintenance' -->
+            </div>
+            <div class="hint">Open Participants in pick mode and click <strong>Send to Maintenance</strong>. The list updates here automatically.</div>
+          </div>
+          <div>
+            <label for="pComment">Comment</label>
+            <input id="pComment" type="text" placeholder="Short summary of work done">
+          </div>
+        </div>
+        <div class="toolbar" style="justify-content:space-between; margin-top:16px; flex-wrap:wrap">
+          <button class="btn danger" onclick="deleteCurrentTask()">Delete task</button>
+          <div style="display:flex; gap:8px">
+            <button class="btn ghost" onclick="closePerform()">Cancel</button>
+            <button class="btn ok" onclick="confirmPerform()">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- File Viewer Modal -->
+  <div id="fileModal" class="modal" role="dialog" aria-modal="true">
+    <div class="card">
+      <header>
+        <h3 id="fileTitle">File</h3>
+        <button class="btn ghost" onclick="closeFile()">✖</button>
+      </header>
+      <div class="body">
+        <div id="fileBox" class="filebox"></div>
+        <div class="toolbar" style="justify-content:flex-end; margin-top:10px">
+          <a id="fileOpenLink" class="btn" target="_blank">Open in new tab</a>
+          <a id="fileDownloadLink" class="btn ok" download>Download</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Storage keys
+    const TKEY = 'maintenance_tasks_v1';
+    const PICKKEY2 = 'selected_for_maintenance'; // set by Participants.html
+
+    // State
+    let tasks = loadTasks();
+    const expanded = new Set(); // task.id expanded history rows
+    let performIndex = null;
+
+    // Utils
+    const $ = (id)=>document.getElementById(id);
+    const todayStr = ()=> new Date().toISOString().slice(0,10);
+    const pad2 = (n)=> String(n).padStart(2,'0');
+
+    function toDate(val){
+      if(!val) return null;
+      return (val instanceof Date)? val : new Date(val+'T00:00:00');
+    }
+    function diffDays(from,to){
+      const MS=24*3600*1000;
+      const a = toDate(from), b = toDate(to);
+      if(!a||!b) return null;
+      return Math.floor((b - a)/MS);
+    }
+    function addDays(d,days){
+      const dt = toDate(d);
+      dt.setDate(dt.getDate()+Number(days||0));
+      return dt;
+    }
+    function fmtDate(d){
+      if(!d) return '';
+      return d instanceof Date
+        ? `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`
+        : String(d);
+    }
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+    }
+
+    // Expiry calculation from (lastPerformed + interval)
+    function computeExpiry(lastPerformed, intervalDays){
+      if(!lastPerformed || !intervalDays) return {days:null, expiry:null};
+      const expiry = addDays(lastPerformed, Number(intervalDays));
+      const daysLeft = diffDays(new Date(), expiry);
+      return {days:daysLeft, expiry:fmtDate(expiry)};
+    }
+
+    // Status bucket + severity score
+    function statusBucket(days, disabled=false){
+      if(disabled) return {bucket:'disabled', score:-1};
+      if(days === null || days === undefined) return {bucket:'ok', score:0};
+      if(days > 10) return {bucket:'ok', score:0};
+      if(days > 2) return {bucket:'warn', score:1};
+      if(days >= 0) return {bucket:'due', score:2};
+      return {bucket:'overdue', score:3};
+    }
+
+    // Dot rendering
+    function renderExpiryCell(days, expiry){
+      if(days === null || days === undefined) return `<span class="cell-muted">—</span>`;
+      if(days > 10){
+        return `<span class="cell-muted">${days} days (exp. ${expiry})</span>`;
+      } else if(days <= 10 && days > 2){
+        return `<span class="dot yellow"></span>${days} days (exp. ${expiry})`;
+      } else if(days <= 2 && days >= 0){
+        return `<span class="dot red"></span>${days} day${days===1?'':'s'} (exp. ${expiry})`;
+      } else {
+        return `<span class="dot-stack"><span class="dot red"></span><span class="dot red"></span></span><strong>${days}</strong> days (exp. ${expiry})`;
+      }
+    }
+
+    function loadTasks(){
+      try{ return JSON.parse(localStorage.getItem(TKEY)) || []; }
+      catch{ return []; }
+    }
+    function saveTasks(){ localStorage.setItem(TKEY, JSON.stringify(tasks)); }
+
+    // FILTERS / SORT
+    const filterEl = $('filterStatus');
+    const sortEl = $('sortBy');
+    const resetEl = $('resetFilters');
+
+    filterEl.addEventListener('change', render);
+    sortEl.addEventListener('change', render);
+    resetEl.addEventListener('click', ()=>{
+      filterEl.value = 'all';
+      sortEl.value = 'expiryAsc';
+      render();
+    });
+
+    // RENDER
+    function render(){
+      const body = $('taskBody');
+      body.innerHTML = '';
+
+      // Prepare view rows with computed fields
+      let view = tasks.map((t, idx)=>{
+        const {days, expiry} = computeExpiry(t.lastPerformed, t.intervalDays);
+        const sb = statusBucket(days, t.disabled);
+        return {t, idx, days, expiry, bucket:sb.bucket, severity:sb.score};
+      });
+
+      // Filter
+      const f = filterEl.value;
+      if(f !== 'all'){
+        view = view.filter(r=> r.bucket === f);
+      }
+
+      // Sort
+      const s = sortEl.value;
+      view.sort((a,b)=>{
+        if(s==='expiryAsc') return (a.days??9e9) - (b.days??9e9);
+        if(s==='expiryDesc') return (b.days??-9e9) - (a.days??-9e9);
+        if(s==='severity') return b.severity - a.severity;
+        if(s==='nameAsc') return a.t.name.localeCompare(b.t.name);
+        if(s==='lastNew') return (new Date(b.t.lastPerformed) - new Date(a.t.lastPerformed));
+        if(s==='lastOld') return (new Date(a.t.lastPerformed) - new Date(b.t.lastPerformed));
+        return 0;
+      });
+
+      // Rows
+      for(const row of view){
+        const {t, idx, days, expiry} = row;
+
+        const tr = document.createElement('tr');
+        if(t.disabled) tr.classList.add('disabled');
+
+        const fileChips = (t.files||[]).map((f,fi)=>{
+          const icon = f.kind==='image' ? '📷' : (f.dataUrl.startsWith('data:application/pdf')?'📄 PDF':'📄');
+          return `<span class="chip-btn" onclick="openFileViewer(${idx},${fi})" title="Open">${icon} ${escapeHtml(f.name)}</span>`;
+        }).join(' ');
+
+        tr.innerHTML = `
+          <td>${escapeHtml(t.name)}</td>
+          <td>${escapeHtml(t.type)}</td>
+          <td>${escapeHtml(t.officer)}</td>
+          <td>${escapeHtml(t.location)}</td>
+          <td>${Number(t.intervalDays)||''}</td>
+          <td>${renderExpiryCell(days, expiry)}</td>
+          <td>${escapeHtml(t.lastPerformed || '')}</td>
+          <td>${fileChips || '<span class="cell-muted">—</span>'}</td>
+          <td>
+            <div style="display:flex; gap:6px; flex-wrap:wrap">
+              <button class="btn" onclick="toggleHistory('${t.id}')">History (${t.history?.length||0})</button>
+              <button class="btn ok" onclick="openPerform(${idx})" ${t.disabled?'disabled':''}>Perform</button>
+              ${t.disabled
+                ? `<button class="btn" onclick="toggleDisable(${idx},false)">Activate</button>`
+                : `<button class="btn danger" onclick="toggleDisable(${idx},true)">Disable</button>`}
+            </div>
+          </td>
+        `;
+        body.appendChild(tr);
+
+        // History row
+        const htr = document.createElement('tr');
+        htr.id = `hist-${t.id}`;
+        htr.style.display = expanded.has(t.id) ? '' : 'none';
+        const td = document.createElement('td');
+        td.colSpan = 9;
+        td.innerHTML = renderHistoryBlock(t);
+        htr.appendChild(td);
+        body.appendChild(htr);
+      }
+    }
+
+    function renderHistoryBlock(t){
+      const items = (t.history||[]).slice().reverse();
+      if(!items.length) return `<div class="hist-wrap"><span class="cell-muted">No history yet.</span></div>`;
+      const html = items.map((h,i)=>{
+        const by = (h.by||[]).join(', ') || '—';
+        const when = h.at || '—';
+        const cmt = h.comment ? escapeHtml(h.comment) : '—';
+        return `
+          <div class="hist-item">
+            <div class="hist-head">#${items.length - i}</div>
+            <div class="hist-meta">Performed: <strong>${escapeHtml(when)}</strong> &nbsp;|&nbsp; By: <strong>${escapeHtml(by)}</strong></div>
+            <div>${cmt}</div>
+          </div>
+        `;
+      }).join('');
+      return `<div class="hist-wrap">${html}</div>`;
+    }
+
+    function toggleHistory(id){
+      if(expanded.has(id)) expanded.delete(id); else expanded.add(id);
+      render();
+    }
+
+    function toggleDisable(i, state){
+      tasks[i].disabled = state;
+      saveTasks(); render();
+    }
+
+    // CREATE TASK
+    $('newTaskBtn').addEventListener('click', ()=> openCreate());
+
+    function openCreate(){
+      resetCreateForm();
+      $('createModal').classList.add('show');
+    }
+    function closeCreate(){ $('createModal').classList.remove('show'); }
+    function resetCreateForm(){
+      $('tName').value = '';
+      $('tType').value = 'Control';
+      $('tOfficer').value = '';
+      $('tLocation').value = 'Bridge';
+      $('tInterval').value = 30;
+      $('tLast').value = todayStr();
+      $('tDesc').value = '';
+      $('tFile').value = '';
+      $('tThumbs').innerHTML = '';
+      updatePreview();
+    }
+
+    function updatePreview(){
+      const last = $('tLast').value;
+      const interval = $('tInterval').value;
+      const {days, expiry} = computeExpiry(last, interval);
+      const prev = $('previewText');
+      if(days===null){ prev.innerHTML = '—'; }
+      else{ prev.innerHTML = renderExpiryCell(days, expiry); }
+    }
+    $('tLast').addEventListener('change', updatePreview);
+    $('tInterval').addEventListener('input', updatePreview);
+
+    $('tFile').addEventListener('change', async (e)=>{
+      const files = Array.from(e.target.files||[]);
+      $('tThumbs').innerHTML = '';
+      e.target._stored = [];
+      for(const f of files){
+        const dataUrl = await fileToDataURL(f);
+        const isImage = dataUrl.startsWith('data:image/');
+        const div = document.createElement('div');
+        div.className='thumb';
+        div.title = f.name;
+        div.innerHTML = isImage
+          ? `<img src="${dataUrl}" alt="">`
+          : `<span style="font-size:12px; text-align:center; padding:6px">${escapeHtml(f.name)}</span>`;
+        $('tThumbs').appendChild(div);
+        e.target._stored.push({ name:f.name, kind: isImage?'image':'file', dataUrl });
+      }
+    });
+
+    function fileToDataURL(file){
+      return new Promise((res,rej)=>{
+        const reader = new FileReader();
+        reader.onload = ()=> res(reader.result);
+        reader.onerror = rej;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function createTask(){
+      const name = $('tName').value.trim();
+      const type = $('tType').value;
+      const officer = $('tOfficer').value.trim();
+      const location = $('tLocation').value;
+      const intervalDays = Number($('tInterval').value);
+      const lastPerformed = $('tLast').value;
+      const desc = $('tDesc').value.trim();
+      const files = ($('tFile')._stored || []).slice();
+
+      if(!name || !officer || !intervalDays || !lastPerformed){
+        alert('Please fill in Name, Responsible officer, Interval and Last performed.');
+        return;
+      }
+
+      const task = {
+        id: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2),
+        name, type, officer, location, intervalDays, lastPerformed, desc,
+        files, history:[], disabled:false
+      };
+      tasks.push(task);
+      saveTasks(); render(); closeCreate();
+    }
+
+    // PERFORM MODAL
+    function openPerform(i){
+      performIndex = i;
+      const t = tasks[i];
+      $('perfTaskName').textContent = `Task: ${t.name} — Interval ${t.intervalDays}d`;
+      const now = new Date();
+      const val = `${now.getFullYear()}-${pad2(now.getMonth()+1)}-${pad2(now.getDate())}T${pad2(now.getHours())}:${pad2(now.getMinutes())}`;
+      $('pWhen').value = val;
+      $('pComment').value = '';
+      $('pPeople').textContent = 'No one selected.';
+      // load any existing maintenance selection
+      applyPickedFromMaintenanceBuffer();
+      $('performModal').classList.add('show');
+    }
+    function closePerform(){ $('performModal').classList.remove('show'); performIndex = null; }
+
+    function openPicker(){
+      window.open('Participants.html?pick=1', '_blank', 'width=1100,height=700');
+    }
+
+    function applyPickedFromMaintenanceBuffer(){
+      try{
+        const picked = JSON.parse(localStorage.getItem(PICKKEY2)) || [];
+        $('pPeople').innerHTML = picked.length
+          ? picked.map(p=>`<span class="tag">👤 ${escapeHtml(p.name)}</span>`).join(' ')
+          : '<span class="cell-muted">No one selected.</span>';
+        $('pPeople').dataset.raw = JSON.stringify(picked);
+      }catch{}
+    }
+
+    // React to storage changes from Participants window
+    window.addEventListener('storage', (e)=>{
+      if(e.key === PICKKEY2 && performIndex !== null){
+        applyPickedFromMaintenanceBuffer();
+      }
+    });
+
+    function confirmPerform(){
+      if(performIndex===null) return;
+      const when = $('pWhen').value;
+      if(!when){ alert('Please set performed time.'); return; }
+      const pickedRaw = $('pPeople').dataset.raw ? JSON.parse($('pPeople').dataset.raw) : [];
+      const comment = $('pComment').value.trim();
+
+      const t = tasks[performIndex];
+      t.lastPerformed = when.slice(0,10);
+      t.history = t.history || [];
+      t.history.push({ at: when, by: pickedRaw.map(p=>p.name), comment });
+
+      saveTasks(); render(); closePerform();
+      localStorage.removeItem(PICKKEY2); // clear buffer after use
+    }
+
+    function deleteCurrentTask(){
+      if(performIndex===null) return;
+      const t = tasks[performIndex];
+      if(!confirm(`Delete task "${t.name}"? This cannot be undone.`)) return;
+      tasks.splice(performIndex,1);
+      saveTasks(); render(); closePerform();
+    }
+
+    // FILE VIEWER
+    function openFileViewer(ti, fi){
+      const f = (tasks[ti].files||[])[fi];
+      if(!f) return;
+      const box = $('fileBox');
+      const title = $('fileTitle');
+      const openA = $('fileOpenLink');
+      const dlA = $('fileDownloadLink');
+
+      title.textContent = f.name || 'File';
+      openA.href = f.dataUrl;
+      dlA.href = f.dataUrl;
+      dlA.download = f.name || 'file';
+
+      if(f.kind === 'image'){
+        box.innerHTML = `<img src="${f.dataUrl}" alt="${escapeHtml(f.name)}">`;
+      } else if(f.dataUrl.startsWith('data:application/pdf')) {
+        box.innerHTML = `<iframe src="${f.dataUrl}"></iframe>`;
+      } else {
+        box.innerHTML = `<div class="preview-line">Cannot preview this file type here. Use the buttons to open/download.</div>`;
+      }
+      $('fileModal').classList.add('show');
+    }
+    function closeFile(){ $('fileModal').classList.remove('show'); }
+
+    // Live refresh around midnight (recompute days left)
+    function scheduleMidnightRefresh(){
+      const now = new Date();
+      const next = new Date(now);
+      next.setDate(now.getDate()+1);
+      next.setHours(0,0,2,0);
+      setTimeout(()=>{ render(); scheduleMidnightRefresh(); }, next - now);
+    }
+
+    // Init
+    render();
+    scheduleMidnightRefresh();
+
+    // Close modals on backdrop click
+    $('createModal').addEventListener('click', (e)=>{ if(e.target===e.currentTarget) closeCreate(); });
+    $('performModal').addEventListener('click', (e)=>{ if(e.target===e.currentTarget) closePerform(); });
+    $('fileModal').addEventListener('click', (e)=>{ if(e.target===e.currentTarget) closeFile(); });
+
+    // Keyboard ESC support
+    document.addEventListener('keydown', (e)=>{
+      if(e.key==='Escape'){
+        closeCreate(); closePerform(); closeFile();
+      }
+    });
+
+    // Wire preview on load
+    updatePreview();
+
+    // Expose for inline handlers
+    window.openFileViewer = openFileViewer;
+    window.toggleHistory = toggleHistory;
+    window.toggleDisable = toggleDisable;
+    window.openPerform = openPerform;
+  </script>
+</body>
+</html>

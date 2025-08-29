@@ -32,9 +32,9 @@
       margin:10px 0 20px;
       box-shadow: 0 4px 10px rgba(0,0,0,.25);
     }
-    .picker-bar.active { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .picker-bar.active { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
     .picker-info { font-weight:600; }
-    .picker-actions { display:flex; gap:10px; }
+    .picker-actions { display:flex; gap:10px; flex-wrap:wrap; }
     .btn {
       padding:10px 14px; font-size:14px; border:none; border-radius:8px; cursor:pointer; color:#fff;
       background:linear-gradient(to right,#62b2e7,#1b4f8f);
@@ -52,9 +52,10 @@
 
   <!-- Vises kun i pick=1 modus -->
   <div id="pickerBar" class="picker-bar">
-    <div class="picker-info">Picker mode: Select participants and send to Supplies.</div>
+    <div class="picker-info">Picker mode: Select participants and send to Supplies or Maintenance.</div>
     <div class="picker-actions">
-      <button id="sendPicked" class="btn">Send selected to Supplies</button>
+      <button id="sendPicked" class="btn">Send to Supplies</button>
+      <button id="sendPicked2" class="btn">Send to Maintenance</button>
       <button id="cancelPicked" class="btn btn-ghost">Cancel</button>
     </div>
   </div>
@@ -142,9 +143,9 @@
   <script>
     const PKEY = 'participants_v1';
     const PICKKEY = 'selected_for_supplies';
+    const PICKKEY2 = 'selected_for_maintenance';
 
     const $ = id => document.getElementById(id);
-    const qs = sel => document.querySelector(sel);
 
     function getQueryParam(name) {
       const url = new URL(window.location.href);
@@ -240,24 +241,32 @@
       const bar = $('pickerBar');
       if (isPicker) {
         bar.classList.add('active');
-        $('sendPicked').onclick = sendSelectedToSupplies;
+        $('sendPicked').onclick = () => sendSelected('supplies');
+        $('sendPicked2').onclick = () => sendSelected('maintenance');
         $('cancelPicked').onclick = () => window.close();
       }
     }
 
-    function sendSelectedToSupplies() {
+    function getPickedArray() {
       const checks = Array.from(document.querySelectorAll('.pickbox:checked'));
-      if (!checks.length) {
+      if (!checks.length) return [];
+      const selectedUids = checks.map(c => c.getAttribute('data-uid'));
+      return participants
+        .filter(p => selectedUids.includes(p.uid))
+        .map(p => ({ uid: p.uid, name: p.name }));
+    }
+
+    function sendSelected(target){
+      const picked = getPickedArray();
+      if (!picked.length) {
         alert('Select at least one participant.');
         return;
       }
-      const selectedUids = checks.map(c => c.getAttribute('data-uid'));
-      const picked = participants
-        .filter(p => selectedUids.includes(p.uid))
-        .map(p => ({ uid: p.uid, name: p.name }));
-
-      localStorage.setItem(PICKKEY, JSON.stringify(picked));
-      // Lukk vinduet så Supplies kan plukke opp utvalget
+      if(target==='supplies'){
+        localStorage.setItem(PICKKEY, JSON.stringify(picked));
+      } else {
+        localStorage.setItem(PICKKEY2, JSON.stringify(picked));
+      }
       window.close();
     }
 

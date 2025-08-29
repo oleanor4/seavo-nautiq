@@ -485,6 +485,109 @@
   }
 }
 
+/* ========================= */
+/* D/W/V (Fuel/Lube/Ballast) */
+/* ========================= */
+
+#dvwSection {
+  margin: 20px 60px 60px 60px;
+}
+
+#dvwSection h2 {
+  margin: 10px 0 14px 0;
+  font-size: 22px;
+  font-weight: bold;
+  color: #e8f2ff;
+  text-shadow: 0 1px 3px rgba(0,0,0,.35);
+}
+
+.dvw-table {
+  background-color: rgb(31, 59, 102);
+}
+
+.dvw-table th {
+  background-color: #14a8ec;
+  color: #000;
+}
+
+.dvw-table input[type="text"],
+.dvw-table input[type="number"]{
+  width: 95%;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #112036;
+  font-weight: bold;
+}
+
+
+/* Level gauge */
+.level-wrap{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  align-items:center;
+}
+
+.level-input-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  width:100%;
+  justify-content:center;
+}
+
+.level-input-row input{
+  width: 60%;
+}
+
+.level-bar{
+  width:95%;
+  height:16px;
+  border-radius:10px;
+  background: rgba(255,255,255,.15);
+  border:1px solid rgba(0,0,0,.35);
+  overflow:hidden;
+  position:relative;
+  box-shadow: inset 0 0 6px rgba(0,0,0,.45);
+}
+
+.level-fill{
+  height:100%;
+  width:0%;
+  background: linear-gradient(90deg, #f03747, #ffd036, #36d131);
+  transition: width .25s ease;
+}
+
+.level-label{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform: translate(-50%, -50%);
+  font-size:12px;
+  color:#fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,.8);
+  pointer-events:none;
+}
+
+/* Delete btn (row) */
+.dvw-del-btn{
+  cursor:pointer;
+  font-size:20px;
+  text-shadow: 0 1px 3px rgba(0,0,0,.9);
+}
+
+.dvw-del-btn:hover{
+  background-color: rgba(0,0,0,.3);
+  border-radius:50px;
+  padding:0 4px;
+}
+
+/* Make table horizontally scrollable on small screens */
+#dvwTableWrap{
+  overflow-x:auto;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,.6);
+}
 
   </style>
 </head>
@@ -564,11 +667,6 @@
 <img src="images/Parts and tools.PNG" alt="parts and tools" class="parts-and-tools">
 
 
-  
-
-
-
-
 
 
 
@@ -586,6 +684,34 @@
 
 </div>
 
+<!-- ========================================== -->
+<!-- D/W/V (Fuel, Lube, Ballast) – EXTRA LINES -->
+<!-- ========================================== -->
+<section id="dvwSection">
+  <h2>Fuel / Lube / Ballast — SG • Weight • Volume</h2>
+  <div id="dvwTableWrap">
+    <table class="dvw-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>SG (—)</th>
+          <th>Weight (kg)</th>
+          <th>Volume (m³)</th>
+          <th>Temp (°C)</th>
+          <th>Level (max m³) + Gauge</th>
+          <th>Comments</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody id="dvwTbody"></tbody>
+    </table>
+  </div>
+  <button class="add-line" id="dvwAddBtn">+ Add line for D/W/V</button>
+  <button class="add-line" id="dvwPdfBtn">📄 Export D/W/V PDF</button>
+  <button class="add-line" id="dvwRecalcBtn">↻ Update calculations</button> <!-- NY -->
+</section>
+
+
 
 <script>
 function searchInPage() {
@@ -595,7 +721,6 @@ function searchInPage() {
 
   let firstMatch = null;
 
-  // 1. Søk i headers (span-elementer)
   document.querySelectorAll("td span").forEach(span => {
     const content = span.textContent.toLowerCase();
     if (content.includes(term)) {
@@ -609,7 +734,6 @@ function searchInPage() {
     }
   });
 
-  // 2. Søk i input-feltene
   document.querySelectorAll("input").forEach(input => {
     if (input.value.toLowerCase().includes(term)) {
       input.classList.add("highlight-input");
@@ -617,29 +741,24 @@ function searchInPage() {
     }
   });
 
-  // Scroll til første treff
   if (firstMatch) {
     setTimeout(() => {
       firstMatch.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 100); // vent litt så tabellen rekker å tegne seg
+    }, 100);
   }
 }
 
 function removeHighlights() {
-  // Fjern <span class="highlight"> fra header
   document.querySelectorAll("span .highlight").forEach(el => {
     const parent = el.parentNode;
     parent.replaceChild(document.createTextNode(el.textContent), el);
     parent.normalize();
   });
 
-  // Fjern gul markering fra input
   document.querySelectorAll(".highlight-input").forEach(input => {
     input.classList.remove("highlight-input");
   });
 }
-
-
 </script>
 
 
@@ -764,7 +883,6 @@ function showCategory() {
     if (key === "image") {
   td.classList.add("cell-image");
 
-  // Lag input-elementet (skjult)
   const fileInput = document.createElement("input");
   fileInput.type = "file";
   fileInput.accept = "image/*";
@@ -772,7 +890,6 @@ function showCategory() {
   const inputId = `file-${i}`;
   fileInput.id = inputId;
 
-  // Lag en tilpasset knapp
   const customButton = document.createElement("button");
   customButton.textContent = "📷 Upload";
   customButton.className = "upload-btn";
@@ -781,7 +898,6 @@ function showCategory() {
     document.getElementById(inputId).click();
   };
 
-  // Lag bilde-elementet (preview)
   const preview = document.createElement("img");
   preview.style.maxWidth = "60px";
   preview.style.maxHeight = "50px";
@@ -794,7 +910,6 @@ function showCategory() {
  };
 
 
-  // Les bildet når valgt
   fileInput.onchange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -809,14 +924,12 @@ function showCategory() {
     }
   };
 
-  // 📦 Legg knapp og bilde i container med flex-styling
   const container = document.createElement("div");
-  container.className = "image-upload-container"; // CSS-klassen for side-ved-side visning
+  container.className = "image-upload-container";
   container.appendChild(customButton);
   container.appendChild(preview);
 
-  // 🧩 Legg elementene til cellen
-  td.appendChild(fileInput); // skjult input
+  td.appendChild(fileInput);
   td.appendChild(container);
   tr.appendChild(td);
   return;
@@ -861,7 +974,6 @@ function showCategory() {
       inputs[key] = input;
       td.appendChild(input);
       if (key === "Parts and tools") {
-  // 1. Lag fargeknappene
   const colorContainer = document.createElement("div");
   colorContainer.className = "color-buttons";
 
@@ -881,7 +993,6 @@ function showCategory() {
 
   td.appendChild(colorContainer);
 
-  // 2. Bruk lagret farge når cellen bygges
   if (row.productColor) {
     input.style.backgroundColor = row.productColor || "";
 
@@ -933,7 +1044,7 @@ function showCategory() {
 
   content.appendChild(addLine);
   content.appendChild(addHeader);
-  searchInPage(); // kjør søket igjen etter innhold er bygd opp
+  searchInPage();
 
 }
 
@@ -947,16 +1058,14 @@ function moveRow(index, direction) {
   const list = data[activeCategory];
   const newIndex = index + direction;
 
-  // Hindrer at den flyttes utenfor grensene
   if (newIndex < 0 || newIndex >= list.length) return;
 
-  // Bytter plass på radene
   const temp = list[index];
   list[index] = list[newIndex];
   list[newIndex] = temp;
 
   save();
-  showCategory(); // Tegner tabellen på nytt
+  showCategory();
 }
 
 
@@ -1017,11 +1126,9 @@ function toggleGlobalView() {
   const button = document.getElementById("globalToggleButton");
 
   if (!isGlobalView) {
-    // Vis global oversikt
     showGlobalOverview();
     button.textContent = "🔙 Back to Table";
   } else {
-    // Gå tilbake til aktiv kategori
     showCategory();
     button.textContent = "📋 Global Overview";
   }
@@ -1049,7 +1156,6 @@ async function generatePDF() {
     doc.text(header, 10, 50 + (index * 10));
   });
 
-  // Ta skjermbilde av innhold
   const content = document.getElementById("content");
 
   await html2canvas(content, {
@@ -1090,9 +1196,360 @@ function toggleSidePanel() {
     toggleBtn.textContent = "⫷";
   }
 }
-
-
-
 </script>
+
+<!-- ========================= -->
+<!-- D/W/V: Logic & Persistence -->
+<!-- ========================= -->
+<script>
+  // Egen lagring, påvirker ikke lagerDataV3
+ let dvwData = JSON.parse(localStorage.getItem('dvwDataV1')) || [];
+
+  function dvwSave(){ localStorage.setItem('dvwDataV1', JSON.stringify(dvwData)); }
+
+  function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+
+  function percentColor(pct){
+    if (isNaN(pct)) return '#40e0d0';
+    if (pct <= 30) return '#f03747';
+    if (pct <= 70) return '#ffd036';
+    return '#36d131';
+  }
+
+  // Tillat , og ., og ikke ødelegg mellomtilstander som "0."
+  function parseLocaleNumber(val){
+    const s = String(val ?? '').trim().replace(/\s/g,'').replace(',', '.');
+    if (s === '' || s === '-' || s === '.' || s === '-.') return NaN;
+    return Number(s);
+  }
+
+  function renderDVWTable(){
+    const tbody = document.getElementById('dvwTbody');
+    tbody.innerHTML = '';
+
+    dvwData.forEach((row, idx) => {
+      const tr = document.createElement('tr');
+
+      function makeInput(type, key, placeholder=''){
+        const td = document.createElement('td');
+        const input = document.createElement('input');
+        input.type = type;
+        input.placeholder = placeholder;
+        input.value = row[key] ?? '';
+        if (type === 'number'){
+          input.step = 'any';
+          input.inputMode = 'decimal';     // mobil: desimaltastatur
+          input.pattern = '[0-9]*[.,]?[0-9]*';
+        }
+        input.classList.add('large-bold-input');
+
+        input.oninput = () => {
+          // Ikke overskriv brukerens pågående input
+          const num = (type === 'number') ? parseLocaleNumber(input.value) : input.value;
+          row[key] = (type === 'number' && isNaN(num)) ? '' : num;
+
+          // Beregn og oppdater andre felt (ikke det aktuelle)
+          recomputeRow(idx, key);
+
+          const rr = dvwData[idx] || {};
+          if (key !== 'sg'     && sg && sg.input) sg.input.value = rr.sg      ?? '';
+          if (key !== 'weight' && w  && w.input)  w .input.value = rr.weight  ?? '';
+          if (key !== 'volume' && v  && v.input)  v .input.value = rr.volume  ?? '';
+          if (key !== 'temp'   && t  && t.input)  t .input.value = rr.temp    ?? '';
+
+          updateGauge(idx, tr);
+          dvwSave();
+        };
+
+        td.appendChild(input);
+        return {td, input};
+      }
+
+      // Product
+      const p = makeInput('text', 'product', 'Product');
+      tr.appendChild(p.td);
+
+      // SG (—)
+      const sg = makeInput('number', 'sg', 'SG (—)');
+      tr.appendChild(sg.td);
+
+      // Weight (kg)
+      const w = makeInput('number', 'weight', 'Weight (kg)');
+      tr.appendChild(w.td);
+
+      // Volume (m³)
+      const v = makeInput('number', 'volume', 'Volume (m³)');
+      tr.appendChild(v.td);
+
+      // Temp (°C)
+      const t = makeInput('number', 'temp', 'Temp (°C)');
+      tr.appendChild(t.td);
+
+      // Level (max) + gauge
+      const tdLevel = document.createElement('td');
+      const levelWrap = document.createElement('div');
+      levelWrap.className = 'level-wrap';
+
+      const levelRow = document.createElement('div');
+      levelRow.className = 'level-input-row';
+
+      const levelInput = document.createElement('input');
+      levelInput.type = 'number';
+      levelInput.step = 'any';
+      levelInput.inputMode = 'decimal';
+      levelInput.placeholder = 'Max m³';
+      levelInput.value = row.levelMax ?? '';
+      levelInput.classList.add('large-bold-input');
+      levelInput.oninput = () => {
+        const val = parseLocaleNumber(levelInput.value);
+        row.levelMax = isNaN(val) ? '' : val;
+        updateGauge(idx, tr);
+        dvwSave();
+      };
+
+      levelRow.appendChild(levelInput);
+
+      const bar = document.createElement('div');
+      bar.className = 'level-bar';
+      const fill = document.createElement('div');
+      fill.className = 'level-fill';
+      const label = document.createElement('div');
+      label.className = 'level-label';
+      label.textContent = '';
+
+      bar.appendChild(fill);
+      bar.appendChild(label);
+
+      levelWrap.appendChild(levelRow);
+      levelWrap.appendChild(bar);
+      tdLevel.appendChild(levelWrap);
+      tr.appendChild(tdLevel);
+
+      // Comments
+      const c = makeInput('text', 'comment', 'Comments');
+      tr.appendChild(c.td);
+
+      // Delete
+      const tdDel = document.createElement('td');
+      const del = document.createElement('span');
+      del.className = 'dvw-del-btn';
+      del.textContent = '🗑️';
+      del.title = 'Delete line';
+      del.onclick = () => {
+        dvwData.splice(idx,1);
+        dvwSave();
+        renderDVWTable();
+      };
+      tdDel.appendChild(del);
+      tr.appendChild(tdDel);
+
+      tbody.appendChild(tr);
+
+      // Init
+      updateGauge(idx, tr);
+    });
+  }
+
+  // Temperatur-korreksjon (enkel)
+  const DVW_ALPHA = 0.0008; // pr °C
+
+  function densityFromSGAtTemp(sg, temp){
+    if (isNaN(sg)) return NaN;
+    const d15 = sg * 1000; // kg/m³ @ ~15°C
+    if (isNaN(temp)) return d15;
+    return d15 / (1 + DVW_ALPHA * (temp - 15));
+  }
+
+  function sgFromDensityAtTemp(dT, temp){
+    if (isNaN(dT)) return NaN;
+    if (isNaN(temp)) return dT / 1000;
+    const d15 = dT * (1 + DVW_ALPHA * (temp - 15));
+    return d15 / 1000;
+  }
+
+  function roundSmart(val){
+    if (Math.abs(val) >= 1000) return Math.round(val);
+    if (Math.abs(val) >= 100)  return Math.round(val * 10) / 10;
+    if (Math.abs(val) >= 10)   return Math.round(val * 100) / 100;
+    return Math.round(val * 1000) / 1000;
+  }
+  function roundSG(val){ return Math.round(val * 1000) / 1000; }
+
+  // Re-beregning som respekterer hvilket felt som endres
+  function recomputeRow(idx, changedKey){
+    const r = dvwData[idx] || {};
+    const sg = parseLocaleNumber(r.sg);
+    const w  = parseLocaleNumber(r.weight);
+    const v  = parseLocaleNumber(r.volume);
+    const t  = parseLocaleNumber(r.temp);
+
+    const haveSG = !isNaN(sg);
+    const haveW  = !isNaN(w);
+    const haveV  = !isNaN(v);
+
+    const rhoT = haveSG ? densityFromSGAtTemp(sg, t) : NaN;
+
+    // Prioritet: beregn et annet felt enn det brukeren skriver i nå
+    const setWeightFrom = () => {
+      if (!isNaN(rhoT) && haveV){
+        const wCalc = rhoT * v;
+        r.weight = isFinite(wCalc) ? roundSmart(wCalc) : '';
+      }
+    };
+    const setVolumeFrom = () => {
+      if (!isNaN(rhoT) && haveW && rhoT !== 0){
+        const vCalc = w / rhoT;
+        r.volume = isFinite(vCalc) ? roundSmart(vCalc) : '';
+      }
+    };
+    const setSGFrom = () => {
+      if (haveW && haveV && v !== 0){
+        const dT = w / v;
+        const sgCalc = sgFromDensityAtTemp(dT, t);
+        r.sg = isFinite(sgCalc) ? roundSG(sgCalc) : '';
+      }
+    };
+
+    const known = (haveSG?1:0) + (haveW?1:0) + (haveV?1:0);
+
+    if (known < 2) return;
+
+    switch (changedKey){
+      case 'sg':
+      case 'temp':
+        // Endrer SG/Temp → oppdater Weight (fra SG & Volume), ellers Volume (fra SG & Weight)
+        if (haveSG && haveV) setWeightFrom();
+        else if (haveSG && haveW) setVolumeFrom();
+        else if (haveW && haveV) setSGFrom();
+        break;
+
+      case 'weight':
+        // Endrer Weight → oppdater Volume (fra SG & Weight), ellers SG (fra W & V)
+        if (haveSG && haveW) setVolumeFrom();
+        else if (haveW && haveV) setSGFrom();
+        else if (haveSG && haveV) setWeightFrom();
+        break;
+
+      case 'volume':
+        // Endrer Volume → oppdater Weight (fra SG & Volume), ellers SG (fra W & V)
+        if (haveSG && haveV) setWeightFrom();
+        else if (haveW && haveV) setSGFrom();
+        else if (haveSG && haveW) setVolumeFrom();
+        break;
+
+      default:
+        // Generell fallback
+        if (!haveW && haveSG && haveV) setWeightFrom();
+        else if (!haveV && haveSG && haveW) setVolumeFrom();
+        else if (!haveSG && haveW && haveV) setSGFrom();
+    }
+  }
+
+  function updateGauge(idx, tr){
+    const r = dvwData[idx] || {};
+    const v = parseLocaleNumber(r.volume);
+    const max = parseLocaleNumber(r.levelMax);
+    const fill  = tr.querySelector('.level-fill');
+    const label = tr.querySelector('.level-label');
+
+    let pct = 0;
+    if (!isNaN(v) && !isNaN(max) && max > 0){
+      pct = clamp((v / max) * 100, 0, 100);
+    }
+
+    fill.style.width = pct + '%';
+    fill.style.background = percentColor(pct);
+    label.textContent = (isNaN(v) || isNaN(max) || max <= 0)
+      ? '—'
+      : `(${Math.round(pct)}%)`;
+  }
+
+  // Add line
+  document.getElementById('dvwAddBtn').addEventListener('click', () => {
+    dvwData.push({
+      product: '',
+      sg: '',
+      weight: '',
+      volume: '',
+      temp: '',
+      levelMax: '',
+      comment: ''
+    });
+    dvwSave();
+    renderDVWTable();
+  });
+
+  // PDF for D/W/V only
+  document.getElementById('dvwPdfBtn').addEventListener('click', generateDVWPDF);
+
+  async function generateDVWPDF(){
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4');
+
+    // Logo (best effort)
+    const logo = new Image();
+    logo.src = "images/Logo Seavo Nautiq.png";
+    await new Promise(res => { logo.onload = res; }).catch(()=>{});
+    try { doc.addImage(logo, 'PNG', 10, 10, 50, 30); } catch(e){}
+
+    doc.setFontSize(16);
+    doc.text("D/W/V (Fuel • Lube • Ballast) — Overview", 10, 48);
+
+    const wrap = document.getElementById('dvwTableWrap');
+
+    const canvas = await html2canvas(wrap, { backgroundColor: "#ffffff", scale: 2 });
+    const imgData = canvas.toDataURL('image/png');
+    const imgProps = doc.getImageProperties(imgData);
+
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const marginX = 10;
+    const topY = 55;
+
+    const pdfW = pageWidth - marginX*2;
+    const pdfH = (imgProps.height * pdfW) / imgProps.width;
+
+    let y = topY;
+    let remaining = pdfH;
+
+    let sY = 0;
+    const pageImgHeight = pageHeight - topY - 10;
+    while (remaining > 0){
+      const sliceH = Math.min(pageImgHeight, remaining);
+      const sliceCanvas = document.createElement('canvas');
+      const scale = pdfW / imgProps.width;
+      sliceCanvas.width = imgProps.width;
+      sliceCanvas.height = sliceH / scale;
+
+      const ctx = sliceCanvas.getContext('2d');
+      ctx.drawImage(canvas,
+        0, sY / scale, imgProps.width, sliceCanvas.height,
+        0, 0, imgProps.width, sliceCanvas.height);
+
+      const sliceData = sliceCanvas.toDataURL('image/png');
+      doc.addImage(sliceData, 'PNG', marginX, y, pdfW, sliceH);
+
+      remaining -= sliceH;
+      sY += sliceH;
+      if (remaining > 0){
+        doc.addPage();
+        y = 20;
+      }
+    }
+
+    doc.save('SeavoNautiq_DWV.pdf');
+  }
+
+  // Manuell oppdatering (↻-knappen)
+  document.getElementById('dvwRecalcBtn').addEventListener('click', () => {
+    dvwData.forEach((_, i) => recomputeRow(i, 'manual'));
+    dvwSave();
+    renderDVWTable();
+  });
+
+  // Init
+  renderDVWTable();
+</script>
+
 </body>
 </html>

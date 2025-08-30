@@ -490,6 +490,31 @@ row.appendChild(upload);
   doc.save("Order_Seavo_Nautiq.pdf");
 }
 
+document.addEventListener("DOMContentLoaded", ()=>{
+  const incoming = JSON.parse(localStorage.getItem("ordersTransfer") || "[]");
+  if (!incoming.length) return;
+
+  incoming.forEach(item=>{
+    // Lag en ny linje og fyll verdier
+    addLineRow();
+    const row = tableBody.lastElementChild;
+    const prodInput = row.querySelector('td:nth-child(1) input');
+    const qtyInput  = row.querySelector('td:nth-child(2) input');
+
+    if (prodInput) prodInput.value = item.product;
+    if (qtyInput) {
+      qtyInput.value = item.quantity;
+      // trigge total-beregning
+      qtyInput.dispatchEvent(new Event("input", { bubbles:true }));
+    }
+  });
+
+  // Rydd opp
+  localStorage.removeItem("ordersTransfer");
+  updateGrandTotal?.();
+});
+
+
 </script>
 </body>
 </html>

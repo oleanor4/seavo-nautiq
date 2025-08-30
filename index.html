@@ -253,7 +253,7 @@
       margin-top: 20px;
       margin-left: -20px;
       width: 250px;
-      height: 280px;
+      height: 330px;
       padding: 20px;
       background: linear-gradient(to left, #12315c, #215db1); 
       border-radius: 40px;
@@ -478,6 +478,7 @@
     <button onclick="window.open('disposal.html', '_blank')">Disposal</button>
 
     <div class="ny-container">
+      <button onclick="åpnePopup9()"><img src="icon/Cargo.png" alt="info" style="height: 32px; vertical-align: middle; float: left;"> Cargo Space</button>
       <button onclick="åpnePopup8()"><img src="icon/Maintenance.png" alt="info" style="height: 32px; vertical-align: middle; float: left;"> Maintenance</button>
       <button onclick="åpnePopup3()"><img src="icon/Order-black.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Orders</button>
       <button onclick="åpnePopup()"><img src="icon/Participants.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Participants</button>
@@ -774,6 +775,15 @@ updateDigitalClock(); // første kall
         'width=1400,height=800'  
       );
     }
+
+                  function åpnePopup9() {
+      window.open(
+        'Cargo.html',    
+        'popup',                  
+        'width=1900,height=1200'  
+      );
+    }
+
 
 
 

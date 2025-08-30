@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cargo – Seavo Nautiq</title>
+  <style>
+    :root{
+      --bg:#12315c; --panel:rgba(0,0,0,.15); --panel-2:rgba(255,255,255,.08);
+      --text:#fff; --muted:#bcd3f1; --accent:#62b2e7; --danger:#f03747; --warn:#ecc543; --ok:#28e755;
+    }
+    *{box-sizing:border-box}
+    body{background-color:var(--bg); font-family:Arial,sans-serif; margin:0; color:var(--text)}
+    .video-header{position:relative; aspect-ratio:1280/99; overflow:hidden; background:#000}
+    .video-header video{width:100%; height:200%; object-fit:cover; display:block}
+    .gradient-overgang{height:10px; background:linear-gradient(to left,#62b2e7,#001125); box-shadow:0 4px 10px rgba(0,0,0,.6)}
+
+    h1{font-size:2.4rem; color:#7ddbf3; margin:18px 0; text-align:center; text-shadow:2px 2px 4px rgba(0,0,0,.5)}
+    .container{max-width:1400px; margin:0 auto; padding:16px}
+
+    .card{background:rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.12); border-radius:14px; box-shadow:0 6px 18px rgba(0,0,0,.35)}
+    .card header{padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.1); background:rgba(0,0,0,.2); border-radius:14px 14px 0 0; display:flex; justify-content:space-between; align-items:center}
+    .card .body{padding:12px 14px}
+    .muted{color:var(--muted); font-size:.9rem}
+
+    .btn{padding:9px 14px; border:none; border-radius:10px; color:#fff; cursor:pointer; background:linear-gradient(to right,#1b75d1,#0e3e86); box-shadow:0 2px 8px rgba(0,0,0,.35); font-weight:600}
+    .btn.ghost{background:rgba(0,0,0,.25)}
+    .btn.ok{background:linear-gradient(to right,#18b857,#0a7c36)}
+    .btn.danger{background:linear-gradient(to right,#f13e4e,#a31621)}
+    .btn.warn{background:linear-gradient(to right,#d1a21b,#865f0e)}
+    .btn:disabled{opacity:.6; cursor:not-allowed}
+    .toolbar{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+
+    label{display:block; font-weight:700; margin-bottom:4px}
+    input[type="text"], input[type="number"], input[type="date"], select, textarea{
+      width:100%; padding:9px; border-radius:10px; border:1px solid rgba(255,255,255,.2); background:rgba(0,0,0,.2); color:#fff
+    }
+    textarea{min-height:72px; resize:vertical}
+
+    /* Små knapper for verktøylinje inne i hold-kort */
+.btn.xs{ padding:4px 8px; font-size:.8rem; border-radius:8px; box-shadow:none }
+/* Lastekort som ligger i dropzonen */
+.cargo-card{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:10px;
+  padding:6px 8px;
+  margin:6px 0;
+}
+.cargo-head{ font-weight:600; margin-bottom:6px; display:flex; gap:6px; flex-wrap:wrap }
+.cargo-tools{ display:flex; gap:6px; flex-wrap:wrap }
+
+/* Skjul Actions-kolonnen i tabellen */
+th.actions-col, td.actions-col { display:none; }
+
+
+
+    /* ===== Ny top-layout: 3 kolonner =====
+       Venstre: Voyage (smal)
+       Midt:    Add cargo line (over) + Cargo table (under) – samme bredde
+       Høyre:   Holds / Tanks / Bays (palette)
+    */
+    .top-grid{
+      display:grid;
+      grid-template-columns: 360px 1fr 360px;
+      gap:16px;
+      align-items:start;
+    }
+    @media(max-width:1250px){
+      .top-grid{grid-template-columns:320px 1fr 320px}
+    }
+    @media(max-width:1000px){
+      .top-grid{grid-template-columns:1fr; }
+    }
+
+    /* Holds palette + layout */
+    .holds-grid{display:grid; grid-template-columns:1fr; gap:10px}
+    .hold-card{background:rgba(0,0,0,.2); border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:10px; min-height:160px; display:flex; flex-direction:column}
+    .hold-card[draggable="true"]{cursor:grab}
+    .hold-card.dragging{opacity:.6}
+    .hold-head{display:flex; justify-content:space-between; align-items:center; font-weight:700; margin-bottom:6px}
+    .progress{height:10px; background:rgba(255,255,255,.15); border-radius:999px; overflow:hidden}
+    .bar{height:100%; background:linear-gradient(to right,#62b2e7,#1b75d1); width:0%}
+    .capline{display:flex; justify-content:space-between; font-size:.9rem; color:var(--muted); margin-top:6px}
+    .chip{display:inline-block; padding:2px 8px; border-radius:999px; font-size:.78rem; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.15); margin-right:6px; margin-bottom:6px; white-space:nowrap}
+
+    .dropzone{margin-top:8px; padding:6px; border:1px dashed rgba(255,255,255,.2); border-radius:10px; min-height:46px; overflow:auto; max-height:120px}
+    .hold-card.drag-over{outline:2px dashed var(--accent); outline-offset:2px}
+
+    /* Layout-boks (bred under) */
+    .layout-card .body{padding:0}
+    .layout-area{
+      padding:12px;
+      min-height:240px;
+      resize:vertical;
+      overflow:auto;
+      border-radius:0 0 14px 14px;
+    }
+    .layout-drop{
+      display:grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
+      gap:12px;
+    }
+    .layout-area.drag-over{outline:2px dashed var(--accent); outline-offset:-6px}
+
+    /* Grid hjelpeklasser */
+    .grid{display:grid; gap:10px}
+    .grid.cols-2{grid-template-columns:1fr 1fr}
+    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    .grid.cols-4{grid-template-columns:repeat(4,1fr)}
+    @media(max-width:1100px){.grid.cols-3,.grid.cols-4{grid-template-columns:1fr 1fr}}
+    @media(max-width:700px){.grid.cols-2,.grid.cols-3,.grid.cols-4{grid-template-columns:1fr}}
+
+    /* Tabell */
+    table{width:100%; border-collapse:collapse; background:rgba(0,0,0,.15); border-radius:12px; overflow:hidden; margin-top:8px}
+    th,td{padding:10px 8px; border-bottom:1px solid rgba(255,255,255,.12); text-align:left; vertical-align:top; font-size:.95rem}
+    th{background:rgba(0,0,0,.25)}
+    tr.over{background:rgba(240,55,71,.10)}
+    .right{text-align:right}
+    .center{text-align:center}
+    tr[draggable="true"]{cursor:grab}
+    tr.dragging{opacity:.55}
+
+    .filters{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin:8px 0}
+    .dot{display:inline-block; width:9px; height:9px; border-radius:50%}
+    .dot.green{background:var(--ok)} .dot.red{background:var(--danger)}
+    .note{font-size:.85rem; color:var(--muted)}
+
+    /* Print */
+    @media print{
+      body{background:#fff; color:#000}
+      .video-header, .gradient-overgang, .btn, select, input, .note{display:none !important}
+      .card{page-break-inside:avoid; box-shadow:none; border:1px solid #ccc}
+      .chip{border:1px solid #999; background:#f7f7f7; color:#000}
+      .layout-area{min-height:auto; resize:none}
+    }
+  </style>
+</head>
+<body>
+  <header class="video-header">
+    <video autoplay muted loop playsinline>
+      <source src="Video/Ocean-Seavo-Nautiq.mp4" type="video/mp4">
+    </video>
+  </header>
+  <div class="gradient-overgang"></div>
+
+  <h1>Cargo Planning</h1>
+
+  <div class="container">
+
+    <!-- ==================== TOPP: 3 kolonner ==================== -->
+    <div class="top-grid">
+
+      <!-- Venstre: VOYAGE -->
+      <aside>
+        <div class="card" style="margin-bottom:12px">
+          <header>
+            <div>Voyage</div>
+            <div class="toolbar">
+              <button class="btn ok" id="savePlanBtn">Save</button>
+              <button class="btn ghost" id="newPlanBtn">New</button>
+              <button class="btn" id="printBtn">Print / PDF</button>
+            </div>
+          </header>
+          <div class="body">
+            <div class="grid cols-2">
+              <div>
+                <label for="planName">Plan name</label>
+                <input id="planName" type="text" placeholder="e.g., VOY-2025-08-NAUTIQ">
+              </div>
+              <div>
+                <label for="voyNo">Voyage no.</label>
+                <input id="voyNo" type="text" placeholder="e.g., 112A">
+              </div>
+            </div>
+            <div class="grid cols-2" style="margin-top:8px">
+              <div>
+                <label for="depPort">From (port)</label>
+                <input id="depPort" type="text" placeholder="e.g., Ålesund">
+              </div>
+              <div>
+                <label for="arrPort">To (port)</label>
+                <input id="arrPort" type="text" placeholder="e.g., Reykjavik">
+              </div>
+            </div>
+            <div class="grid cols-2" style="margin-top:8px">
+              <div>
+                <label for="etd">ETD</label>
+                <input id="etd" type="date">
+              </div>
+              <div>
+                <label for="eta">ETA</label>
+                <input id="eta" type="date">
+              </div>
+            </div>
+            <div class="note" style="margin-top:6px">Planer lagres lokalt. Last inn/slett under.</div>
+            <div class="toolbar" style="margin-top:8px">
+              <select id="loadPlanSel" style="flex:1">
+                <option value="">Load saved plan…</option>
+              </select>
+              <button class="btn danger" id="deletePlanBtn">Delete</button>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Midt: ADD CARGO LINE (over) + TABELL (under) -->
+      <section>
+        <div class="card" id="addCargoCard" style="margin-bottom:12px">
+          <header>
+            <div>Add cargo line</div>
+            <div class="toolbar">
+              <button class="btn ok" id="addLineBtn">Add line</button>
+              <button class="btn ghost" id="clearInputsBtn">Clear</button>
+            </div>
+          </header>
+          <div class="body">
+            <div class="grid cols-4">
+              <div>
+                <label for="cType">Cargo type</label>
+                <select id="cType">
+                  <option value="Bulk">Bulk</option>
+                  <option value="Breakbulk">Breakbulk</option>
+                  <option value="Container">Container</option>
+                  <option value="Liquid">Liquid/Tank</option>
+                  <option value="Reefer">Reefer</option>
+                  <option value="Fish">Fish</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div>
+                <label for="cDesc">Description</label>
+                <input id="cDesc" type="text" placeholder="e.g., Frozen cod / Steel coils / 20’ DRY">
+              </div>
+              <div>
+                <label for="cDest">Destination</label>
+                <input id="cDest" type="text" placeholder="Final discharge port">
+              </div>
+              <div>
+                <label for="cStow">Stowage (hold/tank/bay)</label>
+                <input id="cStow" type="text" placeholder="e.g., Hold 2 / Tank P3 / Bay 14">
+              </div>
+            </div>
+
+            <div class="grid cols-4" style="margin-top:8px">
+              <div>
+                <label for="cQty">Quantity (units)</label>
+                <input id="cQty" type="number" min="0" step="1" placeholder="e.g., 120">
+              </div>
+              <div>
+                <label for="cWeight">Total weight (t)</label>
+                <input id="cWeight" type="number" min="0" step="0.01" placeholder="e.g., 180.5">
+              </div>
+              <div>
+                <label for="cVol">Total volume (m³)</label>
+                <input id="cVol" type="number" min="0" step="0.01" placeholder="optional">
+              </div>
+              <div>
+                <label for="cTemp">Carriage temp (°C)</label>
+                <input id="cTemp" type="number" step="0.1" placeholder="reefer/fish">
+              </div>
+            </div>
+
+            <div class="grid cols-4" style="margin-top:8px">
+              <div>
+                <label for="cHaz">HazMat</label>
+                <select id="cHaz">
+                  <option value="No">No</option>
+                  <option value="Yes">Yes</option>
+                </select>
+              </div>
+              <div>
+                <label for="cImo">IMO class / UN no.</label>
+                <input id="cImo" type="text" placeholder="e.g., 3 / UN1203">
+              </div>
+              <div id="ctrDims" style="display:none">
+                <label>Container dims (Bay/Row/Tier)</label>
+                <div class="grid cols-3">
+                  <input id="cBay" type="text" placeholder="Bay">
+                  <input id="cRow" type="text" placeholder="Row">
+                  <input id="cTier" type="text" placeholder="Tier">
+                </div>
+              </div>
+              <div>
+                <label for="cNotes">Notes</label>
+                <input id="cNotes" type="text" placeholder="Segregation, lashings, stack height…">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="tableCard">
+          <header>
+            <div>Cargo table (drag rows)</div>
+            <div class="toolbar">
+              <input id="searchBox" type="text" placeholder="Search…" style="min-width:220px">
+              <select id="filterType">
+                <option value="">All types</option>
+              </select>
+              <select id="filterStow">
+                <option value="">All stowages</option>
+              </select>
+              <button class="btn" id="exportCsvBtn">Export CSV</button>
+            </div>
+          </header>
+          <div class="body">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th><th>Type</th><th>Description</th><th>Dest</th><th>Stowage</th>
+                  <th>Bay</th><th>Row</th><th>Tier</th>
+                  <th class="right">Qty</th>
+                  <th class="right">Weight (t)</th>
+                  <th class="right">Volume (m³)</th>
+                  <th>Haz</th><th>Temp</th><th>Notes</th>
+                </tr>
+              </thead>
+              <tbody id="cargoBody"></tbody>
+              <tfoot>
+                <tr>
+                  <th colspan="9" class="right">Totals:</th>
+                  <th class="right" id="totWeight">0.00</th>
+                  <th class="right" id="totVol">0.00</th>
+                  <th colspan="4"></th>
+                </tr>
+              </tfoot>
+            </table>
+            <div class="note" style="margin-top:8px">
+              Enkel balanseindikator (heuristikk):
+              <span class="chip" id="balFwd">FWD: 0 t</span>
+              <span class="chip" id="balAft">AFT: 0 t</span>
+              <span class="chip" id="balNote">Balanced</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Høyre: PALLETTEN for Holds -->
+      <aside>
+        <div class="card">
+          <header>
+            <div>Holds / Tanks / Bays (palette)</div>
+            <button class="btn" id="addHoldBtn">Add</button>
+          </header>
+          <div class="body">
+            <div class="holds-grid" id="holdsPalette"></div>
+            <div class="note" style="margin-top:8px">Dra et hold til “Stowage layout” under, eller bruk “⇩ To layout”.</div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- ==================== BRED BOKS UNDER ==================== -->
+    <div class="card layout-card" style="margin-top:16px">
+      <header>
+        <div>Stowage layout (drag holds here)</div>
+        <div class="toolbar">
+          <span class="muted">Dra hold-kort hit (eller bruk “⇩ To layout”). Dra tilbake for å fjerne.</span>
+        </div>
+      </header>
+      <div class="body">
+        <div id="layoutArea" class="layout-area">
+          <div id="layoutDrop" class="layout-drop"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Keys
+    const CARGO_KEY = 'cargo_plan_lines_v4';
+    const HOLDS_KEY = 'cargo_plan_holds_v4';
+    const META_KEY  = 'cargo_plan_meta_v4';
+    const SAVED_KEY = 'cargo_saved_plans_index_v4';
+
+    // State
+    let lines = load(CARGO_KEY, []);
+    let holds = load(HOLDS_KEY, defaultHolds());
+    let meta  = load(META_KEY, {planName:'', voyNo:'', depPort:'', arrPort:'', etd:'', eta:''});
+    let dragLineId = null;     // for dragging cargo rows
+    let dragHoldId = null;     // for dragging hold cards
+
+    // Helpers
+    const $ = id => document.getElementById(id);
+    const sum = arr => arr.reduce((a,b)=>a+(Number(b)||0),0);
+    function load(k, fallback){ try{ return JSON.parse(localStorage.getItem(k)) ?? fallback; }catch{ return fallback; } }
+    function save(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
+    function fmt2(n){ n = Number(n||0); return n.toFixed(2); }
+    function uid(){ return crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2); }
+    function escape(s){return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;');}
+
+    // Defaults: INGEN forhåndsopprettede holds/tanks/bays
+    function defaultHolds(){
+      return []; // tom
+    }
+
+    // Meta init/save
+    function initMeta(){
+      $('planName').value = meta.planName||'';
+      $('voyNo').value = meta.voyNo||'';
+      $('depPort').value = meta.depPort||'';
+      $('arrPort').value = meta.arrPort||'';
+      $('etd').value = meta.etd||'';
+      $('eta').value = meta.eta||'';
+    }
+    function readMeta(){
+      meta.planName = $('planName').value.trim();
+      meta.voyNo    = $('voyNo').value.trim();
+      meta.depPort  = $('depPort').value.trim();
+      meta.arrPort  = $('arrPort').value.trim();
+      meta.etd      = $('etd').value;
+      meta.eta      = $('eta').value;
+      save(META_KEY, meta);
+    }
+
+    // RENDER HOLDS (palette og layout)
+    function renderHolds(){
+      const pal = $('holdsPalette');
+      const lay = $('layoutDrop');
+      pal.innerHTML = ''; lay.innerHTML = '';
+
+      const byName = h => h.name || '';
+      holds.sort((a,b)=>byName(a).localeCompare(byName(b)));
+
+      for(const h of holds){
+        const useT  = sum(lines.filter(l=>matchesHold(l, h.name)).map(l=>Number(l.weight)||0));
+        const useV  = sum(lines.filter(l=>matchesHold(l, h.name)).map(l=>Number(l.volume)||0));
+        const pctT  = h.capT ? Math.min(100, (useT / h.capT) * 100) : 0;
+        const pctV  = h.capM3 ? Math.min(100, (useV / h.capM3) * 100) : 0;
+        const overT = h.capT && useT > h.capT;
+        const overV = h.capM3 && useV > h.capM3;
+
+        const card = document.createElement('div');
+        card.className = 'hold-card drop-target';
+        card.dataset.hold = h.name;
+        card.dataset.id = h.id;
+        card.draggable = true;
+
+        card.innerHTML = `
+          <div class="hold-head">
+            <span>${escape(h.name)}</span>
+            <span class="muted">${h.locked? '🔒' : ''}</span>
+          </div>
+          <div class="muted">Cap: ${h.capT||0} t • ${h.capM3||0} m³</div>
+          <div style="margin:6px 0 4px">Weight</div>
+          <div class="progress"><div class="bar" style="width:${pctT}%; ${overT?'background:linear-gradient(to right,#f03747,#a31621)':''}"></div></div>
+          <div class="capline"><span>${fmt2(useT)} t</span><span>${fmt2(h.capT||0)} t</span></div>
+          <div style="margin:6px 0 4px">Volume</div>
+          <div class="progress"><div class="bar" style="width:${pctV}%; ${overV?'background:linear-gradient(to right,#f03747,#a31621)':''}"></div></div>
+          <div class="capline"><span>${fmt2(useV)} m³</span><span>${fmt2(h.capM3||0)} m³</span></div>
+
+          <div class="dropzone"></div>
+          <div class="toolbar" style="margin-top:8px">
+            <button class="btn ghost" onclick="editHold('${h.id}')">Edit</button>
+            <button class="btn ${h.locked?'warn':'ghost'}" onclick="toggleLock('${h.id}')">${h.locked?'Unlock':'Lock'}</button>
+            ${h.inLayout
+              ? `<button class="btn" onclick="moveHoldToPalette('${h.id}')">⇧ Remove</button>`
+              : `<button class="btn" onclick="moveHoldToLayout('${h.id}')">⇩ To layout</button>`}
+            <button class="btn danger" onclick="removeHold('${h.id}')">Delete</button>
+          </div>
+        `;
+
+        // Chips (cargo innhold)
+        const dz = card.querySelector('.dropzone');
+        const items = lines.filter(l=>matchesHold(l, h.name));
+        items.forEach(l=>{
+        const dims = l.type==='Container' ? ` • B${l.bay||''}/R${l.row||''}/T${l.tier||''}` : '';
+        const wrap = document.createElement('div');
+        wrap.className = 'cargo-card';
+        wrap.innerHTML = `
+     <div class="cargo-head">
+      <span>${escape(l.desc || l.type)}</span>
+      <span class="muted">• ${fmt2(l.weight)}t${dims}</span>
+     </div>
+     <div class="cargo-tools">
+      <button class="btn xs" onclick="editLine('${l.id}')">Edit</button>
+      <button class="btn xs danger" onclick="removeLine('${l.id}')">Delete</button>
+     </div>
+    `;
+     dz.appendChild(wrap);
+    });
+
+
+        // Drag-hold handlers (mellom palette ↔ layout)
+        card.addEventListener('dragstart', ()=>{ dragHoldId = h.id; card.classList.add('dragging'); });
+        card.addEventListener('dragend', ()=>{ dragHoldId = null; card.classList.remove('dragging'); });
+
+        // Drop cargo-lines inn i hold-kort
+        addCargoDropHandlers(card, h);
+
+        if(h.inLayout) lay.appendChild(card); else pal.appendChild(card);
+      }
+
+      // Drop-targets for hold-kort (hele layout-området og palett-listen)
+      addHoldDropTargets();
+    }
+
+    function matchesHold(line, holdName){
+      const s = (line.stowage||'').toLowerCase();
+      const n = (holdName||'').toLowerCase();
+      return s.includes(n);
+    }
+
+    function addHoldDropTargets(){
+      const layoutArea = $('layoutArea');
+      const layoutDrop = $('layoutDrop');
+      const palette = $('holdsPalette');
+
+      // Drag over layout
+      [layoutArea, layoutDrop].forEach(el=>{
+        el.addEventListener('dragover', e=>{
+          if(!dragHoldId) return; e.preventDefault(); layoutArea.classList.add('drag-over');
+        });
+        el.addEventListener('dragleave', ()=> layoutArea.classList.remove('drag-over'));
+        el.addEventListener('drop', e=>{
+          if(!dragHoldId) return; e.preventDefault();
+          layoutArea.classList.remove('drag-over');
+          const h = holds.find(x=>x.id===dragHoldId); if(!h) return;
+          h.inLayout = true; save(HOLDS_KEY, holds); renderHolds();
+        });
+      });
+
+      // Drag over palette
+      palette.addEventListener('dragover', e=>{
+        if(!dragHoldId) return; e.preventDefault();
+        palette.classList.add('drag-over');
+      });
+      palette.addEventListener('dragleave', ()=> palette.classList.remove('drag-over'));
+      palette.addEventListener('drop', e=>{
+        if(!dragHoldId) return; e.preventDefault();
+        palette.classList.remove('drag-over');
+        const h = holds.find(x=>x.id===dragHoldId); if(!h) return;
+        h.inLayout = false; save(HOLDS_KEY, holds); renderHolds();
+      });
+    }
+
+    function moveHoldToLayout(id){
+      const h = holds.find(x=>x.id===id); if(!h) return;
+      h.inLayout = true; save(HOLDS_KEY, holds); renderHolds();
+    }
+    function moveHoldToPalette(id){
+      const h = holds.find(x=>x.id===id); if(!h) return;
+      h.inLayout = false; save(HOLDS_KEY, holds); renderHolds();
+    }
+
+    // Cargo drop på hold-kort (for begge visninger)
+    function addCargoDropHandlers(card, hold){
+      card.addEventListener('dragover', e=>{
+        if(hold.locked) return;
+        e.preventDefault();
+        card.classList.add('drag-over');
+      });
+      card.addEventListener('dragleave', ()=> card.classList.remove('drag-over'));
+      card.addEventListener('drop', e=>{
+        e.preventDefault();
+        card.classList.remove('drag-over');
+        if(hold.locked){ alert(`"${hold.name}" is locked.`); return; }
+        if(!dragLineId) return;
+        const line = lines.find(l=>l.id===dragLineId);
+        if(!line) return;
+        line.stowage = hold.name;
+        save(CARGO_KEY, lines);
+        renderAll();
+      });
+    }
+
+    // HOLDS CRUD
+    function addHold(){
+      const name = prompt('Hold/Tank/Bay name (e.g., Hold 1, Tank P3, Bay 14):','Hold X');
+      if(!name) return;
+      const capT = Number(prompt('Capacity in tonnes (t):','0')||0);
+      const capM3= Number(prompt('Capacity in cubic meters (m³):','0')||0);
+      holds.push({id:uid(), name, capT, capM3, note:'', locked:false, inLayout:false});
+      save(HOLDS_KEY, holds);
+      renderAll();
+    }
+    function editHold(id){
+      const h = holds.find(x=>x.id===id); if(!h) return;
+      const name = prompt('Name:', h.name);
+      if(!name) return;
+      const capT = Number(prompt('Capacity t:', h.capT)||0);
+      const capM3= Number(prompt('Capacity m³:', h.capM3)||0);
+      h.name = name; h.capT = capT; h.capM3 = capM3;
+      save(HOLDS_KEY, holds);
+      renderAll();
+    }
+    function removeHold(id){
+      if(!confirm('Remove this hold/tank/bay?')) return;
+      holds = holds.filter(h=>h.id!==id);
+      save(HOLDS_KEY, holds);
+      renderAll();
+    }
+    function toggleLock(id){
+      const h = holds.find(x=>x.id===id); if(!h) return;
+      h.locked = !h.locked;
+      save(HOLDS_KEY, holds);
+      renderHolds();
+    }
+
+    // Cargo lines (inkl. container dims)
+    function readLineInputs(){
+      return {
+        id: uid(),
+        type: $('cType').value,
+        desc: $('cDesc').value.trim(),
+        dest: $('cDest').value.trim(),
+        stowage: $('cStow').value.trim(),
+        qty: Number($('cQty').value||0),
+        weight: Number($('cWeight').value||0),
+        volume: Number($('cVol').value||0),
+        temp: $('cTemp').value,
+        haz: $('cHaz').value,
+        imo: $('cImo').value.trim(),
+        bay: $('cBay').value.trim(),
+        row: $('cRow').value.trim(),
+        tier: $('cTier').value.trim(),
+        notes: $('cNotes').value.trim()
+      };
+    }
+    function clearLineInputs(){
+      $('cDesc').value = '';
+      $('cDest').value = '';
+      $('cStow').value = '';
+      $('cQty').value = '';
+      $('cWeight').value = '';
+      $('cVol').value = '';
+      $('cTemp').value = '';
+      $('cHaz').value = 'No';
+      $('cImo').value = '';
+      $('cBay').value = '';
+      $('cRow').value = '';
+      $('cTier').value = '';
+      $('cNotes').value = '';
+    }
+    function validateLine(line){
+      const missing = [];
+      if(!line.type) missing.push('Type');
+      if(!line.desc) missing.push('Description');
+      if(!line.dest) missing.push('Destination');
+      if(!line.stowage) missing.push('Stowage');
+      if(!(line.qty>0)) missing.push('Quantity');
+      if(!(line.weight>=0)) missing.push('Weight');
+      if(line.haz==='Yes' && !line.imo) missing.push('IMO/UN for HazMat');
+      if(line.type==='Container' && (!line.bay || !line.row || !line.tier)) missing.push('Bay/Row/Tier');
+      if(missing.length){ alert('Please fill: ' + missing.join(', ')); return false; }
+      const lockHit = holds.find(h => matchesHold(line, h.name) && h.locked);
+      if(lockHit){ alert(`"${lockHit.name}" is locked. Unlock it or choose another stowage.`); return false; }
+      return true;
+    }
+
+    function addLine(){
+      const line = readLineInputs();
+      if(!validateLine(line)) return;
+      lines.push(line);
+      save(CARGO_KEY, lines);
+      clearLineInputs();
+      renderAll();
+    }
+    function removeLine(id){
+      if(!confirm('Delete cargo line?')) return;
+      lines = lines.filter(l=>l.id!==id);
+      save(CARGO_KEY, lines);
+      renderAll();
+    }
+    function moveLine(id, dir){
+      const idx = lines.findIndex(l=>l.id===id);
+      if(idx<0) return;
+      const nidx = idx + (dir==='up'?-1:1);
+      if(nidx<0 || nidx>=lines.length) return;
+      const [it] = lines.splice(idx,1);
+      lines.splice(nidx,0,it);
+      save(CARGO_KEY, lines);
+      renderTable();
+    }
+    function editLine(id){
+      const l = lines.find(x=>x.id===id); if(!l) return;
+      const desc = prompt('Description:', l.desc); if(desc===null) return;
+      const dest = prompt('Destination:', l.dest); if(dest===null) return;
+      const stow = prompt('Stowage:', l.stowage); if(stow===null) return;
+      const qty  = Number(prompt('Quantity:', l.qty) || 0);
+      const w    = Number(prompt('Weight (t):', l.weight) || 0);
+      const v    = Number(prompt('Volume (m³):', l.volume) || 0);
+      let bay=l.bay, row=l.row, tier=l.tier;
+      if(l.type==='Container'){
+        bay = prompt('Bay:', l.bay||''); if(bay===null) return;
+        row = prompt('Row:', l.row||''); if(row===null) return;
+        tier= prompt('Tier:', l.tier||''); if(tier===null) return;
+      }
+      l.desc=desc; l.dest=dest; l.stowage=stow; l.qty=qty; l.weight=w; l.volume=v; l.bay=bay; l.row=row; l.tier=tier;
+      save(CARGO_KEY, lines); renderAll();
+    }
+
+    // Filters, search, table, totals & row dragging
+    let filterType='', filterStow='', searchTerm='';
+    function renderFilters(){
+      const ft = $('filterType'); const fs = $('filterStow');
+      const types = Array.from(new Set(lines.map(l=>l.type))).filter(Boolean).sort();
+      ft.innerHTML = `<option value="">All types</option>` + types.map(t=>`<option ${t===filterType?'selected':''}>${escape(t)}</option>`).join('');
+      const stows = Array.from(new Set(lines.map(l=>l.stowage))).filter(Boolean).sort();
+      fs.innerHTML = `<option value="">All stowages</option>` + stows.map(s=>`<option ${s===filterStow?'selected':''}>${escape(s)}</option>`).join('');
+    }
+
+    function renderTable(){
+      const body = $('cargoBody'); body.innerHTML = '';
+      let view = lines.slice();
+
+      // search
+      const q = (searchTerm||'').toLowerCase();
+      if(q){
+        view = view.filter(l =>
+          [l.desc, l.dest, l.stowage, l.type, l.notes, l.imo, l.bay, l.row, l.tier].some(x => (x||'').toLowerCase().includes(q))
+        );
+      }
+      if(filterType) view = view.filter(l => l.type===filterType);
+      if(filterStow) view = view.filter(l => l.stowage===filterStow);
+
+      const totW = sum(view.map(l=>l.weight));
+      const totV = sum(view.map(l=>l.volume));
+      $('totWeight').textContent = fmt2(totW);
+      $('totVol').textContent = fmt2(totV);
+
+      const fwdW = sum(view.filter(l=>isFwd(l.stowage)).map(l=>l.weight));
+      const aftW = sum(view.filter(l=>!isFwd(l.stowage)).map(l=>l.weight));
+      $('balFwd').textContent = `FWD: ${fmt2(fwdW)} t`;
+      $('balAft').textContent = `AFT: ${fmt2(aftW)} t`;
+      const diff = Math.abs(fwdW - aftW);
+      $('balNote').textContent = diff < 0.05* (totW||1) ? 'Balanced' : (fwdW > aftW ? 'FWD heavy' : 'AFT heavy');
+
+      view.forEach((l, i)=>{
+        const h = holds.find(h=>matchesHold(l, h.name));
+        let over = false;
+        if(h){
+          const weightInHold = sum(lines.filter(x=>matchesHold(x, h.name)).map(x=>x.weight));
+          if(h.capT && weightInHold > h.capT) over = true;
+        }
+        const tr = document.createElement('tr');
+        tr.draggable = true;
+        tr.dataset.id = l.id;
+        tr.addEventListener('dragstart', ()=>{ dragLineId = l.id; tr.classList.add('dragging'); });
+        tr.addEventListener('dragend', ()=>{ dragLineId = null; tr.classList.remove('dragging'); });
+
+        if(over) tr.classList.add('over');
+        tr.innerHTML = `
+          <td>${i+1}</td>
+          <td>${escape(l.type)}</td>
+          <td>${escape(l.desc)}</td>
+          <td>${escape(l.dest)}</td>
+          <td>${escape(l.stowage)}</td>
+          <td>${escape(l.bay||'')}</td>
+          <td>${escape(l.row||'')}</td>
+          <td>${escape(l.tier||'')}</td>
+          <td class="right">${l.qty||''}</td>
+          <td class="right">${fmt2(l.weight)}</td>
+          <td class="right">${l.volume?fmt2(l.volume):''}</td>
+          <td class="center">${l.haz==='Yes' ? `<span class="dot red" title="${escape(l.imo||'HazMat')}"></span>` : `<span class="dot green"></span>`}</td>
+          <td class="right">${l.temp||''}</td>
+          <td>${escape(l.notes||'')}</td>
+         <td class="center actions-col">
+         <div class="toolbar">
+         <button class="btn ghost" onclick="moveLine('${l.id}','up')">↑</button>
+         <button class="btn ghost" onclick="moveLine('${l.id}','down')">↓</button>
+         <button class="btn" onclick="editLine('${l.id}')">Edit</button>
+         <button class="btn danger" onclick="removeLine('${l.id}')">Delete</button>
+      </div>
+    </td>
+
+        `;
+        body.appendChild(tr);
+      });
+    }
+
+    function isFwd(stow){
+      const s = (stow||'').toLowerCase();
+      if(s.includes('fwd')) return true;
+      const m = s.match(/hold\s*(\d+)/i);
+      if(m){ const n = Number(m[1]); return n<=Math.max(2, Math.ceil(maxHoldNumber()/2)); }
+      return false;
+    }
+    function maxHoldNumber(){
+      const nums = holds.map(h=>{
+        const m = (h.name||'').match(/(\d+)/);
+        return m? Number(m[1]) : 0;
+      });
+      return nums.length? Math.max(...nums) : 0;
+    }
+
+    // Export CSV
+    function exportCsv(){
+      const headers = ['Type','Description','Destination','Stowage','Bay','Row','Tier','Quantity','Weight(t)','Volume(m3)','HazMat','IMO/UN','Temp','Notes'];
+      const rows = lines.map(l=>[
+        l.type, l.desc, l.dest, l.stowage, l.bay||'', l.row||'', l.tier||'', l.qty, l.weight, l.volume, l.haz, l.imo, l.temp, l.notes
+      ]);
+      const csv = [headers].concat(rows).map(r=>r.map(cell=>{
+        const s = String(cell??'');
+        return /[",\n]/.test(s) ? `"${s.replaceAll('"','""')}"` : s;
+      }).join(',')).join('\n');
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = (meta.planName||'cargo_plan') + '.csv';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    // Saved plans
+    function refreshSavedList(){
+      const idx = load(SAVED_KEY, {});
+      const sel = $('loadPlanSel');
+      const names = Object.keys(idx).sort();
+      sel.innerHTML = `<option value="">Load saved plan…</option>` + names.map(n=>`<option value="${escape(n)}">${escape(n)}</option>`).join('');
+    }
+    function savePlan(){
+      readMeta();
+      if(!meta.planName){ alert('Please set a Plan name.'); return; }
+      const idx = load(SAVED_KEY, {});
+      idx[meta.planName] = { lines, holds, meta };
+      localStorage.setItem(SAVED_KEY, JSON.stringify(idx));
+      refreshSavedList();
+      alert('Plan saved.');
+    }
+    function deletePlan(){
+      const name = $('loadPlanSel').value || meta.planName;
+      if(!name){ alert('Select a plan to delete.'); return; }
+      if(!confirm(`Delete saved plan "${name}"?`)) return;
+      const idx = load(SAVED_KEY, {});
+      delete idx[name];
+      localStorage.setItem(SAVED_KEY, JSON.stringify(idx));
+      refreshSavedList();
+      alert('Deleted.');
+    }
+    function loadPlanByName(name){
+      const idx = load(SAVED_KEY, {});
+      const pack = idx[name];
+      if(!pack){ alert('Not found.'); return; }
+      lines = pack.lines || [];
+      holds = pack.holds || defaultHolds();
+      meta  = pack.meta  || {};
+      save(CARGO_KEY, lines); save(HOLDS_KEY, holds); save(META_KEY, meta);
+      initMeta(); renderAll(); refreshSavedList();
+    }
+
+    // Events
+    $('addHoldBtn').addEventListener('click', addHold);
+    $('addLineBtn').addEventListener('click', addLine);
+    $('clearInputsBtn').addEventListener('click', clearLineInputs);
+    $('exportCsvBtn').addEventListener('click', exportCsv);
+    $('printBtn').addEventListener('click', ()=> window.print());
+
+    $('savePlanBtn').addEventListener('click', savePlan);
+    $('newPlanBtn').addEventListener('click', ()=>{ if(confirm('Clear current plan?')){ lines=[]; holds=defaultHolds(); meta={planName:'', voyNo:'', depPort:'', arrPort:'', etd:'', eta:''}; save(CARGO_KEY,lines); save(HOLDS_KEY,holds); save(META_KEY,meta); initMeta(); renderAll(); refreshSavedList(); } });
+    $('deletePlanBtn').addEventListener('click', deletePlan);
+    $('loadPlanSel').addEventListener('change', (e)=>{ if(e.target.value) loadPlanByName(e.target.value); });
+
+    // meta fields save-on-change
+    ['planName','voyNo','depPort','arrPort','etd','eta'].forEach(id=>{
+      $(id).addEventListener('input', readMeta);
+      $(id).addEventListener('change', readMeta);
+    });
+
+    // filters/search
+    $('searchBox').addEventListener('input', (e)=>{ searchTerm = e.target.value; renderTable(); });
+    $('filterType').addEventListener('change', (e)=>{ filterType = e.target.value; renderTable(); });
+    $('filterStow').addEventListener('change', (e)=>{ filterStow = e.target.value; renderTable(); });
+
+    // Container dims visibility
+    $('cType').addEventListener('change', ()=>{ $('ctrDims').style.display = $('cType').value==='Container' ? '' : 'none'; });
+    $('ctrDims').style.display = $('cType').value==='Container' ? '' : 'none';
+
+    // Init
+    initMeta(); renderAll(); refreshSavedList();
+
+    function renderAll(){
+      renderHolds(); renderFilters(); renderTable();
+    }
+
+    // Expose for inline
+    window.removeHold = removeHold;
+    window.toggleLock = toggleLock;
+    window.editHold = editHold;
+    window.moveLine = moveLine;
+    window.removeLine = removeLine;
+    window.editLine = editLine;
+    window.moveHoldToLayout = moveHoldToLayout;
+    window.moveHoldToPalette = moveHoldToPalette;
+  </script>
+</body>
+</html>

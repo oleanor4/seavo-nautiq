@@ -18,9 +18,10 @@
     .container{max-width:1200px; margin:0 auto; padding:16px}
     .toolbar{display:flex; gap:12px; justify-content:center; margin:12px 0 12px; flex-wrap:wrap}
     .btn{
-      padding:10px 16px; border:none; border-radius:10px; color:#fff; cursor:pointer;
+      padding:10px 16px; border:none; border-radius:10px; color:#fff; cursor:pointer;  font-size:1rem; transition:filter .2s;
       background:linear-gradient(to right,#1b75d1,#0e3e86); box-shadow:0 2px 8px rgba(0,0,0,.35); font-weight:600
     }
+
     .btn.ghost{background:rgba(0,0,0,.25)}
     .btn.danger{background:linear-gradient(to right,#f13e4e,#a31621)}
     .btn.ok{background:linear-gradient(to right,#18b857,#0a7c36)}
@@ -57,7 +58,7 @@
     @media(max-width:900px){.grid.cols-3{grid-template-columns:1fr;}.grid.cols-2{grid-template-columns:1fr}}
     label{display:block; font-weight:700; margin-bottom:6px}
     input[type="text"], input[type="number"], input[type="date"], input[type="datetime-local"], select, textarea{
-      width:100%; padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,.2); background:rgba(0,0,0,.2); color:#fff;
+      width:100%; padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,.2); background:rgba(0,0,0,.2); color:#ffffff;
     }
     textarea{min-height:100px; resize:vertical}
     .hint{font-size:.85rem; color:var(--muted); margin-top:4px}
@@ -73,6 +74,7 @@
     .tag{display:inline-block; padding:2px 8px; border-radius:999px; font-size:.8rem; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.15); margin-right:6px}
     .chip-btn{display:inline-block; padding:4px 10px; border-radius:999px; font-size:.8rem; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.15); margin:0 6px 6px 0; cursor:pointer}
     .chip-btn:hover{filter:brightness(1.08)}
+    .chip-btn.active{border-color:var(--accent); background:rgba(98,178,231,.2)} /* active markering */
 
     /* History row */
     .hist-wrap{padding:10px 6px}
@@ -84,6 +86,35 @@
     .filebox{max-width:90vw; max-height:80vh}
     .filebox img{max-width:100%; height:auto; display:block}
     .filebox iframe{width:min(900px,90vw); height:70vh; border:none; background:#fff}
+
+    /* ===== Create-modal layout with category panel (beholdes i modal) ===== */
+    .create-layout{
+      display:grid; grid-template-columns:260px 1fr; gap:16px;
+    }
+    .cat-panel{
+      background:rgba(0,0,0,.25);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:12px;
+      padding:12px;
+      height:100%;
+    }
+    .cat-panel h4{margin:0 0 8px 0; font-size:1rem}
+    .cat-list{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px}
+
+    /* ===== NEW: hovedlayout med kategori-venstreboks ===== */
+    .main-layout{display:grid; grid-template-columns:240px 1fr; gap:16px; align-items:start}
+    .main-cat{
+      background:rgba(0,0,0,.25);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:12px;
+      padding:12px;
+    }
+    .main-cat h4{margin:0 0 10px 0; font-size:1rem}
+    .main-cat .cat-list{display:flex; flex-wrap:wrap; gap:6px}
+    @media(max-width:900px){
+      .create-layout{grid-template-columns:1fr;}
+      .main-layout{grid-template-columns:1fr;}
+    }
   </style>
 </head>
 <body>
@@ -101,42 +132,56 @@
       <button id="newTaskBtn" class="btn">➕ New Task</button>
     </div>
 
-    <div class="filters">
-      <select id="filterStatus">
-        <option value="all">All statuses</option>
-        <option value="ok">OK (&gt;10d)</option>
-        <option value="warn">Warning (10–3d)</option>
-        <option value="due">Due soon (2–0d)</option>
-        <option value="overdue">Overdue (&lt;0d)</option>
-        <option value="disabled">Disabled</option>
-      </select>
-      <select id="sortBy">
-        <option value="expiryAsc">Days to expiry ↑</option>
-        <option value="expiryDesc">Days to expiry ↓</option>
-        <option value="severity">Severity (high → low)</option>
-        <option value="nameAsc">Name A–Z</option>
-        <option value="lastNew">Last performed (newest)</option>
-        <option value="lastOld">Last performed (oldest)</option>
-      </select>
-      <button id="resetFilters" class="btn ghost">Reset</button>
-    </div>
+    <!-- ===== NEW: Hovedlayout med venstre kategori-boks + høyre innhold ===== -->
+    <div class="main-layout">
+      <aside class="main-cat">
+        <h4>Categories</h4>
+        <div id="mainCatList" class="cat-list">
+          <span class="cell-muted">No categories yet.</span>
+        </div>
+        <div class="hint" style="margin-top:8px">Klikk for å filtrere. “All categories” viser alt.</div>
+      </aside>
 
-    <table id="taskTable">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type of work</th>
-          <th>Responsible officer</th>
-          <th>Location</th>
-          <th>Interval (days)</th>
-          <th>Days to expire</th>
-          <th>Last performed</th>
-          <th>Files</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="taskBody"></tbody>
-    </table>
+      <div>
+        <div class="filters">
+          <select id="filterStatus">
+            <option value="all">All statuses</option>
+            <option value="ok">OK (&gt;10d)</option>
+            <option value="warn">Warning (10–3d)</option>
+            <option value="due">Due soon (2–0d)</option>
+            <option value="overdue">Overdue (&lt;0d)</option>
+            <option value="disabled">Disabled</option>
+          </select>
+          <select id="sortBy">
+            <option value="expiryAsc">Days to expiry ↑</option>
+            <option value="expiryDesc">Days to expiry ↓</option>
+            <option value="severity">Severity (high → low)</option>
+            <option value="nameAsc">Name A–Z</option>
+            <option value="lastNew">Last performed (newest)</option>
+            <option value="lastOld">Last performed (oldest)</option>
+          </select>
+          <button id="resetFilters" class="btn ghost">Reset</button>
+        </div>
+
+        <table id="taskTable">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type of work</th>
+              <th>Responsible officer</th>
+              <th>Location</th>
+              <th>Interval (days)</th>
+              <th>Days to expire</th>
+              <th>Last performed</th>
+              <th>Files</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="taskBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <!-- ===== /NEW hovedlayout ===== -->
   </div>
 
   <!-- Create Task Modal -->
@@ -147,67 +192,84 @@
         <button class="btn ghost" onclick="closeCreate()">✖</button>
       </header>
       <div class="body">
-        <div class="grid cols-3">
-          <div>
-            <label for="tName">Name of task</label>
-            <input id="tName" type="text" placeholder="e.g., Inspect liferafts">
-          </div>
-          <div>
-            <label for="tType">Type of work</label>
-            <select id="tType">
-              <option>Control</option>
-              <option>Service</option>
-              <option>Test</option>
-              <option>Cleaning</option>
-            </select>
-          </div>
-          <div>
-            <label for="tOfficer">Responsible officer</label>
-            <input id="tOfficer" type="text" placeholder="e.g., Chief Officer">
-          </div>
-          <div>
-            <label for="tLocation">Location</label>
-            <select id="tLocation">
-              <option>Bridge</option>
-              <option>Engine room</option>
-              <option>Deck</option>
-              <option>Cargo hold</option>
-              <option>Other area</option>
-            </select>
-          </div>
-          <div>
-            <label for="tInterval">Interval (days)</label>
-            <input id="tInterval" type="number" min="1" value="30">
-          </div>
-          <div>
-            <label for="tLast">Last performed</label>
-            <input id="tLast" type="date">
-            <div class="hint">Set last performed date; expiry preview below updates automatically.</div>
-          </div>
-        </div>
+        <!-- Venstre kategori-oversikt i modal beholdes for gjenbruk -->
+        <div class="create-layout">
+          <aside class="cat-panel">
+            <h4>Categories</h4>
+            <div id="catList" class="cat-list"><span class="cell-muted">No categories yet.</span></div>
+            <label for="tCategory">New or selected category</label>
+            <input id="tCategory" type="text" placeholder="e.g., GMDSS Radio">
+            <div class="hint">Klikk på en kategori over, eller skriv inn en ny.</div>
+          </aside>
 
-        <div style="margin-top:10px" class="preview-line" id="expiryPreview">
-          <strong>Expiry preview:</strong> <span id="previewText" class="cell-muted">—</span>
-        </div>
+          <div>
+            <div class="grid cols-3">
+              <div>
+                <label for="tName">Name of task</label>
+                <input id="tName" type="text" placeholder="e.g., Inspect liferafts">
+              </div>
+              <div>
+                <label for="tType">Type of work</label>
+                <select id="tType">
+                  <option>Control</option>
+                  <option>Service</option>
+                  <option>Test</option>
+                  <option>Inspection</option>
+                  <option>Cleaning</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div>
+                <label for="tOfficer">Responsible officer</label>
+                <input id="tOfficer" type="text" placeholder="e.g., Chief Officer">
+              </div>
+              <div>
+                <label for="tLocation">Location</label>
+                <select id="tLocation">
+                  <option>Bridge</option>
+                  <option>Engine room</option>
+                  <option>Control room</option>
+                  <option>Deck</option>
+                  <option>Roof deck</option>
+                  <option>Cargo hold</option>
+                  <option>Other area</option>
+                </select>
+              </div>
+              <div>
+                <label for="tInterval">Interval (days)</label>
+                <input id="tInterval" type="number" min="1" value="30">
+              </div>
+              <div>
+                <label for="tLast">Last performed</label>
+                <input id="tLast" type="date">
+                <div class="hint">Set last performed date; expiry preview below updates automatically.</div>
+              </div>
+            </div>
 
-        <div class="grid cols-2" style="margin-top:12px">
-          <div>
-            <label for="tDesc">Work description / notes</label>
-            <textarea id="tDesc" placeholder="Describe the work to be carried out..."></textarea>
-          </div>
-          <div>
-            <label>Attach file / image</label>
-            <div class="upload">
-              <input id="tFile" type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx">
-              <div class="hint">Images will show as thumbnails. Other files are stored and listed by name.</div>
-              <div id="tThumbs" class="thumbs"></div>
+            <div style="margin-top:10px" class="preview-line" id="expiryPreview">
+              <strong>Expiry preview:</strong> <span id="previewText" class="cell-muted">—</span>
+            </div>
+
+            <div class="grid cols-2" style="margin-top:12px">
+              <div>
+                <label for="tDesc">Work description / notes</label>
+                <textarea id="tDesc" placeholder="Describe the work to be carried out..."></textarea>
+              </div>
+              <div>
+                <label>Attach file / image</label>
+                <div class="upload">
+                  <input id="tFile" type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx">
+                  <div class="hint">Images will show as thumbnails. Other files are stored and listed by name.</div>
+                  <div id="tThumbs" class="thumbs"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="toolbar" style="justify-content:flex-end; margin-top:16px">
+              <button class="btn ghost" onclick="closeCreate()">Cancel</button>
+              <button class="btn ok" onclick="createTask()">Create task</button>
             </div>
           </div>
-        </div>
-
-        <div class="toolbar" style="justify-content:flex-end; margin-top:16px">
-          <button class="btn ghost" onclick="closeCreate()">Cancel</button>
-          <button class="btn ok" onclick="createTask()">Create task</button>
         </div>
       </div>
     </div>
@@ -234,7 +296,6 @@
             </div>
             <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap">
               <button class="btn" onclick="openPicker()">Pick participants</button>
-              <!-- Load selection removed; auto-loads via 'Send to Maintenance' -->
             </div>
             <div class="hint">Open Participants in pick mode and click <strong>Send to Maintenance</strong>. The list updates here automatically.</div>
           </div>
@@ -280,6 +341,7 @@
     let tasks = loadTasks();
     const expanded = new Set(); // task.id expanded history rows
     let performIndex = null;
+    let selectedCategory = null; // NEW: valgt kategori på hovedsiden
 
     // Utils
     const $ = (id)=>document.getElementById(id);
@@ -361,8 +423,69 @@
     resetEl.addEventListener('click', ()=>{
       filterEl.value = 'all';
       sortEl.value = 'expiryAsc';
+      selectedCategory = null; // reset kategori ved reset
       render();
     });
+
+    // ===== NEW: kategorier (begge steder) =====
+    function uniqueCategories(){
+      const set = new Set();
+      for(const t of tasks){
+        const c = (t.category||'').trim();
+        if(c) set.add(c);
+      }
+      return Array.from(set).sort((a,b)=>a.localeCompare(b));
+    }
+
+    function populateCategoryList(){ // i CREATE-modal
+      const list = $('catList');
+      const cats = uniqueCategories();
+      if(!cats.length){
+        list.innerHTML = `<span class="cell-muted">No categories yet.</span>`;
+        return;
+      }
+      list.innerHTML = '';
+      for(const c of cats){
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'chip-btn';
+        btn.textContent = c;
+        btn.addEventListener('click', ()=>{$('tCategory').value = c;});
+        list.appendChild(btn);
+      }
+    }
+
+    function renderMainCategories(){ // på hovedsiden
+      const list = $('mainCatList');
+      const cats = uniqueCategories();
+      // Lag "All categories" alltid først
+      list.innerHTML = '';
+      const makeChip = (label, catValue)=>{
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'chip-btn' + ((selectedCategory===catValue)?' active':'');
+        btn.textContent = label;
+        btn.addEventListener('click', ()=>{
+          selectedCategory = catValue;
+          renderMainCategories();
+          render();
+        });
+        return btn;
+      };
+      list.appendChild(makeChip('All categories', null));
+      if(!cats.length){
+        const span = document.createElement('span');
+        span.className = 'cell-muted';
+        span.style.marginLeft = '6px';
+        span.textContent = 'No categories yet.';
+        list.appendChild(span);
+        return;
+      }
+      for(const c of cats){
+        list.appendChild(makeChip(c, c));
+      }
+    }
+    // ===== /NEW =====
 
     // RENDER
     function render(){
@@ -376,10 +499,14 @@
         return {t, idx, days, expiry, bucket:sb.bucket, severity:sb.score};
       });
 
-      // Filter
+      // Filter by status
       const f = filterEl.value;
       if(f !== 'all'){
         view = view.filter(r=> r.bucket === f);
+      }
+      // ===== NEW: filter by selected category =====
+      if(selectedCategory){
+        view = view.filter(r => (r.t.category||'').trim() === selectedCategory);
       }
 
       // Sort
@@ -437,6 +564,9 @@
         htr.appendChild(td);
         body.appendChild(htr);
       }
+
+      // Oppdater venstre kategori-boks ved hver render
+      renderMainCategories();
     }
 
     function renderHistoryBlock(t){
@@ -472,6 +602,7 @@
 
     function openCreate(){
       resetCreateForm();
+      populateCategoryList(); // oppdater kategori-chips i modal
       $('createModal').classList.add('show');
     }
     function closeCreate(){ $('createModal').classList.remove('show'); }
@@ -485,6 +616,7 @@
       $('tDesc').value = '';
       $('tFile').value = '';
       $('tThumbs').innerHTML = '';
+      $('tCategory').value = '';
       updatePreview();
     }
 
@@ -535,19 +667,34 @@
       const lastPerformed = $('tLast').value;
       const desc = $('tDesc').value.trim();
       const files = ($('tFile')._stored || []).slice();
+      const category = $('tCategory').value.trim();
 
-      if(!name || !officer || !intervalDays || !lastPerformed){
-        alert('Please fill in Name, Responsible officer, Interval and Last performed.');
+      // ===== NEW: streng validering (alle unntatt file/image) =====
+      const missing = [];
+      if(!name) missing.push('Name');
+      if(!type) missing.push('Type of work');
+      if(!officer) missing.push('Responsible officer');
+      if(!location) missing.push('Location');
+      if(!intervalDays) missing.push('Interval (days)');
+      if(!lastPerformed) missing.push('Last performed');
+      if(!desc) missing.push('Description/notes');
+      if(!category) missing.push('Category');
+
+      if(missing.length){
+        alert('Please fill in: ' + missing.join(', ') + '.');
         return;
       }
 
       const task = {
         id: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2),
         name, type, officer, location, intervalDays, lastPerformed, desc,
-        files, history:[], disabled:false
+        files, history:[], disabled:false,
+        category
       };
       tasks.push(task);
-      saveTasks(); render(); closeCreate();
+      saveTasks();
+      render(); // oppdater liste + kategori-boks
+      closeCreate();
     }
 
     // PERFORM MODAL
@@ -560,7 +707,6 @@
       $('pWhen').value = val;
       $('pComment').value = '';
       $('pPeople').textContent = 'No one selected.';
-      // load any existing maintenance selection
       applyPickedFromMaintenanceBuffer();
       $('performModal').classList.add('show');
     }
@@ -600,7 +746,7 @@
       t.history.push({ at: when, by: pickedRaw.map(p=>p.name), comment });
 
       saveTasks(); render(); closePerform();
-      localStorage.removeItem(PICKKEY2); // clear buffer after use
+      localStorage.removeItem(PICKKEY2);
     }
 
     function deleteCurrentTask(){

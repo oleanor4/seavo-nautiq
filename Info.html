@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>About – Seavo Nautiq • Vessel Inventory Management</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    :root{
+      --bg:#12315c;
+      --panel:linear-gradient(to left, #12315c, #215db1);
+      --panel-soft:rgba(255,255,255,.06);
+      --text:#ffffff;
+      --muted:#bcd3f1;
+      --accent:#62b2e7;
+      --accent-2:#1b75d1;
+      --accent-3:#0e3e86;
+      --ok:#28e755; --warn:#ecc543; --danger:#f03747;
+      --radius:40px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:Arial, sans-serif; color:var(--text);
+      background:var(--bg);
+    }
+
+    /* Header */
+    header.hero{
+      position:relative;
+      padding:24px 20px 80px;
+      background:linear-gradient(to right, #1b75d1, #0e3e86);
+      box-shadow:0 6px 16px rgba(0,0,0,.45);
+    }
+    .hero h1{margin:0; font-size:34px;}
+    .hero p{margin:8px 0 0; color:#e7f1ff}
+    .hero-actions{
+      margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;
+    }
+    .btn{
+      cursor:pointer; border:0; border-radius:12px; font-weight:bold;
+      padding:10px 14px; color:#001125; background:var(--accent);
+      box-shadow:0 6px 14px rgba(0,0,0,.25);
+    }
+    .btn-ghost{ background:transparent; color:#fff; border:1px solid var(--accent); }
+
+    /* Quick nav chips */
+    .chips{
+      display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;
+    }
+    .chip{
+      border:1px solid rgba(255,255,255,.25);
+      color:#fff; padding:6px 10px; border-radius:999px; font-size:13px;
+      background:rgba(0,0,0,.12);
+      text-decoration:none;
+    }
+    .chip:hover{ border-color:var(--accent); }
+
+    /* Content wrapper */
+    .wrap{ padding:22px; max-width:1200px; margin: -50px auto 40px; }
+
+    /* Info cards */
+    .info-grid{
+      display:grid; gap:22px;
+      grid-template-columns: repeat(12, 1fr);
+    }
+    .card{
+      grid-column: span 12;
+      background:var(--panel);
+      border-radius:var(--radius);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:6px 6px 12px rgba(0,0,0,.55);
+      padding:22px;
+      position:relative;
+      overflow:hidden;
+    }
+    .card h2{ margin:0 0 10px; color:#7ddbf3; }
+    .card p{ margin:8px 0; color:#fff; }
+    .card .muted{ color:var(--muted); font-size:14px; }
+
+    /* Two / three column helpers */
+    .cols-2{ display:grid; gap:18px; grid-template-columns: 1fr 1fr; }
+    .cols-3{ display:grid; gap:18px; grid-template-columns: 1fr 1fr 1fr; }
+
+    /* Feature item */
+    .feature{
+      background: rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:18px; padding:14px;
+    }
+    .feature h3{ margin:0 0 6px; font-size:18px; color:#b8e6ff; }
+    .feature p{ margin:0; font-size:14px; color:#f1f8ff; }
+    .feature .tag{ display:inline-block; margin-top:8px; font-size:12px; color:#001125; background:var(--accent); border-radius:999px; padding:4px 8px; }
+
+    /* List bullets */
+    ul.clean{ padding-left:18px; margin:8px 0; }
+    ul.clean li{ margin:6px 0; }
+
+    /* Callouts */
+    .callout{
+      background:rgba(0,0,0,.22);
+      border-left:4px solid var(--accent); padding:12px; border-radius:10px;
+      font-size:14px; color:#eaf5ff;
+    }
+
+     #btn-close-page{
+    appearance:none; border:0; cursor:pointer;
+    display:inline-flex; align-items:center; gap:.5rem;
+    padding:.6rem 1rem; font:600 15px/1 Arial,sans-serif; color:#001125;
+    background:linear-gradient(to right,#6da5dd,#2b69c7);
+    border-radius:12px; box-shadow:0 6px 14px rgba(0,0,0,.25);
+    transition:filter .2s ease, transform .08s ease;
+  }
+
+  .spaced { margin-top: 16px; }
+
+  #btn-close-page:hover{ filter:brightness(1.08); }
+  #btn-close-page:active{ transform:translateY(1px); }
+
+    /* Print */
+    .toolbar{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .no-print{ }
+    @media print{
+      .no-print{ display:none !important; }
+      body{ background:#fff; color:#000; }
+      .card{ background:#fff !important; border-color:#000 !important; box-shadow:none; color:#000; }
+      .feature{ background:#fff !important; border-color:#000 !important; }
+      .chip{ border-color:#000; color:#000; background:transparent; }
+      a{ color:#000; }
+    }
+
+    /* Highlight box (darker sub-box) */
+    .highlight{
+      background: rgba(0,0,0,.30);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 16px;
+      padding: 12px 14px;
+      margin-top: 14px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px){
+      .cols-2, .cols-3{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="hero">
+    <h1>Seavo Nautiq – Vessel Inventory Management</h1>
+    <p>All your onboard operations in one place: inventory, crew, cargo space, maintenance, voyages and fleet overview.</p>
+
+    <div class="hero-actions no-print">
+      
+      <button class="btn-ghost" onclick="window.print()">🖨️ Print this page</button>
+    </div>
+
+    <div class="chips no-print">
+      <a class="chip" href="#what">What is Seavo?</a>
+      <a class="chip" href="#features">Key features</a>
+      <a class="chip" href="#workflows">Workflows</a>
+      <a class="chip" href="#printing">Exports & printing</a>
+      <a class="chip" href="#security">Access & security</a>
+      <a class="chip" href="#fleet">Fleet overview</a>
+      <a class="chip" href="#faq">FAQ</a>
+      <a class="chip" href="#get-started">Get started</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- What -->
+    <section id="what" class="card">
+      <h2>What is Seavo Nautiq?</h2>
+      <p>
+        Seavo Nautiq is a maritime-focused platform that helps vessels keep a tight grip on daily operations.
+        From provisions and spare parts to crew readiness, cargo space planning, maintenance routines,
+        voyage planning and fleet coordination—Seavo brings it all together in a clean, fast interface.
+      </p>
+      <div class="callout" style="margin-top:10px;">
+        Designed for demanding environments at sea: simple to use, fast to update, and resilient when connectivity is limited.
+      </div>
+    </section>
+
+    <!-- Key features -->
+    <section id="features" class="card">
+      <h2>Key features</h2>
+
+      <div class="cols-3">
+        <div class="feature">
+          <h3>Inventory management</h3>
+          <p>Structured tables per category, min/max alerts, expiry-date coloring, photo uploads, comments, order flags, and quick add/move/delete lines.</p>
+          <span class="tag">Provisions • Parts • Safety</span>
+        </div>
+        <div class="feature">
+          <h3>Crew overview & control</h3>
+          <p>Register crew, documents status, contact details and roles. Send participants to task modules and track completion history.</p>
+          <span class="tag">Participants</span>
+        </div>
+        <div class="feature">
+          <h3>Cargo space planning</h3>
+          <p>Plan and visualize space, attach notes and images, and keep a running overview for loading/unloading operations.</p>
+          <span class="tag">Cargo</span>
+        </div>
+
+        <div class="feature">
+          <h3>Maintenance routines</h3>
+          <p>Plan tasks, set due dates, log actions with expandable history, filter by status/urgency, and attach documents or photos.</p>
+          <span class="tag">Tasks</span>
+        </div>
+        <div class="feature">
+          <h3>Voyage planning</h3>
+          <p>Create voyage plans, ETAs and notes. Send plans to Fleet and keep them visible under the correct vessel/company box.</p>
+          <span class="tag">Voyages</span>
+        </div>
+        <div class="feature">
+          <h3>Fleet overview (Company)</h3>
+          <p>Create a Fleet with a PIN, let vessels join via PIN, and keep shared visibility of members and their latest voyage plans.</p>
+          <span class="tag">Company</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works / workflows -->
+    <section id="workflows" class="card">
+      <h2>How it works</h2>
+      <div class="cols-2">
+        <div>
+          <h3 style="margin:0 0 8px;">Fast editing</h3>
+          <ul class="clean">
+            <li>Add lines, headers and sections on the fly.</li>
+            <li>Move rows up/down, center delete buttons, inline edits, image thumbnails per row.</li>
+            <li>Min/Max thresholds with color alerts, expiry color logic (green/yellow/red).</li>
+          </ul>
+
+          <h3 style="margin:14px 0 8px;">Smart views</h3>
+          <ul class="clean">
+            <li>Category sliders, search & highlight, collapsible panels.</li>
+            <li>Side panel with quick actions (Information, Documents, Shared content, Settings, Sign out).</li>
+            <li>Badge shows vessel name and call sign on the home page.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 style="margin:0 0 8px;">Access & roles</h3>
+          <ul class="clean">
+            <li>Local registration gate: personal user + vessel details before first use.</li>
+            <li>Language selection for the UI (no language text shown in the vessel badge).</li>
+            <li>PIN-based Fleet join (local model now; server roles later).</li>
+          </ul>
+
+          <h3 style="margin:14px 0 8px;">Sync & upgrades</h3>
+          <ul class="clean">
+            <li>Works fully offline (localStorage) — ideal for limited connectivity.</li>
+            <li>Ready for backend upgrade (API, auth, real-time updates, Stripe billing).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Printing / export -->
+    <section id="printing" class="card">
+      <h2>Exports & printing</h2>
+      <p>Seavo supports clean printouts and exports for sharing and compliance.</p>
+      <ul class="clean">
+        <li><strong>Print</strong> any page with the browser’s print dialog (this page includes a print-friendly theme).</li>
+        <li><strong>PDF</strong> exports for lists and orders (via your existing export buttons where enabled).</li>
+        <li><strong>Excel/CSV</strong> exports for tabular data (optional).</li>
+      </ul>
+      <div class="callout" style="margin-top:8px;">
+        Tip: Add a “Print” or “Export” button to any module header for quick access during inspections.
+      </div>
+    </section>
+
+    <!-- Security / access -->
+    <section id="security" class="card">
+      <h2>Access & security</h2>
+      <div class="cols-2">
+        <div class="feature">
+          <h3>Registration gate</h3>
+          <p>New users must register personal info and vessel before entering the system. Language can be set at registration and on the main page.</p>
+        </div>
+        <div class="feature">
+          <h3>Fleet PIN</h3>
+          <p>Create a Fleet (Company) with a PIN. Members can join by PIN and appear under the same company box in Fleet.</p>
+        </div>
+      </div>
+      <p class="muted" style="margin-top:10px;">
+        Current version uses client-side storage (localStorage). For production: add backend authentication (tokens), roles (Owner/Officer/Crew), and encrypted storage.
+      </p>
+    </section>
+     
+      </div>
+    </section>
+
+    <!-- Fleet -->
+    <section id="fleet" class="card">
+      <h2>Fleet overview (Company)</h2>
+      <div class="cols-2">
+        <div class="feature">
+          <h3>Create & join</h3>
+          <p>Create a Fleet with a PIN, share the PIN with vessels, and see members appear under your company box.</p>
+          <span class="tag">PIN-join</span>
+        </div>
+        <div class="feature">
+          <h3>Voyage visibility</h3>
+          <p>Voyage plans sent from Voyages appear under the correct vessel in Fleet with ETA and notes (latest always visible).</p>
+          <span class="tag">Shared awareness</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="card">
+      <h2>FAQ</h2>
+      <div class="feature">
+        <h3>Do I need internet?</h3>
+        <p>No. Seavo works offline using local storage. Sync/backups require a server upgrade (optional).</p>
+      </div>
+      <div class="feature" style="margin-top:12px">
+        <h3>How do I start?</h3>
+        <p>Open the main page, complete the registration overlay (personal + vessel), pick language and plan (1-month free), and you’re in.</p>
+      </div>
+      <div class="feature" style="margin-top:12px">
+        <h3>Can I print reports?</h3>
+        <p>Yes. Use your browser’s print function or the module export buttons (PDF/Excel) where available.</p>
+      </div>
+    </section>
+
+    <!-- Get started -->
+    <section id="get-started" class="card">
+      <h2>Get started</h2>
+      <div class="cols-2">
+        <div>
+          <ul class="clean">
+            <li>Register your user and vessel on first launch.</li>
+            <li>Start by familiarizing yourself with how the platform is structured. I recommend a quick walkthrough from top to bottom.
+            And then you can start managing wherever you want.</li>
+
+            <div class="highlight">
+              <p>Deck officer and platform developer.</p>
+              <p>Ole Andre Øren</p>
+              <p>Seavonautiq@outlook.com</p>
+            </div>
+
+          </ul>
+          <div class="callout" style="margin-top:10px">
+            1-month free trial included. After the trial, continue on monthly or annual subscription.
+          </div>
+        </div>
+        <div class="toolbar no-print" style="justify-content:flex-end; align-items:flex-start;">
+        <button id="btn-close-page" type="button">Close page</button>
+          <button class="btn-ghost" onclick="window.print()">🖨️ Print this page</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+</body>
+
+<script>
+  document.getElementById('btn-close-page').addEventListener('click', function () {
+    // Hvis denne siden ble åpnet som popup (fra window.open), lukk vinduet:
+    if (window.opener && !window.opener.closed) {
+      window.close();
+      return;
+    }
+
+    // Forsøk standard lukking uansett (noen nettlesere tillater dette ved bruker-gest)
+    window.close();
+
+    // Fallback 1: gå tilbake hvis det finnes historikk
+    if (history.length > 1) {
+      history.back();
+      return;
+    }
+  });
+</script>
+</html>

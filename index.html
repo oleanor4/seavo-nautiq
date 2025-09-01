@@ -9,6 +9,9 @@
   
   <style>
 
+
+
+
     
     body {
         background-color: hsl(210, 100%, var(--bg-lightness));
@@ -415,6 +418,80 @@
 }
 
 
+
+    /* overlay vises */
+body.sn-locked { overflow: hidden; }
+
+
+#snRegOverlay {
+position: fixed; inset: 0; z-index: 9999;
+display: none; /* vises via JS om ikke registrert */
+background: rgba(0,0,0,.55);
+backdrop-filter: blur(2px);
+}
+#snRegOverlay.show { display: grid; place-items: center; }
+
+
+.sn-modal {
+width: min(880px, 92vw);
+background: rgba(12, 25, 48, .92);
+border: 1px solid rgba(255,255,255,.12);
+border-radius: 16px;
+box-shadow: 0 12px 36px rgba(0,0,0,.5);
+color: #fff;
+padding: 18px 18px 12px;
+}
+
+#btn-info {
+  background: linear-gradient(to right, #1b75d1, #0e3e86);
+  color: #7de1ff;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 12px;
+}
+
+
+#btn-info:hover {
+  background: linear-gradient(to right, #0e3e86, #1b75d1);
+  color: #a0d8ff;
+}
+
+.sn-head { background: linear-gradient(to right,#1b75d1,#0e3e86); padding: 14px 16px; border-radius: 12px; margin-bottom: 12px; }
+.sn-head h2 { margin: 0; }
+
+
+.sn-grid { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
+.sn-row { display: grid; gap: 10px; }
+
+
+.sn-field label{ font-size: 16px; color: #bcd3f1; display:block; margin-bottom:6px; }
+.sn-field input, .sn-field select {
+width: 95%; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,.15);
+background: rgba(0,0,0,.25); color:#fff;
+}
+
+.h6 {
+  font-size: 1.2rem;
+  color: #418a3b;
+  margin-left: 548px;
+}
+
+.sn-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+.sn-btn { cursor: pointer; padding: 10px 14px; border-radius: 10px; border: 0; font-weight: bold; }
+.sn-btn-primary { background: #62b2e7; color: #001125; }
+.sn-btn-ghost { background: transparent; border: 1px solid #62b2e7; color: #fff; }
+
+
+.sn-sub { color:#bcd3f1; font-size: 13px; }
+.sn-row-terms { display:flex; align-items:center; gap:8px; margin-top:6px; }
+
+
+@media (max-width: 720px){ .sn-grid{ grid-template-columns: 1fr; } }
+
   </style>
  
 
@@ -432,7 +509,7 @@
 
  </video>
 
-  
+  <div id="snTrialBanner" style="display:none; background:rgba(0,0,0,.25); color:#fff; padding:6px 10px; text-align:center"></div>
 </header>
 
     <div class="gradient-overgang"></div>
@@ -461,7 +538,7 @@
 
     
 
-  </header>
+ 
 
 </div>
 
@@ -509,8 +586,13 @@
   <!-- Høyre kolonne -->
   <div class="hoyre-kolonne">
     <div class="top-container">
-      <img src="icon/User.png" alt="Info" style="height: 32px; vertical-align: middle;">
-      <p>Vessels name and call sign</p>
+
+      <div id="vesselBadge" style="
+        margin:12px 0; padding:10px 14px; border-radius:12px;
+        background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.12);
+        color:#ffffff; font-weight:bold; display:inline-block;">
+        Vessels name and call sign
+    </div>
     </div>
 
     <div class="hoyre-container">
@@ -519,7 +601,8 @@
       <button onclick="åpnePopup2()"><img src="icon/Doc-black.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Documents</button>
       <button><img src="icon/Share-black.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Shared content</button>
       <button onclick="åpnePopup7()"><img src="icon/Settings.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Settings</button>
-      <button><img src="icon/Sign out.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Sign out</button>
+      <button id="btnSignOut"><img src="icon/Sign out.png" style="height:32px; vertical-align:middle; float:left;"> Sign out</button>
+
     </div>
 
     
@@ -574,6 +657,206 @@
 
 </div>
 </main>
+
+<!-- Registrerings‑overlay -->
+<div id="snRegOverlay" aria-modal="true" role="dialog">
+  <div>
+      <button onclick="åpnePopup10()" id="btn-info">What is Seavo Nautiq?</button>
+
+  <div class="sn-modal" role="document">
+    <div class="sn-head"><h2>Register Seavo Nautiq user</h2></div>
+    <p class="sn-sub">Enter your personal details and vessel information. Enjoy a 1-month free trial—then your chosen plan begins.</p>
+
+    <div class="sn-grid">
+      <div class="sn-row">
+        <div class="sn-field">
+          <label>Full name *</label>
+          <input id="snFullName" autocomplete="name" placeholder="First name Last name" />
+        </div>
+        <div class="sn-field">
+          <label>Email *</label>
+          <input id="snEmail" type="email" autocomplete="email" placeholder="you@example.com" />
+        </div>
+        <div class="sn-field">
+          <label>Phone (optional)</label>
+          <input id="snPhone" type="tel" autocomplete="tel" placeholder="" />
+        </div>
+      </div>
+
+      <div class="sn-row">
+        <div class="sn-field">
+          <label>Vessel name *</label>
+          <input id="snVesselName" placeholder="M/V Seavo Nautiq" />
+        </div>
+        <div class="sn-field">
+          <label>Call sign (optional)</label>
+          <input id="snCallSign" placeholder="LABC" />
+        </div>
+        <div class="sn-field">
+          <label>Language *</label>
+          <select id="snLanguage">
+            <option value="English">English</option>
+            <option value="Norsk">Norsk</option>
+            <option value="Español">Español</option>
+            <option value="Português">Português</option>
+            <option value="Русский">Русский</option>
+            <option value="中文">中文</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="sn-row" style="margin-top:25px;">
+      <div class="sn-field">
+        <label>Subscription * <style>label { font-weight: bold; }</style></label>
+       
+        <div>
+          <label style="display:flex; align-items:center; gap: 8px; margin-bottom:18px;">
+            <input type="radio" name="snPlan" value="monthly" checked style="margin-right: -300px;"> Monthly (1 month free, price 29.37 GBP)
+          </label>
+           <div class="h6">
+        <h6>10% discount for annual subscription</h6>
+      </div>
+          <label style="display:flex; align-items:center; gap:8px;">
+            <input type="radio" name="snPlan" value="annual" style="margin-right: -300px;"> Annual (1 month free, price 317.17 GBP)
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="sn-row-terms">
+      <input id="snTerms" type="checkbox"> <label for="snTerms" class="sn-sub">I accept the terms of use & privacy policy.</label>
+    </div>
+
+    <div class="sn-actions">
+      <button class="sn-btn sn-btn-ghost" id="snCancelReg">Cancel</button>
+      <button class="sn-btn sn-btn-primary" id="snSubmitReg">Start free trial</button>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Init/binding – kjører når DOM er klar og kjerne er lastet -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Trial banner (valgfritt)
+  (function renderTrialBanner(){
+    const b = document.getElementById('snTrialBanner'); if(!b) return;
+    const s = getSub(); if(!s) return;
+    const { inTrial, daysLeft, trialEnd } = getTrialStatus();
+    if(inTrial){
+      b.style.display='block';
+      b.textContent = `Free trial active – ${daysLeft} day(s) left (ends ${trialEnd.toLocaleDateString()})`;
+    }
+  })();
+
+  // Gate + handlers
+  (function initRegistrationGate(){
+    const overlay = document.getElementById('snRegOverlay');
+    if(!overlay){ console.warn('snRegOverlay not found'); return; }
+
+    const fName = document.getElementById('snFullName');
+    const email = document.getElementById('snEmail');
+    const phone = document.getElementById('snPhone');
+    const vName = document.getElementById('snVesselName');
+    const cSign = document.getElementById('snCallSign');
+    const lang  = document.getElementById('snLanguage');
+    const terms = document.getElementById('snTerms');
+
+    function show(){ overlay.classList.add('show'); document.body.classList.add('sn-locked'); prefill(); }
+    function hide(){ overlay.classList.remove('show'); document.body.classList.remove('sn-locked'); }
+
+    function prefill(){
+      const u = getUser();
+      const v = getVessel();
+      if(u){ fName.value = u.fullName||''; email.value=u.email||''; phone.value=u.phone||''; lang.value=u.language||lang.value; }
+      if(v){ vName.value = v.vesselName||''; cSign.value=v.callSign||''; if(!u) lang.value = v.language||lang.value; }
+    }
+
+    function currentPlan(){ return (document.querySelector('input[name="snPlan"]:checked')?.value)||'monthly'; }
+
+    function validate(){
+      if(!fName.value.trim()) return alert('Full name is required'), false;
+      if(!/.+@.+\..+/.test(email.value.trim())) return alert('Valid email required'), false;
+      if(!vName.value.trim()) return alert('Vessel name is required'), false;
+      if(!terms.checked) return alert('You must accept the terms.'), false;
+      return true;
+    }
+
+    // Vis overlay hvis ikke registrert
+    if(!isRegistered()){
+      show();
+    } else {
+      const u = getUser();
+      applyLanguage(u?.language || getVessel()?.language || 'English');
+    }
+
+    // Knapper
+    document.getElementById('snCancelReg').addEventListener('click', ()=>{ if(confirm('Cancel registration?')) hide(); });
+
+    document.getElementById('snSubmitReg').addEventListener('click', ()=>{
+      if(!validate()) return;
+
+      const u = {
+        fullName: fName.value.trim(),
+        email: email.value.trim(),
+        phone: phone.value.trim()||undefined,
+        language: lang.value,
+        createdAtISO: new Date().toISOString()
+      };
+      setUser(u);
+
+      registerVessel({
+        vesselName: vName.value.trim(),
+        callSign: cSign.value.trim(),
+        language: lang.value
+      });
+
+      if(!getSub()) setSub({ plan: currentPlan(), trialStartISO: new Date().toISOString() });
+      else setSub({ ...getSub(), plan: currentPlan(), trialStartISO: getSub().trialStartISO || new Date().toISOString() });
+
+      applyLanguage(lang.value);
+
+      const badge = document.getElementById('vesselBadge');
+      const v = getVessel();
+      if(badge && v){ badge.textContent = `${v.vesselName} • ${formatCallSign(v.callSign||'')} (${v.language})`; }
+
+      hide();
+      alert('Registration saved. Your free trial has started.');
+    });
+  })();
+});
+</script>
+
+<!-- Kjerne – må lastes før init -->
+<script src="./js/seavo-core.js" defer></script>
+
+<script>
+  document.getElementById('btnSignOut')?.addEventListener('click', () => {
+    if(!confirm('Reset registration on this device?')) return;
+    // “Soft reset”: beholder flåter og userId (sesjon)
+    SN.clearRegistration({ keepFleets: true, keepSession: true });
+    location.reload(); // overlayet vil dukke opp igjen
+  });
+
+    function updateVesselBadge(){
+    const badge = document.getElementById('vesselBadge');
+    if(!badge) return;
+    const v = getVessel();
+    if(!v){
+      badge.textContent = 'Vessels name and call sign';
+      return;
+    }
+    // Ikke vis language – kun navn og ev. kallesignal
+    const parts = [v.vesselName];
+    if (v.callSign) parts.push(formatCallSign(v.callSign));
+    badge.textContent = parts.join(' • ');
+  }
+</script>
+
+
+
 </body>
 
 
@@ -785,13 +1068,212 @@ updateDigitalClock(); // første kall
       );
     }
 
+                      function åpnePopup10() {
+      window.open(
+        'Info.html',    
+        'popup',                  
+        'width=1600,height=1200'  
+      );
+    }
+
+ 
+
+
+    (function renderTrialBanner(){
+     const b = document.getElementById('snTrialBanner'); if(!b) return;
+     const s = getSub(); if(!s) return;
+     const { inTrial, daysLeft, trialEnd } = getTrialStatus();
+     if(inTrial){ b.style.display='block'; b.textContent = `Free trial active – ${daysLeft} day(s) left (ends ${trialEnd.toLocaleDateString()})`; }
+    })();
+
+
+
+
+function getSession(){ return JSON.parse(localStorage.getItem(SN_KEYS.session) || '{}'); }
+function setSession(upd){ localStorage.setItem(SN_KEYS.session, JSON.stringify({ ...getSession(), ...upd })); }
+
+
+function getUser(){ return JSON.parse(localStorage.getItem(SN_KEYS.user) || 'null'); }
+function setUser(u){ localStorage.setItem(SN_KEYS.user, JSON.stringify(u)); }
+
+
+function getVessel(){ return JSON.parse(localStorage.getItem(SN_KEYS.vessel) || 'null'); }
+function setVessel(v){ localStorage.setItem(SN_KEYS.vessel, JSON.stringify(v)); }
+
+
+function getSub(){ return JSON.parse(localStorage.getItem(SN_KEYS.subscription) || 'null'); }
+function setSub(s){ localStorage.setItem(SN_KEYS.subscription, JSON.stringify(s)); }
+
+
+function getFleets(){ return JSON.parse(localStorage.getItem(SN_KEYS.fleets) || '{}'); }
+function setFleets(f){ localStorage.setItem(SN_KEYS.fleets, JSON.stringify(f)); }
+
+
+// --- Helpers ---
+function isEmail(x){ return /.+@.+\..+/.test(x); }
+function daysBetween(a,b){ const d=24*60*60*1000; return Math.floor((b-a)/d); }
+function addDays(iso, n){ return new Date(new Date(iso).getTime() + n*86400000); }
+
+
+// Trial: 30 dager fra trialStartISO
+function getTrialStatus(){
+const sub = getSub();
+if(!sub?.trialStartISO) return { inTrial:false, daysLeft:0, trialEnd:null };
+const now = new Date();
+const end = addDays(sub.trialStartISO, 30);
+const inTrial = now < end;
+const daysLeft = Math.max(0, 30 - daysBetween(new Date(sub.trialStartISO), now));
+return { inTrial, daysLeft, trialEnd:end };
+}
+
+
+function applyLanguage(lang){
+// Enkel baseline – sett lang-attributt og lagre
+// (Koble senere til faktisk i18n-tekster på siden)
+document.documentElement.setAttribute('lang', lang || 'en');
+}
+
+
+function formatCallSign(cs){ return cs ? cs.toUpperCase() : ''; }
+
+
+// --- Registration gate check ---
+function isRegistered(){
+const u = getUser();
+const v = getVessel();
+// Krav: navn + epost + fartøyets navn (kallesignal valgfritt)
+return !!(u && u.fullName && isEmail(u.email) && v && v.vesselName);
+}
+
+
+// ===== (Fleet API fra tidligere beholdes uendret) =====
+async function sha256Hex(text){
+const enc = new TextEncoder().encode(text);
+const buf = await crypto.subtle.digest('SHA-256', enc);
+return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+
+async function createFleet(fleetName, pin){
+const { userId } = getSession();
+const pinHash = await sha256Hex(String(pin||''));
+const fleetId = crypto.randomUUID();
+const fleets = getFleets();
+fleets[fleetId] = { fleetId, name: fleetName, pinHash, ownerUserId: userId, vessels: {}, voyages: {} };
+setFleets(fleets);
+setSession({ fleetId });
+return fleets[fleetId];
+}
+
+
+
+(function initRegistrationGate(){
+const overlay = document.getElementById('snRegOverlay');
+const fName = document.getElementById('snFullName');
+const email = document.getElementById('snEmail');
+const phone = document.getElementById('snPhone');
+const vName = document.getElementById('snVesselName');
+const cSign = document.getElementById('snCallSign');
+const lang = document.getElementById('snLanguage');
+const terms = document.getElementById('snTerms');
+
+
+function show(){ overlay.classList.add('show'); document.body.classList.add('sn-locked'); prefill(); }
+function hide(){ overlay.classList.remove('show'); document.body.classList.remove('sn-locked'); }
+
+
+function prefill(){
+const u = getUser();
+const v = getVessel();
+if(u){ fName.value = u.fullName||''; email.value=u.email||''; phone.value=u.phone||''; lang.value=u.language||lang.value; }
+if(v){ vName.value = v.vesselName||''; cSign.value=v.callSign||''; if(!u) lang.value = v.language||lang.value; }
+}
+
+
+function currentPlan(){ return (document.querySelector('input[name="snPlan"]:checked')?.value)||'monthly'; }
+
+
+function validate(){
+if(!fName.value.trim()) return alert('Full name is required'), false;
+if(!/.+@.+\..+/.test(email.value.trim())) return alert('Valid email required'), false;
+if(!vName.value.trim()) return alert('Vessel name is required'), false;
+if(!terms.checked) return alert('You must accept the terms.'), false;
+return true;
+}
+
+
+// Gate på load
+if(!isRegistered()){ 
+  show(); 
+} else { 
+  const u = getUser();
+  applyLanguage(u?.language || getVessel()?.language || 'English');
+  updateVesselBadge(); // <-- legg til
+}
+
+// Knappers logikk
+document.getElementById('snCancelReg').addEventListener('click', ()=>{ if(confirm('Cancel registration?')) hide(); });
+
+
+document.getElementById('snSubmitReg').addEventListener('click', ()=>{
+if(!validate()) return;
+
+
+const u = {
+fullName: fName.value.trim(),
+email: email.value.trim(),
+phone: phone.value.trim()||undefined,
+language: lang.value,
+createdAtISO: new Date().toISOString()
+};
+setUser(u);
+
+
+registerVessel({
+vesselName: vName.value.trim(),
+callSign: cSign.value.trim(),
+language: lang.value
+});
+
+
+// Start gratis prøve hvis ikke satt
+if(!getSub()) setSub({ plan: currentPlan(), trialStartISO: new Date().toISOString() });
+else setSub({ ...getSub(), plan: currentPlan(), trialStartISO: getSub().trialStartISO || new Date().toISOString() });
+
+
+applyLanguage(lang.value);
+
+
+// Oppdater badge hvis finnes
+
+  function updateVesselBadge(){
+    const badge = document.getElementById('vesselBadge');
+    if(!badge) return;
+    const v = getVessel();
+    if(!v || !v.vesselName){
+      badge.textContent = 'Vessels name and call sign';
+      return;
+    }
+    const parts = [v.vesselName];
+    if (v.callSign) parts.push(formatCallSign(v.callSign));
+    badge.textContent = parts.join(' • '); // <-- no language here
+  }
+
+  // Initialize on load and when SN_vessel changes (other tabs/windows)
+  document.addEventListener('DOMContentLoaded', updateVesselBadge);
+  window.addEventListener('storage', (e)=>{ if(e.key==='SN_vessel') updateVesselBadge(); });
+
+
+
+
+
+hide();
+alert('Registration saved. Your free trial has started.');
+});
+})();
+
 
 
 
 </script>
-
-
-
-
-</body>
 </html>

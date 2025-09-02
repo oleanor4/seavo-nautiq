@@ -1,692 +1,400 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Parts and tools – Seavo Nautiq</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <link rel="stylesheet" href="responsive.css">
+  <script defer src="responsive.js"></script>
+
   <style>
-    body {
-      background-color: #12315c;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      color: rgb(255, 255, 255);
-    }
+/* ====== TEMA / BASE (samme som Office) ====== */
+:root{
+  --bg:#0f2a4a;
+  --panel:rgba(0,0,0,.18);
+  --panel-2:rgba(255,255,255,.08);
+  --text:#ffffff;
+  --muted:#bcd3f1;
+  --accent:#62b2e7;
+  --accent-2:#1b75d1;
+  --accent-3:#0e3e86;
+  --danger:#f03747;
+  --warn:#ecc543;
+  --ok:#28e755;
 
-    
-  .video-header {
-  position: relative;
-  aspect-ratio: 1280 / 99; /* behold riktig proporsjon */
-  overflow: hidden;
-  background-color: #000; /* fallback bakgrunn */
+  --panel-w: 180px;
+  --panel-h: 32vh;
+  --handle-w: 28px;
 }
 
-
-.video-header video {
-  width: 100%;
-  height: 200%;
-  object-fit: cover;
-  display: block;
+*{box-sizing:border-box}
+body{
+  background-color:var(--bg);
+  font-family:Arial,sans-serif;
+  margin:0;
+  color:var(--text);
 }
 
-.gradient-overgang {
-  height: 10px;
-  background: linear-gradient(to left, #62b2e7, #001125);
-  box-shadow: 6px 4px 6px rgba(0, 0, 0, 0.7);
+/* Header-video */
+.video-header{ position:relative; aspect-ratio:1280/99; overflow:hidden; background:#000; }
+.video-header video{ width:100%; height:200%; object-fit:cover; display:block; }
+.gradient-overgang{ height:10px; background:linear-gradient(to left,#62b2e7,#001125); box-shadow:6px 4px 6px rgba(0,0,0,.7); }
+
+/* ====== TOPP / LOGO / SØK ====== */
+.logo{
+  width:200px; height:auto; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,.45);
+  cursor:pointer; margin-left:60px; transition:transform .2s ease, box-shadow .2s ease; background:rgba(255,255,255,.04);
+}
+.logo:hover{ transform:scale(1.05); box-shadow:0 8px 28px rgba(0,0,0,.6); }
+
+#searchBox{
+  width:260px; padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.25);
+  background:rgba(0,0,0,.25); color:var(--text); margin-left:60px; margin-top:24px; margin-bottom:18px;
+  font-weight:600; box-shadow:0 6px 16px rgba(0,0,0,.35); outline:none;
+}
+#searchBox::placeholder{ color:var(--muted); }
+#searchBox:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(98,178,231,.25); }
+
+/* Bakgrunnsbilde */
+.parts-and-tools{
+  width:100%; height:130%; position:absolute; top:0; left:0; z-index:-1; opacity:.08; pointer-events:none;
+  filter:saturate(.9) contrast(1.05);
 }
 
-    .category-slider-parts {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(to right, #041425, #3b7fbe);
-      padding: 18px;
-      overflow-x: auto;
-      margin-bottom: 10px;
-      margin-top: 30px;
-      width: 90%;
-      margin-left: 80px;
-      border-radius: 18px;
-    }
-
-    .category-item {
-      display: flex;
-      align-items: center;
-      margin: 0 6px;
-    }
-
-    .category-button, .add-category {
-      padding: 8px 30px;
-      background: linear-gradient(to right, #00b7ff, #326fa8);
-      color: rgb(255, 255, 255);
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 16px;  
-    }
-
-    .category-button.active {
-      background: #9ccdfa;
-      font-weight: bold;
-    }
-    
-    .category-button:hover, .add-category:hover {
-      background: #56bafd;
-      color: white;
-    }
-
-    .delete-category {
-      color: rgb(255, 0, 0);
-      font-size:20px;
-      margin-left: 20px;
-      margin-right: 40px;
-      cursor: pointer;
-    }
-
-    .delete-category:hover {
-     background-color: rgba(0, 0, 0, 0.3); 
-      border-radius: 50px; 
-      padding:0px 4px;
-    }
-
-    .arrow {
-      font-size: 20px;
-      font-weight: bold;
-      padding: 5px 10px;
-      background: transparent;
-      color: rgb(255, 255, 255);
-      border-radius: 6px;
-      cursor: pointer;
-      width: 60px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-    }
-
-    .arrow:hover {
-      background: #36a7f1;
-      color: white;
-    }
-
-    #content {
-      padding: 60px;
-    }
-
-    .logo {
-     width: 200px;
-     height: auto;
-     border-radius: 6px;
-     box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-     cursor: pointer;
-     float: left;
-     margin-left: 60px;
-     margin-top: -40px;
-   }
-
-.logo:hover {
-  transform: scale(1.08);
-  transition: transform 0.2s ease;
-  box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+/* ====== KATEGORI-SLIDER ====== */
+.category-slider-office{
+  display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.25); backdrop-filter:blur(4px);
+  padding:14px; overflow-x:auto; margin-bottom:-10px; width:90%; margin-left:60px; border-radius:14px;
+  border:1px solid rgba(255,255,255,.12); box-shadow:0 10px 26px rgba(0,0,0,.35);
 }
-
-
-    #searchBox {
-      width: 200px;
-      padding: 10px;
-      border-radius: 6px;
-      border:  1px solid #000000;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-      margin-left: 60px;
-      margin-top: 60px;
-      margin-bottom:  10px;
-      font-weight: bold;
-    }
-
-    .highlight {
-  background-color: rgb(240, 138, 42);
-  font-weight: bold;
+.category-item{ display:flex; align-items:center; margin:0 6px; }
+.category-button,.add-category{
+  padding:10px 16px; background:linear-gradient(to right,var(--accent-2),var(--accent-3));
+  color:#fff; border-radius:10px; cursor:pointer; font-size:15px; border:1px solid rgba(255,255,255,.12); box-shadow:0 4px 12px rgba(0,0,0,.35);
 }
-
-.highlight-input {
-  background-color: yellow;
-  font-weight: bold;
-}
-
-    .parts-and-tools {
-       width: 100%;
-     height: 140%;
-     position: absolute;
-     top: 0;
-     left: 0;
-     z-index: -1;
-     opacity: 0.1;
-     pointer-events: none;
-    }
-
-
-    table { 
-      width: 100%;
-      border-collapse: collapse;
-      background-color: rgb(31, 59, 102);
-      color: rgb(0, 0, 0);
-      margin-bottom: 20px;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
-    }
-
-
-    .large-bold-input {
-      font-weight: bold;
-      font-size: 14px;
-    }
-
-    .cell-min {
-      width: 80px;
-    }
-
-    .cell-order {
-      width: 100px;
-    }
-
-    .cell-move {
-      width: 110px;
-      button {
-        width: 40px;
-        height: 35px;
-        background: linear-gradient(to right, #00b7ff, #326fa8);
-        color: rgb(255, 255, 255);
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 18px;
-      }
-      button:hover {
-        background: #87cfff;
-        color: white;
-      }
-    }
-
-
-    th, td {
-      border: 1px solid #112036;
-      padding: 5px;
-      text-align: center;
-      font-size: 18px;
-    }
-
-    th {
-      background-color:  #14a8ec;
-      color: rgb(0, 0, 0);
-      border-radius: 5px;
-    }
-
-    td.min-col input {
-      width: 60px;
-    }
-
-    .red-warning {
-      background: linear-gradient(to right, #ffffff, #fcac01);
-    }
-
-    .add-line {
-      padding: 8px 16px;
-      margin: 5px 10px 20px 0;
-      font-size: 15px;
-      font-weight: bold;
-      border-radius: 10px;
-      background: linear-gradient(to right, #00b7ff, #326fa8);
-      cursor: pointer;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-    }
-    .add-line:hover {
-      background: #6eaed8;
-      color: white;
-    }
-
-    .color-btn.limegreen { background-color: #36d131; }   
-    .color-btn.gold { background-color: #ffd036; }  
-    .color-btn.mediumturquoise { background-color: #40e0d0; }
-    .color-btn.white { background-color: #ffffff; }
-
-    .color-btn {
-      width: 18px;      
-      height: 10px;
-      border-radius: 30%;
-      cursor: pointer;
-    }
-
-    .color-btn:hover {
-      outline: 1px solid #fff;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
-    }
-
-
-    .color-buttons {
-      display: inline-flex;
-      flex-direction: column;
-      gap: 1px;
-      margin-left: 2px;
-      vertical-align: middle;
-      transform: translateY( 0px); 
-    }
-
-
-    .header-row td {
-      background: linear-gradient(to left, #12315c, #79acee);
-      font-weight: bold;;
-      text-align: left;
-      border-radius: 5px;
-      border-color: black;
-    }
-
-    .header-row td span {
-      display: inline-block;
-      width: 60%;
-    }
-
-    .delete-button {
-      color: rgb(0, 0, 0);
-      cursor: pointer;
-      font-size: 20px;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
-    }
-
-    .delete-button:hover {
-      background-color: rgba(0, 0, 0, 0.3); 
-      border-radius: 50px; 
-      padding:0px 4px;
-    }
-
-    td:last-child {
-      width: 50px; 
-      background: linear-gradient(to right, #4e9bce, #1b3863);
-    }
-
-
-      button img {
-      width: 40px;
-      height: 40px;
-      padding-left: 55px;
-      margin-top: 20px;
-    }
-
-
-    .global-button {
-      background: linear-gradient(to right, #00b7ff, #326fa8);
-      color: rgb(255, 255, 255);
-      padding: 20px 15px;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-      margin: 10px 60px;
-      border-radius: 16px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-    }
-
-    .global-button:hover {
-      background: #1077bb;
-      color: white;
-    }
-
-    
-  td input[type="file"] {
-  width: 80%;
-  padding: 2px;
-}
-
-.image-upload-container {
-  display: flex;
-  align-items: center;
-  gap: 20px; 
-  justify-content: center; 
-}
-
-.image-upload-container img {
-  max-width: 50px;
-  max-height: 50px;
+.category-button.active{ background:linear-gradient(to right,#438ed3,#1853a8); font-weight:700; }
+.category-button:hover,.add-category:hover{ filter:brightness(1.30); }
+.delete-category-button {
+  background: linear-gradient(to right, #f13e4e, #a31621);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 6px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.4);
-  inline-size: 20%;
-}
-
-
-
-.upload-btn {
-  background: linear-gradient(to right, #00b7ff, #326fa8);
-  color: white;
-  border-radius: 6px;
-  padding: 4px 6px;
-  font-size: 14px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
   cursor: pointer;
-  font-weight: bold;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
-  
-  position: block;
+  margin: 1px 1px;
+}
+.delete-category-button:hover { filter: brightness(1.40); box-shadow: 0 8px 20px rgba(255, 0, 0, 0.45); }
+
+.arrow{
+  font-size:18px; font-weight:700; padding:8px 12px; background:rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.12);
+  color:#fff; border-radius:10px; cursor:pointer; width:56px; box-shadow:0 6px 16px rgba(0,0,0,.35); margin-left:16px;
+}
+.arrow:hover{ background:rgba(0,0,0,.35); }
+
+.undo-category{
+  margin-left:22px; padding:6px 14px; border-radius:10px; border:1px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.08); color:#fff; cursor:pointer;
+}
+.undo-category:disabled{ opacity:.5; cursor:not-allowed; }
+.undo-category:hover:not(:disabled){ background:rgba(255,255,255,.12); box-shadow:0 6px 16px rgba(0,0,0,.35); }
+
+/* ====== KNAPPER GLOBALT ====== */
+.global-button,#sidePanel button:not(#togglePanelBtn),#calc-buttons button{
+  background:linear-gradient(to right,var(--accent-2),var(--accent-3));
+  color:#fff; border:1px solid rgba(255,255,255,.12); border-radius:12px; box-shadow:0 6px 16px rgba(0,0,0,.35);
+}
+.global-button{ padding:10px 18px; font-size:15px; font-weight:700; cursor:pointer; margin:10px 60px; }
+.global-button:hover{ filter:brightness(1.30); }
+
+
+.global-overview-table {
+  width: 98%;
+  border-collapse: collapse;
+  font-size: 28px;
+  line-height: 1.5; 
+  font-weight: bolder;
 }
 
-.upload-btn:hover {
-  background: #56bafd;
+.global-overview-table th,
+.global-overview-table td {
+  border: 1px solid #ccc;
+  padding: 14px 10px;
 }
 
+.global-overview-table th {
+  background: #1466e0;
+  font-size: 20px;
 
-    .cell-product {
-      width: 380px;
-    }
-
-    .cell-comment {
-     width: 350px;
-   }
-
-
-
-   .cell-small {
-   width:130px;
-   }
-
-  #image-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
 }
 
-#modal-overlay {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.7);
-  cursor: pointer;
+/* ====== TABELL ====== */
+table{
+  width:93%; margin-left: 60px; margin-top: 60px; border-collapse:collapse; background:rgba(0,0,0,.20); color:var(--text);
+  margin-bottom:20px; border:1px solid rgba(255,255,255,.12); border-radius:14px; overflow:hidden; box-shadow:0 12px 28px rgba(0,0,0,.35);
+}
+th,td{ border-bottom:1px solid rgba(255,255,255,.12); padding:0px; text-align:center; font-size:16px; }
+th{ background:rgba(0,0,0,.28); color:var(--text); }
+
+.header-row td{
+  background:linear-gradient(to right, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  font-weight:700; text-align:left; border-color:rgba(255,255,255,.12); border-radius:0;
+}
+.header-row td span{ display:inline-block; width:52%; margin-left:10px; color:var(--text); vertical-align:middle; }
+
+/* Mini-kolonneheader */
+.section-columns td{
+  background:rgba(0,0,0,.24); color:#fff; font-weight:700; border-bottom:1px solid rgba(255,255,255,.12); padding:6px 10px;
+}
+.section-columns td.muted{ color:#bcd3f1; font-weight:600; }
+
+/* Header farge-chip */
+.header-color-chip{
+  height:8px; width:14px; border-radius:4px; border:1px solid rgba(0,0,0,.35); box-shadow:0 0 4px rgba(0,0,0,.25);
+  cursor:pointer; margin-left:4px; background:rgba(255,255,255,.15); display:inline-block; opacity:.9;
 }
 
-#modal-image {
-  max-width: 90%;
-  max-height: 90%;
-  z-index: 1001;
-  border-radius: 8px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.8);
+/* Celler / inputs */
+.large-bold-input{ font-weight:700; font-size:14px; color:var(--text); background:rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); }
+.large-bold-input::placeholder{ color:var(--muted); }
+.large-bold-input:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(98,178,231,.18); }
+
+.cell-min,.cell-max{ width:100px; min-width:100px; max-width:100px; }
+.cell-order{ width:120px; }
+.cell-move{ width:80px; }
+.cell-product{ width:350px; }
+.cell-comment{ width:350px; }
+td.min-col input{ width:60px; }
+td.cell-small input{ max-width:120px; min-width:100px; padding:10px; font-size:16px; }
+
+/* Flytteknapper */
+.cell-move button{
+  width:42px; height:35px; background:linear-gradient(to right,var(--accent-2),var(--accent-3));
+  color:#fff; border-radius:10px; cursor:pointer; font-size:16px; border:1px solid rgba(255,255,255,.12);
 }
+.cell-move button:hover{ filter:brightness(1.15); }
 
-  
-#sidePanel {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 180px;
-  height: 32%;
-  background: linear-gradient(to left, #072446, #306cc7);
-  color: rgb(0, 0, 0);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px 10px;
-  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
-  transition: right 0.5s ease;
-  z-index: 999;
-  border-radius: 16px;
-  border: 2px solid #3994e9;
+td:last-child{ width:60px; background:linear-gradient(to right, rgba(78,155,206,.25), rgba(27,56,99,.25)); }
+
+.btn-danger{
+  background:linear-gradient(to right,#f13e4e,#a31621); color:#fff; font-weight:bold; padding:6px 12px; border-radius:6px; cursor:pointer; border:none;
 }
+.btn-danger:hover{ background:linear-gradient(to right,#ff5a6b,#c3222d); font-style:italic; box-shadow:0 0 20px #ff0000; }
 
-#sidePanel.hidden {
-  right: -160px;
-}
+/* Alarmfarger */
+.min-alarm{ background:linear-gradient(to right, rgba(255,255,255,.2), rgba(247, 230, 0, 0.35)) !important; }
+.max-alarm{ background:linear-gradient(to right, rgba(255,255,255,.2), rgba(95, 255, 2, 0.28)) !important; }
 
-#sidePanel button {
-  margin: 4px 0;
-  padding: 12px 20px;
-  width: 100%;
-  background: linear-gradient(to right, #123981, #1994db);
-  color: rgb(0, 0, 0);
-  font-weight: bold;
+/* Transparent input via CSS-variabel --col-rgb */
+.product-input{ background-color:rgba(var(--col-rgb,0,0,0), .30); transition:background-color .15s ease; }
+.product-input:focus{ background-color:rgba(var(--col-rgb,0,0,0), .22); }
 
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
-}
-
-#sidePanel button:hover {
-  background: #56bafd;
-}
-
-#signOutBtn {
-  margin-top: 40px;
-}
-
-#bottomButtons {
-  margin-top: auto;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-#togglePanelBtn {
-  position: fixed;
-  top: 10%;
-  right: 150px;
-  transform: translateY(-50%);
-  background: #16a5f8;
-  color: rgb(255, 255, 255);
-  border-radius: 0 10px 10px 0;
-  padding: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 35px;
-  z-index: 1000;
-  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.3);
-}
-
-#togglePanelBtn:hover {
-  background: #064b79;
-}
-
-
-@media (max-width: 768px) {
-  table, thead, tbody, th, td, tr {
-    display: block;
-  }
-}
-
-/* ========================= */
-/* D/W/V (Fuel/Lube/Ballast) */
-/* ========================= */
-
-#dvwSection {
-  margin: 20px 60px 60px 60px;
-}
-
-#dvwSection h2 {
-  margin: 10px 0 14px 0;
-  font-size: 22px;
-  font-weight: bold;
-  color: #e8f2ff;
-  text-shadow: 0 1px 3px rgba(0,0,0,.35);
-}
-
-.dvw-table {
-  background-color: rgb(31, 59, 102);
-}
-
-.dvw-table th {
-  background-color: #14a8ec;
-  color: #000;
-}
-
-.dvw-table input[type="text"],
-.dvw-table input[type="number"]{
-  width: 95%;
-  padding: 6px;
-  border-radius: 6px;
-  border: 1px solid #112036;
-  font-weight: bold;
-}
-
-
-/* Level gauge */
-.level-wrap{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  align-items:center;
-}
-
-.level-input-row{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  width:100%;
-  justify-content:center;
-}
-
-.level-input-row input{
-  width: 60%;
-}
-
-.level-bar{
-  width:95%;
-  height:16px;
-  border-radius:10px;
-  background: rgba(255,255,255,.15);
-  border:1px solid rgba(0,0,0,.35);
-  overflow:hidden;
+/* Produkt fargepicker */
+.product-color-wrap{
   position:relative;
-  box-shadow: inset 0 0 6px rgba(0,0,0,.45);
+  display:grid !important; grid-template-columns:1fr auto;
+  align-items:center; column-gap:6px; width:100%;
+}
+.product-color-wrap input{ width:100% !important; min-width:0; }
+
+.color-chip{
+  width:16px; height:16px; border-radius:4px; border:1px solid rgba(0,0,0,.35); cursor:pointer;
+  box-shadow:0 0 4px rgba(0,0,0,.25);
+  background:var(--chip-color, rgba(255,255,255,.15));
 }
 
-.level-fill{
-  height:100%;
-  width:0%;
-  background: linear-gradient(90deg, #f03747, #ffd036, #36d131);
-  transition: width .25s ease;
+/* === POPUP OVER ALT === */
+.color-popover{
+  position:fixed; display:grid; grid-template-columns:repeat(4, 18px); gap:6px;
+  background:rgba(3,14,24,.95); padding:10px; border-radius:10px;
+  border:1px solid rgba(255,255,255,.12); box-shadow:0 10px 26px rgba(0,0,0,.55);
+  z-index:2147483647; visibility:hidden;
+}
+.color-popover.hidden{ display:none; }
+.color-option{ width:18px; height:18px; border-radius:4px; cursor:pointer; border:1px solid rgba(0,0,0,.35); box-shadow:0 0 3px rgba(0,0,0,.25); }
+.color-option.clear{
+  background:linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 50%, #ccc 50%, #ccc 75%, transparent 75%, transparent);
+  background-size:8px 8px;
+}
+.color-option:hover,.color-chip:hover{ outline:1px solid #ffffff; }
+
+
+
+/* ====== SIDE PANEL ====== */
+#sidePanel{
+  position:fixed; overflow:visible; top:180px; right:0; width:var(--panel-w); height:var(--panel-h);
+  background:rgba(0,0,0,.35); backdrop-filter:blur(4px); color:var(--text); display:flex; flex-direction:column; align-items:center;
+  padding:16px 10px; box-shadow:-8px 0 22px rgba(0,0,0,.45); transition:right .5s ease; z-index:999; border-radius:16px 0 0 16px; border:1px solid rgba(255,255,255,.12);
+}
+#sidePanel.hidden{ right:calc(-1 * (var(--panel-w) - var(--handle-w))); }
+#togglePanelBtn{
+  position:absolute; left:0; top:50%; transform:translate(-100%, -50%); width:var(--handle-w); height:clamp(96px,50%,180px);
+  display:flex; align-items:center; justify-content:center; padding:0; background:linear-gradient(to bottom, var(--accent-2), var(--accent-3));
+  color:#fff; font-weight:bold; font-size:22px; border-radius:12px 0 0 12px; cursor:pointer; box-shadow:-8px 0 12px rgba(0,0,0,.35);
+  user-select:none; z-index:1000; border:1px solid rgba(255,255,255,.12);
+}
+#togglePanelBtn:hover{ filter:brightness(1.20); box-shadow: 0 0 15px 3px rgba(255, 255, 255, 0.4); }
+
+#bottomButtons{ margin-top:auto; width:100%; display:flex; flex-direction:column; gap:6px; }
+#sidePanel button:not(#togglePanelBtn){
+  margin:4px 0; padding:12px 14px; width:100%; background:linear-gradient(to right,#123981,#1994db);
+  color:#fff; font-weight:700; border-radius:10px; cursor:pointer; font-size:14px; box-shadow:0 6px 14px rgba(0,0,0,.35);
+}
+#sidePanel button:not(#togglePanelBtn):hover{ filter:brightness(1.20); }
+
+/* Markering */
+.highlight{ background:rgba(240,138,42,.8); font-weight:700; color:#09111f; border-radius:4px; padding:0 2px; }
+.highlight-input{ background:rgba(255,222,89,.85); color:#09111f; font-weight:700; }
+
+/* ====== MODALER (kalkulator/notat) ====== */
+.modal{ position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; z-index:1500; }
+.modal-innhold{
+  position:absolute; left:300px; top:200px; transform:translate(0,0); background:rgba(8,22,38,.9); padding:16px; width:280px;
+  border-radius:16px; box-shadow:0 14px 30px rgba(0,0,0,.6); text-align:center; z-index:1501; border:1px solid rgba(255,255,255,.12);
+}
+.calculator-header{ background:linear-gradient(to right,#104f68,#326fa8); color:white; padding:6px 10px; cursor:move; border-radius:12px 12px 0 0; display:flex; justify-content:space-between; align-items:center; }
+.lukk{ font-weight:700; font-size:22px; cursor:pointer; }
+#calc-buttons button{ width:46px; height:40px; font-size:18px; margin:3px; }
+#calc-buttons button:hover{ filter:brightness(1.25); }
+
+
+.send-orders-button {
+  background: linear-gradient(to right, #5092e7, #3a0580);
+  color: rgb(255, 255, 255);
+  padding: 8px 6px;
+  margin: 5px;
+  border-radius: 24px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 12px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
 }
 
-.level-label{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform: translate(-50%, -50%);
-  font-size:12px;
-  color:#fff;
-  text-shadow: 0 1px 2px rgba(0,0,0,.8);
-  pointer-events:none;
+.send-orders-button:hover {
+  background: linear-gradient(to right, #57d0ee, #072846);
 }
 
-/* Delete btn (row) */
-.dvw-del-btn{
-  cursor:pointer;
-  font-size:20px;
-  text-shadow: 0 1px 3px rgba(0,0,0,.9);
+/* PRINT */
+@media print{
+  body{ background:#fff; color:#000; }
+  .video-header,.gradient-overgang,.global-button,#sidePanel,.category-slider-office,.logo,#searchBox{ display:none !important; }
+  table{ background:#fff; color:#000; box-shadow:none; border:1px solid #ccc; }
+  th{ background:#f2f2f2; color:#000; }
 }
 
-.dvw-del-btn:hover{
-  background-color: rgba(0,0,0,.3);
-  border-radius:50px;
-  padding:0 4px;
+/* ===== D/W/V – mørkere stil ===== */
+#dvwSection{ margin: 20px 60px 60px 60px; }
+#dvwSection h2{
+  margin:10px 0 14px 0; margin-top: 60px; font-size:22px; font-weight:bold; color:#17cffd; text-shadow:0 1px 3px rgba(0,0,0,.35);
 }
-
-/* Make table horizontally scrollable on small screens */
-#dvwTableWrap{
-  overflow-x:auto;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0,0,0,.6);
+#dvwTableWrap{ overflow-x:auto; border-radius: 12px; box-shadow: 0 12px 28px rgba(0,0,0,.45); border:1px solid rgba(255,255,255,.12); }
+.dvw-table{
+  width:94%; border-collapse:collapse; background:rgba(0,0,0,.24); color:var(--text);
 }
-
+.dvw-table th{ background:rgba(0,0,0,.36); color:#fff; padding:10px; }
+.dvw-table td{ border-bottom:1px solid rgba(255,255,255,.12); padding:8px; }
+.dvw-table input[type="text"], .dvw-table input[type="number"]{
+  width:100%; padding:8px; border-radius:10px; border:1px solid rgba(255,255,255,.18);
+  background:rgba(0,0,0,.25); color:#fff; font-weight:700;
+}
+.level-bar{ width:95%; height:16px; border-radius:10px; background: rgba(255,255,255,.12); border:1px solid rgba(0,0,0,.35); overflow:hidden; position:relative; box-shadow: inset 0 0 6px rgba(0,0,0,.45); }
+.level-fill{ height:100%; width:0%; background: linear-gradient(90deg, #f03747, #ffd036, #36d131); transition: width .25s ease; }
+.level-label{ position:absolute; top:50%; left:50%; transform: translate(-50%, -50%); font-size:12px; color:#fff; text-shadow: 0 1px 2px rgba(0,0,0,.8); pointer-events:none; }
+.dvw-del-btn{ cursor:pointer; font-size:20px; text-shadow: 0 1px 3px rgba(0,0,0,.9); }
+.dvw-del-btn:hover{ background-color: rgba(0,0,0,.3); border-radius:50px; padding:0 4px; }
   </style>
 </head>
 
 <header class="video-header">
   <video autoplay muted loop playsinline>
     <source src="Video/Ocean-Seavo-Nautiq.mp4" type="video/mp4">
-    
-
- </video>
-
-  
+  </video>
 </header>
-
-    <div class="gradient-overgang"></div>
+<div class="gradient-overgang"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.19.3/xlsx.full.min.js"></script>
 
 <body>
+<header>
+  <h1 style="text-align:center; color: rgb(30, 182, 209); margin-top:20px; font-size:36px; font-weight:bold; text-shadow:0 1px 3px rgba(0,0,0,.6);">Parts and tools</h1>
+  <a href="index.html" class="logo-link"><img src="images/Logo Seavo Nautiq.png" alt="Logo Seavo Nautiq" class="logo"></a>
 
   <div id="sidePanel" class="hidden">
-  <button>Information</button>
-  <button>Documents</button>
-  <button>Shared Content</button>
-  <button>Settings</button>
-  <button id="signOutBtn">Sign Out</button>
+    <button onclick="åpnePopup4()">Help</button>
+    <button onclick="åpnePopup2()">Documents</button>
+    <button>Shared Content</button>
+    <button onclick="åpnePopup7()">Settings</button>
+    <button id="signOutBtn">Sign Out</button>
 
-  <div id="bottomButtons">
-    <button>🧮 Calculator</button>
-    <button>📝 Notepad</button>
+    <div id="bottomButtons">
+      <button id="openCalculatorBtn">🧮 Calculator</button>
+      <button id="openNotepadBtn">📝 Notepad</button>
+    </div>
+
+    <button id="togglePanelBtn" onclick="toggleSidePanel()">⫷</button>
   </div>
-</div>
-
-<button id="togglePanelBtn" onclick="toggleSidePanel()">⫷</button>
-
-
-  <div id="image-modal" style="display:none;">
-  <div id="modal-overlay"></div>
-  <img id="modal-image" src="">
-</div>
-
-<header>
-  <h1 style="text-align: center; color:
-   rgb(218, 215, 215);
-    margin-top: 20px;
-    font-size: 36px;
-    font-weight: bold;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);" >
-    Parts and tools</h1>
-      
-     
-     <div>
-     <a href="index.html" class="logo-link">
-  <img src="images/Logo Seavo Nautiq.png" alt="Logo Seavo Nautiq" class="logo"> 
-</a> 
-</div>
-
-
-<div>
 </header>
-  <input type="text" id="searchBox" placeholder="Search inventory..." oninput="searchInPage()">
-</div>
 
+<input type="text" id="searchBox" placeholder="Search inventory..." oninput="searchInPage()">
 
-
-<div class="category-slider-parts">
+<div class="category-slider-office">
   <button class="arrow" onclick="scrollSlider(-100)">←</button>
-  <div id="category-container" style="display: flex; overflow-x: auto; max-width: 50%; scroll-behavior: smooth;">
-    <div id="categories" style="display: flex; gap: 8px;"></div>
+  <div id="category-container" style="display:flex; overflow-x:auto; max-width:50%; scroll-behavior:smooth;">
+    <div id="categories" style="display:flex; gap:8px;"></div>
   </div>
   <button class="arrow" onclick="scrollSlider(100)">→</button>
   <button class="add-category" onclick="addCategory()">+ Category</button>
+  <button id="undo-delete" class="undo-category" onclick="undoCategoryDelete()" disabled>↶ Undo Del</button>
 </div>
 
-<img src="images/Parts and tools.PNG" alt="parts and tools" class="parts-and-tools">
-
-
-
-
-
+<div><img src="images/Parts and tools.PNG" alt="parts-and-tools" class="parts-and-tools"></div>
 
 <div id="content"></div>
 
+<button id="globalToggleButton" class="global-button" onclick="toggleGlobalView()">📋 Global Overview</button>Global overview shows total inventory in a table.
+<div><button class="global-button" onclick="generatePDF()">📄 Generate PDF</button></div>
+<button class="global-button" type="button" onclick="generateExcel()">📊 Export to Excel</button>
+<div><button class="global-button" onclick="save()">💾 Save</button></div>
 
-<button id="globalToggleButton" class="global-button" onclick="toggleGlobalView()">📋 Global Overview</button>
-
-<div>
-
-
-</button>
-<button class="global-button" onclick="generatePDF()">📄 Generate PDF</button>
-
+<!-- ====== MODALS ====== -->
+<div id="calculatorModal" class="modal" style="display:none;">
+  <div class="modal-innhold" id="calculatorWindow">
+    <div class="calculator-header" id="calcDragHandle">
+      <h2 style="margin: 0; font-size: 15px;">Calculator</h2>
+      <span class="lukk" onclick="closeCalculator()">×</span>
+    </div>
+    <input id="calc-display" type="text" readonly style="width: 90%; padding: 10px; font-size: 25px; text-align: right; margin-top: 10px;"><br><br>
+    <div id="calc-buttons">
+      <button onclick="appendCalc('7')">7</button><button onclick="appendCalc('8')">8</button><button onclick="appendCalc('9')">9</button><button onclick="appendCalc('/')">÷</button><br>
+      <button onclick="appendCalc('4')">4</button><button onclick="appendCalc('5')">5</button><button onclick="appendCalc('6')">6</button><button onclick="appendCalc('*')">×</button><br>
+      <button onclick="appendCalc('1')">1</button><button onclick="appendCalc('2')">2</button><button onclick="appendCalc('3')">3</button><button onclick="appendCalc('-')">−</button><br>
+      <button onclick="appendCalc('0')">0</button><button onclick="appendCalc('.')">.</button><button onclick="appendCalc('+')">+</button><br>
+      <button onclick="appendCalc('%')">%</button><button onclick="calculateResult()" style="width: 70%;">=</button><br>
+      <button onclick="deleteLast()" style="width: 30%;">DEL</button><button onclick="clearCalc()" style="width: 60%">C</button>
+    </div>
+  </div>
 </div>
 
-<!-- ========================================== -->
-<!-- D/W/V (Fuel, Lube, Ballast) – EXTRA LINES -->
-<!-- ========================================== -->
+<div id="notepadModal" class="modal" style="display:none;">
+  <div class="modal-innhold" id="notepadWindow">
+    <div class="calculator-header" id="noteDragHandle">
+      <h2 style="margin:0; font-size:15px;">Notepad</h2>
+      <span class="lukk" onclick="closeNotepad()">×</span>
+    </div>
+    <textarea id="noteArea" style="width:100%; height:260px; margin-top:10px; border-radius:10px;"></textarea>
+    <div style="margin-top:10px; display:flex; gap:8px; justify-content:center;">
+      <button onclick="saveNote()" style="padding:8px 12px;">Save</button>
+      <button onclick="clearNote()" style="padding:8px 12px;">Clear</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== D/W/V (Fuel, Lube, Ballast) ====== -->
 <section id="dvwSection">
   <h2>Fuel / Lube / Ballast — SG • Weight • Volume</h2>
   <div id="dvwTableWrap">
@@ -706,850 +414,925 @@
       <tbody id="dvwTbody"></tbody>
     </table>
   </div>
-  <button class="add-line" id="dvwAddBtn">+ Add line for D/W/V</button>
-  <button class="add-line" id="dvwPdfBtn">📄 Export D/W/V PDF</button>
-  <button class="add-line" id="dvwRecalcBtn">↻ Update calculations</button> <!-- NY -->
+  <button class="global-button" id="dvwAddBtn">+ Add line for D/W/V</button>
+  <button class="global-button" id="dvwPdfBtn">📄 Export D/W/V PDF</button>
+  <button class="global-button" id="dvwRecalcBtn">↻ Update calculations</button>
 </section>
 
-
-
 <script>
-function searchInPage() {
-  const term = document.getElementById("searchBox").value.trim().toLowerCase();
-  removeHighlights();
-  if (term === "") return;
-
-  let firstMatch = null;
-
-  document.querySelectorAll("td span").forEach(span => {
-    const content = span.textContent.toLowerCase();
-    if (content.includes(term)) {
-      const index = content.indexOf(term);
-      const original = span.textContent;
-      const before = original.slice(0, index);
-      const match = original.slice(index, index + term.length);
-      const after = original.slice(index + term.length);
-      span.innerHTML = `${before}<span class="highlight">${match}</span>${after}`;
-      if (!firstMatch) firstMatch = span;
-    }
+/* === Robust SheetJS-loader (fallback hvis du vil utvide senere) === */
+function loadScript(src){
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = src;
+    s.async = true;
+    s.referrerPolicy = 'no-referrer';
+    s.onload = resolve;
+    s.onerror = () => reject(new Error('Feil ved lasting: ' + src));
+    document.head.appendChild(s);
   });
-
-  document.querySelectorAll("input").forEach(input => {
-    if (input.value.toLowerCase().includes(term)) {
-      input.classList.add("highlight-input");
-      if (!firstMatch) firstMatch = input;
-    }
-  });
-
-  if (firstMatch) {
-    setTimeout(() => {
-      firstMatch.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 100);
+}
+async function ensureXLSX(){
+  if (window.XLSX?.utils) return;
+  const candidates = [
+    "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.19.3/xlsx.full.min.js",
+    "https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js",
+    "https://unpkg.com/xlsx@0.19.3/dist/xlsx.full.min.js",
+    "/libs/xlsx.full.min.js"
+  ];
+  let lastError;
+  for (const url of candidates) {
+    try { await loadScript(url); if (window.XLSX?.utils) return; } catch (e) { lastError = e; }
   }
+  throw lastError || new Error("Kunne ikke laste SheetJS");
 }
 
-function removeHighlights() {
-  document.querySelectorAll("span .highlight").forEach(el => {
-    const parent = el.parentNode;
-    parent.replaceChild(document.createTextNode(el.textContent), el);
-    parent.normalize();
-  });
-
-  document.querySelectorAll(".highlight-input").forEach(input => {
-    input.classList.remove("highlight-input");
-  });
+/* ===== CSV fallback ===== */
+function downloadCSV(aoa, filename) {
+  const csvRows = aoa.map(row => row.map(cell => {
+    let v = cell == null ? "" : String(cell);
+    if (v.includes('"')) v = v.replace(/"/g, '""');
+    if (/[;\n"]/.test(v)) v = `"${v}"`;
+    return v;
+  }).join(';'));
+  const csv = '\ufeff' + csvRows.join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = filename.replace(/\.xlsx$/i, '') + '.csv';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
-</script>
 
+/* ===== PDF (svart skrift) ===== */
+async function generatePDF(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('p','mm','a4');
 
+  const today = new Date().toLocaleDateString();
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(22);
+  doc.text("Seavo Parts & Tools", 105, 15, { align: "center" });
+  doc.setFontSize(18);
+  doc.text("Generated: " + today, 105, 22, { align: "center" });
 
+  const content = document.getElementById("content");
 
-<script>
-let data = JSON.parse(localStorage.getItem("lagerDataV3")) || {};
+  const buttons = content.querySelectorAll("button, .btn, .delete-button");
+  buttons.forEach(btn => btn.style.display = "none");
+
+  const allNodes = content.querySelectorAll("*");
+  const originalColors = [];
+  allNodes.forEach((el, i) => { originalColors[i] = el.style.color; el.style.color = "#000000"; });
+
+  const canvas = await html2canvas(content, { backgroundColor:"#ffffff", scale:2 });
+
+  allNodes.forEach((el, i) => el.style.color = originalColors[i] || "");
+
+  const ctx = canvas.getContext("2d");
+  const imgDataArr = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const data = imgDataArr.data;
+  for(let i=0; i<data.length; i+=4){
+    const avg = 0.3*data[i] + 0.59*data[i+1] + 0.11*data[i+2];
+    data[i] = data[i+1] = data[i+2] = avg;
+  }
+  ctx.putImageData(imgDataArr, 0, 0);
+
+  const imgData = canvas.toDataURL("image/png");
+  const imgProps = doc.getImageProperties(imgData);
+  const pdfWidth = doc.internal.pageSize.getWidth() - 20;
+  const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+  doc.addImage(imgData, "PNG", 10, 30, pdfWidth, pdfHeight);
+
+  doc.save("SeavoNautiq_PartsTools.pdf");
+  buttons.forEach(btn => btn.style.display = "");
+}
+
+/* ===== Excel (AOA) ===== */
+async function generateExcel(){
+  const container=document.getElementById("content");
+  const table=container?.querySelector("table") || document.querySelector("table");
+  if(!table){ alert("No table to export."); return; }
+
+  const aoa=[]; const dateStr=new Date().toLocaleDateString('no-NO',{year:'numeric',month:'2-digit',day:'2-digit'});
+  aoa.push(["Seavo Parts & Tools"]); aoa.push(["Generated:", dateStr]); aoa.push([]);
+
+  const rows = Array.from(table.querySelectorAll("tr"));
+  rows.forEach(tr=>{
+    const cells = Array.from(tr.cells).map(td=>{
+      if(td.querySelector("button")) return "";
+      const ctrl = td.querySelector("input, textarea, select");
+      if(ctrl){
+        if(ctrl.tagName === "SELECT"){
+          const sel = ctrl; return sel.options[sel.selectedIndex]?.text ?? "";
+        }
+        if(ctrl.type === "checkbox") return ctrl.checked ? "Yes" : "No";
+        return ctrl.value ?? "";
+      }
+      return td.textContent.trim();
+    });
+    for(let i=cells.length-1;i>=0;i--){ if(cells[i] !== "") break; cells.pop(); }
+    aoa.push(cells);
+  });
+
+  if (typeof XLSX === "undefined" || !XLSX?.utils){
+    downloadCSV(aoa, "SeavoPartsTools.xlsx");
+    return;
+  }
+
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+
+  const colCount = Math.max(...aoa.map(r=>r.length), 1);
+  ws['!merges'] = ws['!merges'] || [];
+  ws['!merges'].push({ s:{r:0,c:0}, e:{r:0,c:colCount-1} });
+
+  const headerRowIndex = 3;
+  if(ws['!ref']){
+    const range = XLSX.utils.decode_range(ws['!ref']);
+    ws['!autofilter'] = { ref: XLSX.utils.encode_range({ s:{ r: headerRowIndex, c: 0 }, e:{ r: range.e.r, c: range.e.c } }) };
+  }
+  ws['!freeze'] = { ySplit: headerRowIndex, xSplit: 0, topLeftCell: XLSX.utils.encode_cell({ r: headerRowIndex, c: 0 }) };
+
+  const colWidths = [];
+  for(let c=0;c<colCount;c++){
+    let maxLen = 10;
+    for(let r=0;r<aoa.length;r++){
+      const val = aoa[r][c];
+      const len = (val == null) ? 0 : String(val).length;
+      if(len > maxLen) maxLen = len;
+    }
+    colWidths.push({ wch: Math.min(40, Math.max(10, maxLen + 2)) });
+  }
+  ws['!cols'] = colWidths;
+
+  XLSX.utils.book_append_sheet(wb, ws, "Seavo Parts & Tools");
+  XLSX.writeFile(wb, "SeavoPartsTools.xlsx");
+}
+
+/* ===== Sidepanel toggle ===== */
+function toggleSidePanel(){
+  const panel = document.getElementById("sidePanel");
+  const btn   = document.getElementById("togglePanelBtn");
+  const nowHidden = panel.classList.toggle("hidden");
+  btn.textContent = nowHidden ? "⫷" : "⫸";
+}
+
+/* ===== Søk/markering ===== */
+function searchInPage(){
+  const term=document.getElementById("searchBox").value.trim().toLowerCase();
+  removeHighlights(); if(term==="") return;
+  let firstMatch=null;
+  document.querySelectorAll("td span").forEach(span=>{
+    const content=span.textContent.toLowerCase();
+    if(content.includes(term)){
+      const index=content.indexOf(term);
+      const original=span.textContent;
+      const before=original.slice(0,index);
+      const match=original.slice(index,index+term.length);
+      const after=original.slice(index+term.length);
+      span.innerHTML=`${before}<span class="highlight">${match}</span>${after}`;
+      if(!firstMatch) firstMatch=span;
+    }
+  });
+  document.querySelectorAll("input").forEach(input=>{
+    if((input.value||"").toLowerCase().includes(term)){
+      input.classList.add("highlight-input");
+      if(!firstMatch) firstMatch=input;
+    }
+  });
+  if(firstMatch){ setTimeout(()=>{ firstMatch.scrollIntoView({behavior:"smooth", block:"center"}); },100); }
+}
+function removeHighlights(){
+  document.querySelectorAll("span .highlight").forEach(el=>{
+    const parent=el.parentNode; parent.replaceChild(document.createTextNode(el.textContent), el); parent.normalize();
+  });
+  document.querySelectorAll(".highlight-input").forEach(input=> input.classList.remove("highlight-input"));
+}
+
+/* ===== Data/setup (egen lagring) ===== */
+let data = JSON.parse(localStorage.getItem("partsToolsDataV1")) || {};
 let activeCategory = Object.keys(data)[0] || "Standard";
+function save(){ localStorage.setItem("partsToolsDataV1", JSON.stringify(data)); }
+function scrollSlider(offset){ document.getElementById("category-container").scrollLeft += offset; }
 
-function save() {
-  localStorage.setItem("lagerDataV3", JSON.stringify(data));
+/* bakoverkomp for max-felt */
+Object.values(data).forEach(rows=>{
+  (rows||[]).forEach(r=>{
+    if(r && r.type!=="header" && typeof r.max==="undefined"){ r.max=0; }
+  });
+});
+save();
+
+/* ===== Kategorier (med angre sletting) ===== */
+let lastDeletedCategory = null; // { name, rows, index }
+function insertCategoryAtIndex(obj, key, val, index){
+  const entries = Object.entries(obj);
+  const safeIndex = Math.max(0, Math.min(index, entries.length));
+  entries.splice(safeIndex, 0, [key, val]);
+  return Object.fromEntries(entries);
 }
-
-function scrollSlider(offset) {
-  document.getElementById("category-container").scrollLeft += offset;
-}
-
-
-
-function updateCategories() {
+function updateCategories(){
   const container = document.getElementById("categories");
   container.innerHTML = "";
 
-  Object.keys(data).forEach(name => {
+  const names = Object.keys(data);
+  names.forEach((name, idx)=>{
     const wrapper = document.createElement("div");
     wrapper.className = "category-item";
-    wrapper.style.display = "flex";
-    wrapper.style.alignItems = "center";
+    wrapper.style.display="flex";
+    wrapper.style.alignItems="center";
 
     const btn = document.createElement("button");
-    btn.className = "category-button";
-    btn.textContent = name;
-    if (name === activeCategory) btn.classList.add("active");
-    btn.onclick = () => {
-      activeCategory = name;
-      showCategory();
-      updateCategories();
-    };
+    btn.className="category-button";
+    btn.textContent=name;
+    if(name===activeCategory) btn.classList.add("active");
+    btn.onclick=()=>{ activeCategory=name; showCategory(); updateCategories(); };
 
-    const del = document.createElement("span");
-    del.className = "delete-category";
-    del.textContent = "🗑️";
-    del.onclick = () => {
-      if (confirm(`Do you want to delete the category "${name}"?`)) {
+    const delBtn = document.createElement("button");
+    delBtn.className = "delete-category-button";
+    delBtn.textContent = "Del";
+    delBtn.onclick = ()=>{
+      if(confirm(`Do you want to delete the category "${name}"?`)){
+        lastDeletedCategory = { name, rows: data[name], index: idx };
         delete data[name];
         activeCategory = Object.keys(data)[0] || null;
         save();
         updateCategories();
         showCategory();
+        const u = document.getElementById("undo-delete");
+        if(u) u.disabled = false;
       }
     };
 
     wrapper.appendChild(btn);
-    wrapper.appendChild(del);
+    wrapper.appendChild(delBtn);
     container.appendChild(wrapper);
   });
 }
+function undoCategoryDelete(){
+  if(!lastDeletedCategory) return;
+  const { name, rows, index } = lastDeletedCategory;
+  if(data && Object.prototype.hasOwnProperty.call(data, name)){
+    lastDeletedCategory = null;
+    const u = document.getElementById("undo-delete");
+    if(u) u.disabled = true;
+    return;
+  }
+  data = insertCategoryAtIndex(data, name, rows, index);
+  activeCategory = name;
+  save();
+  updateCategories();
+  showCategory();
+  lastDeletedCategory = null;
+  const u = document.getElementById("undo-delete");
+  if(u) u.disabled = true;
+}
+function addCategory(){
+  const name=prompt("New category:");
+  if(name && !data[name]){ data[name]=[]; activeCategory=name; save(); updateCategories(); showCategory(); }
+}
 
-function addCategory() {
-  const name = prompt("New category:");
-  if (name && !data[name]) {
-    data[name] = [];
-    activeCategory = name;
-    save();
-    updateCategories();
-    showCategory();
+/* Palett */
+const PRODUCT_COLORS = [
+  "#36d131","#ffd036","#40e0d0","#ffffff",
+  "#ff6b6b","#4da3ff","#ffa94d","#a78bfa",
+  "#94a3b8","#000000","#f472b6","#2563eb",
+  "#1f2937","#7c3aed","#b45309","#c0c0c0",
+  "#d00000","#f97316","#ef4441",
+];
+
+/* Fargehjelpere */
+function toRgbStr(col){
+  if(/^#/.test(col)){
+    let hex = col.replace('#','');
+    if(hex.length===3) hex = hex.split('').map(c=>c+c).join('');
+    const n = parseInt(hex,16);
+    const r = (n>>16)&255, g=(n>>8)&255, b=n&255;
+    return `${r},${g},${b}`;
+  }
+  if(/^rgba?\(/i.test(col)){
+    const m = col.match(/rgba?\s*\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)/i);
+    if(m) return `${m[1]},${m[2]},${m[3]}`;
+  }
+  const tmp = document.createElement('span');
+  tmp.style.color = col; document.body.appendChild(tmp);
+  const rgb = getComputedStyle(tmp).color; document.body.removeChild(tmp);
+  const m2 = rgb.match(/rgb\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)/i);
+  return m2 ? `${m2[1]},${m2[2]},${m2[3]}` : `0,0,0`;
+}
+function bestTextColor(hexOrCss){
+  const [r,g,b] = toRgbStr(hexOrCss).split(',').map(n=>+n);
+  const lum = 0.2126*(r/255) + 0.7152*(g/255) + 0.0722*(b/255);
+  return lum > 0.55 ? '#000' : '#fff';
+}
+
+/* Popover portal */
+let currentOpenPopover = null;
+function hidePopover(p){ if(!p) return; p.classList.add('hidden'); p.style.visibility='hidden'; if(currentOpenPopover===p) currentOpenPopover=null; }
+function positionPopoverNear(pop, anchorEl){
+  if(pop.parentNode !== document.body){ document.body.appendChild(pop); }
+  pop.classList.remove('hidden'); pop.style.visibility='hidden';
+  const a = anchorEl.getBoundingClientRect();
+  const pw = pop.offsetWidth || 120; const ph = pop.offsetHeight || 120;
+  let top  = a.bottom + 8; let left = a.left;
+  const maxL = window.innerWidth - pw - 8;
+  if(left > maxL) left = Math.max(8, maxL);
+  if(left < 8)    left = 8;
+  if(top + ph > window.innerHeight - 8){
+    top = a.top - ph - 8;
+    if(top < 8) top = Math.max(8, window.innerHeight - ph - 8);
+  }
+  pop.style.top  = `${Math.round(top)}px`;
+  pop.style.left = `${Math.round(left)}px`;
+  pop.style.visibility='visible';
+  currentOpenPopover = pop;
+}
+
+/* Produkt fargepicker + headerfarge */
+function buildProductColorPicker(td, input, row){
+  const wrap = document.createElement('span'); wrap.className='product-color-wrap';
+  if(input.parentNode===td) td.removeChild(input);
+  wrap.appendChild(input);
+
+  const chip = document.createElement('span'); chip.className='color-chip'; chip.title='Pick color';
+  if(row.productColor){
+    chip.style.setProperty('--chip-color', row.productColor);
+    input.classList.add('product-input');
+    input.style.setProperty('--col-rgb', toRgbStr(row.productColor));
+    input.style.color = bestTextColor(row.productColor);
+  }
+
+  const pop = document.createElement('div'); pop.className='color-popover hidden';
+  const clear = document.createElement('div'); clear.className='color-option clear'; clear.title='Clear';
+  clear.onclick = (e)=>{ e.stopPropagation(); row.productColor = null; input.classList.remove('product-input'); input.style.removeProperty('--col-rgb'); input.style.color=''; chip.style.removeProperty('--chip-color'); save(); hidePopover(pop); };
+  pop.appendChild(clear);
+
+  PRODUCT_COLORS.forEach(col=>{
+    const sw = document.createElement('div'); sw.className='color-option'; sw.style.background=col; sw.title=col;
+    sw.onclick = (e)=>{ e.stopPropagation(); row.productColor=col; input.classList.add('product-input'); input.style.setProperty('--col-rgb', toRgbStr(col)); input.style.color=bestTextColor(col); chip.style.setProperty('--chip-color', col); save(); hidePopover(pop); };
+    pop.appendChild(sw);
+  });
+
+  wrap.appendChild(chip);
+  td.appendChild(wrap);
+
+  chip.addEventListener('click', (e)=>{ e.stopPropagation(); if(currentOpenPopover && currentOpenPopover!==pop) hidePopover(currentOpenPopover); if(pop.classList.contains('hidden')){ positionPopoverNear(pop, chip); } else { hidePopover(pop); } });
+  document.addEventListener('click', (ev)=>{ if(pop.classList.contains('hidden')) return; if(pop.contains(ev.target) || chip.contains(ev.target)) return; hidePopover(pop); });
+}
+function applyHeaderStyle(td, row){
+  const span = td.querySelector('span');
+  if(row.headerColor){
+    const col = row.headerColor;
+    td.style.background = `linear-gradient(to right, ${col}36, ${col}10)`;
+    td.style.borderColor = 'rgba(255,255,255,.18)';
+    if(span) span.style.color = bestTextColor(col);
+  }else{
+    td.style.background = ''; td.style.borderColor = ''; if(span) span.style.color = '';
   }
 }
-function showCategory() {
-  const content = document.getElementById("content");
-  content.innerHTML = "";
+function buildHeaderColorPicker(hostTd, row){
+  hostTd.style.position = hostTd.style.position || 'relative';
+  const chip = document.createElement('span'); chip.className='header-color-chip'; chip.title='Pick header color';
+  if(row.headerColor) chip.style.background = row.headerColor;
 
-  if (!activeCategory || !data[activeCategory]) return;
+  const pop = document.createElement('div'); pop.className='color-popover hidden';
+  const clear = document.createElement('div'); clear.className='color-option clear'; clear.title='Clear';
+  clear.onclick = (e)=>{ e.stopPropagation(); row.headerColor=null; chip.style.background='rgba(255,255,255,.15)'; applyHeaderStyle(hostTd, row); save(); hidePopover(pop); };
+  pop.appendChild(clear);
 
-  const table = document.createElement("table");
-  table.innerHTML = `
+  PRODUCT_COLORS.forEach(col=>{
+    const sw=document.createElement('div'); sw.className='color-option'; sw.style.background=col; sw.title=col;
+    sw.onclick=(e)=>{ e.stopPropagation(); row.headerColor=col; chip.style.background=col; applyHeaderStyle(hostTd, row); save(); hidePopover(pop); };
+    pop.appendChild(sw);
+  });
+
+  hostTd.appendChild(chip);
+  chip.addEventListener('click', (e)=>{ e.stopPropagation(); if(currentOpenPopover && currentOpenPopover!==pop) hidePopover(currentOpenPopover); if(pop.classList.contains('hidden')){ positionPopoverNear(pop, chip); } else { hidePopover(pop); } });
+  document.addEventListener('click', (ev)=>{ if(pop.classList.contains('hidden')) return; if(pop.contains(ev.target) || chip.contains(ev.target)) return; hidePopover(pop); });
+}
+
+/* ===== Tabellbygging ===== */
+function showCategory(){
+  const content=document.getElementById("content");
+  content.innerHTML="";
+  if(!activeCategory || !data[activeCategory]) return;
+
+  const table=document.createElement("table");
+  table.innerHTML=`
     <thead>
       <tr>
         <th>Product/Type</th><th>Start Qty</th><th>Used</th><th>End Qty</th>
-        <th>MIN🔔</th><th>Image<th>Comments</th><th>Order</th><th>Move</th><th>Delete</th>
+        <th>MIN🔔</th><th>MAX🔔</th><th>Image</th><th>Comments</th><th>Order</th><th>Move</th><th>Delete</th>
       </tr>
     </thead>
     <tbody></tbody>
   `;
+  const tbody=table.querySelector("tbody");
 
-  const tbody = table.querySelector("tbody");
+  data[activeCategory].forEach((row,i)=>{
+    const tr=document.createElement("tr");
 
-  data[activeCategory].forEach((row, i) => {
-    const tr = document.createElement("tr");
-
-    
-
-    if (row.type === "header") {
-      tr.className = "header-row";
-      const td = document.createElement("td");
-      td.colSpan = 9;
-      const span = document.createElement("span");
-      span.contentEditable = true;
-      span.textContent = row.text || "Section / Header";
-      span.oninput = () => {
-        row.text = span.textContent;
-        save();
-      };
+    if(row.type==="header"){
+      tr.className="header-row";
+      const td=document.createElement("td");
+      td.colSpan=11;
+      const span=document.createElement("span");
+      span.contentEditable=true;
+      span.textContent=row.text||"Section / Header";
+      span.oninput=()=>{ row.text=span.textContent; save(); };
       td.appendChild(span);
       tr.appendChild(td);
-
-      const del = document.createElement("td");
-      del.style.textAlign = "center";
-      del.innerHTML = `<span class="delete-button" onclick="deleteRow(${i})" style="cursor:pointer;">🗑️</span>`;
-
-      tr.appendChild(del);
       tbody.appendChild(tr);
+
+      buildHeaderColorPicker(td, row);
+      applyHeaderStyle(td, row);
+
+      const sub=document.createElement("tr");
+      sub.className="section-columns";
+      sub.innerHTML=`
+        <td>Product/Type</td>
+        <td>Start Qty</td>
+        <td>Used</td>
+        <td>End Qty</td>
+        <td>MIN🔔</td>
+        <td>MAX🔔</td>
+        <td>Image</td>
+        <td>Comments</td>
+        <td>Order</td>
+        <td>Move</td>
+        <td><button class="btn-danger" onclick="deleteRow(${i})">Delete</button></td>
+      `;
+      tbody.appendChild(sub);
       return;
     }
 
-    const fields = ['Parts and tools', 'start', 'used', 'end', 'min', 'image', 'comment', 'order'];
-    const inputs = {};
+    // defaults
+    row.product ??=""; row.start ??=0; row.used ??=0; row.end ??=(parseFloat(row.start)||0)-(parseFloat(row.used)||0);
+    row.min ??=0; row.max ??=0; row.comment ??=""; row.order ??=0; row.image ??=null;
 
-    fields.forEach((key) => {
-      const td = document.createElement("td");
+    const fields=['product','start','used','end','min','max','image','comment','order'];
+    const inputs={};
 
-    if (key === "image") {
-  td.classList.add("cell-image");
-
-  const fileInput = document.createElement("input");
-  fileInput.type = "file";
-  fileInput.accept = "image/*";
-  fileInput.style.display = "none";
-  const inputId = `file-${i}`;
-  fileInput.id = inputId;
-
-  const customButton = document.createElement("button");
-  customButton.textContent = "📷 Upload";
-  customButton.className = "upload-btn";
-  customButton.onclick = (e) => {
-    e.preventDefault();
-    document.getElementById(inputId).click();
-  };
-
-  const preview = document.createElement("img");
-  preview.style.maxWidth = "60px";
-  preview.style.maxHeight = "50px";
-  preview.style.display = row.image ? "block" : "none";
-  if (row.image) preview.src = row.image;
-
-  preview.style.cursor = "pointer";
-  preview.onclick = () => {
-  openImageModal(preview.src);
- };
-
-
-  fileInput.onchange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (event) {
-        row.image = event.target.result;
-        preview.src = row.image;
-        preview.style.display = "block";
-        save();
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const container = document.createElement("div");
-  container.className = "image-upload-container";
-  container.appendChild(customButton);
-  container.appendChild(preview);
-
-  td.appendChild(fileInput);
-  td.appendChild(container);
-  tr.appendChild(td);
-  return;
-}
-
-
-      if (key === "Parts and tools") td.classList.add("cell-product");
-      else if (key === "comment") td.classList.add("cell-comment");
-      else if (key === "min") td.classList.add("cell-min");
-      else if (key === "order") td.classList.add("cell-order");
+    fields.forEach((key)=>{
+      const td=document.createElement("td");
+      if(key==='product') td.classList.add("cell-product");
+      else if(key==='comment') td.classList.add("cell-comment");
+      else if(key==='min') td.classList.add("cell-min");
+      else if(key==='max') td.classList.add("cell-max");
+      else if(key==='order') td.classList.add("cell-order");
       else td.classList.add("cell-small");
 
+      if(key==='image'){
+        td.classList.add("cell-image");
+        const fileInput = document.createElement("input");
+        fileInput.type="file"; fileInput.accept="image/*"; fileInput.style.display="none";
+        const inputId=`file-${activeCategory}-${i}`; fileInput.id=inputId;
 
-      const input = document.createElement("input");
-      input.type = key === "Parts and tools" || key === "comment" ? "text" : "number";
-      input.value = row[key] || "";
-      input.style.width = "90%";
-      input.style.padding = "4px";
-      input.style.borderRadius = "5px";
-      input.placeholder = key.charAt(0).toUpperCase() + key.slice(1);
-      if (["Parts and tools", "comment", "start", "used", "end", "min", "order"].includes(key)) {
-     input.classList.add("large-bold-input");
-     }
+        const customButton=document.createElement("button");
+        customButton.textContent="📷 Upload";
+        customButton.className="global-button";
+        customButton.style.padding="6px 10px";
+        customButton.onclick=(e)=>{ e.preventDefault(); document.getElementById(inputId).click(); };
 
+        const preview=document.createElement("img");
+        preview.style.maxWidth="60px"; preview.style.maxHeight="50px";
+        preview.style.display=row.image ? "block" : "none";
+        if(row.image) preview.src=row.image;
+        preview.style.cursor="pointer";
+        preview.onclick=()=>{ openImageModal(preview.src); };
 
-      input.oninput = () => {
-        row[key] = input.value;
+        fileInput.onchange=(e)=>{
+          const file=e.target.files[0];
+          if(file){
+            const reader=new FileReader();
+            reader.onload=function(evt){
+              row.image=evt.target.result;
+              preview.src=row.image; preview.style.display="block"; save();
+            };
+            reader.readAsDataURL(file);
+          }
+        };
 
-        row.end = (parseFloat(row.start) || 0) - (parseFloat(row.used) || 0);
+        const container=document.createElement("div");
+        container.style.display="flex"; container.style.alignItems="center"; container.style.gap="10px"; container.style.justifyContent="center";
+        container.appendChild(customButton); container.appendChild(preview);
+
+        td.appendChild(fileInput); td.appendChild(container);
+        tr.appendChild(td);
+        return;
+      }
+
+      const input=document.createElement("input");
+      input.type=(key==='product'||key==='comment')?"text":"number";
+      input.value=row[key] ?? "";
+      input.style.width="90%"; input.style.padding="8px"; input.style.borderRadius="10px";
+      input.placeholder=key.charAt(0).toUpperCase()+key.slice(1);
+      input.classList.add("large-bold-input");
+      if(key==='end'){ input.readOnly=true; }
+
+      input.oninput=()=>{
+        row[key]=input.value;
+        const startVal=parseFloat(row.start)||0;
+        const usedVal=parseFloat(row.used)||0;
+        row.end = startVal - usedVal;
         inputs['end'].value = row.end;
-
-        const endVal = parseFloat(row.end);
-        const minVal = parseFloat(row.min);
-        if (!isNaN(endVal) && !isNaN(minVal) && endVal <= minVal) {
-          inputs['min'].classList.add("red-warning");
-        } else {
-          inputs['min'].classList.remove("red-warning");
-        }
-
+        updateAlarms();
         save();
       };
-      inputs[key] = input;
+
+      inputs[key]=input;
       td.appendChild(input);
-      if (key === "Parts and tools") {
-  const colorContainer = document.createElement("div");
-  colorContainer.className = "color-buttons";
 
-  const colors = ["limegreen", "gold", "mediumturquoise", "white"];
-  colors.forEach(color => {
-    const btn = document.createElement("button");
-    btn.className = `color-btn ${color}`;
-    btn.title = `Make ${color}`;
-    btn.onclick = (e) => {
-      e.preventDefault();
-      row.productColor = color === "white" ? null : color;
-      input.style.backgroundColor = row.productColor || "";
-      save();
-    };
-    colorContainer.appendChild(btn);
-  });
+      if(key==='product'){
+        if(row.productColor){
+          input.classList.add('product-input');
+          input.style.setProperty('--col-rgb', toRgbStr(row.productColor));
+          input.style.color = bestTextColor(row.productColor);
+        }
+        buildProductColorPicker(td, input, row);
+      }
 
-  td.appendChild(colorContainer);
-
-  if (row.productColor) {
-    input.style.backgroundColor = row.productColor || "";
-
-  }
-}
       tr.appendChild(td);
     });
 
-    const tdMove = document.createElement("td");
-    tdMove.classList.add("cell-move");
-    tdMove.innerHTML = `
-     <button onclick="moveRow(${i}, -1)">⬆️</button>
-     <button onclick="moveRow(${i}, 1)">⬇️</button>
-    `;
+    function updateAlarms(){
+      const startVal=parseFloat(inputs['start'].value);
+      const usedVal=parseFloat(inputs['used'].value);
+      const endVal=(isNaN(startVal)?0:startVal)-(isNaN(usedVal)?0:usedVal);
+      inputs['end'].value=endVal;
+      const minVal=parseFloat(inputs['min'].value);
+      const maxVal=parseFloat(inputs['max'].value);
 
-    const tdDel = document.createElement("td");
-    tdDel.innerHTML = `<span class="delete-button" onclick="deleteRow(${i})">🗑️</span>`
+      if(!isNaN(endVal) && !isNaN(minVal) && endVal<=minVal) inputs['min'].classList.add("min-alarm");
+      else inputs['min'].classList.remove("min-alarm");
 
+      if(!isNaN(startVal) && !isNaN(maxVal) && startVal>maxVal) inputs['max'].classList.add("max-alarm");
+      else inputs['max'].classList.remove("max-alarm");
+    }
+    updateAlarms();
 
-    tr.appendChild(tdMove);  
-    tr.appendChild(tdDel);
+    const tdMove=document.createElement("td"); tdMove.classList.add("cell-move");
+    tdMove.innerHTML=`<button onclick="moveRow(${i},-1)">⬆️</button> <button onclick="moveRow(${i},1)">⬇️</button>`;
+    const tdDel=document.createElement("td"); tdDel.innerHTML=`<button class="btn-danger" onclick="deleteRow(${i})">Delete</button>`;
+    tr.appendChild(tdMove); tr.appendChild(tdDel);
     tbody.appendChild(tr);
-    
   });
 
+    // FOOT: knapp under "Order"
+  const ths = Array.from(table.tHead.rows[0].cells);
+  const cols = ths.length;
+  const orderIdx = ths.findIndex(th => /order/i.test(th.textContent.trim()));
+  const targetIdx = orderIdx >= 0 ? orderIdx : cols - 1;
+
+  const tfoot = document.createElement("tfoot");
+  const footRow = document.createElement("tr");
+  for (let c = 0; c < cols; c++) {
+    const td = document.createElement("td");
+    if (c === targetIdx) {
+      const sendBtn = document.createElement("button");
+      sendBtn.className = "send-orders-button";
+      sendBtn.type = "button";
+      sendBtn.textContent = "Active Category to Orders 📦";
+      sendBtn.onclick = sendActiveCategoryToOrders;
+      td.appendChild(sendBtn);
+    }
+    footRow.appendChild(td);
+  }
+  tfoot.appendChild(footRow);
+  table.appendChild(tfoot);
+
+  
   content.appendChild(table);
 
-  const addLine = document.createElement("button");
-  addLine.className = "add-line";
-  addLine.textContent = "+ Add line";
-  addLine.onclick = () => {
-    data[activeCategory].push({
-    type: "line", product: "", start: 0, used: 0,
-    comment: "", min: 0, order: 0, end: 0, productColor: null
+  const addLine=document.createElement("button");
+  addLine.className="global-button"; addLine.textContent="+ Add line";
+  addLine.onclick=()=>{ data[activeCategory].push({type:"line", product:"", start:0, used:0, end:0, min:0, max:0, comment:"", order:0, productColor:null, image:null}); save(); showCategory(); };
+
+  const addHeader=document.createElement("button");
+  addHeader.className="global-button"; addHeader.textContent="+ Add header/section";
+  addHeader.onclick=()=>{ data[activeCategory].push({type:"header", text:"New Header"}); save(); showCategory(); };
+
+  content.appendChild(addLine); content.appendChild(addHeader);
+  searchInPage();
+}
+
+function deleteRow(index){ data[activeCategory].splice(index,1); save(); showCategory(); }
+function moveRow(index, direction){
+  const list=data[activeCategory]; const newIndex=index+direction;
+  if(newIndex<0 || newIndex>=list.length) return;
+  const temp=list[index]; list[index]=list[newIndex]; list[newIndex]=temp;
+  save(); showCategory();
+}
+
+/* ===== SEND: aktiv kategori -> Orders.html ===== */
+function sendActiveCategoryToOrders() {
+  const rows = data[activeCategory] || [];
+  const payload = [];
+  let pendingHeader = "";
+
+  rows.forEach(r => {
+    if (!r) return;
+
+    // ta med overskrift som egen blokk
+    if (r.type === "header") {
+      pendingHeader = (r.text || "").trim();
+      return;
+    }
+
+    // les direkte fra data (ikke DOM)
+    const product = (r.product || r["Parts and tools"] || "").trim();
+    const qty = Number(String(r.order ?? "").toString().replace(",", "."));
+    const comment = (r.comment || "").trim();
+
+    if (product && qty > 0) {
+      if (pendingHeader) {
+        payload.push({ header: pendingHeader });
+        pendingHeader = "";
+      }
+      payload.push({
+        product,
+        quantity: qty,
+        comment,
+        category: activeCategory
+      });
+    }
   });
 
-    save();
-    showCategory();
-  };
+  if (!payload.length) {
+    console.warn("Ingen ordrelinjer funnet i data for aktiv kategori:", {
+      activeCategory,
+      rows: JSON.parse(JSON.stringify(rows))
+    });
+    alert("Product field is empty.");
+    return;
+  }
 
-  const addHeader = document.createElement("button");
-  addHeader.className = "add-line";
-  addHeader.textContent = "+ Add header/section";
-  addHeader.onclick = () => {
-    data[activeCategory].push({ type: "header", text: "New Header" });
-    save();
-    showCategory();
-  };
-
-  content.appendChild(addLine);
-  content.appendChild(addHeader);
-  searchInPage();
-
+  localStorage.setItem("ordersTransfer", JSON.stringify(payload));
+  window.location.href = "Orders.html";
 }
 
-function deleteRow(index) {
-  data[activeCategory].splice(index, 1);
-  save();
-  showCategory();
-}
-
-function moveRow(index, direction) {
-  const list = data[activeCategory];
-  const newIndex = index + direction;
-
-  if (newIndex < 0 || newIndex >= list.length) return;
-
-  const temp = list[index];
-  list[index] = list[newIndex];
-  list[newIndex] = temp;
-
-  save();
-  showCategory();
-}
-
-
-function showGlobalOverview() {
-  const content = document.getElementById("content");
-  content.innerHTML = "<h2>Global overview of the entire inventory</h2>";
-  const table = document.createElement("table");
-  table.innerHTML = `
+/* Global oversikt */
+function showGlobalOverview(){
+  const content=document.getElementById("content");
+  content.innerHTML="<h2>Global overview of the entire inventory</h2>";
+  const table=document.createElement("table");
+  table.className="global-overview-table";
+  table.innerHTML=`
     <thead>
-      <tr><th>Category</th><th>Product</th><th>Start</th><th>Used</th><th>End</th><th>Min</th><th>Comment</th><th>Order</th></tr>
+      <tr><th>Category</th><th>Product</th><th>Start</th><th>Used</th><th>End</th><th>Min</th><th>Max</th><th>Comment</th><th>Order</th></tr>
     </thead>
     <tbody></tbody>
   `;
-  const tbody = table.querySelector("tbody");
-
-  Object.entries(data).forEach(([category, rows]) => {
-    rows.forEach(row => {
-      if (row.type === "header") return;
-      const tr = document.createElement("tr");
-      const start = parseInt(row.start) || 0;
-      const used = parseInt(row.used) || 0;
-      const end = row.end ?? (start - used);
-      const min = parseInt(row.min) || 0;
-
-      const values = [
-        category,
-        row.product || "",
-        start,
-        used,
-        end,
-        min,
-        row.comment || "",
-        row.order || ""
-      ];
-
-      values.forEach((val, i) => {
-        const td = document.createElement("td");
-        td.textContent = val;
-        if (i === 4 && end <= min) td.classList.add("red-warning");
-        tr.appendChild(td);
-      });
-
+  const tbody=table.querySelector("tbody");
+  Object.entries(data).forEach(([category, rows])=>{
+    rows.forEach(row=>{
+      if(row.type==="header") return;
+      const tr=document.createElement("tr");
+      const start=parseFloat(row.start)||0;
+      const used =parseFloat(row.used)||0;
+      const end  = (typeof row.end!=="undefined") ? row.end : (start-used);
+      const min  = parseFloat(row.min)||0;
+      const max  = parseFloat(row.max)||0;
+      const values=[category, row.product||"", start, used, end, min, max, row.comment||"", row.order||""];
+      values.forEach(val=>{ const td=document.createElement("td"); td.textContent=val; tr.appendChild(td); });
       tbody.appendChild(tr);
     });
   });
-
   content.appendChild(table);
 }
 
-if (!data[activeCategory]) {
-  data[activeCategory] = [];
-  save();
+if(!data[activeCategory]){ data[activeCategory]=[]; save(); }
+
+let isGlobalView=false;
+function toggleGlobalView(){
+  const button=document.getElementById("globalToggleButton");
+  if(!isGlobalView){ showGlobalOverview(); button.textContent="🔙 Back to control table"; }
+  else { showCategory(); button.textContent="📋 Global Overview"; }
+  isGlobalView=!isGlobalView;
 }
-
-let isGlobalView = false;
-
-function toggleGlobalView() {
-  const button = document.getElementById("globalToggleButton");
-
-  if (!isGlobalView) {
-    showGlobalOverview();
-    button.textContent = "🔙 Back to Table";
-  } else {
-    showCategory();
-    button.textContent = "📋 Global Overview";
-  }
-
-  isGlobalView = !isGlobalView;
-}
-
 
 updateCategories();
 showCategory();
 
-async function generatePDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF('p', 'mm', 'a4');
-
-  
-  const logoImg = new Image();
-  logoImg.src = "images/Logo Seavo Nautiq.png";
-  await new Promise(resolve => { logoImg.onload = resolve; });
-
-  doc.addImage(logoImg, 'PNG', 10, 10, 60, 35); // (x, y, width, height)
-
-  Headers.forEach((header, index) => {
-    doc.setFontSize(16);
-    doc.text(header, 10, 50 + (index * 10));
-  });
-
-  const content = document.getElementById("content");
-
-  await html2canvas(content, {
-    backgroundColor: "#ffffff"
-  }).then(canvas => {
-    const imgData = canvas.toDataURL('image/png');
-    const imgProps = doc.getImageProperties(imgData);
-    const pdfWidth = doc.internal.pageSize.getWidth() - 20;
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-    doc.addImage(imgData, 'PNG', 13, 35, pdfWidth, pdfHeight);
-    doc.save("SeavoNautiq_Inventory.pdf");
-  });
-}
-
-function openImageModal(src) {
-  const modal = document.getElementById("image-modal");
-  const modalImg = document.getElementById("modal-image");
-  modalImg.src = src;
+/* ===== Image modal ===== */
+function openImageModal(src){
+  let modal = document.getElementById("image-modal");
+  if(!modal){
+    modal = document.createElement('div'); modal.id="image-modal"; modal.style.cssText="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7);z-index:2000;";
+    const img = document.createElement('img'); img.id="modal-image"; img.style.maxWidth="90%"; img.style.maxHeight="90%"; img.style.borderRadius="8px"; img.style.boxShadow="0 0 15px rgba(0,0,0,.8)";
+    modal.appendChild(img); document.body.appendChild(modal);
+    modal.addEventListener('click', ()=> modal.style.display='none');
+  }
+  document.getElementById("modal-image").src = src;
   modal.style.display = "flex";
 }
 
-document.getElementById("modal-overlay").onclick = () => {
-  document.getElementById("image-modal").style.display = "none";
-};
+/* ===== Calculator / Notepad ===== */
+function openCalculator(){ document.getElementById("calculatorModal").style.display="block"; }
+function closeCalculator(){ document.getElementById("calculatorModal").style.display="none"; }
+function openNotepad(){ document.getElementById("notepadModal").style.display="block"; }
+function closeNotepad(){ document.getElementById("notepadModal").style.display="none"; }
+function appendCalc(v){ const d=document.getElementById('calc-display'); d.value+=v; }
+function deleteLast(){ const d=document.getElementById('calc-display'); d.value=d.value.slice(0,-1); }
+function clearCalc(){ document.getElementById('calc-display').value=''; }
+function calculateResult(){
+  const d=document.getElementById('calc-display');
+  try{
+    const expr=d.value.replace(/×/g,'*').replace(/÷/g,'/');
+    const expr2=expr.replace(/(\d+(\.\d+)?)%/g,(_,n)=>String(parseFloat(n)/100));
+    d.value=String(Function(`"use strict";return (${expr2})`)());
+  }catch{ d.value='Error'; }
+}
+function saveNote(){ localStorage.setItem('seavo_note', document.getElementById('noteArea').value); }
+function clearNote(){ document.getElementById('noteArea').value=''; localStorage.removeItem('seavo_note'); }
 
-function toggleSidePanel() {
-  const panel = document.getElementById("sidePanel");
-  const toggleBtn = document.getElementById("togglePanelBtn");
+/* Drag-n-drop for modal-vinduer */
+function makeDraggable(handleId, windowId){
+  const handle=document.getElementById(handleId);
+  const win=document.getElementById(windowId);
+  if(!handle||!win) return;
+  let offsetX=0, offsetY=0, dragging=false;
+  handle.addEventListener('mousedown',(e)=>{
+    dragging=true; const rect=win.getBoundingClientRect();
+    offsetX=e.clientX-rect.left; offsetY=e.clientY-rect.top; document.body.style.userSelect='none';
+  });
+  window.addEventListener('mousemove',(e)=>{
+    if(!dragging) return; win.style.left=(e.clientX-offsetX)+'px'; win.style.top=(e.clientY-offsetY)+'px';
+  });
+  window.addEventListener('mouseup',()=>{ dragging=false; document.body.style.userSelect=''; });
+}
 
-  if (panel.classList.contains("hidden")) {
-    panel.classList.remove("hidden");
-    toggleBtn.style.right = "220px";
-    toggleBtn.textContent = "⫸";
-  } else {
-    panel.classList.add("hidden");
-    toggleBtn.style.right = "0px";
-    toggleBtn.textContent = "⫷";
+/* Init */
+document.addEventListener("DOMContentLoaded", ()=>{
+  const openCalcBtn=document.getElementById("openCalculatorBtn");
+  const openNoteBtn=document.getElementById("openNotepadBtn");
+  const calcModal=document.getElementById("calculatorModal");
+  const noteModal=document.getElementById("notepadModal");
+
+  openCalcBtn?.addEventListener("click", openCalculator);
+  openNoteBtn?.addEventListener("click", openNotepad);
+
+  function backdropClose(e){
+    if(e.target===calcModal) closeCalculator();
+    if(e.target===noteModal) closeNotepad();
+  }
+  calcModal?.addEventListener("click", backdropClose);
+  noteModal?.addEventListener("click", backdropClose);
+
+  document.addEventListener("keydown",(e)=>{ if(e.key==="Escape"){ closeCalculator(); closeNotepad(); } });
+
+  const saved=localStorage.getItem('seavo_note');
+  if(saved) document.getElementById('noteArea').value=saved;
+
+  makeDraggable('calcDragHandle','calculatorWindow');
+  makeDraggable('noteDragHandle','notepadWindow');
+});
+
+/* Popup-vinduer */
+function åpnePopup4(){ window.open('Help.html','popup','width=1600,height=1200'); }
+function åpnePopup2(){ window.open('Documents.html','popup','width=1600,height=1200'); }
+function åpnePopup7(){ window.open('Settings.html','popup','width=1600,height=1200'); }
+
+/* ========================= */
+/* D/W/V: Logic & Persistence */
+/* ========================= */
+let dvwData = JSON.parse(localStorage.getItem('dvwDataV2')) || [];
+function dvwSave(){ localStorage.setItem('dvwDataV2', JSON.stringify(dvwData)); }
+function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+function percentColor(pct){ if (isNaN(pct)) return '#40e0d0'; if (pct <= 30) return '#f03747'; if (pct <= 70) return '#ffd036'; return '#36d131'; }
+function parseLocaleNumber(val){
+  const s = String(val ?? '').trim().replace(/\s/g,'').replace(',', '.');
+  if (s === '' || s === '-' || s === '.' || s === '-.') return NaN;
+  return Number(s);
+}
+function renderDVWTable(){
+  const tbody = document.getElementById('dvwTbody');
+  tbody.innerHTML = '';
+  dvwData.forEach((row, idx) => {
+    const tr = document.createElement('tr');
+    function makeInput(type, key, placeholder=''){
+      const td = document.createElement('td');
+      const input = document.createElement('input');
+      input.type = type; input.placeholder = placeholder; input.value = row[key] ?? '';
+      if (type === 'number'){ input.step = 'any'; input.inputMode = 'decimal'; input.pattern = '[0-9]*[.,]?[0-9]*'; }
+      input.classList.add('large-bold-input');
+      input.oninput = () => {
+        const num = (type === 'number') ? parseLocaleNumber(input.value) : input.value;
+        row[key] = (type === 'number' && isNaN(num)) ? '' : num;
+        recomputeRow(idx, key);
+        const rr = dvwData[idx] || {};
+        if (key !== 'sg'     && sg && sg.input) sg.input.value = rr.sg      ?? '';
+        if (key !== 'weight' && w  && w.input)  w .input.value = rr.weight  ?? '';
+        if (key !== 'volume' && v  && v.input)  v .input.value = rr.volume  ?? '';
+        if (key !== 'temp'   && t  && t.input)  t .input.value = rr.temp    ?? '';
+        updateGauge(idx, tr); dvwSave();
+      };
+      td.appendChild(input); return {td, input};
+    }
+    const p  = makeInput('text',   'product', 'Product'); tr.appendChild(p.td);
+    const sg = makeInput('number', 'sg',      'SG (—)');  tr.appendChild(sg.td);
+    const w  = makeInput('number', 'weight',  'Weight');  tr.appendChild(w.td);
+    const v  = makeInput('number', 'volume',  'Volume');  tr.appendChild(v.td);
+    const t  = makeInput('number', 'temp',    'Temp');    tr.appendChild(t.td);
+
+    const tdLevel = document.createElement('td');
+    const levelWrap = document.createElement('div'); levelWrap.className = 'level-wrap';
+    const levelRow = document.createElement('div'); levelRow.className = 'level-input-row';
+    const levelInput = document.createElement('input');
+    levelInput.type='number'; levelInput.step='any'; levelInput.inputMode='decimal';
+    levelInput.placeholder='Max m³'; levelInput.value=row.levelMax ?? '';
+    levelInput.classList.add('large-bold-input');
+    levelInput.oninput = ()=>{ const val=parseLocaleNumber(levelInput.value); row.levelMax=isNaN(val)?'':val; updateGauge(idx, tr); dvwSave(); };
+    levelRow.appendChild(levelInput);
+    const bar = document.createElement('div'); bar.className='level-bar';
+    const fill = document.createElement('div'); fill.className='level-fill';
+    const label = document.createElement('div'); label.className='level-label'; label.textContent='';
+    bar.appendChild(fill); bar.appendChild(label);
+    levelWrap.appendChild(levelRow); levelWrap.appendChild(bar);
+    tdLevel.appendChild(levelWrap); tr.appendChild(tdLevel);
+
+    const c = makeInput('text', 'comment', 'Comments'); tr.appendChild(c.td);
+
+    const tdDel = document.createElement('td');
+    const del = document.createElement('span'); del.className='dvw-del-btn'; del.textContent='🗑️'; del.title='Delete line';
+    del.onclick = ()=>{ dvwData.splice(idx,1); dvwSave(); renderDVWTable(); };
+    tdDel.appendChild(del); tr.appendChild(tdDel);
+
+    tbody.appendChild(tr);
+    updateGauge(idx, tr);
+  });
+}
+const DVW_ALPHA = 0.0008; // pr °C
+function densityFromSGAtTemp(sg, temp){ if (isNaN(sg)) return NaN; const d15=sg*1000; if (isNaN(temp)) return d15; return d15/(1+DVW_ALPHA*(temp-15)); }
+function sgFromDensityAtTemp(dT, temp){ if (isNaN(dT)) return NaN; if (isNaN(temp)) return dT/1000; const d15=dT*(1+DVW_ALPHA*(temp-15)); return d15/1000; }
+function roundSmart(val){ if(Math.abs(val)>=1000) return Math.round(val); if(Math.abs(val)>=100) return Math.round(val*10)/10; if(Math.abs(val)>=10) return Math.round(val*100)/100; return Math.round(val*1000)/1000; }
+function roundSG(val){ return Math.round(val * 1000) / 1000; }
+function recomputeRow(idx, changedKey){
+  const r = dvwData[idx] || {};
+  const sg = parseLocaleNumber(r.sg);
+  const w  = parseLocaleNumber(r.weight);
+  const v  = parseLocaleNumber(r.volume);
+  const t  = parseLocaleNumber(r.temp);
+  const haveSG=!isNaN(sg), haveW=!isNaN(w), haveV=!isNaN(v);
+  const rhoT = haveSG ? densityFromSGAtTemp(sg, t) : NaN;
+  const setWeightFrom = ()=>{ if(!isNaN(rhoT)&&haveV){ const wCalc=rhoT*v; r.weight=isFinite(wCalc)?roundSmart(wCalc):''; } };
+  const setVolumeFrom = ()=>{ if(!isNaN(rhoT)&&haveW&&rhoT!==0){ const vCalc=w/rhoT; r.volume=isFinite(vCalc)?roundSmart(vCalc):''; } };
+  const setSGFrom     = ()=>{ if(haveW&&haveV&&v!==0){ const dT=w/v; const sgCalc=sgFromDensityAtTemp(dT,t); r.sg=isFinite(sgCalc)?roundSG(sgCalc):''; } };
+  const known=(haveSG?1:0)+(haveW?1:0)+(haveV?1:0); if(known<2) return;
+  switch(changedKey){
+    case 'sg': case 'temp': if(haveSG&&haveV) setWeightFrom(); else if(haveSG&&haveW) setVolumeFrom(); else if(haveW&&haveV) setSGFrom(); break;
+    case 'weight': if(haveSG&&haveW) setVolumeFrom(); else if(haveW&&haveV) setSGFrom(); else if(haveSG&&haveV) setWeightFrom(); break;
+    case 'volume': if(haveSG&&haveV) setWeightFrom(); else if(haveW&&haveV) setSGFrom(); else if(haveSG&&haveW) setVolumeFrom(); break;
+    default: if(!haveW&&haveSG&&haveV) setWeightFrom(); else if(!haveV&&haveSG&&haveW) setVolumeFrom(); else if(!haveSG&&haveW&&haveV) setSGFrom();
   }
 }
+function updateGauge(idx, tr){
+  const r = dvwData[idx] || {};
+  const v = parseLocaleNumber(r.volume);
+  const max = parseLocaleNumber(r.levelMax);
+  const fill  = tr.querySelector('.level-fill');
+  const label = tr.querySelector('.level-label');
+  let pct = 0;
+  if (!isNaN(v) && !isNaN(max) && max > 0){ pct = clamp((v / max) * 100, 0, 100); }
+  fill.style.width = pct + '%'; fill.style.background = percentColor(pct);
+  label.textContent = (isNaN(v) || isNaN(max) || max <= 0) ? '—' : `(${Math.round(pct)}%)`;
+}
+document.getElementById('dvwAddBtn').addEventListener('click', ()=>{ dvwData.push({product:'',sg:'',weight:'',volume:'',temp:'',levelMax:'',comment:''}); dvwSave(); renderDVWTable(); });
+document.getElementById('dvwPdfBtn').addEventListener('click', generateDVWPDF);
+async function generateDVWPDF(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('p', 'mm', 'a4');
+  const logo = new Image(); logo.src = "images/Logo Seavo Nautiq.png";
+  await new Promise(res => { logo.onload = res; }).catch(()=>{});
+  try { doc.addImage(logo, 'PNG', 10, 10, 50, 30); } catch(e){}
+  doc.setFontSize(16); doc.text("D/W/V (Fuel • Lube • Ballast) — Overview", 10, 48);
+  const wrap = document.getElementById('dvwTableWrap');
+  const canvas = await html2canvas(wrap, { backgroundColor: "#ffffff", scale: 2 });
+  const imgData = canvas.toDataURL('image/png'); const imgProps = doc.getImageProperties(imgData);
+  const pageWidth = doc.internal.pageSize.getWidth(); const pageHeight = doc.internal.pageSize.getHeight();
+  const marginX = 10; const topY = 55; const pdfW = pageWidth - marginX*2; const pdfH = (imgProps.height * pdfW) / imgProps.width;
+  let y = topY; let remaining = pdfH; let sY = 0; const pageImgHeight = pageHeight - topY - 10;
+  while (remaining > 0){
+    const sliceH = Math.min(pageImgHeight, remaining);
+    const sliceCanvas = document.createElement('canvas'); const scale = pdfW / imgProps.width;
+    sliceCanvas.width = imgProps.width; sliceCanvas.height = sliceH / scale;
+    const ctx = sliceCanvas.getContext('2d');
+    ctx.drawImage(canvas, 0, sY / scale, imgProps.width, sliceCanvas.height, 0, 0, imgProps.width, sliceCanvas.height);
+    const sliceData = sliceCanvas.toDataURL('image/png');
+    doc.addImage(sliceData, 'PNG', marginX, y, pdfW, sliceH);
+    remaining -= sliceH; sY += sliceH;
+    if (remaining > 0){ doc.addPage(); y = 20; }
+  }
+  doc.save('SeavoNautiq_DWV.pdf');
+}
+document.getElementById('dvwRecalcBtn').addEventListener('click', ()=>{ dvwData.forEach((_, i)=>recomputeRow(i, 'manual')); dvwSave(); renderDVWTable(); });
+renderDVWTable();
 </script>
 
-<!-- ========================= -->
-<!-- D/W/V: Logic & Persistence -->
-<!-- ========================= -->
-<script>
-  // Egen lagring, påvirker ikke lagerDataV3
- let dvwData = JSON.parse(localStorage.getItem('dvwDataV1')) || [];
-
-  function dvwSave(){ localStorage.setItem('dvwDataV1', JSON.stringify(dvwData)); }
-
-  function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
-
-  function percentColor(pct){
-    if (isNaN(pct)) return '#40e0d0';
-    if (pct <= 30) return '#f03747';
-    if (pct <= 70) return '#ffd036';
-    return '#36d131';
-  }
-
-  // Tillat , og ., og ikke ødelegg mellomtilstander som "0."
-  function parseLocaleNumber(val){
-    const s = String(val ?? '').trim().replace(/\s/g,'').replace(',', '.');
-    if (s === '' || s === '-' || s === '.' || s === '-.') return NaN;
-    return Number(s);
-  }
-
-  function renderDVWTable(){
-    const tbody = document.getElementById('dvwTbody');
-    tbody.innerHTML = '';
-
-    dvwData.forEach((row, idx) => {
-      const tr = document.createElement('tr');
-
-      function makeInput(type, key, placeholder=''){
-        const td = document.createElement('td');
-        const input = document.createElement('input');
-        input.type = type;
-        input.placeholder = placeholder;
-        input.value = row[key] ?? '';
-        if (type === 'number'){
-          input.step = 'any';
-          input.inputMode = 'decimal';     // mobil: desimaltastatur
-          input.pattern = '[0-9]*[.,]?[0-9]*';
-        }
-        input.classList.add('large-bold-input');
-
-        input.oninput = () => {
-          // Ikke overskriv brukerens pågående input
-          const num = (type === 'number') ? parseLocaleNumber(input.value) : input.value;
-          row[key] = (type === 'number' && isNaN(num)) ? '' : num;
-
-          // Beregn og oppdater andre felt (ikke det aktuelle)
-          recomputeRow(idx, key);
-
-          const rr = dvwData[idx] || {};
-          if (key !== 'sg'     && sg && sg.input) sg.input.value = rr.sg      ?? '';
-          if (key !== 'weight' && w  && w.input)  w .input.value = rr.weight  ?? '';
-          if (key !== 'volume' && v  && v.input)  v .input.value = rr.volume  ?? '';
-          if (key !== 'temp'   && t  && t.input)  t .input.value = rr.temp    ?? '';
-
-          updateGauge(idx, tr);
-          dvwSave();
-        };
-
-        td.appendChild(input);
-        return {td, input};
-      }
-
-      // Product
-      const p = makeInput('text', 'product', 'Product');
-      tr.appendChild(p.td);
-
-      // SG (—)
-      const sg = makeInput('number', 'sg', 'SG (—)');
-      tr.appendChild(sg.td);
-
-      // Weight (kg)
-      const w = makeInput('number', 'weight', 'Weight (kg)');
-      tr.appendChild(w.td);
-
-      // Volume (m³)
-      const v = makeInput('number', 'volume', 'Volume (m³)');
-      tr.appendChild(v.td);
-
-      // Temp (°C)
-      const t = makeInput('number', 'temp', 'Temp (°C)');
-      tr.appendChild(t.td);
-
-      // Level (max) + gauge
-      const tdLevel = document.createElement('td');
-      const levelWrap = document.createElement('div');
-      levelWrap.className = 'level-wrap';
-
-      const levelRow = document.createElement('div');
-      levelRow.className = 'level-input-row';
-
-      const levelInput = document.createElement('input');
-      levelInput.type = 'number';
-      levelInput.step = 'any';
-      levelInput.inputMode = 'decimal';
-      levelInput.placeholder = 'Max m³';
-      levelInput.value = row.levelMax ?? '';
-      levelInput.classList.add('large-bold-input');
-      levelInput.oninput = () => {
-        const val = parseLocaleNumber(levelInput.value);
-        row.levelMax = isNaN(val) ? '' : val;
-        updateGauge(idx, tr);
-        dvwSave();
-      };
-
-      levelRow.appendChild(levelInput);
-
-      const bar = document.createElement('div');
-      bar.className = 'level-bar';
-      const fill = document.createElement('div');
-      fill.className = 'level-fill';
-      const label = document.createElement('div');
-      label.className = 'level-label';
-      label.textContent = '';
-
-      bar.appendChild(fill);
-      bar.appendChild(label);
-
-      levelWrap.appendChild(levelRow);
-      levelWrap.appendChild(bar);
-      tdLevel.appendChild(levelWrap);
-      tr.appendChild(tdLevel);
-
-      // Comments
-      const c = makeInput('text', 'comment', 'Comments');
-      tr.appendChild(c.td);
-
-      // Delete
-      const tdDel = document.createElement('td');
-      const del = document.createElement('span');
-      del.className = 'dvw-del-btn';
-      del.textContent = '🗑️';
-      del.title = 'Delete line';
-      del.onclick = () => {
-        dvwData.splice(idx,1);
-        dvwSave();
-        renderDVWTable();
-      };
-      tdDel.appendChild(del);
-      tr.appendChild(tdDel);
-
-      tbody.appendChild(tr);
-
-      // Init
-      updateGauge(idx, tr);
-    });
-  }
-
-  // Temperatur-korreksjon (enkel)
-  const DVW_ALPHA = 0.0008; // pr °C
-
-  function densityFromSGAtTemp(sg, temp){
-    if (isNaN(sg)) return NaN;
-    const d15 = sg * 1000; // kg/m³ @ ~15°C
-    if (isNaN(temp)) return d15;
-    return d15 / (1 + DVW_ALPHA * (temp - 15));
-  }
-
-  function sgFromDensityAtTemp(dT, temp){
-    if (isNaN(dT)) return NaN;
-    if (isNaN(temp)) return dT / 1000;
-    const d15 = dT * (1 + DVW_ALPHA * (temp - 15));
-    return d15 / 1000;
-  }
-
-  function roundSmart(val){
-    if (Math.abs(val) >= 1000) return Math.round(val);
-    if (Math.abs(val) >= 100)  return Math.round(val * 10) / 10;
-    if (Math.abs(val) >= 10)   return Math.round(val * 100) / 100;
-    return Math.round(val * 1000) / 1000;
-  }
-  function roundSG(val){ return Math.round(val * 1000) / 1000; }
-
-  // Re-beregning som respekterer hvilket felt som endres
-  function recomputeRow(idx, changedKey){
-    const r = dvwData[idx] || {};
-    const sg = parseLocaleNumber(r.sg);
-    const w  = parseLocaleNumber(r.weight);
-    const v  = parseLocaleNumber(r.volume);
-    const t  = parseLocaleNumber(r.temp);
-
-    const haveSG = !isNaN(sg);
-    const haveW  = !isNaN(w);
-    const haveV  = !isNaN(v);
-
-    const rhoT = haveSG ? densityFromSGAtTemp(sg, t) : NaN;
-
-    // Prioritet: beregn et annet felt enn det brukeren skriver i nå
-    const setWeightFrom = () => {
-      if (!isNaN(rhoT) && haveV){
-        const wCalc = rhoT * v;
-        r.weight = isFinite(wCalc) ? roundSmart(wCalc) : '';
-      }
-    };
-    const setVolumeFrom = () => {
-      if (!isNaN(rhoT) && haveW && rhoT !== 0){
-        const vCalc = w / rhoT;
-        r.volume = isFinite(vCalc) ? roundSmart(vCalc) : '';
-      }
-    };
-    const setSGFrom = () => {
-      if (haveW && haveV && v !== 0){
-        const dT = w / v;
-        const sgCalc = sgFromDensityAtTemp(dT, t);
-        r.sg = isFinite(sgCalc) ? roundSG(sgCalc) : '';
-      }
-    };
-
-    const known = (haveSG?1:0) + (haveW?1:0) + (haveV?1:0);
-
-    if (known < 2) return;
-
-    switch (changedKey){
-      case 'sg':
-      case 'temp':
-        // Endrer SG/Temp → oppdater Weight (fra SG & Volume), ellers Volume (fra SG & Weight)
-        if (haveSG && haveV) setWeightFrom();
-        else if (haveSG && haveW) setVolumeFrom();
-        else if (haveW && haveV) setSGFrom();
-        break;
-
-      case 'weight':
-        // Endrer Weight → oppdater Volume (fra SG & Weight), ellers SG (fra W & V)
-        if (haveSG && haveW) setVolumeFrom();
-        else if (haveW && haveV) setSGFrom();
-        else if (haveSG && haveV) setWeightFrom();
-        break;
-
-      case 'volume':
-        // Endrer Volume → oppdater Weight (fra SG & Volume), ellers SG (fra W & V)
-        if (haveSG && haveV) setWeightFrom();
-        else if (haveW && haveV) setSGFrom();
-        else if (haveSG && haveW) setVolumeFrom();
-        break;
-
-      default:
-        // Generell fallback
-        if (!haveW && haveSG && haveV) setWeightFrom();
-        else if (!haveV && haveSG && haveW) setVolumeFrom();
-        else if (!haveSG && haveW && haveV) setSGFrom();
-    }
-  }
-
-  function updateGauge(idx, tr){
-    const r = dvwData[idx] || {};
-    const v = parseLocaleNumber(r.volume);
-    const max = parseLocaleNumber(r.levelMax);
-    const fill  = tr.querySelector('.level-fill');
-    const label = tr.querySelector('.level-label');
-
-    let pct = 0;
-    if (!isNaN(v) && !isNaN(max) && max > 0){
-      pct = clamp((v / max) * 100, 0, 100);
-    }
-
-    fill.style.width = pct + '%';
-    fill.style.background = percentColor(pct);
-    label.textContent = (isNaN(v) || isNaN(max) || max <= 0)
-      ? '—'
-      : `(${Math.round(pct)}%)`;
-  }
-
-  // Add line
-  document.getElementById('dvwAddBtn').addEventListener('click', () => {
-    dvwData.push({
-      product: '',
-      sg: '',
-      weight: '',
-      volume: '',
-      temp: '',
-      levelMax: '',
-      comment: ''
-    });
-    dvwSave();
-    renderDVWTable();
-  });
-
-  // PDF for D/W/V only
-  document.getElementById('dvwPdfBtn').addEventListener('click', generateDVWPDF);
-
-  async function generateDVWPDF(){
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('p', 'mm', 'a4');
-
-    // Logo (best effort)
-    const logo = new Image();
-    logo.src = "images/Logo Seavo Nautiq.png";
-    await new Promise(res => { logo.onload = res; }).catch(()=>{});
-    try { doc.addImage(logo, 'PNG', 10, 10, 50, 30); } catch(e){}
-
-    doc.setFontSize(16);
-    doc.text("D/W/V (Fuel • Lube • Ballast) — Overview", 10, 48);
-
-    const wrap = document.getElementById('dvwTableWrap');
-
-    const canvas = await html2canvas(wrap, { backgroundColor: "#ffffff", scale: 2 });
-    const imgData = canvas.toDataURL('image/png');
-    const imgProps = doc.getImageProperties(imgData);
-
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const pageHeight = doc.internal.pageSize.getHeight();
-    const marginX = 10;
-    const topY = 55;
-
-    const pdfW = pageWidth - marginX*2;
-    const pdfH = (imgProps.height * pdfW) / imgProps.width;
-
-    let y = topY;
-    let remaining = pdfH;
-
-    let sY = 0;
-    const pageImgHeight = pageHeight - topY - 10;
-    while (remaining > 0){
-      const sliceH = Math.min(pageImgHeight, remaining);
-      const sliceCanvas = document.createElement('canvas');
-      const scale = pdfW / imgProps.width;
-      sliceCanvas.width = imgProps.width;
-      sliceCanvas.height = sliceH / scale;
-
-      const ctx = sliceCanvas.getContext('2d');
-      ctx.drawImage(canvas,
-        0, sY / scale, imgProps.width, sliceCanvas.height,
-        0, 0, imgProps.width, sliceCanvas.height);
-
-      const sliceData = sliceCanvas.toDataURL('image/png');
-      doc.addImage(sliceData, 'PNG', marginX, y, pdfW, sliceH);
-
-      remaining -= sliceH;
-      sY += sliceH;
-      if (remaining > 0){
-        doc.addPage();
-        y = 20;
-      }
-    }
-
-    doc.save('SeavoNautiq_DWV.pdf');
-  }
-
-  // Manuell oppdatering (↻-knappen)
-  document.getElementById('dvwRecalcBtn').addEventListener('click', () => {
-    dvwData.forEach((_, i) => recomputeRow(i, 'manual'));
-    dvwSave();
-    renderDVWTable();
-  });
-
-  // Init
-  renderDVWTable();
-</script>
+<!-- Lokal fallback (valgfri) -->
+<script src="/libs/xlsx.full.min.js"></script>
 
 </body>
 </html>

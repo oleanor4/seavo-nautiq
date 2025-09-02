@@ -495,21 +495,25 @@ document.addEventListener("DOMContentLoaded", ()=>{
   if (!incoming.length) return;
 
   incoming.forEach(item=>{
-    // Lag en ny linje og fyll verdier
-    addLineRow();
-    const row = tableBody.lastElementChild;
-    const prodInput = row.querySelector('td:nth-child(1) input');
-    const qtyInput  = row.querySelector('td:nth-child(2) input');
-
-    if (prodInput) prodInput.value = item.product;
-    if (qtyInput) {
-      qtyInput.value = item.quantity;
-      // trigge total-beregning
-      qtyInput.dispatchEvent(new Event("input", { bubbles:true }));
+    // Header-blokk
+    if (item.header) {
+      addHeaderRow(item.header); // eksisterende funksjon
+      return;
     }
+
+    // Vanlig ordrelinje
+    addLineRow(); // eksisterende funksjon som lager en tom rad
+    const row         = tableBody.lastElementChild;
+    const prodInput   = row.querySelector('td:nth-child(1) input');
+    const qtyInput    = row.querySelector('td:nth-child(2) input');
+    const commentInput= row.querySelector('td:nth-child(7) input'); // "Comments"-kolonnen
+
+    if (prodInput)    prodInput.value    = item.product  || "";
+    if (qtyInput)  {  qtyInput.value     = Number(item.quantity) || 0;
+                       qtyInput.dispatchEvent(new Event("input", { bubbles:true })); }
+    if (commentInput) commentInput.value = item.comment  || "";
   });
 
-  // Rydd opp
   localStorage.removeItem("ordersTransfer");
   updateGrandTotal?.();
 });

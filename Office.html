@@ -66,7 +66,7 @@ body{
 /* ====== KATEGORI-SLIDER ====== */
 .category-slider-office{
   display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.25); backdrop-filter:blur(4px);
-  padding:14px; overflow-x:auto; margin-bottom:-10px; width:90%; margin-left:70px; border-radius:14px;
+  padding:14px; overflow-x:auto; margin-bottom:-10px; width:90%; margin-left:60px; border-radius:14px;
   border:1px solid rgba(255,255,255,.12); box-shadow:0 10px 26px rgba(0,0,0,.35);
 }
 .category-item{ display:flex; align-items:center; margin:0 6px; }
@@ -101,6 +101,36 @@ body{
   box-shadow: 0 8px 20px rgba(255, 0, 0, 0.45);
 }
 
+.undo-category{
+  margin-left:22px; padding:6px 14px; border-radius:10px; border:1px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.08); color:#fff; cursor:pointer;
+}
+.undo-category:disabled{ opacity:.5; cursor:not-allowed; }
+
+.undo-category:hover:not(:disabled){ background:rgba(255,255,255,.12); box-shadow:0 6px 16px rgba(0,0,0,.35); }
+
+
+.global-overview-table {
+  width: 98%;
+  border-collapse: collapse;
+  font-size: 28px;
+  line-height: 1.5; 
+  font-weight: bolder;
+}
+
+.global-overview-table th,
+.global-overview-table td {
+  border: 1px solid #ccc;
+  padding: 14px 10px;
+}
+
+.global-overview-table th {
+  background: #1466e0;
+  font-size: 20px;
+
+}
+
+
 /* ====== KNAPPER GLOBALT ====== */
 .global-button,#sidePanel button:not(#togglePanelBtn),#calc-buttons button{
   background:linear-gradient(to right,var(--accent-2),var(--accent-3));
@@ -114,7 +144,7 @@ table{
   width:100%; border-collapse:collapse; background:rgba(0,0,0,.20); color:var(--text);
   margin-bottom:20px; border:1px solid rgba(255,255,255,.12); border-radius:14px; overflow:hidden; box-shadow:0 12px 28px rgba(0,0,0,.35);
 }
-th,td{ border-bottom:1px solid rgba(255,255,255,.12); padding:10px; text-align:center; font-size:16px; }
+th,td{ border-bottom:1px solid rgba(255,255,255,.12); padding:0px; text-align:center; font-size:16px; }
 th{ background:rgba(0,0,0,.28); color:var(--text); }
 
 .header-row td{
@@ -158,7 +188,7 @@ td.cell-small input{
 
 /* Flytteknapper */
 .cell-move button{
-  width:42px; height:36px; background:linear-gradient(to right,var(--accent-2),var(--accent-3));
+  width:42px; height:35px; background:linear-gradient(to right,var(--accent-2),var(--accent-3));
   color:#fff; border-radius:10px; cursor:pointer; font-size:16px; border:1px solid rgba(255,255,255,.12);
 }
 .cell-move button:hover{ filter:brightness(1.15); }
@@ -269,12 +299,12 @@ button img{ width:40px; height:40px; padding-left:55px; margin-top:20px; }
 .send-orders-button {
   background: linear-gradient(to right, #5092e7, #3a0580);
   color: rgb(255, 255, 255);
-  padding: 12px 8px;
+  padding: 8px 6px;
   margin: 5px;
   border-radius: 24px;
   cursor: pointer;
-  font-weight: 600;
-  font-size: 14px;
+  font-weight: 500;
+  font-size: 12px;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
 }
 
@@ -305,6 +335,7 @@ button img{ width:40px; height:40px; padding-left:55px; margin-top:20px; }
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.19.3/xlsx.full.min.js"></script>
 
 <body>
 <header>
@@ -312,10 +343,10 @@ button img{ width:40px; height:40px; padding-left:55px; margin-top:20px; }
   <a href="index.html" class="logo-link"><img src="images/Logo Seavo Nautiq.png" alt="Logo Seavo Nautiq" class="logo"></a>
 
   <div id="sidePanel" class="hidden">
-    <button>Help</button>
-    <button>Documents</button>
+    <button onclick="åpnePopup4()">Help</button>
+    <button onclick="åpnePopup2()">Documents</button>
     <button>Shared Content</button>
-    <button>Settings</button>
+    <button onclick="åpnePopup7()">Settings</button>
     <button id="signOutBtn">Sign Out</button>
 
     <div id="bottomButtons">
@@ -336,14 +367,16 @@ button img{ width:40px; height:40px; padding-left:55px; margin-top:20px; }
   </div>
   <button class="arrow" onclick="scrollSlider(100)">→</button>
   <button class="add-category" onclick="addCategory()">+ Category</button>
+  <button id="undo-delete" class="undo-category" onclick="undoCategoryDelete()" disabled>↶ Undo Del</button>
 </div>
 
 <div><img src="images/Office.PNG" alt="Office" class="office"></div>
 
 <div id="content"></div>
 
-<button id="globalToggleButton" class="global-button" onclick="toggleGlobalView()">📋 Global Overview</button>
+<button id="globalToggleButton" class="global-button" onclick="toggleGlobalView()">📋 Global Overview</button>Global overview shows total inventory in a table.
 <div><button class="global-button" onclick="generatePDF()">📄 Generate PDF</button></div>
+<button class="global-button" type="button" onclick="generateExcel()">📊 Export to Excel</button>
 <div><button class="global-button" onclick="save()">💾 Save</button></div>
 
 <!-- ====== MODALS ====== -->
@@ -369,11 +402,13 @@ button img{ width:40px; height:40px; padding-left:55px; margin-top:20px; }
       <button onclick="appendCalc('-')">−</button><br>
       <button onclick="appendCalc('0')">0</button>
       <button onclick="appendCalc('.')">.</button>
-      <button onclick="calculateResult()">=</button>
+      
       <button onclick="appendCalc('+')">+</button><br>
       <button onclick="appendCalc('%')">%</button>
-      <button onclick="deleteLast()" style="width: 30%;">DEL</button><br>
-      <button onclick="clearCalc()" style="width: 90%">C</button>
+      <button onclick="calculateResult()" style="width: 70%;">=</button><br>
+      <button onclick="deleteLast()" style="width: 30%;">DEL</button>
+      
+      <button onclick="clearCalc()" style="width: 60%">C</button>
     </div>
   </div>
 </div>
@@ -392,7 +427,162 @@ button img{ width:40px; height:40px; padding-left:55px; margin-top:20px; }
   </div>
 </div>
 
+
+<script>
+/* === Robust SheetJS-loader === */
+function loadScript(src){
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = src;
+    s.async = true;
+    s.referrerPolicy = 'no-referrer';
+    s.onload = resolve;
+    s.onerror = () => reject(new Error('Feil ved lasting: ' + src));
+    document.head.appendChild(s);
+  });
+}
+
+async function ensureXLSX(){
+  if (window.XLSX?.utils) return; // allerede klar
+
+  const candidates = [
+    "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.19.3/xlsx.full.min.js",
+    "https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js",
+    "https://unpkg.com/xlsx@0.19.3/dist/xlsx.full.min.js",
+    // Lokal fallback (legg filen i prosjektet ditt om du trenger offline)
+    "/libs/xlsx.full.min.js"
+  ];
+
+  let lastError;
+  for (const url of candidates) {
+    try {
+      await loadScript(url);
+      if (window.XLSX?.utils) return;
+    } catch (e) {
+      lastError = e;
+    }
+  }
+  throw lastError || new Error("Kunne ikke laste SheetJS");
+}
+
+
+
+
+/* ===== EXCEL (Seavo Office) ===== */
+/* ===== CSV fallback ===== */
+function downloadCSV(aoa, filename) {
+  // Lag CSV med semikolon-separator (Excel på norsk liker ; )
+  const csvRows = aoa.map(row => row.map(cell => {
+    let v = cell == null ? "" : String(cell);
+    // Escapér " og ;
+    if (v.includes('"')) v = v.replace(/"/g, '""');
+    if (/[;\n"]/.test(v)) v = `"${v}"`;
+    return v;
+  }).join(';'));
+  const csv = '\ufeff' + csvRows.join('\n'); // UTF-8 BOM for æøå
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = filename.replace(/\.xlsx$/i, '') + '.csv';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+/* ===== EXCEL (Seavo Office) – med lokal SheetJS + CSV fallback ===== */
+window.generateExcel = async function(){
+  // Finn container og/eller første tabell på siden
+  const container = document.getElementById("content");
+  const table = container?.querySelector("table") || document.querySelector("table");
+  if(!table){
+    console.warn("Fant ingen <table> i #content eller på siden.");
+    alert("Fant ingen tabell å eksportere.");
+    return;
+  }
+
+  // Bygg AOA
+  const aoa = [];
+  const dateStr = new Date().toLocaleDateString('no-NO', { year:'numeric', month:'2-digit', day:'2-digit' });
+  aoa.push(["Seavo Office"]);
+  aoa.push(["Generated:", dateStr]);
+  aoa.push([]); // tom rad
+
+  const rows = Array.from(table.querySelectorAll("tr"));
+  rows.forEach(tr => {
+    const cells = Array.from(tr.cells).map(td => {
+      if (td.querySelector("button")) return ""; // dropp knapper
+      const ctrl = td.querySelector("input, textarea, select");
+      if (ctrl) {
+        if (ctrl.tagName === "SELECT") {
+          const sel = ctrl;
+          return sel.options[sel.selectedIndex]?.text || "";
+        }
+        if (ctrl.type === "checkbox") return ctrl.checked ? "Yes" : "No";
+        return ctrl.value ?? "";
+      }
+      return td.textContent.trim();
+    });
+    // rydd trailing tomme
+    for (let i = cells.length - 1; i >= 0; i--) {
+      if (cells[i] !== "") break;
+      cells.pop();
+    }
+    aoa.push(cells);
+  });
+
+  // Hvis SheetJS mangler => CSV fallback
+  if (typeof XLSX === "undefined" || !XLSX?.utils) {
+    console.warn("SheetJS ikke lastet – bruker CSV fallback.");
+    downloadCSV(aoa, "SeavoOffice.xlsx"); // navn konverteres til .csv i funksjonen
+    return;
+  }
+
+  // SheetJS-eksport
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+
+  const colCount = Math.max(...aoa.map(r => r.length), 1);
+
+  // Slå sammen tittel
+  ws['!merges'] = ws['!merges'] || [];
+  ws['!merges'].push({ s:{r:0,c:0}, e:{r:0,c:colCount-1} });
+
+  // Autofilter på header-raden (index 3)
+  const headerRowIndex = 3;
+  if (ws['!ref']) {
+    const range = XLSX.utils.decode_range(ws['!ref']);
+    ws['!autofilter'] = {
+      ref: XLSX.utils.encode_range({ s:{ r: headerRowIndex, c: 0 }, e:{ r: range.e.r, c: range.e.c } })
+    };
+  }
+
+  // Frys header
+  ws['!freeze'] = { ySplit: headerRowIndex, xSplit: 0, topLeftCell: XLSX.utils.encode_cell({ r: headerRowIndex, c: 0 }) };
+
+  // Kolonnebredder
+  const colWidths = [];
+  for (let c = 0; c < colCount; c++) {
+    let maxLen = 10;
+    for (let r = 0; r < aoa.length; r++) {
+      const val = aoa[r][c];
+      const len = (val == null) ? 0 : String(val).length;
+      if (len > maxLen) maxLen = len;
+    }
+    colWidths.push({ wch: Math.min(40, Math.max(10, maxLen + 2)) });
+  }
+  ws['!cols'] = colWidths;
+
+  XLSX.utils.book_append_sheet(wb, ws, "Seavo Office");
+  XLSX.writeFile(wb, "SeavoOffice.xlsx");
+};
+</script>
+
+<script src="/libs/xlsx.full.min.js"></script>
+
+
 </body>
+
+
 
 <script>
 /* ===== Sidepanel toggle ===== */
@@ -416,7 +606,7 @@ function searchInPage(){
       const before=original.slice(0,index);
       const match=original.slice(index,index+term.length);
       const after=original.slice(index+term.length);
-      span.innerHTML=`${before}<span class="highlight">${match}</span>${after}`;
+      span.innerHTML=`${before}<span class="highlight">${match}</span>${after}`; 
       if(!firstMatch) firstMatch=span;
     }
   });
@@ -441,6 +631,7 @@ let activeCategory = Object.keys(data)[0] || "Standard";
 function save(){ localStorage.setItem("lagerDataV3", JSON.stringify(data)); }
 function scrollSlider(offset){ document.getElementById("category-container").scrollLeft += offset; }
 
+// sørg for at max finnes
 Object.values(data).forEach(rows=>{
   (rows||[]).forEach(r=>{
     if(r && r.type!=="header" && typeof r.max==="undefined"){ r.max=0; }
@@ -449,19 +640,76 @@ Object.values(data).forEach(rows=>{
 save();
 
 /* ===== Kategorier ===== */
+let lastDeletedCategory = null; // { name, rows, index }
+
+function insertCategoryAtIndex(obj, key, val, index){
+  const entries = Object.entries(obj);
+  const safeIndex = Math.max(0, Math.min(index, entries.length));
+  entries.splice(safeIndex, 0, [key, val]);
+  return Object.fromEntries(entries);
+}
+
 function updateCategories(){
-  const container=document.getElementById("categories");
-  container.innerHTML="";
-  Object.keys(data).forEach(name=>{
-    const wrapper=document.createElement("div"); wrapper.className="category-item"; wrapper.style.display="flex"; wrapper.style.alignItems="center";
-    const btn=document.createElement("button"); btn.className="category-button"; btn.textContent=name;
+  const container = document.getElementById("categories");
+  container.innerHTML = "";
+
+  const names = Object.keys(data);
+  names.forEach((name, idx)=>{
+    const wrapper = document.createElement("div");
+    wrapper.className = "category-item";
+    wrapper.style.display="flex";
+    wrapper.style.alignItems="center";
+
+    const btn = document.createElement("button");
+    btn.className="category-button";
+    btn.textContent=name;
     if(name===activeCategory) btn.classList.add("active");
     btn.onclick=()=>{ activeCategory=name; showCategory(); updateCategories(); };
-    const button = document.createElement("button"); button.className = "delete-category-button"; button.textContent = "Del";
-    button.onclick=()=>{ if(confirm(`Do you want to delete the category "${name}"?`)){ delete data[name]; activeCategory=Object.keys(data)[0]||null; save(); updateCategories(); showCategory(); } };
-    wrapper.appendChild(btn); wrapper.appendChild(button); container.appendChild(wrapper);
+
+    const delBtn = document.createElement("button");
+    delBtn.className = "delete-category-button";
+    delBtn.textContent = "Del";
+    delBtn.onclick = ()=>{
+      if(confirm(`Do you want to delete the category "${name}"?`)){
+        lastDeletedCategory = { name, rows: data[name], index: idx };
+        delete data[name];
+        activeCategory = Object.keys(data)[0] || null;
+        save();
+        updateCategories();
+        showCategory();
+        const u = document.getElementById("undo-delete");
+        if(u) u.disabled = false;
+      }
+    };
+
+    wrapper.appendChild(btn);
+    wrapper.appendChild(delBtn);
+    container.appendChild(wrapper);
   });
 }
+
+function undoCategoryDelete(){
+  if(!lastDeletedCategory) return;
+  const { name, rows, index } = lastDeletedCategory;
+
+  if(data && Object.prototype.hasOwnProperty.call(data, name)){
+    lastDeletedCategory = null;
+    const u = document.getElementById("undo-delete");
+    if(u) u.disabled = true;
+    return;
+  }
+
+  data = insertCategoryAtIndex(data, name, rows, index);
+  activeCategory = name;
+  save();
+  updateCategories();
+  showCategory();
+
+  lastDeletedCategory = null;
+  const u = document.getElementById("undo-delete");
+  if(u) u.disabled = true;
+}
+
 function addCategory(){
   const name=prompt("New category:");
   if(name && !data[name]){ data[name]=[]; activeCategory=name; save(); updateCategories(); showCategory(); }
@@ -475,8 +723,6 @@ const PRODUCT_COLORS = [
   "#1f2937","#7c3aed","#b45309","#c0c0c0",
   "#d00000","#f97316","#ef4441",
 ];
-
-
 
 /* Fargehjelpere */
 function toRgbStr(col){
@@ -503,7 +749,7 @@ function bestTextColor(hexOrCss){
   return lum > 0.55 ? '#000' : '#fff';
 }
 
-/* === Popover portal & posisjonering (NYTT) === */
+/* === Popover portal & posisjonering === */
 let currentOpenPopover = null;
 function hidePopover(p){
   if(!p) return;
@@ -512,28 +758,19 @@ function hidePopover(p){
   if(currentOpenPopover===p) currentOpenPopover=null;
 }
 function positionPopoverNear(pop, anchorEl){
-  // legg i body som portal
-  if(pop.parentNode !== document.body){
-    document.body.appendChild(pop);
-  }
-  // midlertidig gjør synlig for måling
+  if(pop.parentNode !== document.body){ document.body.appendChild(pop); }
   pop.classList.remove('hidden');
   pop.style.visibility = 'hidden';
-  // mål
+
   const a = anchorEl.getBoundingClientRect();
   const pw = pop.offsetWidth || 120;
   const ph = pop.offsetHeight || 120;
-
-  // standard under, litt til høyre
   let top  = a.bottom + 8;
   let left = a.left;
 
-  // horisontal clamp
   const maxL = window.innerWidth - pw - 8;
   if(left > maxL) left = Math.max(8, maxL);
   if(left < 8)    left = 8;
-
-  // hvis går utenfor nederst, legg over
   if(top + ph > window.innerHeight - 8){
     top = a.top - ph - 8;
     if(top < 8) top = Math.max(8, window.innerHeight - ph - 8);
@@ -556,7 +793,6 @@ function buildProductColorPicker(td, input, row){
   chip.className = 'color-chip';
   chip.title = 'Pick color';
 
-  // Init fra lagret
   if(row.productColor){
     chip.style.setProperty('--chip-color', row.productColor);
     input.classList.add('product-input');
@@ -567,25 +803,21 @@ function buildProductColorPicker(td, input, row){
   const pop = document.createElement('div');
   pop.className = 'color-popover hidden';
 
-  // Clear
   const clear = document.createElement('div');
   clear.className = 'color-option clear';
   clear.title = 'Clear';
   clear.onclick = (e)=>{
     e.stopPropagation();
     row.productColor = null;
-
     input.classList.remove('product-input');
     input.style.removeProperty('--col-rgb');
     input.style.color = '';
     chip.style.removeProperty('--chip-color');
-
     save();
     hidePopover(pop);
   };
   pop.appendChild(clear);
 
-  // Farger
   PRODUCT_COLORS.forEach(col=>{
     const sw = document.createElement('div');
     sw.className = 'color-option';
@@ -594,13 +826,10 @@ function buildProductColorPicker(td, input, row){
     sw.onclick = (e)=>{
       e.stopPropagation();
       row.productColor = col;
-
       input.classList.add('product-input');
       input.style.setProperty('--col-rgb', toRgbStr(col));
       input.style.color = bestTextColor(col);
-
       chip.style.setProperty('--chip-color', col);
-
       save();
       hidePopover(pop);
     };
@@ -608,20 +837,15 @@ function buildProductColorPicker(td, input, row){
   });
 
   wrap.appendChild(chip);
-  // viktig: IKKE legg pop inn i wrap (blir portet til body ved åpning)
   td.appendChild(wrap);
 
   chip.addEventListener('click', (e)=>{
     e.stopPropagation();
     if(currentOpenPopover && currentOpenPopover!==pop) hidePopover(currentOpenPopover);
-    if(pop.classList.contains('hidden')){
-      positionPopoverNear(pop, chip);
-    } else {
-      hidePopover(pop);
-    }
+    if(pop.classList.contains('hidden')){ positionPopoverNear(pop, chip); }
+    else { hidePopover(pop); }
   });
 
-  // Lukk ved klikk utenfor
   document.addEventListener('click', (ev)=>{
     if(pop.classList.contains('hidden')) return;
     if(pop.contains(ev.target) || chip.contains(ev.target)) return;
@@ -688,11 +912,8 @@ function buildHeaderColorPicker(hostTd, row){
   chip.addEventListener('click', (e)=>{
     e.stopPropagation();
     if(currentOpenPopover && currentOpenPopover!==pop) hidePopover(currentOpenPopover);
-    if(pop.classList.contains('hidden')){
-      positionPopoverNear(pop, chip);
-    } else {
-      hidePopover(pop);
-    }
+    if(pop.classList.contains('hidden')){ positionPopoverNear(pop, chip); }
+    else { hidePopover(pop); }
   });
 
   document.addEventListener('click', (ev)=>{
@@ -720,7 +941,7 @@ function showCategory(){
   `;
   const tbody=table.querySelector("tbody");
 
-  data[activeCategory].forEach((row,i)=>{
+  (data[activeCategory]||[]).forEach((row,i)=>{
     const tr=document.createElement("tr");
 
     if(row.type==="header"){
@@ -779,15 +1000,23 @@ function showCategory(){
       input.classList.add("large-bold-input");
       if(key==='end'){ input.readOnly=true; }
 
-      input.oninput=()=>{
-        row[key]=input.value;
-        const startVal=parseFloat(row.start)||0;
-        const usedVal=parseFloat(row.used)||0;
-        row.end = startVal - usedVal;
-        inputs['end'].value = row.end;
-        updateAlarms();
-        save();
-      };
+
+      input.oninput = () => {
+  if (key === 'order') {
+    // tillat komma og gjør til tall
+    const v = (input.value ?? '').toString().replace(',', '.');
+    row.order = v === '' ? 0 : (parseFloat(v) || 0);
+  } else {
+    row[key] = input.value;
+  }
+
+  const startVal = parseFloat(row.start) || 0;
+  const usedVal  = parseFloat(row.used)  || 0;
+  row.end = startVal - usedVal;
+  inputs['end'].value = row.end;
+  updateAlarms();
+  save();
+};
 
       inputs[key]=input;
       td.appendChild(input);
@@ -827,41 +1056,51 @@ function showCategory(){
     tbody.appendChild(tr);
   });
 
-  // --- FOOT med knapp under "Order"-kolonnen ---
-const tfoot = document.createElement("tfoot");
-const footRow = document.createElement("tr");
+  // FOOT: knapp under "Order"
+  const ths = Array.from(table.tHead.rows[0].cells);
+  const cols = ths.length;
+  const orderIdx = ths.findIndex(th => /order/i.test(th.textContent.trim()));
+  const targetIdx = orderIdx >= 0 ? orderIdx : cols - 1;
 
-// 10 kolonner: 0..9 (Order er index 7)
-for (let c = 0; c < 10; c++) {
-  const td = document.createElement("td");
-  if (c === 7) {
-    const sendBtn = document.createElement("button");
-    sendBtn.className = "send-orders-button";
-    sendBtn.textContent = "📦 Send to Orders";
-    sendBtn.onclick = sendToOrders; // funksjonen under
-    td.appendChild(sendBtn);
+  const tfoot = document.createElement("tfoot");
+  const footRow = document.createElement("tr");
+  for (let c = 0; c < cols; c++) {
+    const td = document.createElement("td");
+    if (c === targetIdx) {
+      const sendBtn = document.createElement("button");
+      sendBtn.className = "send-orders-button";
+      sendBtn.type = "button";
+      sendBtn.textContent = "Active Category to Orders 📦";
+      sendBtn.onclick = sendActiveCategoryToOrders;
+      td.appendChild(sendBtn);
+    }
+    footRow.appendChild(td);
   }
-  footRow.appendChild(td);
-}
-tfoot.appendChild(footRow);
-table.appendChild(tfoot);
-
+  tfoot.appendChild(footRow);
+  table.appendChild(tfoot);
 
   content.appendChild(table);
 
   const addLine=document.createElement("button");
   addLine.className="global-button"; addLine.textContent="+ Add line";
-  addLine.onclick=()=>{ data[activeCategory].push({type:"line", product:"", start:0, used:0, end:0, min:0, max:0, comment:"", order:0, productColor:null}); save(); showCategory(); };
+  addLine.onclick=()=>{ 
+    (data[activeCategory] ||= []).push({type:"line", product:"", start:0, used:0, end:0, min:0, max:0, comment:"", order:0, productColor:null}); 
+    save(); showCategory(); 
+  };
 
   const addHeader=document.createElement("button");
   addHeader.className="global-button"; addHeader.textContent="+ Add header/section";
-  addHeader.onclick=()=>{ data[activeCategory].push({type:"header", text:"New Header"}); save(); showCategory(); };
+  addHeader.onclick=()=>{ 
+    (data[activeCategory] ||= []).push({type:"header", text:"New Header"}); 
+    save(); showCategory(); 
+  };
 
-  content.appendChild(addLine); content.appendChild(addHeader);
+  content.appendChild(addLine); 
+  content.appendChild(addHeader);
   searchInPage();
 }
 
-function deleteRow(index){ data[activeCategory].splice(index,1); save(); showCategory(); }
+function deleteRow(index){ (data[activeCategory]||[]).splice(index,1); save(); showCategory(); }
 function moveRow(index, direction){
   const list=data[activeCategory]; const newIndex=index+direction;
   if(newIndex<0 || newIndex>=list.length) return;
@@ -869,34 +1108,59 @@ function moveRow(index, direction){
   save(); showCategory();
 }
 
-function sendToOrders(){
+/* ===== SEND: aktiv kategori -> Orders.html ===== */
+function sendActiveCategoryToOrders() {
+  const rows = data[activeCategory] || [];
   const payload = [];
+  let pendingHeader = "";
 
-  // Gå gjennom ALLE kategorier og ta med alle linjer (ikke headers) med Order > 0
-  Object.entries(data).forEach(([category, rows])=>{
-    (rows || []).forEach(r=>{
-      if (r && r.type !== "header") {
-        const qty  = Number(r.order) || 0;
-        const prod = (r.product || "").trim();
-        if (prod && qty > 0) {
-          payload.push({ product: prod, quantity: qty, category });
-        }
+  rows.forEach(r => {
+    if (!r) return;
+
+    // ta med overskrift som egen blokk
+    if (r.type === "header") {
+      pendingHeader = (r.text || "").trim();
+      return;
+    }
+
+    // les direkte fra data (ikke DOM)
+    const product = (r.product || r["Office"] || "").trim();
+    const qty = Number(String(r.order ?? "").toString().replace(",", "."));
+    const comment = (r.comment || "").trim();
+
+    if (product && qty > 0) {
+      if (pendingHeader) {
+        payload.push({ header: pendingHeader });
+        pendingHeader = "";
       }
-    });
+      payload.push({
+        product,
+        quantity: qty,
+        comment,
+        category: activeCategory
+      });
+    }
   });
 
-  // Lagre og navigér (endre filnavn om siden din heter "Order.html")
+  if (!payload.length) {
+    console.warn("Ingen ordrelinjer funnet i data for aktiv kategori:", {
+      activeCategory,
+      rows: JSON.parse(JSON.stringify(rows))
+    });
+    alert("Product field is empty.");
+    return;
+  }
+
   localStorage.setItem("ordersTransfer", JSON.stringify(payload));
   window.location.href = "Orders.html";
 }
 
-
-
-/* Global oversikt */
+/* ===== Global oversikt ===== */
 function showGlobalOverview(){
   const content=document.getElementById("content");
-  content.innerHTML="<h2>Global overview of the entire inventory</h2>";
+  content.innerHTML="<h2>Global overview of the entire office inventory</h2>";
   const table=document.createElement("table");
+  table.className = "global-overview-table";
   table.innerHTML=`
     <thead>
       <tr><th>Category</th><th>Product</th><th>Start</th><th>Used</th><th>End</th><th>Min</th><th>Max</th><th>Comment</th><th>Order</th></tr>
@@ -905,7 +1169,7 @@ function showGlobalOverview(){
   `;
   const tbody=table.querySelector("tbody");
   Object.entries(data).forEach(([category, rows])=>{
-    rows.forEach(row=>{
+    (rows||[]).forEach(row=>{
       if(row.type==="header") return;
       const tr=document.createElement("tr");
       const start=parseFloat(row.start)||0;
@@ -926,7 +1190,7 @@ if(!data[activeCategory]){ data[activeCategory]=[]; save(); }
 let isGlobalView=false;
 function toggleGlobalView(){
   const button=document.getElementById("globalToggleButton");
-  if(!isGlobalView){ showGlobalOverview(); button.textContent="🔙 Back to Table"; }
+  if(!isGlobalView){ showGlobalOverview(); button.textContent="🔙 Back to control table"; }
   else { showCategory(); button.textContent="📋 Global Overview"; }
   isGlobalView=!isGlobalView;
 }
@@ -934,22 +1198,49 @@ function toggleGlobalView(){
 updateCategories();
 showCategory();
 
-/* ===== PDF ===== */
+/* ===== PDF (svart skrift) ===== */
 async function generatePDF(){
   const { jsPDF } = window.jspdf;
-  const doc=new jsPDF('p','mm','a4');
-  const logoImg=new Image(); logoImg.src="images/Logo Seavo Nautiq.png";
-  await new Promise(resolve=>{ logoImg.onload=resolve; });
-  doc.addImage(logoImg,'PNG',10,10,60,35);
-  const content=document.getElementById("content");
-  await html2canvas(content,{backgroundColor:"#ffffff"}).then(canvas=>{
-    const imgData=canvas.toDataURL('image/png');
-    const imgProps=doc.getImageProperties(imgData);
-    const pdfWidth=doc.internal.pageSize.getWidth()-20;
-    const pdfHeight=(imgProps.height*pdfWidth)/imgProps.width;
-    doc.addImage(imgData,'PNG',13,35,pdfWidth,pdfHeight);
-    doc.save("SeavoNautiq_Inventory.pdf");
-  });
+  const doc = new jsPDF('p','mm','a4');
+
+  const today = new Date().toLocaleDateString();
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(22);
+  doc.text("Seavo Office", 105, 15, { align: "center" });
+  doc.setFontSize(18);
+  doc.text("Generated: " + today, 105, 22, { align: "center" });
+
+  const content = document.getElementById("content");
+
+  const buttons = content.querySelectorAll("button, .btn, .delete-button");
+  buttons.forEach(btn => btn.style.display = "none");
+
+  const allNodes = content.querySelectorAll("*");
+  const originalColors = [];
+  allNodes.forEach((el, i) => { originalColors[i] = el.style.color; el.style.color = "#000000"; });
+
+  const canvas = await html2canvas(content, { backgroundColor:"#ffffff", scale:2 });
+
+  allNodes.forEach((el, i) => el.style.color = originalColors[i] || "");
+
+  const ctx = canvas.getContext("2d");
+  const imgDataArr = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const d = imgDataArr.data;
+  for(let i=0; i<d.length; i+=4){
+    const avg = 0.3*d[i] + 0.59*d[i+1] + 0.11*d[i+2];
+    d[i]=d[i+1]=d[i+2]=avg;
+  }
+  ctx.putImageData(imgDataArr, 0, 0);
+
+  const imgData = canvas.toDataURL("image/png");
+  const imgProps = doc.getImageProperties(imgData);
+  const pdfWidth = doc.internal.pageSize.getWidth() - 20;
+  const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+  doc.addImage(imgData, "PNG", 10, 30, pdfWidth, pdfHeight);
+
+  doc.save("SeavoNautiq_Inventory.pdf");
+
+  buttons.forEach(btn => btn.style.display = "");
 }
 
 /* ===== Calculator / Notepad ===== */
@@ -958,7 +1249,6 @@ function closeCalculator(){ document.getElementById("calculatorModal").style.dis
 function openNotepad(){ document.getElementById("notepadModal").style.display="block"; }
 function closeNotepad(){ document.getElementById("notepadModal").style.display="none"; }
 
-/* Kalkulator-funksjoner */
 function appendCalc(v){ const d=document.getElementById('calc-display'); d.value+=v; }
 function deleteLast(){ const d=document.getElementById('calc-display'); d.value=d.value.slice(0,-1); }
 function clearCalc(){ document.getElementById('calc-display').value=''; }
@@ -971,11 +1261,9 @@ function calculateResult(){
   }catch{ d.value='Error'; }
 }
 
-/* Notepad lagring */
 function saveNote(){ localStorage.setItem('seavo_note', document.getElementById('noteArea').value); }
 function clearNote(){ document.getElementById('noteArea').value=''; localStorage.removeItem('seavo_note'); }
 
-/* Drag-n-drop for modal-vinduer */
 function makeDraggable(handleId, windowId){
   const handle=document.getElementById(handleId);
   const win=document.getElementById(windowId);
@@ -1016,5 +1304,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
   makeDraggable('calcDragHandle','calculatorWindow');
   makeDraggable('noteDragHandle','notepadWindow');
 });
+
+/* Popup helpers */
+function åpnePopup4(){ window.open('Help.html','popup','width=1600,height=1200'); }
+function åpnePopup2(){ window.open('Documents.html','popup','width=1600,height=1200'); }
+function åpnePopup7(){ window.open('Settings.html','popup','width=1600,height=1200'); }
 </script>
-</html>

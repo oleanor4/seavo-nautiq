@@ -5,6 +5,9 @@
   <title>Medicine – Seavo Nautiq</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
+  <!-- Kjerne (én gang, med defer) -->
+  <script src="./js/seavo-core.js" defer></script>
+
   <style>
 /* ====== THEME / BASE (samme palett som Office) ====== */
 :root{
@@ -62,7 +65,6 @@ table{
 th,td{ border-bottom:1px solid rgba(255,255,255,.12); padding:8px; text-align:center; font-size:16px; }
 th{ background:rgba(0,0,0,.28); color:var(--text); }
 
-
 input[type="text"], input[type="number"], input[type="date"]{
   width:95%; padding:10px; border-radius:10px;
   background:rgba(0,0,0,.25); color:var(--text);
@@ -70,14 +72,10 @@ input[type="text"], input[type="number"], input[type="date"]{
   font-weight:700; font-size:14px;
   outline:none;
 }
-
-input[type="text"]::placeholder{ color:var(--muted); }
-input[type="number"]::placeholder{ color:var(--muted); }
+input[type="text"]::placeholder,
+input[type="number"]::placeholder,
 input[type="date"]::placeholder{ color:var(--muted); }
 input:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(98,178,231,.18); }
-
-.medical-equipment-input::placeholder{ color:var(--muted); }
-.medical-equipment-input:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(98,178,231,.18); }
 
 /* Knapper (Office-gradients) */
 .btn{
@@ -86,29 +84,25 @@ input:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(98,178,231,.1
   color:#fff; border:1px solid rgba(255,255,255,.12); box-shadow:0 6px 16px rgba(0,0,0,.35);
 }
 .btn:hover{ filter:brightness(1.25); }
-.btn-del{
-  background:linear-gradient(to right,#f13e4e,#a31621);
-}
-.btn-pdf{
-  background:linear-gradient(to right,#6c757d,#495057);
-}
+.btn-del{ background:linear-gradient(to right,#f13e4e,#a31621); }
+.btn-pdf{ background:linear-gradient(to right,#6c757d,#495057); }
 
-/* MIN-alarm (beholdt) */
+/* MIN-alarm */
 .min-alarm{
   background:linear-gradient(to right, rgba(255,255,255,.2), rgba(247,230,0,.35)) !important;
 }
 
-/* Expiry "trafikklys" (Office-stil) */
+/* Expiry "trafikklys" */
 .expiry-green{
-  background:linear-gradient(to right,#000000,#39e99f) !important; color:#000; font-weight:bold;
+  background:linear-gradient(to right,#00000080,#39e9a0a1) !important; color:#000; font-weight:bold;
   box-shadow:0 0 6px rgba(0,0,0,.4);
 }
 .expiry-yellow{
-  background:linear-gradient(to right,#000000,#ffda47) !important; color:#000; font-weight:bold;
+  background:linear-gradient(to right,#00000088,#ffda478e) !important; color:#000; font-weight:bold;
   box-shadow:0 0 6px rgba(0,0,0,.4);
 }
 .expiry-red{
-  background:linear-gradient(to right,#000000,#d12e2e) !important; color:#000; font-weight:bold;
+  background:linear-gradient(to right,#0000008a,#d12e2e9f) !important; color:#000; font-weight:bold;
   box-shadow:0 0 6px rgba(0,0,0,.4);
 }
 
@@ -161,7 +155,7 @@ input:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(98,178,231,.1
           <th>Delete</th>
         </tr>
       </thead>
-      <tbody></tbody>
+      <tbody><!-- fylles fra localStorage --></tbody>
     </table>
     <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
       <button class="btn" onclick="addMedicineLine()">+ Add Line</button>
@@ -175,93 +169,229 @@ input:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(98,178,231,.1
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
 
 <script>
-/* ====== Felles funksjon: sett expiry-klasse med 50/20-dagers terskel ====== */
+/* =======================
+   LOCAL STORAGE + CORE SYNC
+   ======================= */
+const LS_KEY = 'sn.medicine.v1';
+
+function loadPageState(){
+  try { return JSON.parse(localStorage.getItem(LS_KEY)) || null; }
+  catch { return null; }
+}
+function savePageState(state){
+  localStorage.setItem(LS_KEY, JSON.stringify(state));
+}
+
+/* Serialize hele siden (registrering + rader) */
+function serializePage(){
+  const regs = {
+    regDate:  document.getElementById('regDate')?.value || '',
+    regExpiry:document.getElementById('regExpiry')?.value || '',
+    issuer:   document.getElementById('issuer')?.value || '',
+    officer:  document.getElementById('officer')?.value || '',
+    notes:    document.getElementById('notes')?.value || ''
+  };
+  const rows = Array.from(document.querySelectorAll('#medicineTable tbody tr')).map(tr=>{
+    const id = tr.getAttribute('data-row-id') || '';
+    const get = sel => tr.querySelector(sel);
+    return {
+      id,
+      name:   get('.product-name')?.value?.trim() || '',
+      qty:    get('.qty-input')?.value || '',
+      min:    get('.min-input')?.value || '',
+      expiry: get('.expiry-input')?.value || '',
+      comment:get('.comment-input')?.value || '',
+      order:  get('.order-input')?.value || ''
+    };
+  });
+  return { regs, rows };
+}
+
+/* Render fra state */
+function renderFromState(state){
+  // Registrering
+  const r = state?.regs || {};
+  document.getElementById('regDate').value   = r.regDate   || '';
+  document.getElementById('regExpiry').value = r.regExpiry || '';
+  document.getElementById('issuer').value    = r.issuer    || '';
+  document.getElementById('officer').value   = r.officer   || '';
+  document.getElementById('notes').value     = r.notes     || '';
+
+  // Rader
+  const tbody = document.querySelector('#medicineTable tbody');
+  tbody.innerHTML = '';
+  (state?.rows || []).forEach(row => {
+    const tr = createMedicineRow(row);
+    tbody.appendChild(tr);
+  });
+
+  // Farg registreringens expiry
+  applyExpiryClass(document.getElementById('regExpiry'));
+  // Farg alle raders expiry
+  document.querySelectorAll('.expiry-input').forEach(applyExpiryClass);
+
+  // Sync til core
+  scanAndSyncMedicine();
+}
+
+/* Lag en rad-node (brukes ved load og add) */
+function createMedicineRow(data = {}){
+  const tr = document.createElement('tr');
+  tr.setAttribute('data-row-id', data.id || crypto.randomUUID());
+
+  const tdEquip = document.createElement('td');
+  const equip = document.createElement('input');
+  equip.type = "text"; equip.placeholder="Med Eq"; equip.className = "product-name";
+  equip.value = data.name || '';
+  tdEquip.appendChild(equip);
+
+  const tdQty = document.createElement('td');
+  const qty = document.createElement('input');
+  qty.type="number"; qty.value = data.qty || 0; qty.className = "qty-input";
+  tdQty.appendChild(qty);
+
+  const tdMin = document.createElement('td');
+  const min = document.createElement('input');
+  min.type="number"; min.value = data.min || 0; min.className = "min-input";
+  tdMin.appendChild(min);
+
+  const tdExp = document.createElement('td');
+  const exp = document.createElement('input');
+  exp.type="date"; exp.value = data.expiry || ''; exp.className = "expiry-input";
+  tdExp.appendChild(exp);
+
+  const tdCom = document.createElement('td');
+  const com = document.createElement('input');
+  com.type="text"; com.placeholder="Comments"; com.value = data.comment || ''; com.className = "comment-input";
+  tdCom.appendChild(com);
+
+  const tdOrder = document.createElement('td');
+  const order = document.createElement('input');
+  order.type="number"; order.value = data.order || 0; order.className = "order-input";
+  tdOrder.appendChild(order);
+
+  const tdDel = document.createElement('td');
+  const delBtn = document.createElement('button');
+  delBtn.textContent="🗑️";
+  delBtn.className="btn btn-del";
+  delBtn.addEventListener('click', ()=>{
+    const name = equip.value?.trim() || '[Unnamed]';
+    tr.remove();
+    medLog(`Deleted "${name}" from Medicine`);
+    persistAndSync();
+  });
+  tdDel.appendChild(delBtn);
+
+  tr.append(tdEquip, tdQty, tdMin, tdExp, tdCom, tdOrder, tdDel);
+
+  // Alarmer
+  function checkAlarms(){
+    const q = parseFloat(qty.value)||0;
+    const m = parseFloat(min.value)||0;
+    if(q <= m){ min.classList.add("min-alarm"); } else { min.classList.remove("min-alarm"); }
+    applyExpiryClass(exp);
+  }
+  qty.addEventListener('input', ()=>{ checkAlarms(); persistAndSync(); });
+  min.addEventListener('input', ()=>{ checkAlarms(); persistAndSync(); });
+  exp.addEventListener('input', ()=>{
+    checkAlarms();
+    medLog(`Updated expiry for "${equip.value?.trim() || '[Unnamed]'}" to ${exp.value}`);
+    persistAndSync();
+  });
+  equip.addEventListener('input', ()=>{ persistAndSync(); });
+  com.addEventListener('input',  ()=>{ persistAndSync(); });
+  order.addEventListener('input',()=>{ persistAndSync(); });
+
+  // Init farger
+  checkAlarms();
+
+  return tr;
+}
+
+/* Lagre + sync */
+function persistAndSync(){
+  savePageState(serializePage());
+  scanAndSyncMedicine();
+}
+
+/* ====== UI: farg utløpsdato lokalt (50/20-dagers terskel) ====== */
 function applyExpiryClass(el){
+  if(!el) return;
   el.classList.remove("expiry-green","expiry-yellow","expiry-red");
   if(!el.value) return;
-
   const today = new Date(); today.setHours(0,0,0,0);
   const exp   = new Date(el.value); exp.setHours(0,0,0,0);
-  const diffDays = Math.ceil((exp - today) / (1000*60*60*24));
-
-  // Rød: <= 20 dager (også passert), Gul: <= 50 dager, Grønn: ellers
+  const diffDays = Math.ceil((exp - today) / 86400000);
   if(diffDays <= 20){ el.classList.add("expiry-red"); }
   else if(diffDays <= 50){ el.classList.add("expiry-yellow"); }
   else { el.classList.add("expiry-green"); }
 }
 
-/* ====== Init for registreringens Expiry ====== */
-(function initRegistrationExpiry(){
-  const regExpiry = document.getElementById("regExpiry");
-  if(!regExpiry) return;
-  const handler = ()=> applyExpiryClass(regExpiry);
-  regExpiry.addEventListener("input", handler);
-  // Kjør en gang ved last
-  handler();
-})();
+/* ====== CORE-bridge: send snapshot til Index ====== */
+function scanAndSyncMedicine(){
+  const rows = Array.from(document.querySelectorAll('#medicineTable tbody tr'))
+    .filter(tr => !tr.classList.contains('header-row'));
 
-/* ====== Legg til linje i tabell (uendret logikk, men med ny style + expiry-alarm) ====== */
-function addMedicineLine(){
-  const tbody = document.querySelector("#medicineTable tbody");
-  const tr = document.createElement("tr");
+  const items = rows.map(tr => {
+    let id = tr.getAttribute('data-row-id');
+    if(!id){ id = crypto.randomUUID(); tr.setAttribute('data-row-id', id); }
+    const nameEl = tr.querySelector('.product-name');
+    const expEl  = tr.querySelector('.expiry-input');
+    const name = nameEl ? (nameEl.value?.trim?.() || nameEl.textContent?.trim?.() || '') : '';
+    const expiryISO = expEl?.value || '';
+    return { id, name, expiryISO };
+  });
 
-  const tdEquip = document.createElement("td");
-  const equip = document.createElement("input");
-  equip.type = "text"; equip.placeholder="Med Eq";
-  tdEquip.appendChild(equip);
-
-  const tdQty = document.createElement("td");
-  const qty = document.createElement("input");
-  qty.type="number"; qty.value=0;
-  tdQty.appendChild(qty);
-
-  const tdMin = document.createElement("td");
-  const min = document.createElement("input");
-  min.type="number"; min.value=0;
-  tdMin.appendChild(min);
-
-  const tdExp = document.createElement("td");
-  const exp = document.createElement("input");
-  exp.type="date";
-  tdExp.appendChild(exp);
-
-  const tdCom = document.createElement("td");
-  const com = document.createElement("input");
-  com.type="text"; com.placeholder="Comments";
-  tdCom.appendChild(com);
-
-  const tdOrder = document.createElement("td");
-  const order = document.createElement("input");
-  order.type="number"; order.value=0;
-  tdOrder.appendChild(order);
-
-  const tdDel = document.createElement("td");
-  const delBtn = document.createElement("button");
-  delBtn.textContent="🗑️";
-  delBtn.className="btn btn-del";
-  delBtn.onclick=()=> tr.remove();
-  tdDel.appendChild(delBtn);
-
-  tr.append(tdEquip, tdQty, tdMin, tdExp, tdCom, tdOrder, tdDel);
-  tbody.appendChild(tr);
-
-  // --- alarm checks (UI) ---
-  function checkAlarms(){
-    const q = parseFloat(qty.value)||0;
-    const m = parseFloat(min.value)||0;
-    if(q <= m){ min.classList.add("min-alarm"); } else { min.classList.remove("min-alarm"); }
-
-    applyExpiryClass(exp); // bruker samme 50/20 terskler
-  }
-
-  qty.oninput=checkAlarms;
-  min.oninput=checkAlarms;
-  exp.oninput=checkAlarms;
-
-  // Kjør ved opprettelse
-  checkAlarms();
+  // <-- Viktig: pageKey = 'medicine'
+  seavo.syncInventory('medicine', items);
 }
 
+/* ====== Aktivitetslogg helper ====== */
+function medLog(text){
+  seavo.logActivity({ text, source: 'Medicine', type: 'action' });
+}
+
+/* ====== Public: Add line-knappen ====== */
+function addMedicineLine(){
+  const tbody = document.querySelector("#medicineTable tbody");
+  const tr = createMedicineRow();
+  tbody.appendChild(tr);
+  medLog('Added new medicine line');
+  persistAndSync();
+}
+
+/* ====== Registreringens Expiry farging + lagring ====== */
+(function initRegistrationExpiry(){
+  const regDate   = document.getElementById("regDate");
+  const regExpiry = document.getElementById("regExpiry");
+  const issuer    = document.getElementById("issuer");
+  const officer   = document.getElementById("officer");
+  const notes     = document.getElementById("notes");
+
+  const onChange = (e)=>{
+    if(e?.target === regExpiry) applyExpiryClass(regExpiry);
+    persistAndSync();
+  };
+
+  [regDate, regExpiry, issuer, officer, notes].forEach(el=>{
+    if(el) el.addEventListener('input', onChange);
+  });
+})();
+
+/* ====== Init ved last ====== */
+document.addEventListener('DOMContentLoaded', ()=>{
+  const saved = loadPageState();
+  if(saved){
+    renderFromState(saved);
+  } else {
+    // Tom state: start med en blank rad
+    addMedicineLine();
+    persistAndSync();
+  }
+});
+</script>
+
+<script>
 /* ---- PDF (svart/hvitt) med jsPDF AutoTable ---- */
 async function generatePDF(){
   const { jsPDF } = window.jspdf;

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Infobox</title>
+  <style>
+    :root {
+      --bg-lightness: 20%;
+      --text-color: hsl(0, 0%, calc(100% - var(--bg-lightness)));
+      --box-color: rgba(0, 30, 70, 0.85); /* mørk blå gjennomsiktig */
+      --warn: #ecc543; /* gul */
+      --danger: #f03747; /* rød */
+      --muted: rgba(255,255,255,.6);
+    }
+
+    body {
+      background-color: hsl(210, 100%, var(--bg-lightness));
+      transition: background-color 0.5s ease;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      overflow-x: hidden;
+      color: var(--text-color);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7));
+      z-index: -1;
+    }
+
+    /* Top widgets container */
+    .top-widgets {
+      position: fixed;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 14px;
+      z-index: 1000;
+      padding: 0 10px;
+    }
+
+    .widget {
+      background: var(--box-color);
+      padding: 14px 16px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      width: 280px;
+      backdrop-filter: blur(4px);
+    }
+
+    .widget h3 {
+      margin: 0 0 10px 0;
+      font-size: 18px;
+      text-align: center;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    }
+
+    /* Reminders list */
+    .reminder-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 6px 0;
+      font-size: 15px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 2px rgba(255,255,255,.08) inset;
+    }
+    .dot.yellow { background-color: var(--warn); }
+    .dot.red    { background-color: var(--danger); }
+
+    .label {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .badge {
+      min-width: 22px;
+      height: 18px;
+      padding: 0 6px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      background: rgba(255,255,255,.14);
+      color: #fff;
+      line-height: 1;
+    }
+
+    /* Recent Activity */
+    .activity-box .subtle {
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+      margin-top: -6px;
+      margin-bottom: 8px;
+    }
+
+    .activity-list {
+      max-height: 150px;          /* “slider”/scroll-område */
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .activity-item {
+      padding: 8px 10px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 10px;
+      background: rgba(255,255,255,.04);
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    /* Fin scroll */
+    .activity-list::-webkit-scrollbar { width: 8px; }
+    .activity-list::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,.25);
+      border-radius: 8px;
+    }
+    .activity-list::-webkit-scrollbar-track { background: transparent; }
+
+    /* Responsiv stacking */
+    @media (max-width: 640px) {
+      .top-widgets { 
+        flex-direction: column; 
+        align-items: center; 
+        top: 10px;
+      }
+      .widget { width: min(92vw, 320px); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-widgets">
+    <!-- Reminders -->
+    <div class="widget" aria-label="Reminders">
+      <h3>Reminders</h3>
+
+      <div class="reminder-item">
+        <span class="dot yellow"></span>
+        <span class="label">Inventory expires</span>
+        <span class="badge" id="invYellowCount">3</span>
+      </div>
+
+      <div class="reminder-item">
+        <span class="dot red"></span>
+        <span class="label">Inventory expires</span>
+        <span class="badge" id="invRedCount">1</span>
+      </div>
+
+      <div class="reminder-item">
+        <span class="dot yellow"></span>
+        <span class="label">Tasks expire</span>
+        <span class="badge" id="taskYellowCount">5</span>
+      </div>
+
+      <div class="reminder-item">
+        <span class="dot red"></span>
+        <span class="label">Tasks expire</span>
+        <span class="badge" id="taskRedCount">2</span>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="widget activity-box" aria-label="Recent Activity">
+      <h3>Recent Activity</h3>
+      <div class="subtle">Visual only – scrollable</div>
+      <div class="activity-list">
+        <div class="activity-item">[12:04] Replaced fire extinguishers – logged by Chief Officer</div>
+        <div class="activity-item">[11:55] Inventory: Coffee Beans below MIN (5 &rarr; 2)</div>
+        <div class="activity-item">[10:21] Task created: “Inspect Liferaft #2” – due in 7 days</div>
+        <div class="activity-item">[09:47] Medicine chest updated – 3 items expiring in 14 days</div>
+        <div class="activity-item">[08:12] Uploaded receipt for engine oil order</div>
+        <div class="activity-item">[Yesterday] Voyage ST-104 marked Completed</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- (Valgfritt) Eksempel på hvordan du kan oppdatere tellerne senere -->
+  <script>
+    // Dette er bare et eksempel – du kan oppdatere disse verdiene dynamisk senere.
+    // document.getElementById('invYellowCount').textContent = 7;
+    // document.getElementById('invRedCount').textContent = 3;
+    // document.getElementById('taskYellowCount').textContent = 4;
+    // document.getElementById('taskRedCount').textContent = 1;
+  </script>
+
+</body>
+</html>

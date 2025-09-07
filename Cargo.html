@@ -192,7 +192,7 @@ th.actions-col, td.actions-col { display:none; }
                 <input id="eta" type="date">
               </div>
             </div>
-            <div class="note" style="margin-top:6px">Planer lagres lokalt. Last inn/slett under.</div>
+            <div class="note" style="margin-top:6px">Plans are stored locally. Load/delete below.</div>
             <div class="toolbar" style="margin-top:8px">
               <select id="loadPlanSel" style="flex:1">
                 <option value="">Load saved plan…</option>
@@ -325,7 +325,7 @@ th.actions-col, td.actions-col { display:none; }
               </tfoot>
             </table>
             <div class="note" style="margin-top:8px">
-              Enkel balanseindikator (heuristikk):
+              Simple balance indicator (heuristic):
               <span class="chip" id="balFwd">FWD: 0 t</span>
               <span class="chip" id="balAft">AFT: 0 t</span>
               <span class="chip" id="balNote">Balanced</span>
@@ -343,7 +343,7 @@ th.actions-col, td.actions-col { display:none; }
           </header>
           <div class="body">
             <div class="holds-grid" id="holdsPalette"></div>
-            <div class="note" style="margin-top:8px">Dra et hold til “Stowage layout” under, eller bruk “⇩ To layout”.</div>
+            <div class="note" style="margin-top:8px">Drag a handle to “Stowage layout” below, or use “⇩ To layout”.</div>
           </div>
         </div>
       </aside>
@@ -354,7 +354,7 @@ th.actions-col, td.actions-col { display:none; }
       <header>
         <div>Stowage layout (drag holds here)</div>
         <div class="toolbar">
-          <span class="muted">Dra hold-kort hit (eller bruk “⇩ To layout”). Dra tilbake for å fjerne.</span>
+          <span class="muted">Drag hold cards here (or use “⇩ To layout”). Drag back to remove.</span>
         </div>
       </header>
       <div class="body">
@@ -365,6 +365,10 @@ th.actions-col, td.actions-col { display:none; }
     </div>
 
   </div>
+
+  <!-- Legg denne script-taggen nederst på hver side (før dine side-spesifikke skript) -->
+<script src="seavo-core.js"></script>
+
 
   <script>
     // Keys

@@ -1,524 +1,643 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Order – Seavo Nautiq</title>
+  <meta charset="UTF-8" />
+  <title>Orders – Seavo Nautiq</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Core (må være før vår app-script; juster stien hvis nødvendig) -->
+  <script src="./js/seavo-core.js" defer></script>
+
+  <!-- jsPDF + AutoTable -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
+
   <style>
-
-    
-    body {
-      background-color: #12315c;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      color: white;
-      padding: 20px;
+    :root{
+      --bg:#12315c; --text:#fff; --muted:#bcd3f1;
+      --accent:#62b2e7; --accent-2:#1b75d1; --accent-3:#0e3e86;
+      --danger:#f03747; --warn:#ecc543; --ok:#28e755;
     }
+    *{ box-sizing:border-box }
+    body{ background-color:var(--bg); color:var(--text); font-family:Arial,sans-serif; margin:0; padding:16px }
+    h1{ text-align:center; margin:16px 0 8px; font-size:34px; color:#7ddbf3; text-shadow:0 1px 3px rgba(0,0,0,.6); margin-top:40px }
 
-    h1 {
-      text-align: center;
-      color: rgb(218, 215, 215);
-      margin-top: 20px;
-      font-size: 35px;
-      font-weight: bold;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+      .video-header{position:relative; aspect-ratio:1280/99; overflow:hidden; background:#000}
+    .video-header video{width:100%; height:200%; object-fit:cover; display:block}
+    .gradient-overgang{height:10px; background:linear-gradient(to left,#62b2e7,#001125); box-shadow:6px 4px 6px rgba(0,0,0,.7)}
+
+    /* Kort/panel */
+    .panel{
+      background:rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:14px; padding:14px; margin:14px auto;
+      max-width:1400px; box-shadow:0 12px 28px rgba(0,0,0,.35);
+      margin-bottom: 60px;
     }
+    .panel h2{ margin:0 0 12px 0; font-size:20px }
 
-    .logo, .Order {
-      position: absolute;
-      border-radius: 6px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6);
+    /* Grid */
+    .grid{ display:grid; gap:10px }
+    .cols-4{ grid-template-columns:repeat(4,1fr) }
+    .cols-3{ grid-template-columns:repeat(3,1fr) }
+    .cols-2{ grid-template-columns:repeat(2,1fr) }
+    @media(max-width:1000px){ .cols-4{grid-template-columns:1fr 1fr} }
+    @media(max-width:700px){ .cols-3,.cols-2{grid-template-columns:1fr} }
+
+    label{ display:block; font-weight:700; margin-bottom:6px }
+    input[type="text"], input[type="number"], input[type="date"], select, textarea{
+      width:100%; padding:10px; border-radius:10px;
+      border:1px solid rgba(255,255,255,.25);
+      background:rgba(0,0,0,.25); color:#fff; outline:none;
     }
+    textarea{ min-height:80px; resize:vertical }
 
-    .logo {
-      width: 200px;
-      height: auto;
-      margin-top: -80px;
+    .btn{
+      padding:10px 16px; border:none; border-radius:12px; cursor:pointer; font-weight:700; font-size:14px;
+      background:linear-gradient(to right,var(--accent-2),var(--accent-3));
+      color:#fff; border:1px solid rgba(255,255,255,.12); box-shadow:0 6px 16px rgba(0,0,0,.35);
     }
+    .btn:hover{ filter:brightness(1.15) }
+    .btn.ghost{ background:rgba(255,255,255,.12) }
+    .btn.danger{ background:linear-gradient(to right,#f13e4e,#a31621) }
+    .btn.ok{ background:linear-gradient(to right,#18b857,#0a7c36) }
 
-    .Order {
-      width: 100%;
-      height: 180%;
-      top: 0;
-      left: 0;
-      z-index: -1;
-      opacity: 0.1;
-      pointer-events: none;
+    .toolbar{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:10px auto; max-width:1400px }
+
+    /* Tabell */
+    table{
+      width:100%; border-collapse:collapse; background:rgba(0,0,0,.18); color:var(--text);
+      border:1px solid rgba(255,255,255,.12); border-radius:14px; overflow:hidden;
+      box-shadow:0 12px 28px rgba(0,0,0,.35);
     }
+    th,td{ border-bottom:1px solid rgba(255,255,255,.12); padding:8px; vertical-align:middle; text-align:left }
+    th{ background:rgba(0,0,0,.28) }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 50px;
+    .header-row td{ background:rgba(255,255,255,.06); font-weight:800; letter-spacing:.3px }
+    .section-title{ width:100%; font-weight:800 }
+
+    .qty-wrap, .price-wrap { display:flex; gap:6px; align-items:center }
+    .move-buttons{ display:flex; gap:6px }
+    .thumb{ width:48px; height:48px; border-radius:8px; border:1px solid rgba(255,255,255,.18); object-fit:cover; display:none; cursor:pointer }
+    .cell-muted{ color:var(--muted) }
+
+    /* Totals panel */
+    .totals{
+      display:grid; gap:8px;
+      grid-template-columns: 1fr 180px;
+      max-width: 520px;
     }
+    .totals .row{ display:contents }
+    .totals .label{ text-align:right; opacity:.85 }
+    .totals .value{ text-align:right; font-weight:700 }
+    .totals input[type="number"]{ text-align:right }
 
-
-    table th,
-    table td {
-     width: 20px; /* eller tilpass etter behov per kolonne */
-     text-align: left;
-     vertical-align: middle;
+    .status-chip{
+      display:inline-block; padding:3px 8px; border-radius:999px; font-size:.8rem;
+      background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18); margin-left:6px
     }
-
-    .input-product {
-     width: 400px;
-    }
-
-   .input-quantity {
-     width: 100px;
-    }
-
-   .input-unitprice {
-     width: 100px;
-    }
-
-   .input-comments {
-     width: 280px;
-     margin-left: 0px;
-    }
-
-.input-base {
-  height: 25px;
-  font-size: 20px;
-  font-weight: bold;
-  padding: 6px;
-  border-radius: 6px;
-  border: 2px solid #000000;
-  resize: none;
-}
-
-.move-buttons {
-  display: flex;
-  gap: 0px;
-  justify-content: left;
-  align-items: left;
-}
-
-
-.move-btn {
-  background-color: #48adbe;
-  color: white;
-  border-radius: 4px;
-  padding: 4px 10px;
-  margin: 2px;
-  margin-left: 0px;
-  cursor: pointer;
-  font-size: 14px
-  
-}
-
-.move-btn:hover {
-  background-color: #a0e9eb;
-}
-
-.del-btn {
-  background-color: #ffffff;
-  border-radius: 6px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.del-btn:hover {
-  background-color: #c1121f;
-}
-
-
-.delete-btn {
-  background-color: #ffffff;
-  color: white;
-  border-radius: 4px;
-  padding: 2px 6px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.delete-btn:hover {
-  background-color: #c1121f;
-}
-
-   
-
-.upload-container {
-  display: flex;
-  align-items: center;
-  gap: 12px; 
-  justify-content: left;
-  margin-right: 200px;
-}
-
-.upload-preview {
-  width: 40px;
-  height: 40px;
-  object-fit: cover;
-  border: 1px solid #000000;
-  cursor: pointer;
-  display: flex;
-}
-
-
-    .controls {
-      margin-top: 50px;
-      text-align: center;
-    }
-
-    .total-cell {
-      font-weight: bold;
-      background-color: #0e2a4d;
-      border-top: 2px solid #fff;
-      border-radius: 6px;
-      box-shadow:  0 2px 5px rgba(0, 0, 0, 0.8);
-      width: 90px;
-    }
-
-    
-
-    .btn {
-      background: linear-gradient(to right, #00b7ff, #1c60a0);
-      color: white;
-      padding: 10px 20px;
-      margin: 5px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .btn:hover {
-      background: linear-gradient(to right, #57d0ee, #072846);
-    }
-
-  .spacer {
-    width: 200px;
-  }
-
-@media (max-width: 768px) {
-  table, thead, tbody, th, td, tr {
-    display: block;
-  }
-}
-
-  @media print {
-  body {
-    background-color: white !important;
-    color: black !important;
-  }
-}
-
+    .row-received{ background:rgba(24, 184, 87, .12) }
   </style>
-
-
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-
 </head>
-
-
+ <header class="video-header">
+    <video autoplay muted loop playsinline>
+      <source src="Video/Ocean-Seavo-Nautiq.mp4" type="video/mp4">
+    </video>
+  </header>
+  <div class="gradient-overgang"></div>
 
 <body>
-  <header>
-    <h1>Order</h1>
-    <img src="images/Seavo nautiq logo.png" alt="logo" class="logo">
-    <img src="images/Order.png" alt="Order" class="Order"> 
-  </header>
+  <h1>Order</h1>
 
-  <div class="controls">
-    <button class="btn" onclick="addHeaderRow()">+ Add header/section</button>
-    <button class="btn" onclick="addLineRow()">+ Add line</button>
+  <!-- ORDRE-INFO -->
+  <div class="panel">
+    <h2>Order details</h2>
+    <div class="grid cols-4">
+      <div>
+        <label for="oSupplier">Supplier</label>
+        <input id="oSupplier" type="text" placeholder="Company name">
+      </div>
+      <div>
+        <label for="oEmail">Email</label>
+        <input id="oEmail" type="text" placeholder="orders@supplier.com">
+      </div>
+      <div>
+        <label for="oPhone">Phone</label>
+        <input id="oPhone" type="text" placeholder="+47 …">
+      </div>
+      <div>
+        <label for="oRef">PO / Reference</label>
+        <input id="oRef" type="text" placeholder="PO-2025-001">
+      </div>
+    </div>
+
+    <div class="grid cols-4" style="margin-top:8px">
+      <div>
+        <label for="oStatus">Status</label>
+        <select id="oStatus">
+          <option>Draft</option>
+          <option>Ordered</option>
+          <option>Partially received</option>
+          <option>Received</option>
+          <option>Cancelled</option>
+        </select>
+      </div>
+      <div>
+        <label for="oCurrency">Currency</label>
+        <select id="oCurrency">
+          <option value="NOK">NOK</option>
+          <option value="EUR">EUR</option>
+          <option value="USD">USD</option>
+          <option value="GBP" selected>GBP</option>
+          <option value="SEK">SEK</option>
+          <option value="DKK">DKK</option>
+        </select>
+      </div>
+      <div>
+        <label for="oDate">Order date</label>
+        <input id="oDate" type="date">
+      </div>
+      <div>
+        <label for="oNeedBy">Needed by</label>
+        <input id="oNeedBy" type="date">
+      </div>
+    </div>
+
+    <div class="grid cols-1" style="margin-top:8px">
+      <div>
+        <label for="oNotes">Notes</label>
+        <textarea id="oNotes" placeholder="Special delivery instructions, quote reference, etc."></textarea>
+      </div>
+    </div>
   </div>
 
-  <table id="orderTable">
-    <thead>
-      <tr>
-        <th>Product/type</th>
-        <th>Quantity</th>
-        <th>Upload Picture</th>
-        <th class="spacer"></th>
-        <th>Unit Price</th>
-        <th>Total Unit Price</th>
-        <th>Comments</th>
-        <th>Move</th>
-        <th>Delete</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-    <tfoot>
-      <tr>
-        <td colspan="5"></td>
-        <td class="total-cell" id="grandTotal">Total : 0</td>
-        <td colspan="3"></td>
-      </tr>
-    </tfoot>
-  </table>
-
-  <div style="margin-top: 30px; text-align: left;">
-  <button class="btn" onclick="generatePDF()">📄 Generate PDF</button>
+  <!-- VERKTØYLINJE -->
+  <div class="toolbar">
+    <button class="btn" id="btnAddHeader">+ Add header/section</button>
+    <button class="btn" id="btnAddLine">+ Add line</button>
+    <button class="btn ghost" id="btnImportTransfer" title="Importer fra ordersTransfer om den finnes">Import pending</button>
+    <button class="btn danger" id="btnClear">Clear order</button>
+    <button class="btn" id="btnPdf">📄 Generate PDF</button>
   </div>
 
+  <!-- TABELL -->
+  <div class="panel">
+    <table id="orderTable" aria-label="Order lines">
+      <thead>
+        <tr>
+          <th style="min-width:240px">Product / type</th>
+          <th style="width:120px">Quantity</th>
+          <th style="width:120px">Unit price</th>
+          <th style="width:110px">Line total</th>
+          <th style="min-width:220px">Comments</th>
+          <th style="width:140px">Picture</th>
+          <th style="width:120px">Status</th>
+          <th style="width:110px">Move</th>
+          <th style="width:72px">Delete</th>
+        </tr>
+      </thead>
+      <tbody id="orderBody"></tbody>
+    </table>
+  </div>
+
+  <!-- TOTALS -->
+  <div class="panel">
+    <h2>Totals</h2>
+    <div class="totals">
+      <div class="row"><div class="label">Subtotal</div><div id="tSubtotal" class="value">0.00</div></div>
+      <div class="row">
+        <div class="label">Discount (%)</div>
+        <div><input id="tDiscountPct" type="number" min="0" step="0.1" value="0"></div>
+      </div>
+      <div class="row">
+        <div class="label">Shipping</div>
+        <div><input id="tShipping" type="number" min="0" step="0.01" value="0"></div>
+      </div>
+      <div class="row">
+        <div class="label">Tax / VAT (%)</div>
+        <div><input id="tTaxPct" type="number" min="0" step="0.1" value="0"></div>
+      </div>
+      <hr style="grid-column:1/3; border:0; border-top:1px solid rgba(255,255,255,.2); margin:6px 0">
+      <div class="row"><div class="label">Grand total</div><div id="tGrand" class="value">0.00</div></div>
+      <div class="row"><div class="label">Currency</div><div id="tCurr" class="value">GBP</div></div>
+    </div>
+  </div>
 
   <script>
-    const tableBody = document.querySelector("#orderTable tbody");
-    const grandTotalCell = document.getElementById("grandTotal");
+  /* =======================================
+     LOKAL LAGRING + MODELL
+     ======================================= */
+  const LS_KEY = 'sn.orders.v1';
 
-    function createCell(tag = "td", content = "") {
-      const cell = document.createElement(tag);
-      cell.innerHTML = content;
-      return cell;
-    }
+  const state = loadState();
+  const $ = (id)=>document.getElementById(id);
 
-    function addLineRow() {
-      const row = document.createElement("tr");
-
-      // Product
-      const product = createCell();
-      product.classList.add("product");
-      const inputProd = document.createElement("input");
-      inputProd.placeholder = "Product/type";
-      inputProd.className = "input-base input-product";
-      product.appendChild(inputProd);
-      row.appendChild(product);
-
-      // Quantity
-      const qty = createCell();
-      const inputQty = document.createElement("input");
-      inputQty.className = "input-base input-quantity";
-      inputQty.type = "number";
-      inputQty.value = 0;
-      inputQty.oninput = updateRowTotal;
-      qty.appendChild(inputQty);
-      row.appendChild(qty);
-
-     // Upload picture
-const upload = createCell();
-const container = document.createElement("div");
-container.className = "upload-container";
-
-const file = document.createElement("input");
-file.type = "file";
-file.accept = "image/*";
-file.style.display = "none";
-
-const preview = document.createElement("img");
-preview.className = "upload-preview";
-preview.style.display = "none";
-preview.onclick = () => {
-  const win = window.open();
-  win.document.write(`<img src="${preview.src}" style="width:100%">`);
-};
-
-const button = document.createElement("button");
-button.className = "btn";
-button.textContent = "📷 Upload";
-button.onclick = () => file.click();
-
-file.onchange = () => {
-  const reader = new FileReader();
-  reader.onload = e => {
-    preview.src = e.target.result;
-    preview.style.display = "block";
-  };
-  reader.readAsDataURL(file.files[0]);
-};
-
-container.append(button, preview, file);
-upload.appendChild(container);
-row.appendChild(upload);
-
-
-      // Spacer
-      row.appendChild(createCell("td", ""));
-
-      // Unit Price
-      const unitPrice = createCell();
-      const inputPrice = document.createElement("input");
-      inputPrice.className = "input-base input-unitprice";
-      inputPrice.type = "number";
-      inputPrice.value = 0;
-      inputPrice.oninput = updateRowTotal;
-      unitPrice.appendChild(inputPrice);
-      row.appendChild(unitPrice);
-
-      // Total per unit
-      const totalUnit = createCell();
-      totalUnit.className = "unitTotal";
-      totalUnit.textContent = "0";
-      row.appendChild(totalUnit);
-
-      // Comments
-      const comments = createCell();
-      const inputComment = document.createElement("input");
-      inputComment.placeholder = "Comments";
-      inputComment.className = "input-base input-comments";
-      comments.appendChild(inputComment);
-      row.appendChild(comments);
-
-      // Move
-      const move = createCell();
-      move.innerHTML = `
-      <div class="move-buttons">
-      <button class="move-btn" onclick="moveRow(this, -1)">↑</button>
-      <button class="move-btn" onclick="moveRow(this, 1)">↓</button>
-      </div>`;
-      row.appendChild(move);
-
-      // Delete
-      const del = createCell();
-      const delBtn = document.createElement("button");
-      delBtn.className = "del-btn";
-      delBtn.textContent = "❌";
-      delBtn.onclick = () => {
-        row.remove();
-        updateGrandTotal();
+  function loadState(){
+    try{
+      return JSON.parse(localStorage.getItem(LS_KEY)) || {
+        meta:{
+          supplier:'', email:'', phone:'', ref:'', status:'Draft',
+          currency:'GBP', orderDateISO:'', needByISO:'', notes:'',
+          discountPct:0, taxPct:0, shipping:0
+        },
+        rows:[]
       };
-      del.appendChild(delBtn);
-      row.appendChild(del);
-
-      tableBody.appendChild(row);
+    }catch{ 
+      return { meta:{currency:'GBP', status:'Draft'}, rows:[] };
     }
-
-     function addHeaderRow() {
-     const row = document.createElement("tr");
-
-     const headerCell = createCell("td");
-     headerCell.colSpan = 8;
-     headerCell.style.background = "#1d3557";
-     headerCell.innerHTML = `
-    <strong contenteditable="true">Section Header</strong>
-    `;
-
-    const deleteCell = createCell("td");
-    const deleteBtn = document.createElement("button");
-    deleteBtn.className = "delete-btn";
-    deleteBtn.textContent = "❌";
-    deleteBtn.onclick = () => {
-    row.remove();
-  };
-    deleteCell.appendChild(deleteBtn);
-
-    row.appendChild(headerCell);
-    row.appendChild(deleteCell);
-    tableBody.appendChild(row);
+  }
+  function saveState(){
+    localStorage.setItem(LS_KEY, JSON.stringify(state));
   }
 
+  function currencySymbol(ccy){
+    const map = { NOK:'kr', SEK:'kr', DKK:'kr', EUR:'€', USD:'$', GBP:'£' };
+    return map[ccy] || ccy;
+  }
 
-    function moveRow(btn, direction) {
-      const row = btn.closest("tr");
-      const index = [...tableBody.children].indexOf(row);
-      const newIndex = index + direction;
+  /* =======================================
+     RENDER
+     ======================================= */
+  const tbody = $('orderBody');
 
-      if (newIndex < 0 || newIndex >= tableBody.children.length) return;
-      const target = tableBody.children[newIndex];
-      tableBody.insertBefore(row, direction === -1 ? target : target.nextSibling);
+  function render(){
+    // Meta
+    $('oSupplier').value = state.meta.supplier || '';
+    $('oEmail').value    = state.meta.email    || '';
+    $('oPhone').value    = state.meta.phone    || '';
+    $('oRef').value      = state.meta.ref      || '';
+    $('oStatus').value   = state.meta.status   || 'Draft';
+    $('oCurrency').value = state.meta.currency || 'GBP';
+    $('oDate').value     = state.meta.orderDateISO || '';
+    $('oNeedBy').value   = state.meta.needByISO    || '';
+    $('oNotes').value    = state.meta.notes    || '';
+    $('tDiscountPct').value = state.meta.discountPct || 0;
+    $('tTaxPct').value      = state.meta.taxPct || 0;
+    $('tShipping').value    = state.meta.shipping || 0;
+
+    $('tCurr').textContent = state.meta.currency || 'GBP';
+
+    // Rows
+    tbody.innerHTML = '';
+    state.rows.forEach((r, idx)=>{
+      if(r.type === 'header'){
+        tbody.appendChild(renderHeaderRow(r, idx));
+      } else {
+        tbody.appendChild(renderLineRow(r, idx));
+      }
+    });
+
+    recalcTotals();
+  }
+
+  function renderHeaderRow(r, idx){
+    const tr = document.createElement('tr');
+    tr.className = 'header-row';
+    tr.dataset.rowId = r.id;
+
+    const t0 = document.createElement('td');
+    t0.colSpan = 8;
+    const inp = document.createElement('input');
+    inp.type = 'text'; inp.className='section-title';
+    inp.value = r.text || ''; inp.placeholder='Section header';
+    inp.addEventListener('input', ()=>{ r.text = inp.value; saveState(); });
+    t0.appendChild(inp);
+
+    const t1 = document.createElement('td');
+    const del = document.createElement('button');
+    del.className='btn danger'; del.textContent='🗑️';
+    del.addEventListener('click', ()=>{
+      state.rows.splice(idx,1); saveState(); render();
+      logActivity(`Removed section "${r.text||'Untitled'}"`);
+    });
+    t1.appendChild(del);
+
+    tr.append(t0,t1);
+    return tr;
+  }
+
+  function renderLineRow(r, idx){
+    const tr = document.createElement('tr');
+    tr.dataset.rowId = r.id;
+    if(r.received) tr.classList.add('row-received');
+
+    // Product
+    const c0 = document.createElement('td');
+    const p = document.createElement('input');
+    p.type='text'; p.placeholder='Product / type'; p.value = r.product||'';
+    p.addEventListener('input', ()=>{ r.product = p.value; saveState(); });
+    c0.appendChild(p);
+
+    // Quantity
+    const c1 = document.createElement('td');
+    const q = document.createElement('input');
+    q.type='number'; q.min='0'; q.step='1'; q.value = r.quantity ?? 0;
+    q.addEventListener('input', ()=>{ r.quantity = Number(q.value)||0; saveState(); updateLineTotal(tr, r); });
+    c1.appendChild(q);
+
+    // Unit price
+    const c2 = document.createElement('td');
+    const up = document.createElement('input');
+    up.type='number'; up.min='0'; up.step='0.01'; up.value = r.unitPrice ?? 0;
+    up.addEventListener('input', ()=>{ r.unitPrice = Number(up.value)||0; saveState(); updateLineTotal(tr, r); });
+    c2.appendChild(up);
+
+    // Line total
+    const c3 = document.createElement('td');
+    c3.className = 'lineTotal';
+    c3.textContent = lineTotal(r).toFixed(2);
+
+    // Comments
+    const c4 = document.createElement('td');
+    const comm = document.createElement('input');
+    comm.type='text'; comm.placeholder='Comments'; comm.value = r.comments||'';
+    comm.addEventListener('input', ()=>{ r.comments = comm.value; saveState(); });
+    c4.appendChild(comm);
+
+    // Picture
+    const c5 = document.createElement('td');
+    const btn = document.createElement('button');
+    btn.className='btn'; btn.textContent='📷 Upload';
+    const img = document.createElement('img'); img.className='thumb';
+    const file = document.createElement('input'); file.type='file'; file.accept='image/*'; file.style.display='none';
+
+    if(r.imageDataUrl){ img.src = r.imageDataUrl; img.style.display='block'; }
+    img.addEventListener('click', ()=>{
+      const w = window.open(); w.document.write(`<img src="${img.src}" style="width:100%">`);
+    });
+    btn.addEventListener('click', ()=> file.click());
+    file.addEventListener('change', ()=>{
+      const f = file.files?.[0]; if(!f) return;
+      const reader = new FileReader();
+      reader.onload = e=>{
+        r.imageDataUrl = e.target.result;
+        img.src = r.imageDataUrl; img.style.display='block';
+        saveState();
+      };
+      reader.readAsDataURL(f);
+    });
+    c5.append(btn, img, file);
+
+    // Status
+    const c6 = document.createElement('td');
+    const cb = document.createElement('input'); cb.type='checkbox'; cb.checked = !!r.received;
+    const lbl = document.createElement('label'); lbl.style.marginLeft='6px'; lbl.textContent='Received';
+    const chip = document.createElement('span'); chip.className='status-chip'; chip.textContent = r.received ? 'Received' : 'Open';
+    cb.addEventListener('change', ()=>{
+      r.received = cb.checked;
+      chip.textContent = r.received ? 'Received' : 'Open';
+      tr.classList.toggle('row-received', r.received);
+      saveState();
+      logActivity(`${r.received?'Marked received':'Reopened'} line "${r.product||'(no name)'}"`);
+    });
+    c6.append(cb,lbl,chip);
+
+    // Move
+    const c7 = document.createElement('td');
+    const mv = document.createElement('div'); mv.className='move-buttons';
+    const upBtn = document.createElement('button'); upBtn.className='btn'; upBtn.textContent='↑';
+    const dnBtn = document.createElement('button'); dnBtn.className='btn'; dnBtn.textContent='↓';
+    upBtn.addEventListener('click', ()=>{
+      if(idx<=0) return;
+      const t = state.rows[idx]; state.rows.splice(idx,1); state.rows.splice(idx-1,0,t);
+      saveState(); render();
+    });
+    dnBtn.addEventListener('click', ()=>{
+      if(idx>=state.rows.length-1) return;
+      const t = state.rows[idx]; state.rows.splice(idx,1); state.rows.splice(idx+1,0,t);
+      saveState(); render();
+    });
+    mv.append(upBtn,dnBtn); c7.appendChild(mv);
+
+    // Delete
+    const c8 = document.createElement('td');
+    const del = document.createElement('button'); del.className='btn danger'; del.textContent='🗑️';
+    del.addEventListener('click', ()=>{
+      if(!confirm('Delete this line?')) return;
+      state.rows.splice(idx,1); saveState(); render();
+      logActivity(`Deleted order line "${r.product||'(no name)'}"`);
+    });
+    c8.appendChild(del);
+
+    tr.append(c0,c1,c2,c3,c4,c5,c6,c7,c8);
+    return tr;
+  }
+
+  function lineTotal(r){
+    const q = Number(r.quantity)||0;
+    const u = Number(r.unitPrice)||0;
+    return q*u;
+  }
+  function updateLineTotal(tr, r){
+    tr.querySelector('.lineTotal').textContent = lineTotal(r).toFixed(2);
+    recalcTotals();
+  }
+
+  /* =======================================
+     TOTALS
+     ======================================= */
+  function recalcTotals(){
+    const ccy = state.meta.currency || 'GBP';
+    $('tCurr').textContent = ccy;
+
+    const subtotal = state.rows.reduce((s, r)=>{
+      return s + (r.type==='line' ? lineTotal(r) : 0);
+    }, 0);
+
+    const discPct = Number($('tDiscountPct').value)||0;
+    const ship    = Number($('tShipping').value)||0;
+    const taxPct  = Number($('tTaxPct').value)||0;
+
+    const discount = subtotal * (discPct/100);
+    const taxBase  = Math.max(0, subtotal - discount) + ship;
+    const tax      = taxBase * (taxPct/100);
+    const grand    = taxBase + tax;
+
+    $('tSubtotal').textContent = `${subtotal.toFixed(2)} ${currencySymbol(ccy)}`;
+    $('tGrand').textContent    = `${grand.toFixed(2)} ${currencySymbol(ccy)}`;
+
+    // lagre meta
+    state.meta.discountPct = discPct;
+    state.meta.taxPct      = taxPct;
+    state.meta.shipping    = ship;
+    saveState();
+  }
+
+  /* =======================================
+     HANDLERS
+     ======================================= */
+  function addHeader(text=''){
+    state.rows.push({ type:'header', id:(crypto.randomUUID?.() ?? Math.random().toString(36).slice(2)), text });
+    saveState(); render();
+    logActivity(`Added section "${text||'Untitled'}"`);
+  }
+
+  function addLine(prefill){
+    state.rows.push({
+      type:'line',
+      id:(crypto.randomUUID?.() ?? Math.random().toString(36).slice(2)),
+      product: prefill?.product || '',
+      quantity: Number(prefill?.quantity)||0,
+      unitPrice: Number(prefill?.unitPrice)||0,
+      comments: prefill?.comments || '',
+      imageDataUrl: prefill?.imageDataUrl || '',
+      received: !!prefill?.received
+    });
+    saveState(); render();
+    if(prefill?.product){ logActivity(`Added line "${prefill.product}"`); }
+  }
+
+  function clearOrder(){
+    if(!confirm('Clear entire order (lines + totals)?')) return;
+    state.rows = [];
+    state.meta.discountPct = 0; state.meta.taxPct = 0; state.meta.shipping = 0;
+    saveState(); render();
+    logActivity('Cleared order lines');
+  }
+
+  // Meta changes
+  $('oSupplier').addEventListener('input', e=>{ state.meta.supplier = e.target.value; saveState(); });
+  $('oEmail').addEventListener('input', e=>{ state.meta.email = e.target.value; saveState(); });
+  $('oPhone').addEventListener('input', e=>{ state.meta.phone = e.target.value; saveState(); });
+  $('oRef').addEventListener('input', e=>{ state.meta.ref = e.target.value; saveState(); });
+  $('oStatus').addEventListener('change', e=>{ state.meta.status = e.target.value; saveState(); logActivity(`Order status → ${state.meta.status}`); });
+  $('oCurrency').addEventListener('change', e=>{ state.meta.currency = e.target.value; saveState(); recalcTotals(); });
+  $('oDate').addEventListener('change', e=>{ state.meta.orderDateISO = e.target.value; saveState(); });
+  $('oNeedBy').addEventListener('change', e=>{ state.meta.needByISO = e.target.value; saveState(); });
+  $('oNotes').addEventListener('input', e=>{ state.meta.notes = e.target.value; saveState(); });
+
+  $('tDiscountPct').addEventListener('input', recalcTotals);
+  $('tShipping').addEventListener('input', recalcTotals);
+  $('tTaxPct').addEventListener('input', recalcTotals);
+
+  // Toolbar
+  $('btnAddHeader').addEventListener('click', ()=> addHeader('Section header'));
+  $('btnAddLine').addEventListener('click', ()=> addLine());
+  $('btnClear').addEventListener('click', clearOrder);
+  $('btnPdf').addEventListener('click', generatePDF);
+  $('btnImportTransfer').addEventListener('click', importFromTransfer);
+
+  /* =======================================
+     IMPORT FRA ANDRE SIDER
+     - ordersTransfer: [{header?:string, product, quantity, comments, unitPrice}]
+     - legacy: orders_from_safety
+     ======================================= */
+  function importFromTransfer(){
+    const payloadA = JSON.parse(localStorage.getItem('ordersTransfer')||'[]');
+    const payloadB = JSON.parse(localStorage.getItem('orders_from_safety')||'[]');
+    const incoming = (Array.isArray(payloadA)&&payloadA.length?payloadA:payloadB)||[];
+    if(!incoming.length){ alert('No pending transfer found.'); return; }
+
+    incoming.forEach(item=>{
+      if(item.header){
+        addHeader(item.header);
+      } else {
+        addLine({ product:item.product, quantity:item.quantity, comments:item.comment||item.comments, unitPrice:item.unitPrice });
+      }
+    });
+    localStorage.removeItem('ordersTransfer');
+    localStorage.removeItem('orders_from_safety');
+    logActivity(`Imported ${incoming.length} item(s) into Orders`);
+  }
+
+  /* =======================================
+     PDF
+     ======================================= */
+  async function generatePDF(){
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit:'pt', format:'a4' });
+    const left = 40; let y = 50;
+
+    // Header
+    doc.setFont('helvetica','bold'); doc.setFontSize(16);
+    doc.text('Seavo Nautiq — Purchase Order', left, y); y += 18;
+
+    // Supplier block
+    doc.setFont('helvetica','normal'); doc.setFontSize(11);
+    const m = state.meta;
+    const lines = [
+      `Supplier: ${m.supplier||'—'}`,
+      `Email: ${m.email||'—'}   Phone: ${m.phone||'—'}`,
+      `PO / Ref: ${m.ref||'—'}   Status: ${m.status||'Draft'}`,
+      `Order date: ${m.orderDateISO||'—'}   Needed by: ${m.needByISO||'—'}`
+    ];
+    lines.forEach(l=>{ doc.text(l, left, y); y += 14; });
+    if((m.notes||'').trim()){ doc.text(`Notes: ${m.notes}`, left, y); y += 18; }
+
+    // Table
+    const body = [];
+    state.rows.forEach(r=>{
+      if(r.type==='header'){
+        body.push([`--- ${r.text||'Section'} ---`, '', '', '', '']);
+      }else{
+        body.push([
+          r.product||'',
+          String(r.quantity??0),
+          (Number(r.unitPrice)||0).toFixed(2) + ' ' + currencySymbol(m.currency||''),
+          lineTotal(r).toFixed(2) + ' ' + currencySymbol(m.currency||''),
+          r.comments||''
+        ]);
+      }
+    });
+
+    doc.autoTable({
+      startY: y,
+      head: [['Product','Qty','Unit price','Line total','Comments']],
+      body,
+      styles: { font:'helvetica', fontSize:10, textColor:[0,0,0], lineColor:[0,0,0], lineWidth:0.5, fillColor:false },
+      headStyles: { fillColor:false, textColor:[0,0,0], fontStyle:'bold' },
+      alternateRowStyles: { fillColor:false },
+      didParseCell: ctx=>{
+        if(ctx.section==='body' && typeof ctx.cell.raw==='string' && ctx.cell.raw.startsWith('--- ')){
+          ctx.cell.styles.fontStyle='italic';
+        }
+      },
+      margin: { left, right:left }
+    });
+
+    // Totals
+    const endY = doc.lastAutoTable.finalY + 14;
+    const subtotal = state.rows.reduce((s,r)=> s+(r.type==='line'?lineTotal(r):0), 0);
+    const discount = subtotal*( (Number(m.discountPct)||0)/100 );
+    const taxBase  = Math.max(0, subtotal-discount) + (Number(m.shipping)||0);
+    const tax      = taxBase * ((Number(m.taxPct)||0)/100);
+    const grand    = taxBase + tax;
+    const c = currencySymbol(m.currency||'');
+
+    doc.setFont('helvetica','bold');
+    doc.text(`Subtotal: ${(subtotal).toFixed(2)} ${c}`, left, endY);
+    doc.text(`Discount (${Number(m.discountPct)||0}%): -${discount.toFixed(2)} ${c}`, left, endY+14);
+    doc.text(`Shipping: ${(Number(m.shipping)||0).toFixed(2)} ${c}`, left, endY+28);
+    doc.text(`Tax (${Number(m.taxPct)||0}%): ${tax.toFixed(2)} ${c}`, left, endY+42);
+    doc.text(`Grand total: ${grand.toFixed(2)} ${c}`, left, endY+66);
+
+    doc.save('Seavo_Order.pdf');
+    logActivity('Exported order to PDF');
+  }
+
+  /* =======================================
+     ACTIVITY
+     ======================================= */
+  function logActivity(text){
+    try{ seavo.logActivity({ text, source:'Orders', type:'action' }); }catch{}
+  }
+
+  /* =======================================
+     INIT
+     ======================================= */
+  document.addEventListener('DOMContentLoaded', ()=>{
+    // Fyll inn dagens dato som default hvis tom
+    if(!state.meta.orderDateISO){
+      const d = new Date(); state.meta.orderDateISO = d.toISOString().slice(0,10);
+      saveState();
     }
+    render();
 
-    function updateRowTotal(e) {
-      const row = e.target.closest("tr");
-      const qty = row.querySelector('td:nth-child(2) input').valueAsNumber || 0;
-      const price = row.querySelector('td:nth-child(5) input').valueAsNumber || 0;
-      const total = qty * price;
-      row.querySelector(".unitTotal").textContent = total.toFixed(2);
-      updateGrandTotal();
-    }
-
-    function updateGrandTotal() {
-      let sum = 0;
-      document.querySelectorAll(".unitTotal").forEach(cell => {
-        sum += parseFloat(cell.textContent) || 0;
-      });
-      grandTotalCell.textContent = "Total: " + sum.toFixed(2);
-    }
-
-
+    // Automatisk import ved last (valgfritt). Behold knappen også.
+    const pending = JSON.parse(localStorage.getItem('ordersTransfer')||'[]')?.length
+      || JSON.parse(localStorage.getItem('orders_from_safety')||'[]')?.length;
+    if(pending){ importFromTransfer(); }
+  });
   </script>
-
-  <script>
-
-  async function generatePDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF('p', 'mm', 'a4');
-  const marginLeft = 10;
-  let y = 10;
-
-  // Logo
-  const logo = new Image();
-  logo.src = "images/Logo Seavo Nautiq.png";
-  await new Promise(resolve => { logo.onload = resolve; });
-  doc.addImage(logo, 'PNG', marginLeft, y, 50, 20);
-  y += 30;
-
-  // Tabell-data
-  const rows = [];
-  const headers = ["Product/type", "Quantity", "Unit Price", "Total Unit Price", "Comments"];
-
-  document.querySelectorAll("#orderTable tbody tr").forEach(row => {
-    const cells = row.querySelectorAll("td");
-    if (cells.length === 9) {
-      const product = cells[0].querySelector("input")?.value || "";
-      const qty = cells[1].querySelector("input")?.value || "";
-      const unit = cells[4].querySelector("input")?.value || "";
-      const total = cells[5]?.textContent || "";
-      const comment = cells[6].querySelector("input")?.value || "";
-      rows.push([product, qty, unit, total, comment]);
-    } else if (cells.length === 2 && cells[0].colSpan === 8) {
-      const sectionHeader = cells[0].textContent.trim();
-      rows.push([`--- ${sectionHeader} ---`, "", "", "", ""]);
-    }
-  });
-
-  // Legg til Total price som siste rad
-  const total = document.getElementById("grandTotal").textContent.replace("Total: ", "");
-  rows.push(["", "", "", "", ""]);
-  rows.push(["", "", "", "TOTAL:", total]);
-
-  // Lag tabell med grid-stil (tynne linjer)
-  doc.setFontSize(12);
-  doc.setTextColor(0, 0, 0);
-  doc.setFont("helvetica", "bold");
-
-  doc.autoTable({
-    startY: y,
-    head: [headers],
-    body: rows,
-    theme: 'grid', // <-- tegner tynne linjer
-    headStyles: { fillColor: [0, 0, 0], textColor: [255, 255, 255] },
-    bodyStyles: { textColor: [0, 0, 0] },
-    styles: { font: "helvetica", fontSize: 10, cellPadding: 2 },
-    margin: { left: marginLeft },
-    tableWidth: 'auto'
-  });
-
-  doc.save("Order_Seavo_Nautiq.pdf");
-}
-
-document.addEventListener("DOMContentLoaded", ()=>{
-  const incoming = JSON.parse(localStorage.getItem("ordersTransfer") || "[]");
-  if (!incoming.length) return;
-
-  incoming.forEach(item=>{
-    // Header-blokk
-    if (item.header) {
-      addHeaderRow(item.header); // eksisterende funksjon
-      return;
-    }
-
-    // Vanlig ordrelinje
-    addLineRow(); // eksisterende funksjon som lager en tom rad
-    const row         = tableBody.lastElementChild;
-    const prodInput   = row.querySelector('td:nth-child(1) input');
-    const qtyInput    = row.querySelector('td:nth-child(2) input');
-    const commentInput= row.querySelector('td:nth-child(7) input'); // "Comments"-kolonnen
-
-    if (prodInput)    prodInput.value    = item.product  || "";
-    if (qtyInput)  {  qtyInput.value     = Number(item.quantity) || 0;
-                       qtyInput.dispatchEvent(new Event("input", { bubbles:true })); }
-    if (commentInput) commentInput.value = item.comment  || "";
-  });
-
-  localStorage.removeItem("ordersTransfer");
-  updateGrandTotal?.();
-});
-
-
-</script>
 </body>
 </html>

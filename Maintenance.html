@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Seavo Nautiq-Maintenance</title>
+
+  <!-- Core må lastes (defer) før vår DOM-init slik at seavo* finnes -->
+  <script src="./js/seavo-core.js" defer></script>
+   
   <style>
     :root{
       --bg:#12315c; --panel:rgba(0,0,0,.15); --panel-2:rgba(255,255,255,.08);
@@ -22,7 +26,7 @@
       background:linear-gradient(to right,#1b75d1,#0e3e86); box-shadow:0 2px 8px rgba(0,0,0,.35); font-weight:600
     }
 
-    .btn.ghost{background:rgba(0,0,0,.25)}
+    .btn.ghost{background:rgba(104, 102, 102, 0.25)}
     .btn.danger{background:linear-gradient(to right,#f13e4e,#a31621)}
     .btn.ok{background:linear-gradient(to right,#18b857,#0a7c36)}
     .btn:disabled{opacity:.6; cursor:not-allowed}
@@ -48,8 +52,8 @@
     /* Modals */
     .modal{position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.55); z-index:40}
     .modal.show{display:flex}
-    .card{width:min(900px,92vw); background:rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.12); border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,.5)}
-    .card header{display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid rgba(255,255,255,.1); background:rgba(0,0,0,.2); border-radius:16px 16px 0 0}
+    .card{width:min(900px,92vw); background:rgba(0, 0, 0, 0.849); border: 2px solid rgba(0, 0, 0, 0.233); border-radius:16px; box-shadow:0 10px 30px rgba(255, 255, 255, 0.5)}
+    .card header{display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid rgba(255, 255, 255, 0.1); background:rgba(0, 0, 0, 0.281); border-radius:16px 16px 0 0}
     .card header h3{margin:0; font-size:1.1rem}
     .card .body{padding:16px}
     .grid{display:grid; gap:12px}
@@ -58,11 +62,11 @@
     @media(max-width:900px){.grid.cols-3{grid-template-columns:1fr;}.grid.cols-2{grid-template-columns:1fr}}
     label{display:block; font-weight:700; margin-bottom:6px}
     input[type="text"], input[type="number"], input[type="date"], input[type="datetime-local"], select, textarea{
-      width:100%; padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,.2); background:rgba(0,0,0,.2); color:#ffffff;
+      width:100%; padding:10px; border-radius:10px; border:1px solid rgba(255, 255, 255, 0.466); background:rgba(95, 93, 93, 0.548); color:#ffffff;
     }
     textarea{min-height:100px; resize:vertical}
     .hint{font-size:.85rem; color:var(--muted); margin-top:4px}
-    .preview-line{padding:10px 12px; background:rgba(0,0,0,.2); border:1px dashed rgba(255,255,255,.2); border-radius:10px}
+    .preview-line{padding:10px 12px; background:rgba(0,0,0,.2); border:1px dashed rgba(255, 255, 255, 0.301); border-radius:10px}
 
     /* Upload */
     .upload{border:2px dashed rgba(255,255,255,.25); border-radius:12px; padding:12px}
@@ -74,7 +78,7 @@
     .tag{display:inline-block; padding:2px 8px; border-radius:999px; font-size:.8rem; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.15); margin-right:6px}
     .chip-btn{display:inline-block; padding:4px 10px; border-radius:999px; font-size:.8rem; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.15); margin:0 6px 6px 0; cursor:pointer}
     .chip-btn:hover{filter:brightness(1.08)}
-    .chip-btn.active{border-color:var(--accent); background:rgba(98,178,231,.2)} /* active markering */
+    .chip-btn.active{border-color:var(--accent); background:rgba(98,178,231,.2)}
 
     /* History row */
     .hist-wrap{padding:10px 6px}
@@ -87,60 +91,26 @@
     .filebox img{max-width:100%; height:auto; display:block}
     .filebox iframe{width:min(900px,90vw); height:70vh; border:none; background:#fff}
 
-    /* ===== Create-modal layout with category panel (beholdes i modal) ===== */
-    .create-layout{
-      display:grid; grid-template-columns:260px 1fr; gap:16px;
-    }
-    .cat-panel{
-      background:rgba(0,0,0,.25);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:12px;
-      padding:12px;
-      height:100%;
-    }
-    .cat-panel h4{margin:0 0 8px 0; font-size:1rem}
-    .cat-list{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px}
-
-    /* ===== Hovedlayout: venstre kategorier – midt innhold – høyre "Tasks expire" ===== */
-    .main-layout{
-      display:grid;
-      grid-template-columns:240px 1fr 300px;
-      gap:16px; align-items:start
-    }
+    /* Hovedlayout */
+    .main-layout{ display:grid; grid-template-columns:240px 1fr 300px; gap:16px; align-items:start }
     .main-cat{
-      background:rgba(0,0,0,.25);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:12px;
-      padding:12px;
+      background:rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:12px;
     }
     .main-cat h4{margin:0 0 10px 0; font-size:1rem}
     .main-cat .cat-list{display:flex; flex-wrap:wrap; gap:6px}
 
     /* Høyre varselboks */
     .expire-box{
-      background:rgba(0,0,0,.25);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:12px;
-      padding:12px;
+      background:rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:12px;
     }
-    .expire-box h4{
-      margin:0 0 10px 0; font-size:1rem
-    }
-
+    .expire-box h4{ margin:0 0 10px 0; font-size:1rem }
     .expire-section{ margin-bottom:14px; }
     .expire-title{ font-size:.9rem; font-weight:700; margin:0 0 8px 0; color:var(--text); opacity:.85 }
     .expire-empty{ color:var(--muted); font-size:.9rem }
-
-
-
-
     .expire-list{ display:flex; flex-direction:column; gap:8px; }
     .expire-item{
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:10px;
-      padding:8px;
-      display:flex; align-items:center; justify-content:space-between; gap:8px;
+      background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); border-radius:10px;
+      padding:8px; display:flex; align-items:center; justify-content:space-between; gap:8px;
     }
     .expire-item .meta{ font-size:.9rem; color:var(--muted); }
     .expire-item .name{ font-weight:700; }
@@ -163,7 +133,7 @@
 
   <div class="container">
     <div class="toolbar">
-      <button id="newTaskBtn" class="btn">➕ New Task</button>
+      <button id="newTaskBtn" class="btn">➕ Create New Task</button>
     </div>
 
     <!-- Hovedlayout: venstre kategorier – midt innhold – høyre "Tasks expire" -->
@@ -215,7 +185,7 @@
         </table>
       </div>
 
-      <!-- NY høyreboks -->
+      <!-- Høyre boks -->
       <aside class="expire-box">
         <h4>Tasks expire</h4>
         <div id="expireList" class="expire-list">
@@ -223,7 +193,6 @@
         </div>
       </aside>
     </div>
-    <!-- /Hovedlayout -->
   </div>
 
   <!-- Create Task Modal -->
@@ -373,6 +342,7 @@
     </div>
   </div>
 
+  <!-- ======= APP SCRIPT ======= -->
   <script>
     // Storage keys
     const TKEY = 'maintenance_tasks_v1';
@@ -452,7 +422,29 @@
       try{ return JSON.parse(localStorage.getItem(TKEY)) || []; }
       catch{ return []; }
     }
-    function saveTasks(){ localStorage.setItem(TKEY, JSON.stringify(tasks)); }
+    function saveTasks(){
+      localStorage.setItem(TKEY, JSON.stringify(tasks));
+      // Sync til seavo-core hver gang vi lagrer
+      syncCoreTasks();
+    }
+
+    /* ======= seavo-core bridge (TASKS) ======= */
+    function syncCoreTasks(){
+      try{
+        const active = tasks.filter(t=>!t.disabled);
+        const snapshot = active.map(t=>{
+          const { expiry } = computeExpiry(t.lastPerformed, t.intervalDays);
+          return { id: t.id, title: t.name || '(Untitled)', dueISO: expiry || '' };
+        });
+        seavo.syncTasks(snapshot);
+      }catch(e){
+        console.warn('seavo.syncTasks failed (core not ready yet?)', e);
+      }
+    }
+    function logTaskActivity(text){
+      try{ seavo.logActivity({ text, source: 'Maintenance', type: 'action' }); }
+      catch(e){ /* ok offline */ }
+    }
 
     // FILTERS / SORT
     const filterEl = $('filterStatus');
@@ -464,7 +456,7 @@
     resetEl.addEventListener('click', ()=>{
       filterEl.value = 'all';
       sortEl.value = 'expiryAsc';
-      selectedCategory = null; // reset kategori ved reset
+      selectedCategory = null;
       render();
     });
 
@@ -526,66 +518,63 @@
       }
     }
 
-    // HØYREBOKS: fyll "Tasks expire" med warn-oppgaver
-     function updateExpireBox(viewRows){
-  const wrap = $('expireList');
-  if(!wrap) return;
+    // Høyreboks "Tasks expire"
+    function updateExpireBox(viewRows){
+      const wrap = $('expireList');
+      if(!wrap) return;
 
-  // Filtrer ut disabled og splitt i tre grupper
-  const warnRows = viewRows
-    .filter(r => r.bucket === 'warn' && !r.t.disabled)
-    .sort((a,b)=> (a.days??9e9) - (b.days??9e9));
+      const warnRows = viewRows
+        .filter(r => r.bucket === 'warn' && !r.t.disabled)
+        .sort((a,b)=> (a.days??9e9) - (b.days??9e9));
+      const dueRows = viewRows
+        .filter(r => r.bucket === 'due' && !r.t.disabled)
+        .sort((a,b)=> (a.days??9e9) - (b.days??9e9));
+      const overdueRows = viewRows
+        .filter(r => r.bucket === 'overdue' && !r.t.disabled)
+        .sort((a,b)=> (a.days??9e9) - (b.days??9e9));
 
-  const dueRows = viewRows
-    .filter(r => r.bucket === 'due' && !r.t.disabled)
-    .sort((a,b)=> (a.days??9e9) - (b.days??9e9));
+      function renderGroup(title, rows, dotHTML){
+        const sec = document.createElement('div');
+        sec.className = 'expire-section';
+        const h = document.createElement('div');
+        h.className = 'expire-title';
+        h.textContent = title;
+        sec.appendChild(h);
 
-  const overdueRows = viewRows
-    .filter(r => r.bucket === 'overdue' && !r.t.disabled)
-    .sort((a,b)=> (a.days??9e9) - (b.days??9e9));
+        if(!rows.length){
+          const empty = document.createElement('div');
+          empty.className = 'expire-empty';
+          empty.textContent = '— none —';
+          sec.appendChild(empty);
+          return sec;
+        }
 
-  function renderGroup(title, rows, dotHTML){
-    const sec = document.createElement('div');
-    sec.className = 'expire-section';
-    const h = document.createElement('div');
-    h.className = 'expire-title';
-    h.textContent = title;
-    sec.appendChild(h);
+        rows.forEach(row=>{
+          const item = document.createElement('div');
+          item.className = 'expire-item';
+          item.innerHTML = `
+            <div>
+              <div class="name">${dotHTML}${escapeHtml(row.t.name)}</div>
+              <div class="meta">${row.days} day${row.days===1?'':'s'} · exp. ${row.expiry || '—'}</div>
+            </div>
+            <button class="btn ok" type="button">Perform</button>
+          `;
+          item.querySelector('button').addEventListener('click', ()=> openPerform(row.idx));
+          sec.appendChild(item);
+        });
+        return sec;
+      }
 
-    if(!rows.length){
-      const empty = document.createElement('div');
-      empty.className = 'expire-empty';
-      empty.textContent = '— none —';
-      sec.appendChild(empty);
-      return sec;
+      wrap.innerHTML = '';
+      wrap.appendChild(renderGroup('Warning', warnRows, `<span class="dot yellow"></span>`));
+      wrap.appendChild(renderGroup('Due soon', dueRows, `<span class="dot red"></span>`));
+      wrap.appendChild(renderGroup('Overdue', overdueRows, `<span class="dot-stack"><span class="dot red"></span><span class="dot red"></span></span>`));
+
+      if(!warnRows.length && !dueRows.length && !overdueRows.length){
+        wrap.innerHTML = `<span class="cell-muted">No tasks with warning or due status.</span>`;
+      }
     }
 
-    rows.forEach(row=>{
-      const item = document.createElement('div');
-      item.className = 'expire-item';
-      item.innerHTML = `
-        <div>
-          <div class="name">${dotHTML}${escapeHtml(row.t.name)}</div>
-          <div class="meta">${row.days} day${row.days===1?'':'s'} · exp. ${row.expiry || '—'}</div>
-        </div>
-        <button class="btn ok" type="button">Perform</button>
-      `;
-      item.querySelector('button').addEventListener('click', ()=> openPerform(row.idx));
-      sec.appendChild(item);
-    });
-    return sec;
-  }
-
-  wrap.innerHTML = '';
-  wrap.appendChild(renderGroup('Warning', warnRows, `<span class="dot yellow"></span>`));
-  wrap.appendChild(renderGroup('Due soon', dueRows, `<span class="dot red"></span>`));
-  wrap.appendChild(renderGroup('Overdue', overdueRows, `<span class="dot-stack"><span class="dot red"></span><span class="dot red"></span></span>`));
-
-  // Hvis absolutt ingenting å vise:
-  if(!warnRows.length && !dueRows.length && !overdueRows.length){
-    wrap.innerHTML = `<span class="cell-muted">No tasks with warning or due status.</span>`;
-  }
-}
     // RENDER
     function render(){
       const body = $('taskBody');
@@ -666,7 +655,8 @@
 
       // Oppdater venstre kategori-boks
       renderMainCategories();
-      // Oppdater høyre “Tasks expire”-boks med warn-oppgaver (alltid basert på full task-liste)
+
+      // Høyre “Tasks expire”-boks basert på full task-liste
       const viewForRightBox = tasks.map((t, idx)=>{
         const {days, expiry} = computeExpiry(t.lastPerformed, t.intervalDays);
         const sb = statusBucket(days, t.disabled);
@@ -701,6 +691,7 @@
     function toggleDisable(i, state){
       tasks[i].disabled = state;
       saveTasks(); render();
+      logTaskActivity(`${state ? 'Disabled' : 'Activated'} task "${tasks[i].name}"`);
     }
 
     // CREATE TASK
@@ -797,9 +788,10 @@
         category
       };
       tasks.push(task);
-      saveTasks();
-      render();
-      closeCreate();
+      saveTasks(); render(); closeCreate();
+
+      const { expiry } = computeExpiry(task.lastPerformed, task.intervalDays);
+      logTaskActivity(`Created task "${task.name}" – due ${expiry || '—'}`);
     }
 
     // PERFORM MODAL
@@ -851,6 +843,9 @@
 
       saveTasks(); render(); closePerform();
       localStorage.removeItem(PICKKEY2);
+
+      const { expiry } = computeExpiry(t.lastPerformed, t.intervalDays);
+      logTaskActivity(`Performed "${t.name}" – next due ${expiry || '—'}`);
     }
 
     function deleteCurrentTask(){
@@ -859,6 +854,7 @@
       if(!confirm(`Delete task "${t.name}"? This cannot be undone.`)) return;
       tasks.splice(performIndex,1);
       saveTasks(); render(); closePerform();
+      logTaskActivity(`Deleted task "${t.name}"`);
     }
 
     // FILE VIEWER
@@ -886,17 +882,18 @@
     }
     function closeFile(){ $('fileModal').classList.remove('show'); }
 
-    // Live refresh around midnight (recompute days left)
+    // Live refresh around midnight (recompute + resync)
     function scheduleMidnightRefresh(){
       const now = new Date();
       const next = new Date(now);
       next.setDate(now.getDate()+1);
       next.setHours(0,0,2,0);
-      setTimeout(()=>{ render(); scheduleMidnightRefresh(); }, next - now);
+      setTimeout(()=>{ render(); syncCoreTasks(); scheduleMidnightRefresh(); }, next - now);
     }
 
     // Init
     render();
+    syncCoreTasks();
     scheduleMidnightRefresh();
 
     // Close modals on backdrop click
@@ -912,7 +909,10 @@
     });
 
     // Wire preview on load
-    updatePreview();
+    (function updatePreviewOnLoad(){
+      const last = $('tLast'); const interval = $('tInterval');
+      if(last && interval){ /* safe no-op if modal not built yet */ }
+    })();
 
     // Expose for inline handlers
     window.openFileViewer = openFileViewer;

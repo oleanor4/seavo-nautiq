@@ -115,7 +115,7 @@
 }
 
  #forsidebilde {
-  width: 200%;
+  width: 100%;
   max-width: 700px;
   border-radius: 20px;
   box-shadow: #000000 0px 0px 10px 3px;
@@ -243,7 +243,7 @@
     .venstre-container {
       width: 250px;
       height: 450px;
-      background: linear-gradient(to left, #12315c, #215db1);
+      background: linear-gradient(to left, #12315c67, #215db16c);
       border-radius: 40px;
       box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.6);
       padding: 20px;
@@ -258,7 +258,7 @@
       width: 250px;
       height: 330px;
       padding: 20px;
-      background: linear-gradient(to left, #12315c, #215db1); 
+      background: linear-gradient(to left, #12315c77, #215db17a); 
       border-radius: 40px;
       box-shadow: 6px 6px 6px rgba(0,0,0,0.6);
     }  
@@ -271,7 +271,7 @@
       height: 20px;
       width: 250px;
       padding: 20px;
-      background: linear-gradient(to right, #1e3a5f, #326fa8);
+      background: linear-gradient(to right, #1e3a5f7c, #326fa880);
       border-radius: 40px;
       color: white;
       box-shadow: 6px 6px 6px rgba(0,0,0,0.6);
@@ -282,7 +282,7 @@
     .hoyre-container {
       width: 250px;
       height: 280px;
-      background: linear-gradient(to left, #12315c, #215db1);
+      background: linear-gradient(to left, #12315c7c, #215db17a);
       border-radius: 40px;
       box-shadow: 6px 6px 6px rgba(0,0,0,0.6);
       padding: 20px;
@@ -290,12 +290,100 @@
       opacity: 0.7;
     }
 
+    .activity-container {
+      width: 400px;
+      height: 500px;
+      background: linear-gradient(to left, #12315c7c, #215db17a);
+      border-radius: 40px;
+      box-shadow: 6px 6px 6px rgba(0,0,0,0.6);
+      padding: 20px;
+      margin-top: 60px;
+      margin-left: 40px;
+      opacity: 0.7;
+    }
+
+
+    .widget {
+  background: rgba(0, 30, 70, 0.85);
+  padding: 12px 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  width: 93%;
+  margin-bottom: 20px;
+  backdrop-filter: blur(4px);
+}
+
+.widget h3 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.reminder-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0;
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 2px rgba(255,255,255,.08) inset;
+}
+.dot.yellow { background-color: #ecc543; }
+.dot.red    { background-color: #f03747; }
+
+.badge {
+  min-width: 22px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(255,255,255,.14);
+  color: #ffffff;
+  line-height: 1;
+}
+
+.activity-box .subtle {
+  color: rgba(255, 255, 255, 0.904);
+  font-size: 12px;
+  text-align: center;
+  margin-top: -6px;
+  margin-bottom: 8px;
+}
+
+.activity-list {
+  max-height: 240px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.activity-item {
+  padding: 8px 10px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 10px;
+  background: rgba(255,255,255,.04);
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #ffffff;
+}
+
 
 
 
     .venstre-container button,
     .hoyre-container button {
-      background: linear-gradient(to left, #7396c7, #173c70);
+      background: linear-gradient(to left, #7396c7, #14386b);
       color: #000000;
       border-radius: 12px;
       border: color(srgb 255 0 0 );
@@ -317,6 +405,9 @@
       filter: brightness(1.1);
       transform: scale(1.05);
     }
+
+
+
 
   .digital-clock-container {
   width:150px;
@@ -565,6 +656,9 @@ background: rgba(0,0,0,.25); color:#fff;
     </div>
   </div>
 
+
+  
+
   <!-- Midtseksjon -->
   <div class="seavo-wrapper">
     <div class="seavo-left">
@@ -573,12 +667,55 @@ background: rgba(0,0,0,.25); color:#fff;
     </div>
 
 
+    
+
+
 
 
  <div class="seavo-right">
-      
-  
-      
+
+
+  <div class="activity-container">
+
+    
+  <!-- Reminders -->
+  <div class="widget" aria-label="Reminders">
+    <h3>Reminders</h3>
+
+    <div class="reminder-item">
+      <span class="dot yellow"></span>
+      <span class="label">Inventory expires in 9 days</span>
+      <span class="badge" id="invYellowCount">0</span>
+    </div>
+
+    <div class="reminder-item">
+      <span class="dot red"></span>
+      <span class="label">Inventory expires in 3 days</span>
+      <span class="badge" id="invRedCount">0</span>
+    </div>
+
+    <div class="reminder-item">
+      <span class="dot yellow"></span>
+      <span class="label">Tasks expire in 9 days</span>
+      <span class="badge" id="taskYellowCount">0</span>
+    </div>
+
+    <div class="reminder-item">
+      <span class="dot red"></span>
+      <span class="label">Tasks expire in 3 days</span>
+      <span class="badge" id="taskRedCount">0</span>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="widget activity-box" aria-label="Recent Activity">
+    <h3>Recent Activity</h3>
+    <div class="subtle">Scrollable</div>
+    <div class="activity-list">
+      <!-- Fylles dynamisk -->
+    </div>
+  </div>
+  </div>
     </div>
   </div>
 
@@ -620,11 +757,16 @@ background: rgba(0,0,0,.25); color:#fff;
   </div>
 </div>
 
- <audio id="sonar" src="Sound/Sonar.mp3" preload="auto"></audio>
+ 
 
 <div>
   <img src="images/Picture_collection.png" class="forsidebilde2" alt="forsidebilde2">
   </div>
+
+
+  
+    
+  
   
 
 
@@ -736,6 +878,77 @@ background: rgba(0,0,0,.25); color:#fff;
 </div>
 
 
+ 
+
+
+
+
+
+<!-- Kjerne – må lastes før init -->
+<script src="./js/seavo-core.js" defer></script>
+
+<script>
+  document.getElementById('btnSignOut')?.addEventListener('click', () => {
+    if(!confirm('Reset registration on this device?')) return;
+    // “Soft reset”: beholder flåter og userId (sesjon)
+    SN.clearRegistration({ keepFleets: true, keepSession: true });
+    location.reload(); // overlayet vil dukke opp igjen
+  });
+
+    function updateVesselBadge(){
+    const badge = document.getElementById('vesselBadge');
+    if(!badge) return;
+    const v = getVessel();
+    if(!v){
+      badge.textContent = 'Vessels name and call sign';
+      return;
+    }
+    // Ikke vis language – kun navn og ev. kallesignal
+    const parts = [v.vesselName];
+    if (v.callSign) parts.push(formatCallSign(v.callSign));
+    badge.textContent = parts.join(' • ');
+  }
+</script>
+
+
+
+
+<script>
+  // 1) Oppdater Reminders fra store
+  function refreshReminders(){
+    const inv = seavo.countInventoryAlerts();
+    const task = seavo.countTaskAlerts();
+    document.getElementById('invYellowCount').textContent = inv.yellow;
+    document.getElementById('invRedCount').textContent    = inv.red;
+    document.getElementById('taskYellowCount').textContent= task.yellow;
+    document.getElementById('taskRedCount').textContent   = task.red;
+  }
+
+  // 2) Last Recent Activity (vis f.eks. siste 20)
+  function renderActivity(){
+    const box = document.querySelector('.activity-list');
+    const store = seavo.getStore();
+    const rows = (store.activity||[]).slice(0,20).map(e=>{
+      const time = new Date(e.tsISO).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+      const src  = e.source ? ` <span style="opacity:.7">– ${e.source}</span>` : '';
+      return `<div class="activity-item">[${time}] ${e.text}${src}</div>`;
+    }).join('');
+    box.innerHTML = rows || '<div class="activity-item" style="opacity:.7">No recent activity</div>';
+  }
+
+  // 3) Init + live-oppdateringer
+  function initIndex(){
+    refreshReminders();
+    renderActivity();
+    seavo.onUpdate(()=>{
+      refreshReminders();
+      renderActivity();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initIndex);
+</script>
+
 
 <!-- Init/binding – kjører når DOM er klar og kjerne er lastet -->
 <script>
@@ -829,67 +1042,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-<!-- Kjerne – må lastes før init -->
-<script src="./js/seavo-core.js" defer></script>
-
-<script>
-  document.getElementById('btnSignOut')?.addEventListener('click', () => {
-    if(!confirm('Reset registration on this device?')) return;
-    // “Soft reset”: beholder flåter og userId (sesjon)
-    SN.clearRegistration({ keepFleets: true, keepSession: true });
-    location.reload(); // overlayet vil dukke opp igjen
-  });
-
-    function updateVesselBadge(){
-    const badge = document.getElementById('vesselBadge');
-    if(!badge) return;
-    const v = getVessel();
-    if(!v){
-      badge.textContent = 'Vessels name and call sign';
-      return;
-    }
-    // Ikke vis language – kun navn og ev. kallesignal
-    const parts = [v.vesselName];
-    if (v.callSign) parts.push(formatCallSign(v.callSign));
-    badge.textContent = parts.join(' • ');
-  }
-</script>
-
 
 
 </body>
 
 
           
- 
-
-
-<script>
-  const sonar = document.getElementById("sonar");
-  const toggleButton = document.getElementById("toggleButton");
-  
-  const volumeSlider = document.getElementById("volumeSlider");
-
-  let sonarInterval = null;
-  let isPlaying = false;
-
-  function playSonar() {
-    sonar.currentTime = 0;
-    sonar.play();
-  }
-
-  function toggleSonar() {
-    if (isPlaying) {
-      clearInterval(sonarInterval);
-      toggleButton.textContent = "🔈 ASDIC";
-    } else {
-      playSonar(); 
-      sonarInterval = setInterval(playSonar, 12000); // deretter hvert 12. sekund
-      toggleButton.textContent = "⏸️ ASDIC";
-    }
-    isPlaying = !isPlaying;
- 
-  }
 
 
 </script>
@@ -1056,7 +1214,7 @@ updateDigitalClock(); // første kall
       window.open(
         'Maintenance.html',    
         'popup',                  
-        'width=1400,height=800'  
+        'width=1600,height=800'  
       );
     }
 

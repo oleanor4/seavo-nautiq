@@ -155,3 +155,130 @@ function clearRegistration({ keepFleets = true, keepSession = true } = {}){
 }
 window.SN = window.SN || {};
 window.SN.clearRegistration = clearRegistration;
+
+
+
+(function(){
+  const CH = new BroadcastChannel('seavo');
+  const KEY = 'seavo.store';
+  const MAX_ACTIVITY = 300;
+
+  const read = () => {
+    try { return JSON.parse(localStorage.getItem(KEY)) || { inventory:{provisions:[], medicine:[], safety:[]}, tasks:[], activity:[] }; }
+    catch { return { inventory:{provisions:[], medicine:[], safety:[]}, tasks:[], activity:[] }; }
+  };
+  const write = (store, skipBroadcast=false) => {
+    localStorage.setItem(KEY, JSON.stringify(store));
+    if(!skipBroadcast) CH.postMessage({type:'store:update'});
+  };
+
+  const daysUntil = (iso) => {
+    if(!iso) return Infinity;
+    const today = new Date(); today.setHours(0,0,0,0);
+    const d = new Date(iso); d.setHours(0,0,0,0);
+    const diff = Math.round((d - today) / (1000*60*60*24));
+    return diff;
+  };
+
+  const statusFromExpiry = (iso) => {
+    const n = daysUntil(iso);
+    if (n <= 3) return 'red';
+    if (n <= 9) return 'yellow';
+    return 'ok';
+  };
+
+  const statusFromDue = statusFromExpiry; // samme logikk for tasks
+
+  const upsertMany = (arr, items, key='id') => {
+    const index = new Map(arr.map((x,i)=>[x[key], i]));
+    items.forEach(it=>{
+      const i = index.get(it[key]);
+      if(i!=null) arr[i] = it; else arr.push(it);
+    });
+    return arr;
+  };
+
+  const removeMissingById = (arr, newIds) => arr.filter(x => newIds.includes(x.id));
+
+  const api = {
+    getStore(){ return read(); },
+
+    /* Inventory sync: pageKey = 'provisions' | 'medicine' | 'safety' */
+    syncInventory(pageKey, items){
+      // items: [{id, name, expiryISO}]
+      const store = read();
+      const normalized = items.map(it => ({
+        id: String(it.id),
+        name: it.name || '',
+        expiryISO: it.expiryISO || '',
+        status: statusFromExpiry(it.expiryISO)
+      }));
+      const newIds = normalized.map(x=>x.id);
+      const current = store.inventory[pageKey] || [];
+      const kept = removeMissingById(current, newIds); // fjern som ikke finnes lenger
+      store.inventory[pageKey] = upsertMany(kept, normalized);
+
+      write(store);
+    },
+
+    /* Tasks sync (Maintenance) */
+    syncTasks(tasks){
+      // tasks: [{id, title, dueISO}]
+      const store = read();
+      const normalized = tasks.map(t => ({
+        id: String(t.id),
+        title: t.title || '',
+        dueISO: t.dueISO || '',
+        status: statusFromDue(t.dueISO)
+      }));
+      const newIds = normalized.map(x=>x.id);
+      const kept = removeMissingById(store.tasks || [], newIds);
+      store.tasks = upsertMany(kept, normalized);
+      write(store);
+    },
+
+    /* Aktivitetslogg */
+    logActivity({text, source, type}){
+      const store = read();
+      const entry = {
+        tsISO: new Date().toISOString(),
+        source: source || 'system',
+        type: type || 'info', // 'info' | 'warning' | 'error' | 'action'
+        text: text || ''
+      };
+      store.activity.unshift(entry);
+      if(store.activity.length > MAX_ACTIVITY) store.activity.length = MAX_ACTIVITY;
+      write(store);
+    },
+
+    /* Hjelpere for lesing og summering */
+    countInventoryAlerts(){
+      const s = read().inventory;
+      const all = [...(s.provisions||[]), ...(s.medicine||[]), ...(s.safety||[])];
+      return {
+        yellow: all.filter(x=>x.status==='yellow').length,
+        red:    all.filter(x=>x.status==='red').length
+      };
+    },
+    countTaskAlerts(){
+      const tasks = read().tasks || [];
+      return {
+        yellow: tasks.filter(t=>t.status==='yellow').length,
+        red:    tasks.filter(t=>t.status==='red').length
+      };
+    },
+
+    /* Live-lytting */
+    onUpdate(cb){
+      CH.addEventListener('message', (e)=>{
+        if(e?.data?.type==='store:update') cb();
+      });
+      window.addEventListener('storage', (e)=>{
+        if(e.key===KEY) cb();
+      });
+    }
+  };
+
+  // Eksponer globalt
+  window.seavo = api;
+})();

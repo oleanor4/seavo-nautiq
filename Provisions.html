@@ -377,6 +377,52 @@ td:last-child{ width:60px; background:linear-gradient(to right, rgba(78,155,206,
     </div>
   </div>
 
+  <!-- Legg denne script-taggen nederst på hver side (før dine side-spesifikke skript) -->
+<script src="seavo-core.js"></script>
+<script>
+  // Anta at hver rad har data-id og felter: .product-name og .expiry-input (type=date)
+  function scanAndSync(pageKey){
+    const rows = Array.from(document.querySelectorAll('tr[data-row-id]'))
+      .filter(tr => !tr.classList.contains('header-row')); // hopp over header/seksjoner
+
+    const items = rows.map(tr => {
+      const id = tr.getAttribute('data-row-id') || crypto.randomUUID();
+      tr.setAttribute('data-row-id', id);
+      const nameEl = tr.querySelector('.product-name');
+      const expEl  = tr.querySelector('.expiry-input'); // <input type="date" ...>
+      const name = nameEl ? nameEl.textContent.trim() || nameEl.value?.trim() : '';
+      const expiryISO = expEl && expEl.value ? expEl.value : '';
+      return { id, name, expiryISO };
+    });
+
+    seavo.syncInventory('provisions', items);
+  }
+
+  // Logg en hendelse når noe viktig skjer
+  function logChange(text){
+    seavo.logActivity({ text, source: document.title || 'Inventory', type:'action' });
+  }
+
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const pageKey = 'provisions'; // <- endre til 'medicine' / 'safety' på de sidene
+    scanAndSync(pageKey);
+
+    // Lytt på endringer i dato-felt (og evt. andre felt)
+    document.addEventListener('change', (e)=>{
+      if(e.target.matches('.expiry-input')){
+        const row = e.target.closest('tr[data-row-id]');
+        const name = row?.querySelector('.product-name')?.textContent?.trim() 
+                  || row?.querySelector('.product-name')?.value?.trim() || '[Unnamed]';
+        logChange(`Updated expiry for "${name}" to ${e.target.value}`);
+        scanAndSync(pageKey);
+      }
+    });
+
+    // Kall også scanAndSync() etter at du legger til/sletter rader i din eksisterende kode
+  });
+</script>
+
+
 <script>
 /* ===== Sidepanel toggle ===== */
 function toggleSidePanel(){

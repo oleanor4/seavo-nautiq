@@ -1145,7 +1145,7 @@ function toggleGlobalView(){
   isGlobalView=!isGlobalView;
 }
 
-/* ===== PDF (svart/hvitt) ===== */
+/* ===== PDF (hvit bakgrunn, svart tabell, 1.45x font i tabell) ===== */
 async function generatePDF(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF('p','mm','a4');
@@ -1154,39 +1154,58 @@ async function generatePDF(){
   doc.setFont("helvetica","bold");
   doc.setFontSize(22);
   doc.text("Seavo Equipment", 105, 15, { align: "center" });
-  doc.setFontSize(18);
+  doc.setFontSize(10);
   doc.text("Generated: " + today, 105, 22, { align: "center" });
 
   const content = document.getElementById("content");
 
+  /* Skjul knapper i skjermdumpen */
   const buttons = content.querySelectorAll("button, .btn, .delete-button");
   buttons.forEach(btn => btn.style.display = "none");
 
-  const allNodes = content.querySelectorAll("*");
-  const originalColors = [];
-  allNodes.forEach((el, i) => { originalColors[i] = el.style.color; el.style.color = "#000000"; });
+  /* Midlertidig stil for PDF: hvit bakgrunn, svart tekst, 1.45x font i tabell */
+  const styleTag = document.createElement("style");
+  styleTag.id = "pdfStyleSeavo";
+  styleTag.textContent = `
+    #content { background:#ffffff !important; }
+    #content * { color:#000 !important; box-shadow:none !important; }
+    #content table, #content th, #content td { 
+      color:#000 !important; 
+      border-color:#000 !important; 
+      background:transparent !important; 
+      font-size: 145% !important;     /* 1.45x */
+      line-height: 1.35 !important;
+    }
+    #content th { 
+      background:#e6e6e6 !important;   /* lys grå header */
+      font-weight:bold !important;
+    }
+    #content th, #content td { padding: 8px !important; }
+  `;
+  document.head.appendChild(styleTag);
 
-  const canvas = await html2canvas(content, { backgroundColor:"#ffffff", scale:2 });
+  /* Render til canvas – lavere scale for fart, hvit bakgrunn */
+  const canvas = await html2canvas(content, {
+    backgroundColor:"#ffffff",
+    scale: 2,
+    scrollX: 0,
+    scrollY: -window.scrollY
+  });
 
-  allNodes.forEach((el, i) => el.style.color = originalColors[i] || "");
+  /* Rydd opp: fjern midlertidig stil */
+  styleTag.remove();
 
-  const ctx = canvas.getContext("2d");
-  const imgDataArr = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  const d = imgDataArr.data;
-  for(let i=0; i<d.length; i+=4){
-    const avg = 0.3*d[i] + 0.59*d[i+1] + 0.11*d[i+2];
-    d[i]=d[i+1]=d[i+2]=avg;
-  }
-  ctx.putImageData(imgDataArr, 0, 0);
+  /* Vis knapper igjen */
+  buttons.forEach(btn => btn.style.display = "");
 
+  /* Legg bildet inn i PDF */
   const imgData = canvas.toDataURL("image/png");
   const imgProps = doc.getImageProperties(imgData);
-  const pdfWidth = doc.internal.pageSize.getWidth() - 20;
+  const pdfWidth = doc.internal.pageSize.getWidth() - 20; // marger
   const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-  doc.addImage(imgData, "PNG", 10, 30, pdfWidth, pdfHeight);
 
-  doc.save("SeavoNautiq_Equipment.pdf");
-  buttons.forEach(btn => btn.style.display = "");
+  doc.addImage(imgData, "PNG", 10, 30, pdfWidth, pdfHeight);
+  doc.save("SeavoNautiq_Inventory.pdf");
 }
 
 /* ===== Calculator / Notepad ===== */

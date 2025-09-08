@@ -37,6 +37,59 @@ body{
   color:var(--text);
 }
 
+
+
+    body {
+        background-color: hsl(210, 100%, var(--bg-lightness));
+        transition: background-color 0.5s ease;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        overflow-x: hidden;
+    }
+
+    
+
+    body::before {
+     content: "";
+     position: fixed;
+     inset: 0;
+     pointer-events: none;
+     background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7));
+     z-index: -1;
+  }
+
+  :root {
+    --bg-lightness: 20%;
+    --text-color: hsl(0, 0%, calc(100% - var(--bg-lightness)));
+    --box-color: hsl(210, 50%, calc(var(--bg-lightness) + 5%));
+    --button-color: hsl(210, 70%, calc(var(--bg-lightness) + 10%));
+    --button-text: hsl(0, 0%, calc(100% - var(--bg-lightness)));
+  }
+
+
+  .theme-slider-container {
+    position: relative;
+    top: 12px;
+    background: rgba(0, 0, 0, 0.705);
+    padding: 16px 18px;
+    border-radius: 12px;
+    border: 2px solid #8f8248;
+    color: rgb(255, 255, 255);
+    font-family: Arial, sans-serif;
+    z-index: 1000;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    width: 180px;
+    margin-left: 0px;
+  }
+
+  .theme-slider-container input[type="range"] {
+    width: 82px;
+    cursor: pointer;
+  }
+
+
+
+
 /* Header-video */
 .video-header{ position:relative; aspect-ratio:1280/99; overflow:hidden; background:#000; }
 .video-header video{ width:100%; height:200%; object-fit:cover; display:block; }
@@ -93,7 +146,7 @@ body{
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
-  margin: 1px 1px;
+  margin: 1px 8px;
 }
 
 .delete-category-button:hover {
@@ -136,7 +189,7 @@ body{
   background:linear-gradient(to right,var(--accent-2),var(--accent-3));
   color:#fff; border:1px solid rgba(255,255,255,.12); border-radius:12px; box-shadow:0 6px 16px rgba(0,0,0,.35);
 }
-.global-button{ padding:10px 18px; font-size:15px; font-weight:700; cursor:pointer; margin:10px 60px; }
+.global-button{ padding:10px 18px; font-size:15px; font-weight:700; cursor:pointer; margin:10px 60px; margin-bottom: 10px; }
 .global-button:hover{ filter:brightness(1.30); }
 
 /* ====== TABELL ====== */
@@ -183,6 +236,8 @@ td.cell-small input{
   padding: 10px;
   font-size: 16px;
 }
+
+
 
 
 
@@ -270,12 +325,14 @@ td:last-child{ width:60px; background:linear-gradient(to right, rgba(78,155,206,
   box-shadow: 0 0 15px 3px rgba(255, 255, 255, 0.4);
 }
 
-#bottomButtons{ margin-top:auto; width:100%; display:flex; flex-direction:column; gap:6px; }
+#bottomButtons{ margin-top: 35px; width:100%; display:flex; flex-direction:column; gap:0px; }
 #sidePanel button:not(#togglePanelBtn){
-  margin:4px 0; padding:12px 14px; width:100%; background:linear-gradient(to right,#123981,#1994db);
-  color:#fff; font-weight:700; border-radius:10px; cursor:pointer; font-size:14px; box-shadow:0 6px 14px rgba(0,0,0,.35);
+  margin:4px 0; padding:12px 14px; width:100%; background:linear-gradient(to right,#235fdfdc,#4e1bd8c5);
+  color:#fff; font-weight:700; border-radius:10px; cursor:pointer; font-size:14px; box-shadow:0 6px 14px rgba(0,0,0,.35); 
 }
-#sidePanel button:not(#togglePanelBtn):hover{ filter:brightness(1.20); }
+#sidePanel button:not(#togglePanelBtn):hover{ filter:brightness(1.20);
+  box-shadow: 0 0 15px 3px rgba(255, 255, 255, 0.2);
+}
 
 /* Markering */
 .highlight{ background:rgba(240,138,42,.8); font-weight:700; color:#09111f; border-radius:4px; padding:0 2px; }
@@ -353,6 +410,13 @@ button img{ width:40px; height:40px; padding-left:55px; margin-top:20px; }
       <button id="openCalculatorBtn">🧮 Calculator</button>
       <button id="openNotepadBtn">📝 Notepad</button>
     </div>
+
+      <div class="theme-slider-container">
+        <label for="themeSlider">☀️</label>
+        <input type="range" min="1" max="13" value="10" id="themeSlider">
+        <label for="themeSlider">🌙</label>
+      </div>
+
 
     <button id="togglePanelBtn" onclick="toggleSidePanel()">⫷</button>
   </div>
@@ -1159,6 +1223,22 @@ function sendActiveCategoryToOrders() {
   window.location.href = "Orders.html";
 }
 
+  const themeSlider = document.getElementById('themeSlider');
+  themeSlider.addEventListener('input', () => {
+    const value = parseInt(themeSlider.value);
+    const lightness = 100 - (value * 8); // 92% til 20%
+    const textColor = lightness < 45 ? '#ffffff' : '#000000';
+    const boxColor = `hsl(210, 50%, ${Math.max(lightness - 10, 15)}%)`;
+    const buttonColor = `hsl(210, 70%, ${Math.max(lightness - 5, 20)}%)`;
+    const buttonText = lightness < 45 ? '#ffffff' : '#000000';
+
+    document.documentElement.style.setProperty('--bg-lightness', `${lightness}%`);
+    document.documentElement.style.setProperty('--text-color', textColor);
+    document.documentElement.style.setProperty('--box-color', boxColor);
+    document.documentElement.style.setProperty('--button-color', buttonColor);
+    document.documentElement.style.setProperty('--button-text', buttonText);
+  });
+
 /* ===== Global oversikt ===== */
 function showGlobalOverview(){
   const content=document.getElementById("content");
@@ -1202,7 +1282,7 @@ function toggleGlobalView(){
 updateCategories();
 showCategory();
 
-/* ===== PDF (svart skrift) ===== */
+/* ===== PDF (hvit bakgrunn, svart tabell, 6x font i tabell) ===== */
 async function generatePDF(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF('p','mm','a4');
@@ -1211,40 +1291,58 @@ async function generatePDF(){
   doc.setFont("helvetica","bold");
   doc.setFontSize(22);
   doc.text("Seavo Office", 105, 15, { align: "center" });
-  doc.setFontSize(18);
+  doc.setFontSize(10);
   doc.text("Generated: " + today, 105, 22, { align: "center" });
 
   const content = document.getElementById("content");
 
+  /* Skjul knapper i skjermdumpen */
   const buttons = content.querySelectorAll("button, .btn, .delete-button");
   buttons.forEach(btn => btn.style.display = "none");
 
-  const allNodes = content.querySelectorAll("*");
-  const originalColors = [];
-  allNodes.forEach((el, i) => { originalColors[i] = el.style.color; el.style.color = "#000000"; });
+  /* Midlertidig stil for PDF: hvit bakgrunn, svart tekst, 1.45x font i tabell */
+  const styleTag = document.createElement("style");
+  styleTag.id = "pdfStyleSeavo";
+  styleTag.textContent = `
+    #content { background:#ffffff !important; }
+    #content * { color:#000 !important; box-shadow:none !important; }
+    #content table, #content th, #content td { 
+      color:#000 !important; 
+      border-color:#000 !important; 
+      background:transparent !important; 
+      font-size: 145% !important;     /* 1.45x */
+      line-height: 1.35 !important;
+    }
+    #content th { 
+      background:#e6e6e6 !important;   /* lys grå header */
+      font-weight:bold !important;
+    }
+    #content th, #content td { padding: 8px !important; }
+  `;
+  document.head.appendChild(styleTag);
 
-  const canvas = await html2canvas(content, { backgroundColor:"#ffffff", scale:2 });
+  /* Render til canvas – lavere scale for fart, hvit bakgrunn */
+  const canvas = await html2canvas(content, {
+    backgroundColor:"#ffffff",
+    scale: 2,
+    scrollX: 0,
+    scrollY: -window.scrollY
+  });
 
-  allNodes.forEach((el, i) => el.style.color = originalColors[i] || "");
+  /* Rydd opp: fjern midlertidig stil */
+  styleTag.remove();
 
-  const ctx = canvas.getContext("2d");
-  const imgDataArr = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  const d = imgDataArr.data;
-  for(let i=0; i<d.length; i+=4){
-    const avg = 0.3*d[i] + 0.59*d[i+1] + 0.11*d[i+2];
-    d[i]=d[i+1]=d[i+2]=avg;
-  }
-  ctx.putImageData(imgDataArr, 0, 0);
+  /* Vis knapper igjen */
+  buttons.forEach(btn => btn.style.display = "");
 
+  /* Legg bildet inn i PDF */
   const imgData = canvas.toDataURL("image/png");
   const imgProps = doc.getImageProperties(imgData);
-  const pdfWidth = doc.internal.pageSize.getWidth() - 20;
+  const pdfWidth = doc.internal.pageSize.getWidth() - 20; // marger
   const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
   doc.addImage(imgData, "PNG", 10, 30, pdfWidth, pdfHeight);
-
   doc.save("SeavoNautiq_Inventory.pdf");
-
-  buttons.forEach(btn => btn.style.display = "");
 }
 
 /* ===== Calculator / Notepad ===== */

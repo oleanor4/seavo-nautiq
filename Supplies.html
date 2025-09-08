@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <title>Supplies – Seavo Nautiq</title>
   <style>
+    :root{
+      --right-w: 420px;       /* fast bredde for høyre kolonne */
+      --gap: 24px;            /* standard mellomrom i layout */
+    }
+
+    *{ box-sizing: border-box; }
+
     body {
       background-color: #12315c;
       font-family: Arial, sans-serif;
@@ -57,34 +64,46 @@
     }
 
     .summary-box{
-  max-width: 1400px;
-  margin: 10px auto 14px;
-  padding: 10px 14px;
-  background: rgba(0,0,0,.18);
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 12px;
-  display: flex;
-  gap: 24px;
-  justify-content: center;
-  align-items: baseline;
-  box-shadow: 0 8px 20px rgba(0,0,0,.35);
-}
-.summary-box .metric{ display:flex; gap:8px; align-items: baseline; }
-.summary-box .num{ font-size: 26px; font-weight: 800; line-height:1; }
-.summary-box .label{ opacity:.8; font-weight:700; }
+      max-width: 300px;
+      margin: 10px auto 14px;
+      padding: 10px 14px;
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 12px;
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      align-items: baseline;
+      box-shadow: 0 8px 20px rgba(0,0,0,.35);
+    }
+    .summary-box .metric{ display:flex; gap:8px; align-items: baseline; }
+    .summary-box .num{ font-size: 26px; font-weight: 800; line-height:1; }
+    .summary-box .label{ opacity:.8; font-weight:700; }
 
+    /* === LAYOUT – fast 2-kolonne grid for stabilitet === */
+    .layout{
+      display: grid;
+      grid-template-columns: minmax(740px, 1fr) var(--right-w);
+      gap: var(--gap);
+      align-items: start;
+      margin-top: 16px;
+    }
+
+    .left-col{
+      min-width: 740px; /* sikrer at venstre kolonne ikke krymper og forårsaker wrap */
+    }
 
     .toolbar {
       display: flex;
       gap: 12px;
       align-items: center;
-      margin: 20px 0 10px;
-      flex-wrap: wrap;
+      margin: 10px 0 6px;
+      flex-wrap: nowrap;    /* forhindrer at knapper hopper ned */
     }
+
     .btn {
       padding: 10px 16px;
       font-size: 15px;
-      margin-top: 30px;
       background: linear-gradient(to right,#62b2e7,#1b4f8f);
       color: #fff;
       border: none;
@@ -100,10 +119,12 @@
     }
     .btn-ghost:hover { background: rgba(0,0,0,.3); }
 
+    .exportbar{
+      display:flex; gap:12px; align-items:center; margin: 8px 0 12px;
+    }
     .btn1 {
       padding: 6px 16px;
       font-size: 15px;
-      margin-top: 30px;
       background: linear-gradient(to right,#7e7ceb,#103d75);
       color: #fff;
       border: none;
@@ -111,21 +132,27 @@
       cursor: pointer;
       box-shadow: 0 2px 6px rgba(0,0,0,.35);
     }
-
     .btn1:hover { filter: brightness(1.30); }
 
+    /* Kortsamling fyller hele venstre kolonne, faste spalter */
     .cards {
       display: grid;
+      grid-template-columns: 1fr; /* én spalte = symmetri */
       gap: 16px;
-      margin-top: 10px;
+      margin-top: 4px;
+      width: 95%;
+      min-height: 80px; /* holder arealet stabilt før første kort */
     }
+
     .card {
       background: rgba(0,0,0,.15);
       border: 1px solid rgba(255,255,255,.15);
       border-radius: 12px;
       box-shadow: 0 4px 10px rgba(0,0,0,.25);
       padding: 12px;
+      width: 100%;     /* fyll alltid kolonnen – ingen hopp */
     }
+
     .card-header {
       display: flex;
       align-items: center;
@@ -143,32 +170,35 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      flex-wrap: nowrap;
     }
 
     /* Tabell inni kortet */
     .supply-table {
-      width: 100%;
+      width: 85%;
       border-collapse: collapse;
       background: rgba(255,255,255,.06);
       border: 1px solid rgba(255,255,255,.15);
       border-radius: 10px;
       overflow: hidden;
-      table-layout: fixed; /* viktig for faste bredder */
+      table-layout: fixed; /* viktig for faste bredder og stabilitet */
     }
     .supply-table th, .supply-table td {
       border-bottom: 1px solid rgba(255,255,255,.12);
       padding: 10px;
       text-align: left;
+      vertical-align: middle;
+      height: 44px; /* konsistent rad-høyde for symmetri */
     }
     .supply-table th {
       background: rgba(0,0,0,.25);
     }
 
-    /* Faste kolonnebredder som du ønsket */
+    /* Faste kolonnebredder (stabile på tvers av alle kort) */
     .col-supply { width: 380px; }
-    .col-qty { width: 80px; }
-    .col-voyage { width: 350px; }
-    /* Date tar resten (no fixed width) */
+    .col-qty    { width: 80px; }
+    .col-comments { width: 350px; }
+    .col-actions { width: 120px; }
 
     .row-actions {
       display: flex;
@@ -180,14 +210,12 @@
       border-radius: 6px;
       border: none;
       cursor: pointer;
+      white-space: nowrap;
     }
+    .btn-small:hover { background-color: #b61b26; }
 
-    .btn-small:hover {
-      background-color: #b61b26;
-      }
-
-    /* Inputs i tabellen */
-    .supply-input, .qty-input, .voyage-input, .date-input {
+    /* Inputs i tabellen – samme høyde overalt for symmetri */
+    .supply-input, .qty-input, .comments-input {
       width: 100%;
       padding: 8px;
       border-radius: 6px;
@@ -195,6 +223,8 @@
       background: rgba(0,0,0,.2);
       color: #fff;
       box-sizing: border-box;
+      height: 34px;            /* låst input-høyde */
+      line-height: 18px;
     }
 
     /* Tom-tilstand */
@@ -202,6 +232,102 @@
       padding: 10px;
       opacity: .8;
       font-style: italic;
+    }
+
+    /* Høyre kolonne – crew-box står fast, flytter seg ikke horisontalt */
+    .right-col{ position: relative; width: var(--right-w); }
+
+    .reset-wrap { display:flex; justify-content:flex-end; margin-bottom: 8px; }
+    .btn-reset {
+      padding: 6px 10px;
+      font-size: 13px;
+      background: linear-gradient(to right,#f03747,#b61b26);
+      color:#fff; border:none; border-radius:8px; cursor:pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,.35);
+      
+    }
+    .btn-reset:hover { filter: brightness(1.1); }
+
+    .crew-box {
+      width: 100%;
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.35);
+      position: sticky; top: 12px; /* holder seg på toppen ved scroll */
+      margin-top: 68px;
+    }
+    .crew-box h3 {
+      margin: 0 0 8px 0;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .crew-count {
+      display: inline-block;
+      min-width: 24px;
+      padding: 2px 8px;
+      font-weight: 800;
+      text-align: center;
+      border-radius: 999px;
+      background: linear-gradient(to right,#62b2e7,#1b4f8f);
+    }
+    .crew-list {
+      max-height: 400px;
+      overflow: auto;
+      display: grid;
+      gap: 6px;
+    }
+    .crew-item {
+      padding: 6px 8px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .crew-item .tag {
+      font-size: 11px;
+      opacity: .85;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.25);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    /* Meta-felt i crew-box */
+    .meta-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 8px 0 10px; }
+    .meta-row label { font-size: 12px; opacity: .9; display:block; margin-bottom: 6px; }
+    .meta-input {
+      width: 100%;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,.2);
+      background: rgba(0,0,0,.2);
+      color: #fff;
+      box-sizing: border-box;
+      height: 34px;
+      line-height: 18px;
+    }
+
+    /* Skjul elementer merket no-print ved utskrift / print-PDF */
+    @media print {
+      .no-print { display: none !important; }
+    }
+
+    /* (Valgfritt) Respons: stack når skjermen er smalere, uten hopp */
+    @media (max-width: 1180px){
+      .layout{
+        grid-template-columns: 1fr;
+      }
+      .left-col{ min-width: 0; }
+      .right-col{ width: 100%; }
+      .crew-box{ position: static; }
     }
   </style>
 </head>
@@ -219,43 +345,71 @@
     </h1>
 
     <div>
-    <a href="index.html" class="logo-link">
-      <img src="images/Logo Seavo Nautiq.png" alt="Logo Seavo Nautiq" class="logo">
-    </a>
-</div>
+      <a href="index.html" class="logo-link">
+        <img src="images/Logo Seavo Nautiq.png" alt="Logo Seavo Nautiq" class="logo">
+      </a>
+    </div>
 
     <div class="summary-box" id="summaryBox" aria-live="polite">
-  <div class="metric">
-    <span class="num" id="crewCount">0</span>
-    <span class="label">Crew</span>
-  </div>
-  <div class="metric">
-    <span class="num" id="lineCount">0</span>
-    <span class="label">Lines</span>
-  </div>
-</div>
-
+      <div class="metric">
+        <span class="num" id="crewCount">0</span>
+        <span class="label">Crew</span>
+      </div>
+      <div class="metric">
+        <span class="num" id="lineCount">0</span>
+        <span class="label">Lines</span>
+      </div>
+    </div>
 
     <img src="images/Supplies.png" alt="Supplies" class="Supplies">
   </header>
 
-  <!-- VERKTØYLINJE: PDF (B/W) + Excel + Add Participant/Crew -->
-  <div class="toolbar">
-   
-    <button class="btn" id="openPickerBtn">Add Participant/Crew</button>
+  <!-- FAST 2-KOLONNE LAYOUT -->
+  <div class="layout">
+    <!-- Venstre kolonne -->
+    <section class="left-col">
+      <div class="toolbar">
+        <button class="btn" id="openPickerBtn">Add Participant/Crew</button>
+      </div>
+
+      <div class="exportbar">
+        <button class="btn1" id="exportPdfBtn">Export PDF (B/W)</button>
+        <button class="btn1" id="exportExcelBtn">Export Excel</button>
+      </div>
+
+      <div id="cards" class="cards"></div>
+    </section>
+
+    <!-- Høyre kolonne (står i ro) -->
+    <aside class="right-col no-print">
+      <div class="reset-wrap">
+        <button class="btn-reset" id="resetAllBtn" title="Remove all lines from all crew">Reset lines</button>
+      </div>
+
+      <div class="crew-box" id="crewBox" aria-live="polite">
+        <h3>Participants <span class="crew-count" id="crewBadge">0</span></h3>
+
+        <!-- Voyage meta -->
+        <div class="meta-row">
+          <div>
+            <label for="voyageNameInput">Voyage name</label>
+            <input id="voyageNameInput" class="meta-input" placeholder="Voyage name">
+          </div>
+          <div>
+            <label for="startDateInput">Start date</label>
+            <input id="startDateInput" class="meta-input" type="date">
+          </div>
+        </div>
+
+        <div class="crew-list" id="crewList">
+          <!-- Fylles dynamisk -->
+        </div>
+      </div>
+    </aside>
   </div>
-
-  <div>
-
-     <button class="btn1" id="exportPdfBtn">Export PDF (B/W)</button>
-    <button class="btn1" id="exportExcelBtn">Export Excel</button>
-  </div>
-
-  <div id="cards" class="cards"></div>
 
   <!-- Legg denne script-taggen nederst på hver side (før dine side-spesifikke skript) -->
-<script src="seavo-core.js"></script>
-
+  <script src="seavo-core.js"></script>
 
   <!-- jsPDF + AutoTable (for PDF) -->
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
@@ -263,9 +417,10 @@
 
   <script>
     /** KEYS */
-    const PKEY = 'participants_v1';          // fra participants.html (ikke brukt her direkte nå)
-    const BOXKEY = 'supplies_boxes_v1';      // lagring av kort og rader
-    const PICKKEY = 'selected_for_supplies'; // midlertidig utvalg fra picker
+    const PKEY   = 'participants_v1';          // (ikke brukt direkte her)
+    const BOXKEY = 'supplies_boxes_v1';        // lagring av kort og rader
+    const PICKKEY= 'selected_for_supplies';    // utvalg fra picker
+    const METAKEY= 'supplies_meta_v1';         // Voyage name + Start date
 
     /** Hjelpere */
     const $ = sel => document.querySelector(sel);
@@ -281,37 +436,68 @@
 
     /** Dataformat:
      * boxes = [
-     *  { participantUid, participantName, lines: [{supply, qty, voyage, date}] }
+     *  { participantUid, participantName, lines: [{supply, qty, comments}] }
      * ]
      */
     let boxes = loadJSON(BOXKEY, []);
+    let meta  = loadJSON(METAKEY, { voyageName:'', startDate:'' });
 
     /** Render hele kortlisten */
     function renderAll() {
-  const wrap = $('#cards');
-  wrap.innerHTML = '';
-  if (!boxes.length) {
-    const empty = el('div', 'empty');
-    empty.textContent = 'No participants added yet. Click "Add Participant" to begin.';
-    wrap.appendChild(empty);
-  } else {
-    boxes.forEach((box, idx) => wrap.appendChild(renderCard(box, idx)));
-  }
-  updateSummaryBox(); // <-- legg til
-}
+      const wrap = $('#cards');
+      wrap.innerHTML = '';
+      if (!boxes.length) {
+        const empty = el('div', 'empty');
+        empty.textContent = 'No participants added yet. Click "Add Participant" to begin.';
+        wrap.appendChild(empty);
+      } else {
+        boxes.forEach((box, idx) => wrap.appendChild(renderCard(box, idx)));
+      }
+      updateSummaryBox();
+      renderCrewBox();
+      hydrateMetaInputs();
+    }
 
-function persistAndRender() {
-  saveJSON(BOXKEY, boxes);
-  renderAll();
-  // updateSummaryBox(); // valgfritt (renderAll kaller allerede)
-}
+    function persistAndRender() {
+      saveJSON(BOXKEY, boxes);
+      renderAll();
+    }
 
-// Etter init
-document.addEventListener('DOMContentLoaded', () => {
-  renderAll();          // du har dette fra før
-  updateSummaryBox();   // <-- sørg for første visning
-});
+    // Etter init
+    document.addEventListener('DOMContentLoaded', () => {
+      renderAll();
+      updateSummaryBox();
+      renderCrewBox();
+      hydrateMetaInputs();
+      bindReset();
+      bindMetaInputs();
+    });
 
+    /** Meta inputs visning/lagring */
+    function hydrateMetaInputs(){
+      const v = $('#voyageNameInput');
+      const d = $('#startDateInput');
+      if (v) v.value = meta.voyageName || '';
+      if (d) d.value = meta.startDate || '';
+    }
+    function bindMetaInputs(){
+      const v = $('#voyageNameInput');
+      const d = $('#startDateInput');
+      if (v) v.addEventListener('input', e => { meta.voyageName = e.target.value; saveJSON(METAKEY, meta); });
+      if (d) d.addEventListener('input', e => { meta.startDate  = e.target.value; saveJSON(METAKEY, meta); });
+    }
+
+    /** Reset alle linjer (beholder crew-kortene) */
+    function bindReset(){
+      const btn = $('#resetAllBtn');
+      if (!btn) return;
+      btn.addEventListener('click', () => {
+        if (!boxes.length) return;
+        if (!confirm('Remove all lines from all crew cards?')) return;
+        boxes = boxes.map(b => ({ ...b, lines: [] }));
+        persistAndRender();
+      });
+    }
 
     /** Render ett kort (deltakerboks med tabell) */
     function renderCard(box, idx) {
@@ -341,9 +527,8 @@ document.addEventListener('DOMContentLoaded', () => {
       trh.innerHTML = `
         <th class="col-supply">Supply</th>
         <th class="col-qty">Qty</th>
-        <th class="col-voyage">Voyage name</th>
-        <th>Date</th>
-        <th>Actions</th>
+        <th class="col-comments">Comments</th>
+        <th class="col-actions">Actions</th>
       `;
       thead.appendChild(trh);
       table.appendChild(thead);
@@ -353,9 +538,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!box.lines || !box.lines.length) {
         const trEmpty = el('tr');
         const tdEmpty = el('td');
-        tdEmpty.colSpan = 5;
+        tdEmpty.colSpan = 4;
         tdEmpty.className = 'empty';
-        tdEmpty.textContent = 'No lines yet. Click "Add line".';
+        tdEmpty.textContent = 'No lines yet. Click "Add supply line".';
         trEmpty.appendChild(tdEmpty);
         tbody.appendChild(trEmpty);
       } else {
@@ -377,18 +562,12 @@ document.addEventListener('DOMContentLoaded', () => {
           inpQty.oninput = e => updateCell(idx, ridx, 'qty', e.target.value);
           tdQty.appendChild(inpQty);
 
-          const tdVoy = el('td');
-          const inpVoy = el('input', 'voyage-input');
-          inpVoy.value = ln.voyage ?? '';
-          inpVoy.oninput = e => updateCell(idx, ridx, 'voyage', e.target.value);
-          tdVoy.appendChild(inpVoy);
-
-          const tdDate = el('td');
-          const inpDate = el('input', 'date-input');
-          inpDate.type = 'date';
-          inpDate.value = ln.date ?? '';
-          inpDate.oninput = e => updateCell(idx, ridx, 'date', e.target.value);
-          tdDate.appendChild(inpDate);
+          const tdComments = el('td');
+          const inpComments = el('input', 'comments-input');
+          inpComments.placeholder = 'Notes, lot, etc.';
+          inpComments.value = ln.comments ?? '';
+          inpComments.oninput = e => updateCell(idx, ridx, 'comments', e.target.value);
+          tdComments.appendChild(inpComments);
 
           const tdAct = el('td');
           const rowBtns = el('div', 'row-actions');
@@ -398,7 +577,7 @@ document.addEventListener('DOMContentLoaded', () => {
           rowBtns.appendChild(delRow);
           tdAct.appendChild(rowBtns);
 
-          tr.append(tdSupply, tdQty, tdVoy, tdDate, tdAct);
+          tr.append(tdSupply, tdQty, tdComments, tdAct);
           tbody.appendChild(tr);
         });
       }
@@ -410,7 +589,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function addLine(cardIndex) {
       boxes[cardIndex].lines = boxes[cardIndex].lines || [];
-      boxes[cardIndex].lines.push({ supply: '', qty: '', voyage: '', date: '' });
+      boxes[cardIndex].lines.push({ supply: '', qty: '', comments: '' });
       persistAndRender();
     }
     function deleteLine(cardIndex, rowIndex) {
@@ -426,10 +605,6 @@ document.addEventListener('DOMContentLoaded', () => {
       boxes[cardIndex].lines[rowIndex][key] = val;
       saveJSON(BOXKEY, boxes);
     }
-    function persistAndRender() {
-      saveJSON(BOXKEY, boxes);
-      renderAll();
-    }
 
     /** Åpne picker (participants.html i plukkemodus) */
     $('#openPickerBtn').addEventListener('click', () => {
@@ -437,8 +612,7 @@ document.addEventListener('DOMContentLoaded', () => {
       window.open('participants.html?pick=1', 'participantPicker',
         'width=1000,height=800,noopener=yes');
 
-      // Poll etter resultatet lagt i localStorage av picker
-      waitForPicked();
+      waitForPicked(); // Poll resultat fra picker
     });
 
     /** Poller lokalStorage etter valgt liste */
@@ -452,8 +626,7 @@ document.addEventListener('DOMContentLoaded', () => {
           localStorage.removeItem(PICKKEY);
           addPickedParticipants(picked);
         } else {
-          // fail-safe: stopp etter 5 minutter
-          if (Date.now() - start > 5 * 60 * 1000) clearInterval(timer);
+          if (Date.now() - start > 5 * 60 * 1000) clearInterval(timer); // fail-safe 5min
         }
       }, 500);
     }
@@ -466,7 +639,7 @@ document.addEventListener('DOMContentLoaded', () => {
           boxes.push({
             participantUid: p.uid,
             participantName: p.name,
-            lines: [{ supply: '', qty: '', voyage: '', date: '' }],
+            lines: [{ supply: '', qty: '', comments: '' }],
           });
         }
       });
@@ -474,16 +647,46 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function countTotalLines(){
-  return (boxes || []).reduce((sum, b) => sum + (b.lines?.length || 0), 0);
-}
-function updateSummaryBox(){
-  const crewEl = document.getElementById('crewCount');
-  const lineEl = document.getElementById('lineCount');
-  if(!crewEl || !lineEl) return;
-  crewEl.textContent = (boxes || []).length;
-  lineEl.textContent = countTotalLines();
-}
+      return (boxes || []).reduce((sum, b) => sum + (b.lines?.length || 0), 0);
+    }
+    function updateSummaryBox(){
+      const crewEl = document.getElementById('crewCount');
+      const lineEl = document.getElementById('lineCount');
+      if(!crewEl || !lineEl) return;
+      crewEl.textContent = (boxes || []).length;
+      lineEl.textContent = countTotalLines();
+    }
 
+    /* === Participants-boks på høyre side === */
+    function renderCrewBox() {
+      const listEl = document.getElementById('crewList');
+      const badge = document.getElementById('crewBadge');
+      if (!listEl || !badge) return;
+
+      const names = (boxes || []).map(b => b.participantName).filter(Boolean);
+      badge.textContent = names.length;
+
+      listEl.innerHTML = '';
+      if (!names.length) {
+        const empty = document.createElement('div');
+        empty.className = 'crew-item';
+        empty.textContent = 'No participants yet.';
+        listEl.appendChild(empty);
+        return;
+      }
+
+      names.forEach((name, i) => {
+        const item = document.createElement('div');
+        item.className = 'crew-item';
+        const span = document.createElement('span');
+        span.textContent = name;
+        const tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.textContent = `#${i+1}`;
+        item.append(span, tag);
+        listEl.appendChild(item);
+      });
+    }
 
     // ==== EXPORT: PDF (Svart/Hvitt) ====
     document.getElementById('exportPdfBtn').addEventListener('click', exportSuppliesPDF);
@@ -503,7 +706,14 @@ function updateSummaryBox(){
       doc.setFontSize(16);
       doc.text('Seavo Nautiq – Supplies', 40, cursorY);
       cursorY += 12;
+
+      // Meta (Voyage + Start) rett under logo/overskrift
       doc.setFontSize(10);
+      const vName = (meta.voyageName || '').toString();
+      const sDate = (meta.startDate  || '').toString();
+      if (vName) { doc.text(`Voyage: ${vName}`, 40, cursorY); cursorY += 12; }
+      if (sDate) { doc.text(`Start date: ${sDate}`, 40, cursorY); cursorY += 12; }
+
       const dateStr = new Date().toISOString().slice(0,16).replace('T',' ');
       doc.text(`Generated: ${dateStr}`, 40, cursorY);
       cursorY += 16;
@@ -517,15 +727,14 @@ function updateSummaryBox(){
         cursorY += 10;
 
         // Bygg tabell-data (kun datafelt – ingen actions/knapper)
-        const head = [['Supply', 'Qty', 'Voyage name', 'Date']];
+        const head = [['Supply', 'Qty', 'Comments']];
         const body = (box.lines && box.lines.length)
           ? box.lines.map(ln => [
               (ln.supply ?? '').toString(),
               (ln.qty ?? '').toString(),
-              (ln.voyage ?? '').toString(),
-              (ln.date ?? '').toString()
+              (ln.comments ?? '').toString()
             ])
-          : [['', '', '', '']];
+          : [['', '', '']];
 
         doc.autoTable({
           head,
@@ -535,24 +744,19 @@ function updateSummaryBox(){
           styles: {
             font: 'helvetica',
             fontSize: 9,
-            textColor: [0,0,0],       // svart tekst
-            lineColor: [0,0,0],       // svarte linjer
+            textColor: [0,0,0],
+            lineColor: [0,0,0],
             lineWidth: 0.5,
-            fillColor: [255,255,255], // hvit bakgrunn
+            fillColor: [255,255,255],
           },
           headStyles: {
-            fillColor: [230,230,230], // grå header
+            fillColor: [230,230,230],
             textColor: [0,0,0],
             lineColor: [0,0,0],
             lineWidth: 0.5
           },
-          alternateRowStyles: {
-            fillColor: [245,245,245] // lys grå annenhver rad
-          },
+          alternateRowStyles: { fillColor: [245,245,245] },
           margin: { left: 40, right: 40 },
-          willDrawCell: function() {
-            // sikrer svart/hvitt
-          }
         });
 
         cursorY = doc.lastAutoTable.finalY + 16;
@@ -567,88 +771,69 @@ function updateSummaryBox(){
       doc.save('Supplies_BW.pdf');
     }
 
-      // ==== EXPORT: Excel (CSV med semikolon) ====
-  document.getElementById('exportExcelBtn').addEventListener('click', exportSuppliesCSV);
+    // ==== EXPORT: Excel (CSV med semikolon) ====
+    document.getElementById('exportExcelBtn').addEventListener('click', exportSuppliesCSV);
 
-  function exportSuppliesCSV() {
-    if (!boxes.length) { alert('No data to export.'); return; }
+    function exportSuppliesCSV() {
+      if (!boxes.length) { alert('No data to export.'); return; }
 
-    // Fast og tydelig kolonnerekkefølge
-    const headers = ['Participant','Supply','Qty','Voyage name','Date'];
+      // Kolonner oppdatert: Comments erstatter Voyage/Date
+      const headers = ['Participant','Supply','Qty','Comments'];
 
-    // Samle rader (en rad per linje i alle bokser)
-    const rows = [headers];
+      // Samle rader (en rad per linje i alle bokser)
+      const rows = [headers];
 
-    boxes.forEach(box => {
-      const participant = sanitizeCSV(box.participantName ?? '');
+      boxes.forEach(box => {
+        const participant = sanitizeCSV(box.participantName ?? '');
 
-      if (box.lines && box.lines.length) {
-        box.lines.forEach(ln => {
-          rows.push([
-            participant,
-            sanitizeCSV(ln.supply ?? ''),
-            sanitizeCSV(ln.qty ?? ''),
-            sanitizeCSV(ln.voyage ?? ''),
-            normalizeDate(ln.date)
-          ]);
-        });
-      } else {
-        // Tom boks får én tom rad så deltaker vises i eksporten
-        rows.push([participant, '', '', '', '']);
+        if (box.lines && box.lines.length) {
+          box.lines.forEach(ln => {
+            rows.push([
+              participant,
+              sanitizeCSV(ln.supply ?? ''),
+              sanitizeCSV(ln.qty ?? ''),
+              sanitizeCSV(ln.comments ?? '')
+            ]);
+          });
+        } else {
+          rows.push([participant, '', '', '']);
+        }
+
+        // Visuell luft mellom deltakere (tom linje)
+        rows.push(['','','','']);
+      });
+
+      // Fjern siste ekstra tomlinje
+      if (rows.length && rows[rows.length - 1].every(c => c === '')) {
+        rows.pop();
       }
 
-      // Visuell luft mellom deltakere (tom linje)
-      rows.push(['','','','','']);
-    });
+      // Bygg CSV med semikolon + BOM + "sep=;" for Excel
+      const DELIM = ';';
+      const csvBody = rows.map(r => r.map(csvEscape).join(DELIM)).join('\r\n');
+      const csvWithSep = 'sep=;\r\n' + csvBody;
+      const blob = new Blob(['\uFEFF' + csvWithSep], { type: 'text/csv;charset=utf-8;' });
 
-    // Fjern siste ekstra tomlinje
-    if (rows.length && rows[rows.length - 1].every(c => c === '')) {
-      rows.pop();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Supplies.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     }
 
-    // Bygg CSV med semikolon + BOM + "sep=;" for Excel
-    const DELIM = ';';
-    const csvBody = rows.map(r => r.map(csvEscape).join(DELIM)).join('\r\n');
-    const csvWithSep = 'sep=;\r\n' + csvBody;            // hjelper Excel å velge separator
-    const blob = new Blob(['\uFEFF' + csvWithSep], {     // BOM for norske tegn
-      type: 'text/csv;charset=utf-8;'
-    });
-
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'Supplies.csv'; // ren .csv fungerer best
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }
-
-  function sanitizeCSV(v) {
-    return (v ?? '').toString().trim();
-  }
-
-  // Pakk felt i " hvis de inneholder spesialtegn (Excel-safe)
-  function csvEscape(field) {
-    const f = field.toString();
-    if (/[\";\r\n]/.test(f)) {
-      return '"' + f.replace(/"/g, '""') + '"';
+    function sanitizeCSV(v) {
+      return (v ?? '').toString().trim();
     }
-    return f;
-  }
-
-  // Normaliser dato til YYYY-MM-DD for Excel
-  function normalizeDate(d) {
-    if (!d) return '';
-    // godta allerede formaterte datoer
-    if (/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
-    const dt = new Date(d);
-    if (isNaN(dt)) return sanitizeCSV(d);
-    const y = dt.getFullYear();
-    const m = String(dt.getMonth()+1).padStart(2,'0');
-    const dd = String(dt.getDate()).padStart(2,'0');
-    return `${y}-${m}-${dd}`;
-  }
+    function csvEscape(field) {
+      const f = field.toString();
+      if (/[\";\r\n]/.test(f)) {
+        return '"' + f.replace(/"/g, '""') + '"';
+      }
+      return f;
+    }
   </script>
 </body>
 </html>

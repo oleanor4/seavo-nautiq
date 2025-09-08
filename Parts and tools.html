@@ -469,7 +469,7 @@ function downloadCSV(aoa, filename) {
   document.body.removeChild(link);
 }
 
-/* ===== PDF (svart skrift) ===== */
+/* ===== PDF (hvit bakgrunn, svart tabell, 1.45x font i tabell) ===== */
 async function generatePDF(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF('p','mm','a4');
@@ -478,39 +478,70 @@ async function generatePDF(){
   doc.setFont("helvetica","bold");
   doc.setFontSize(22);
   doc.text("Seavo Parts & Tools", 105, 15, { align: "center" });
-  doc.setFontSize(18);
+  doc.setFontSize(10);
   doc.text("Generated: " + today, 105, 22, { align: "center" });
 
   const content = document.getElementById("content");
 
+  /* Skjul knapper i skjermdumpen */
   const buttons = content.querySelectorAll("button, .btn, .delete-button");
   buttons.forEach(btn => btn.style.display = "none");
 
-  const allNodes = content.querySelectorAll("*");
-  const originalColors = [];
-  allNodes.forEach((el, i) => { originalColors[i] = el.style.color; el.style.color = "#000000"; });
+  /* Skjul hele Image-kolonnen (th + td) */
+const imageCells = content.querySelectorAll("th:nth-child(7), td:nth-child(7)");
+imageCells.forEach(cell => cell.style.display = "none");
 
-  const canvas = await html2canvas(content, { backgroundColor:"#ffffff", scale:2 });
+  /* Midlertidig stil for PDF: hvit bakgrunn, svart tekst, 1.45x font i tabell */
+  const styleTag = document.createElement("style");
+  styleTag.id = "pdfStyleSeavo";
+  styleTag.textContent = `
+    #content { background:#ffffff !important; }
+    #content * { color:#000 !important; box-shadow:none !important; }
+    #content table, #content th, #content td { 
+      color:#000 !important; 
+      border-color:#000 !important; 
+      background:transparent !important; 
+      font-size: 145% !important;     /* 1.45x */
+      line-height: 1.35 !important;
+    }
+      #content table {
+    width: 95% !important;
+    table-layout: flex !important;
+   }
+ 
+    #content th { 
+      background:#e6e6e6 !important;   /* lys grå header */
+      font-weight:bold !important;
+    }
+    #content th, #content td { padding: 8px !important; }
+  `;
+  document.head.appendChild(styleTag);
 
-  allNodes.forEach((el, i) => el.style.color = originalColors[i] || "");
+  /* Render til canvas – lavere scale for fart, hvit bakgrunn */
+  const canvas = await html2canvas(content, {
+    backgroundColor:"#ffffff",
+    scale: 2,
+    scrollX: 0,
+    scrollY: -window.scrollY
+  });
 
-  const ctx = canvas.getContext("2d");
-  const imgDataArr = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  const data = imgDataArr.data;
-  for(let i=0; i<data.length; i+=4){
-    const avg = 0.3*data[i] + 0.59*data[i+1] + 0.11*data[i+2];
-    data[i] = data[i+1] = data[i+2] = avg;
-  }
-  ctx.putImageData(imgDataArr, 0, 0);
+  /* Rydd opp: fjern midlertidig stil */
+  styleTag.remove();
 
+  /* Vis knapper igjen */
+  buttons.forEach(btn => btn.style.display = "");
+
+  /* Vis Image-kolonnen igjen */
+  imageCells.forEach(cell => cell.style.display = "");
+
+  /* Legg bildet inn i PDF */
   const imgData = canvas.toDataURL("image/png");
   const imgProps = doc.getImageProperties(imgData);
-  const pdfWidth = doc.internal.pageSize.getWidth() - 20;
+  const pdfWidth = doc.internal.pageSize.getWidth() - 20; // marger
   const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-  doc.addImage(imgData, "PNG", 10, 30, pdfWidth, pdfHeight);
 
-  doc.save("SeavoNautiq_PartsTools.pdf");
-  buttons.forEach(btn => btn.style.display = "");
+  doc.addImage(imgData, "PNG", 10, 30, pdfWidth, pdfHeight);
+  doc.save("SeavoNautiq_Inventory.pdf");
 }
 
 /* ===== Excel (AOA) ===== */
@@ -1303,32 +1334,166 @@ function updateGauge(idx, tr){
   fill.style.width = pct + '%'; fill.style.background = percentColor(pct);
   label.textContent = (isNaN(v) || isNaN(max) || max <= 0) ? '—' : `(${Math.round(pct)}%)`;
 }
-document.getElementById('dvwAddBtn').addEventListener('click', ()=>{ dvwData.push({product:'',sg:'',weight:'',volume:'',temp:'',levelMax:'',comment:''}); dvwSave(); renderDVWTable(); });
+document.getElementById('dvwAddBtn').addEventListener('click', ()=>{
+  dvwData.push({product:'',sg:'',weight:'',volume:'',temp:'',levelMax:'',comment:''});
+  dvwSave(); renderDVWTable();
+});
 document.getElementById('dvwPdfBtn').addEventListener('click', generateDVWPDF);
+
 async function generateDVWPDF(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF('p', 'mm', 'a4');
-  const logo = new Image(); logo.src = "images/Logo Seavo Nautiq.png";
-  await new Promise(res => { logo.onload = res; }).catch(()=>{});
-  try { doc.addImage(logo, 'PNG', 10, 10, 50, 30); } catch(e){}
-  doc.setFontSize(16); doc.text("D/W/V (Fuel • Lube • Ballast) — Overview", 10, 48);
+
+  /* Logo + tittel */
+  const today = new Date().toLocaleDateString();
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(22);
+  doc.text("Seavo Parts & Tools", 105, 15, { align: "center" });
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  doc.text("D/W/V (Fuel • Lube • Ballast) — Overview", 10, 48);
+
   const wrap = document.getElementById('dvwTableWrap');
-  const canvas = await html2canvas(wrap, { backgroundColor: "#ffffff", scale: 2 });
-  const imgData = canvas.toDataURL('image/png'); const imgProps = doc.getImageProperties(imgData);
-  const pageWidth = doc.internal.pageSize.getWidth(); const pageHeight = doc.internal.pageSize.getHeight();
-  const marginX = 10; const topY = 55; const pdfW = pageWidth - marginX*2; const pdfH = (imgProps.height * pdfW) / imgProps.width;
-  let y = topY; let remaining = pdfH; let sY = 0; const pageImgHeight = pageHeight - topY - 10;
+
+  /* 1) Skjul knapper og opplasting i snapshot */
+  const hiddenNodes = [];
+  wrap.querySelectorAll('button, .btn, .delete-button, input[type="file"]').forEach(el=>{
+    hiddenNodes.push({el, prev: el.style.display});
+    el.style.display = 'none';
+  });
+
+  /* 2) Finn kolonneindekser som skal beholde farger (Level (max m³), Gauge/Level Max) */
+  const ths = wrap.querySelectorAll('thead th');
+  const keepColorIdx = [];
+  ths.forEach((th, i)=>{
+    const t = (th.textContent || '').trim().toLowerCase();
+
+    // Treffer typiske varianter – tilpass gjerne hvis header-tekst endres
+    if (t.includes('level (max') || t.includes('gauge/level max') || (t.includes('gauge') && t.includes('level'))) {
+      keepColorIdx.push(i+1); // nth-child er 1-basert
+    }
+  });
+
+  // Merk celler i disse kolonnene for å bevare farge
+  const keepColorCells = [];
+  keepColorIdx.forEach(n=>{
+    wrap.querySelectorAll(`thead th:nth-child(${n}), tbody td:nth-child(${n}), tfoot td:nth-child(${n})`)
+        .forEach(cell => { cell.setAttribute('data-keep-color','1'); keepColorCells.push(cell); });
+  });
+
+  /* 3) Midlertidig stil: hvit bakgrunn, sort tekst/border, grå header, større font, tabell innenfor bredde */
+  const styleTag = document.createElement('style');
+  styleTag.id = 'pdfStyleDVW';
+  styleTag.textContent = `
+    #dvwTableWrap { background:#ffffff !important; }
+    #dvwTableWrap table { width:95% !important; table-layout:fixed !important; border-collapse:collapse !important; }
+    #dvwTableWrap th, #dvwTableWrap td { padding:18px !important; border:1px solid #000 !important; font-size:150% !important; line-height:1.20 !important; }
+    #dvwTableWrap thead th { background:#e6e6e6 !important; font-weight:bold !important; }
+    #dvwTableWrap input {
+  border:none !important;
+  margin:0px !important;
+  padding:4px 2px !important;         /* gir litt luft rundt teksten */
+  box-shadow:none !important;
+  background:transparent !important;
+  font-size:90% !important;
+  font-weight:bolder !important;
+  width:92% !important;
+  flex-grow:1 !important;           /* fyller tilgjengelig plass */
+  text-align:center !important;     /* sentrerer teksten */
+  line-height: 1.0 !important;         /* balanserer høyden på teksten */
+  height:auto !important;             /* lar innholdet styre høyden */
+  vertical-align:middle !important;   /* midtstiller teksten i cella */
+  color:inherit !important;           /* arver tekstfarge fra forelder */
+  `;
+  document.head.appendChild(styleTag);
+
+  /* 4) Tving sort tekst og transparente bakgrunner – MEN behold farger i merkede kolonner */
+  const changed = []; // lagre opprinnelige inline-stiler for restore
+  const allNodes = wrap.querySelectorAll('*');
+  allNodes.forEach(el=>{
+    const keep = el.closest('[data-keep-color="1"]') !== null;
+    const isCell = el.tagName === 'TD' || el.tagName === 'TH';
+
+    const prev = {
+      cssText: el.style.cssText
+
+    };
+
+    if (!keep) {
+      // Tving tekst til sort (for ikke-merkede celler/innhold)
+      el.style.color = '#000';
+      // Fjern bakgrunnsfarger (for rader/celler utenom headeren som vi allerede satte via CSS)
+      if (isCell) {
+        // behold header-bakgrunn fra CSS (grå), ikke sett noe her
+      } else {
+       
+      }
+      // Eventuelle rammer håndteres via CSS-regelen over
+    }
+
+    changed.push({el, prev});
+  });
+
+  /* 5) Render til canvas (hvit bakgrunn) */
+  const canvas = await html2canvas(wap = wrap, {
+    backgroundColor: "#ffffff",
+    scale: 2,
+    scrollX: 0,
+    scrollY: -window.scrollY
+  });
+
+  /* 6) Rydd opp – fjern midlertidig styling og gjenopprett */
+  changed.forEach(({el, prev})=>{ el.style.cssText = prev.cssText; });
+  keepColorCells.forEach(cell => cell.removeAttribute('data-keep-color'));
+  if (styleTag && styleTag.parentNode) styleTag.parentNode.removeChild(styleTag);
+  hiddenNodes.forEach(({el, prev})=>{ el.style.display = prev; });
+
+  /* 7) Legg bildet inn i PDF – skaler innenfor siden, med marger og sidesplitting */
+  const imgData   = canvas.toDataURL('image/png');
+  const imgProps  = doc.getImageProperties(imgData);
+  const pageW     = doc.internal.pageSize.getWidth();
+  const pageH     = doc.internal.pageSize.getHeight();
+  const marginX   = 10;
+  const topY      = 55;
+  const pdfW      = pageW - marginX*2;
+  const pdfHFull  = (imgProps.height * pdfW) / imgProps.width;
+
+  let y = topY;
+  let remaining = pdfHFull;
+  let sY = 0;
+  const pageImgHeight = pageH - topY - 10; // 10mm bunnmarg
+
+  // For slicing trenger vi å tegne utsnitt i riktig skala
   while (remaining > 0){
     const sliceH = Math.min(pageImgHeight, remaining);
-    const sliceCanvas = document.createElement('canvas'); const scale = pdfW / imgProps.width;
-    sliceCanvas.width = imgProps.width; sliceCanvas.height = sliceH / scale;
+
+    const sliceCanvas = document.createElement('canvas');
+    const scale = pdfW / imgProps.width; // skala mellom original-canvas og PDF-bredde
+    sliceCanvas.width  = imgProps.width;
+    sliceCanvas.height = sliceH / scale;
+
     const ctx = sliceCanvas.getContext('2d');
-    ctx.drawImage(canvas, 0, sY / scale, imgProps.width, sliceCanvas.height, 0, 0, imgProps.width, sliceCanvas.height);
+    ctx.drawImage(
+      canvas,
+      0,               // sx
+      sY / scale,      // sy i originale canvas-px
+      imgProps.width,  // sw
+      sliceCanvas.height, // sh (i originale canvas-px)
+      0, 0,
+      imgProps.width, sliceCanvas.height
+    );
+
     const sliceData = sliceCanvas.toDataURL('image/png');
     doc.addImage(sliceData, 'PNG', marginX, y, pdfW, sliceH);
-    remaining -= sliceH; sY += sliceH;
-    if (remaining > 0){ doc.addPage(); y = 20; }
+
+    remaining -= sliceH;
+    sY += sliceH;
+    if (remaining > 0){
+      doc.addPage();
+      y = 20; // toppmarg på påfølgende sider
+    }
   }
+
   doc.save('SeavoNautiq_DWV.pdf');
 }
 document.getElementById('dvwRecalcBtn').addEventListener('click', ()=>{ dvwData.forEach((_, i)=>recomputeRow(i, 'manual')); dvwSave(); renderDVWTable(); });

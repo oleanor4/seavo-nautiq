@@ -61,22 +61,7 @@ window.I18N_DICTIONARIES = {
 "nav.cargo": "Cargo Space",
 "nav.research": "Research",
 
-"index.box1.title":"Efficient management of the vessel's inventory",
-"index.box1.p1":"This platform is designed to streamline inventory management on board vessels. Originally tailored for the fishing fleet, the solution offers flexible features suitable for all vessels with large amounts of equipment on board.",
 
-"index.box2.title":"Functions and use",
-"index.box2.p1":"The platform allows you to easily register, track, and update equipment, supplies, tools, and safety items. You can quickly generate reports, export to PDF or Excel, and share them with other users or vessels.",
-"index.box2.p2":"With various user roles, structured access is ensured: For example, officers have full control over the inventory, while crew members can register consumption and updates via the Seavo Nautiq Mobile app.",
-
-"index.box3.title":"Additional modules",
-"index.box3.p1":"The system also includes modules for travel planning, order tracking, fleet overview, and integration with safety and compliance procedures.",
-"index.box3.p2":"Critical expiry dates – such as for medications, rescue equipment, and batteries – are automatically monitored to ensure compliance with regulations.",
-"index.box3.p3":"The solution works both online and offline, making it reliable even with limited internet coverage at sea.",
-
-"index.box4.title":"Getting started",
-"index.box4.p1":"If you are a new user, we recommend starting with the tabs \"Office\" or \"Equipment\" to familiarize yourself with how the categories are structured.",
-"index.box4.p2":"You can also find useful resources and guides in the help section."
-,
 
     "title.office": "Seavo Nautiq — Office",
 
@@ -142,7 +127,7 @@ window.I18N_DICTIONARIES = {
     "default.headerPlaceholder":"Section / Header",
 
     "global.title": "Global overview of the entire office inventory",
-    "global.hint": "Global overview shows total inventory in a table and are more print-friendly.",
+    "global.hint": "The Global Overview presents all inventory in a structured table format, optimized for PDF generating and printing.",
 
     "pdf.headerTitle":"Seavo Office",
     "pdf.generatedLabel":"Generated:",
@@ -219,22 +204,8 @@ window.I18N_DICTIONARIES = {
 "nav.cargo": "Lasterom",
 "nav.research": "Forskning",
 
-"index.box1.title":"Effektiv håndtering av fartøyets lager",
-"index.box1.p1":"Plattformen forenkler lagerstyring om bord. Opprinnelig laget for fiskeflåten, men funksjonene passer alle fartøy med mye utstyr om bord.",
 
-"index.box2.title":"Funksjoner og bruk",
-"index.box2.p1":"Registrer, spor og oppdater utstyr, forsyninger, verktøy og sikkerhetsutstyr. Generer rapporter, eksporter til PDF/Excel og del med andre brukere eller fartøy.",
-"index.box2.p2":"Med ulike brukerroller sikres strukturert tilgang: Offiserer har full kontroll, mens mannskap kan registrere forbruk og oppdateringer via Seavo Nautiq Mobile-appen.",
 
-"index.box3.title":"Tilleggsmoduler",
-"index.box3.p1":"Systemet har også moduler for reiseplanlegging, ordreoppfølging, flåteoversikt og integrasjon mot sikkerhet og etterlevelse.",
-"index.box3.p2":"Kritiske utløpsdatoer – som medisiner, redningsutstyr og batterier – overvåkes automatisk.",
-"index.box3.p3":"Løsningen virker både online og offline, og er driftssikker ved begrenset nett til sjøs.",
-
-"index.box4.title":"Kom i gang",
-"index.box4.p1":"For nye brukere anbefales det å starte med fanene «Office» eller «Equipment» for å bli kjent med struktur og kategorier.",
-"index.box4.p2":"Se også hjelpeseksjonen for ressurser og veiledning."
-,
 
     "title.office": "Seavo Nautiq — Kontor",
 
@@ -300,7 +271,7 @@ window.I18N_DICTIONARIES = {
     "default.headerPlaceholder":"Seksjon / Overskrift",
 
     "global.title": "Global oversikt over hele kontorlageret",
-    "global.hint": "Global oversikt viser total beholdning i en tabell og er mer printvennlig.",
+    "global.hint": "Den globale oversikten viser hele inventaret i et strukturert tabellformat, optimalisert for PDF-generering og utskrift.",
 
     "pdf.headerTitle":"Seavo Kontor",
     "pdf.generatedLabel":"Generert:",
@@ -384,7 +355,7 @@ is: {
   "default.headerPlaceholder": "Kafli / Fyrirsögn",
 
   "global.title": "Heildaryfirlit yfir allan skrifstofulagerinn",
-  "global.hint": "Heildaryfirlit sýnir heildarbirgðir í töflu og er hentugra til prentunar.",
+  "global.hint": "Yfirlitið sýnir allt birgðahald í skipulögðu töfluformi, hannað fyrir PDF-gerð og prentun.",
 
   "pdf.headerTitle": "Seavo Skrifstofa",
   "pdf.generatedLabel": "Útbúið:",
@@ -426,21 +397,7 @@ is: {
   "nav.cargo": "Farmrými",
   "nav.research": "Rannsóknir",
 
-  "index.box1.title": "Skilvirk stjórnun birgða um borð",
-  "index.box1.p1": "Pallurinn er hannaður til að einfalda birgðastjórnun um borð í skipum. Upphaflega sniðinn að fiskiskipaflota, en sveigjanlegir eiginleikar henta öllum skipum með mikið af búnaði um borð.",
 
-  "index.box2.title": "Hlutverk og notkun",
-  "index.box2.p1": "Pallurinn gerir þér kleift að skrá, rekja og uppfæra búnað, birgðir, verkfæri og öryggishluti. Þú getur fljótt búið til skýrslur, flutt út í PDF eða Excel og deilt með öðrum notendum eða skipum.",
-  "index.box2.p2": "Með mismunandi notendahlutverkum er tryggður stýrður aðgangur: Yfirmenn hafa fullt vald yfir birgðunum, en áhöfn getur skráð notkun og uppfærslur í Seavo Nautiq farsímaforritinu.",
-
-  "index.box3.title": "Viðbótareiningar",
-  "index.box3.p1": "Kerfið inniheldur einnig einingar fyrir ferðaplönun, eftirfylgni pantana, yfirsýn yfir flota og samþættingu við öryggis- og regluverksferla.",
-  "index.box3.p2": "Mikilvægir gildistímar — t.d. fyrir lyf, björgunarbúnað og rafhlöður — eru vaktir sjálfvirkt til að tryggja reglufylgni.",
-  "index.box3.p3": "Lausnin virkar bæði á neti og án nets og er áreiðanleg jafnvel með takmarkaða nettengingu á sjó.",
-
-  "index.box4.title": "Byrja hér",
-  "index.box4.p1": "Ef þú ert nýr notandi mælum við með að byrja á flipunum „Office“ eða „Equipment“ til að kynnast uppbyggingu flokkanna.",
-  "index.box4.p2": "Gagnleg gögn og leiðbeiningar er einnig að finna í hjálparhlutanum.",
 
   /* ----- Registrerings-banner ----- */
   "trial.banner": "Ókeypis prufa virk – {days} dag(a) eftir (endar {date})"
@@ -507,22 +464,8 @@ is: {
 "nav.cargo": "Грузовой отсек",
 "nav.research": "Исследования",
 
-"index.box1.title": "Эффективное управление судовым инвентарём",
-"index.box1.p1": "Платформа создана для упрощения управления запасами на борту. Изначально ориентирована на рыболовецкий флот, но гибкие функции подходят для любых судов с большим количеством оборудования на борту.",
 
-"index.box2.title": "Функции и использование",
-"index.box2.p1": "Платформа позволяет легко регистрировать, отслеживать и обновлять оборудование, запасы, инструменты и элементы безопасности. Можно быстро формировать отчёты, экспортировать в PDF или Excel и делиться ими с другими пользователями или судами.",
-"index.box2.p2": "Разные роли пользователей обеспечивают структурированный доступ: например, офицеры полностью контролируют инвентарь, а члены экипажа фиксируют расход и обновления через приложение Seavo Nautiq Mobile.",
 
-"index.box3.title": "Дополнительные модули",
-"index.box3.p1": "Также доступны модули для планирования рейсов, отслеживания заказов, обзора флота и интеграции с процедурами безопасности и соответствия.",
-"index.box3.p2": "Критически важные сроки годности — например, для лекарств, спасательного оборудования и батарей — контролируются автоматически для соблюдения требований.",
-"index.box3.p3": "Решение работает онлайн и офлайн, оставаясь надёжным даже при ограничённом интернете в море.",
-
-"index.box4.title": "Как начать",
-"index.box4.p1": "Если вы новый пользователь, рекомендуем начать с вкладок «Office» или «Equipment», чтобы познакомиться со структурой категорий.",
-"index.box4.p2": "Полезные материалы и руководства доступны в разделе помощи."
-,
 
     "title.office": "Seavo Nautiq — Офис",
 
@@ -587,7 +530,7 @@ is: {
     "default.headerPlaceholder":"Раздел / Заголовок",
 
     "global.title": "Глобальный обзор всего офисного инвентаря",
-    "global.hint": "Глобальный обзор показывает общий остаток в таблице и более удобен для печати.",
+    "global.hint": "Глобальный обзор отображает все запасы в структурированном табличном формате, оптимизированном для генерации PDF и печати.",
 
     "pdf.headerTitle":"Seavo Офис",
     "pdf.generatedLabel":"Создано:",
@@ -662,22 +605,8 @@ is: {
 "nav.cargo": "货舱空间",
 "nav.research": "研究",
 
-"index.box1.title": "高效管理船舶库存",
-"index.box1.p1": "该平台旨在简化船上库存管理。最初面向渔业船队，但其灵活功能也适用于任何拥有大量设备的船舶。",
 
-"index.box2.title": "功能与使用",
-"index.box2.p1": "平台可轻松登记、跟踪并更新设备、用品、工具和安全物资；可快速生成报告、导出为 PDF 或 Excel，并与其他用户或船舶共享。",
-"index.box2.p2": "通过多种用户角色实现分级访问：例如，管理人员对库存拥有完全控制，而船员可通过 Seavo Nautiq 移动应用登记消耗与更新。",
 
-"index.box3.title": "附加模块",
-"index.box3.p1": "系统还包含航次计划、订单跟踪、船队概览，以及与安全与合规流程的集成。",
-"index.box3.p2": "药品、救生设备、电池等关键到期日期将被自动监控，以确保合规。",
-"index.box3.p3": "方案支持在线与离线，即使在海上网络有限的情况下也能可靠运行。",
-
-"index.box4.title": "快速上手",
-"index.box4.p1": "新用户建议先从“Office”或“Equipment”选项卡开始，熟悉类别结构。",
-"index.box4.p2": "更多资源与指南请查看帮助部分。"
-,
 
     "title.office":"Seavo Nautiq — 办公",
 
@@ -742,7 +671,7 @@ is: {
     "default.headerPlaceholder":"分区 / 标题",
 
     "global.title":"整个办公库存的全局概览",
-    "global.hint":"全局概览以表格显示库存总量，并且更适合打印。",
+    "global.hint":"全局概览以结构化表格格式展示所有库存，并针对 PDF 生成和打印进行了优化",
 
     "pdf.headerTitle":"Seavo 办公",
     "pdf.generatedLabel":"生成时间：",
@@ -817,22 +746,8 @@ is: {
 "nav.cargo": "Espacio de carga",
 "nav.research": "Investigación",
 
-"index.box1.title": "Gestión eficiente del inventario del buque",
-"index.box1.p1": "Esta plataforma está diseñada para agilizar la gestión de inventario a bordo. Originalmente pensada para la flota pesquera, sus funciones flexibles sirven para cualquier buque con gran cantidad de equipos.",
 
-"index.box2.title": "Funciones y uso",
-"index.box2.p1": "Permite registrar, seguir y actualizar equipos, suministros, herramientas y elementos de seguridad con facilidad. Puedes generar informes rápidamente, exportar a PDF o Excel y compartirlos con otros usuarios o buques.",
-"index.box2.p2": "Con distintos roles de usuario se garantiza un acceso estructurado: por ejemplo, los oficiales tienen control total del inventario, mientras que la tripulación registra consumos y actualizaciones mediante la app móvil Seavo Nautiq.",
 
-"index.box3.title": "Módulos adicionales",
-"index.box3.p1": "El sistema también incluye módulos para la planificación de viajes, seguimiento de pedidos, visión de flota e integración con procedimientos de seguridad y cumplimiento.",
-"index.box3.p2": "Las fechas de caducidad críticas —como medicamentos, equipos de salvamento y baterías— se monitorizan automáticamente para garantizar el cumplimiento normativo.",
-"index.box3.p3": "La solución funciona tanto online como offline, fiable incluso con conectividad limitada en el mar.",
-
-"index.box4.title": "Primeros pasos",
-"index.box4.p1": "Si eres nuevo, te recomendamos empezar por las pestañas «Office» o «Equipment» para familiarizarte con la estructura de categorías.",
-"index.box4.p2": "También encontrarás recursos y guías en la sección de ayuda."
-,
 
     "title.office":"Seavo Nautiq — Oficina",
 
@@ -897,7 +812,7 @@ is: {
     "default.headerPlaceholder":"Sección / Encabezado",
 
     "global.title":"Vista global de todo el inventario de oficina",
-    "global.hint":"La vista global muestra el inventario total en una tabla y es más amigable para imprimir.",
+    "global.hint":"La visión global presenta todo el inventario en un formato de tabla estructurado, optimizado para la generación de PDF e impresión.",
 
     "pdf.headerTitle":"Seavo Oficina",
     "pdf.generatedLabel":"Generado:",
@@ -972,22 +887,8 @@ is: {
 "nav.cargo": "Espaço de carga",
 "nav.research": "Pesquisa",
 
-"index.box1.title": "Gestão eficiente do inventário do navio",
-"index.box1.p1": "A plataforma foi criada para simplificar a gestão de estoque a bordo. Originalmente voltada à frota pesqueira, suas funções flexíveis atendem a qualquer embarcação com grande quantidade de equipamentos.",
 
-"index.box2.title": "Funções e uso",
-"index.box2.p1": "Permite registrar, acompanhar e atualizar equipamentos, suprimentos, ferramentas e itens de segurança com facilidade. É possível gerar relatórios rapidamente, exportar para PDF ou Excel e compartilhar com outros usuários ou embarcações.",
-"index.box2.p2": "Com diferentes papéis de usuário, garante-se o acesso estruturado: por exemplo, oficiais têm controle total do estoque, enquanto a tripulação registra consumo e atualizações pelo aplicativo móvel Seavo Nautiq.",
 
-"index.box3.title": "Módulos adicionais",
-"index.box3.p1": "O sistema também inclui módulos para planejamento de viagens, acompanhamento de pedidos, visão da frota e integração com procedimentos de segurança e conformidade.",
-"index.box3.p2": "Datas de validade críticas — como de medicamentos, equipamentos de salvamento e baterias — são monitoradas automaticamente para garantir conformidade.",
-"index.box3.p3": "A solução funciona online e offline, sendo confiável mesmo com internet limitada no mar.",
-
-"index.box4.title": "Como começar",
-"index.box4.p1": "Se você é novo, recomendamos começar pelas abas «Office» ou «Equipment» para se familiarizar com a estrutura de categorias.",
-"index.box4.p2": "Você também encontra recursos e guias na seção de ajuda."
-,
 
     "title.office":"Seavo Nautiq — Escritório",
 
@@ -1052,7 +953,7 @@ is: {
     "default.headerPlaceholder":"Secção / Cabeçalho",
 
     "global.title":"Visão global de todo o inventário do escritório",
-    "global.hint":"A visão global mostra o inventário total numa tabela e é mais adequada para impressão.",
+    "global.hint":"A visão global apresenta todo o inventário em um formato de tabela estruturado, otimizado para geração de PDF e impressão.",
 
     "pdf.headerTitle":"Seavo Escritório",
     "pdf.generatedLabel":"Gerado:",

@@ -88,7 +88,7 @@ body::before {
 
 
 .logo{
-  width:200px; height:auto; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,.45);
+  width:130px; height:auto; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,.45);
   cursor:pointer; margin-left:90px; transition:transform .2s ease, box-shadow .2s ease; background:rgba(255,255,255,.04);
 }
 .logo:hover{ transform:scale(1.05); box-shadow:0 8px 28px rgba(255, 255, 255, 0.144); }
@@ -118,7 +118,7 @@ body::before {
   padding:10px 16px; background:linear-gradient(to right,var(--accent-2),var(--accent-3));
   color:#fff; border-radius:10px; cursor:pointer; font-size:15px; border:1px solid rgba(255,255,255,.12); box-shadow:0 4px 12px rgba(0,0,0,.35);
 }
-.category-button.active{ background:linear-gradient(to right,#438ed3,#1853a8); font-weight:700; }
+.category-button.active{ background:linear-gradient(to right,#187ad6,#17a2c5); font-weight:700; }
 .category-button:hover,.add-category:hover{ filter:brightness(1.30); }
 .delete-category{ color:var(--danger); font-size:18px; margin-left:10px; cursor:pointer; filter:drop-shadow(0 2px 4px rgba(0,0,0,.5)); }
 .arrow{
@@ -128,21 +128,45 @@ body::before {
 .arrow:hover{ background:rgba(0,0,0,.35); }
 
 .delete-category-button {
-  background: linear-gradient(to right, #f13e4e, #a31621);
-  color: #a3162200;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  position: relative;
+  overflow: hidden;
+  transition: background 0.4s;
   border-radius: 6px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
-  padding: 4px 5px;
-  font-size: 6px;
-  font-weight: 700;
-  cursor: pointer;
-  margin: 1px 8px;
+  padding: 4px 10px;
+  background-color: #68ddfaa9;
 }
-.delete-category-button:hover {
-  filter: brightness(1.40);
-  box-shadow: 0 8px 20px rgba(255, 0, 0, 0.45);
+
+/* Skygge-effekt (pseudo-element) */
+.delete-category-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(240, 55, 71, 8.4); /* rødlig skygge */
+  transform: scale(0);
+  opacity: 0;
+  pointer-events: none;
+  
 }
+
+/* Når vi "holder inne" */
+.delete-category-button.hold::after {
+  animation: unlockShadow 1.5s forwards;
+}
+
+@keyframes unlockShadow {
+  0%   { transform: scale(0); opacity: 0.6; }
+  80%  { transform: scale(2.5); opacity: 0.15; }
+  100% { transform: scale(3.5); opacity: 0; }
+}
+
+/* Når knappen er klar */
+.delete-category-button.unlocked {
+  background: #f03747;
+  color: #fff;
+  box-shadow: 0 0 8px rgba(240,55,71,.7);
+}
+
 
 .undo-category{
   margin-left:22px; padding:6px 14px; border-radius:10px; border:1px solid rgba(255,255,255,.2);
@@ -231,16 +255,16 @@ th{ background:rgba(0,0,0,.28); color:var(--text); }
 .large-bold-input::placeholder{ color:var(--muted); }
 .large-bold-input:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(98,178,231,.18); }
 
-.cell-min,.cell-max{ width: 100px; min-width:100px; max-width:100px; }
-.cell-order{ width:120px; min-width:120px; }
+.cell-min,.cell-max{ width: 90px; min-width:60px; max-width:100px; }
+.cell-order{ width:120px; min-width:70px; }
 .cell-move{ width:80px; min-width:80px; }
-.cell-product{ width: 350px; min-width:350px; }
-.cell-comment{ width: 350px; min-width:350px; }
+.cell-product{ width: 350px; min-width:200px; }
+.cell-comment{ width: 350px; min-width:200px; }
 td.min-col input{ width:60px; }
 
 td.cell-small input{
   max-width: 120px;
-  min-width: 120px;
+  min-width: 70px;
   padding: 10px;
   font-size: 16px;
   width: 100%;
@@ -338,15 +362,79 @@ td:last-child{ width:60px; background:linear-gradient(to right, rgba(78,155,206,
 .highlight-input{ background:rgba(255,222,89,.85); color:#09111f; font-weight:700; }
 
 /* ====== MODALER ====== */
-.modal{ position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; z-index:1500; }
-.modal-innhold{
-  position:absolute; left:300px; top:200px; transform:translate(0,0); background:rgba(8,22,38,.9); padding:16px; width:280px;
-  border-radius:16px; box-shadow:0 14px 30px rgba(0,0,0,.6); text-align:center; z-index:1501; border:1px solid rgba(255,255,255,.12);
-}
-.calculator-header{ background:linear-gradient(to right,#104f68,#326fa8); color:white; padding:6px 10px; cursor:move; border-radius:12px 12px 0 0; display:flex; justify-content:space-between; align-items:center; }
-.lukk{ font-weight:700; font-size:22px; cursor:pointer; }
-#calc-buttons button{ width:46px; height:40px; font-size:18px; margin:3px; }
-#calc-buttons button:hover{ filter:brightness(1.25); }
+  .modal{
+    position:fixed; inset:0; background:rgba(0,0,0,.45);
+    display:none; z-index:1500;
+  }
+  .modal-innhold{
+    position:absolute; left:300px; top:200px; transform:translate(0,0);
+    background:rgba(8,22,38,.9); padding:16px; width:280px;
+    border:1px solid rgba(255,255,255,.12); border-radius:12px;
+    box-shadow:0 10px 26px rgba(0,0,0,.55); backdrop-filter: blur(6px);
+    color:#fff;
+  }
+
+#calculatorModal .modal-innhold{
+    width: 320px;           /* ryddig bredde for knappe-grid */
+    padding: 14px 14px 18px;
+  }
+  .calculator-header{
+    display:flex; align-items:center; justify-content:space-between;
+    background: linear-gradient(to right, #1b75d1, #0e3e86);
+    padding:8px 10px; border-radius:8px; cursor:move; user-select:none;
+  }
+  .calculator-header .lukk{
+    font-size:18px; line-height:1; cursor:pointer; padding:2px 6px;
+  }
+  #calc-display{
+    width:100%; padding:10px 10px; font-size:24px; text-align:right;
+    margin:12px 0; border-radius:8px; border:1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.06); color:#fff;
+  }
+  .calc-grid{
+    display:grid; grid-template-columns: repeat(4, 1fr); gap:8px;
+  }
+  .calc-grid button{
+    padding:8px; font-size:20px; font-weight:600;
+    border:none; border-radius:10px;
+    background: rgba(255,255,255,.08); color:#fff; cursor:pointer;
+    transition: transform .05s ease, background .15s ease;
+  }
+  .calc-grid button:active{ transform: scale(.98); }
+  .btn-op{ background: rgba(98,178,231,.25); }
+  .btn-clear{ background: rgba(240,55,71,.35); }
+  .btn-del{ background: rgba(236,197,67,.35); }
+  .btn-eq{ background:#28e755; color:#061a08; }
+  .btn-eq:hover{ filter: brightness(1.05); }
+  .span-4{ grid-column: 1 / -1; }
+
+  /* ====== NOTEPAD SPESIFIKK STIL ====== */
+  #notepadModal .modal-innhold{ width: 360px; }
+  .notepad-header{
+    display:flex; align-items:center; justify-content:space-between;
+    background: linear-gradient(to right, #1b75d1, #0e3e86);
+    padding:8px 10px; border-radius:8px; cursor:move; user-select:none;
+  }
+  .notepad-body textarea{
+    width:100%; min-height:200px; resize:vertical;
+    background: rgba(255,255,255,.06); color:#fff; border:1px solid rgba(255,255,255,.12);
+    border-radius:8px; padding:10px; font-size:14px;
+  }
+  .notepad-actions{
+    display:flex; gap:8px; margin-top:10px; justify-content:flex-end;
+  }
+  .btn{
+    padding:10px 12px; border:none; border-radius:10px; font-weight:600; cursor:pointer;
+    background: rgba(255,255,255,.08); color:#fff;
+  }
+  .btn-primary{ background: rgba(98,178,231,.3); }
+  .btn-danger{ background: rgba(240,55,71,.35); }
+
+  @media (max-width: 420px){
+    #calculatorModal .modal-innhold{ width: 92vw; }
+    #notepadModal .modal-innhold{ width: 92vw; }
+  }
+
 
 /* Diverse */
 button img{ width:40px; height:40px; padding-left:55px; margin-top:20px; }
@@ -441,40 +529,66 @@ button img{ width:40px; height:40px; padding-left:55px; margin-top:20px; }
 <div id="content"></div>
 
 <button id="globalToggleButton" class="global-button" onclick="toggleGlobalView()" data-i18n="btn.globalOverview">📋 Global Overview</button>
-<span data-i18n="global.hint">Global overview shows total inventory in a table and are more print-friendly.</span>
+<span data-i18n="global.hint">“The Global Overview presents all inventory in a structured table format, optimized for PDF generating and printing.”</span>
 
-<div><button class="global-button" onclick="generatePDF()" data-i18n="btn.pdf">📄 Generate PDF</button></div>
-<button class="global-button" type="button" onclick="generateExcel()" data-i18n="btn.excel">📊 Export to Excel</button>
-<div><button class="global-button" onclick="save()" data-i18n="btn.save">💾 Save</button></div>
+<div><button class="global-button" onclick="generatePDF()" data-i18n="btn.pdf">📄 Generate PDF</button>"Generate a PDF document of the current inventory view."</div>
+<button class="global-button" type="button" onclick="generateExcel()" data-i18n="btn.excel">📊 Export to Excel</button> "Export the current inventory view to an Excel file."
+<div><button class="global-button" onclick="save()" data-i18n="btn.save">💾 Save</button> "Save the active category and its contents, which can be accessed later in the sidepanel - documents."</div>
+<div><button class="global-button" onclick="load()" data-i18n="btn.load">📂 Load</button> "Load a selected category and its contents."</div>
 
 <!-- ====== MODALS ====== -->
-<div id="calculatorModal" class="modal" style="display:none;">
+<!-- Kalkulator -->
+<div id="calculatorModal" class="modal">
   <div class="modal-innhold" id="calculatorWindow">
     <div class="calculator-header" id="calcDragHandle">
-      <h2 style="margin: 0; font-size: 15px;" data-i18n="tools.calculator">Calculator</h2>
-      <span class="lukk" onclick="closeCalculator()" aria-label="Close">×</span>
+      <h2 style="margin:0; font-size:15px;">Calculator</h2>
+      <span class="lukk" onclick="closeCalculator()">×</span>
     </div>
-    <input id="calc-display" type="text" readonly style="width: 90%; padding: 10px; font-size: 25px; text-align: right; margin-top: 10px;"><br><br>
-    <div id="calc-buttons">
+
+    <input id="calc-display" type="text" readonly>
+
+    <div id="calc-buttons" class="calc-grid">
+      <!-- Rad 1 -->
+      <button class="btn-clear" onclick="clearCalc()">C</button>
+      <button class="btn-del" onclick="deleteLast()">DEL</button>
+      <button class="btn-op" onclick="appendCalc('%')">%</button>
+      <button class="btn-op" onclick="appendCalc('/')">÷</button>
+      <!-- Rad 2 -->
       <button onclick="appendCalc('7')">7</button>
       <button onclick="appendCalc('8')">8</button>
       <button onclick="appendCalc('9')">9</button>
-      <button onclick="appendCalc('/')">÷</button><br>
+      <button class="btn-op" onclick="appendCalc('*')">×</button>
+      <!-- Rad 3 -->
       <button onclick="appendCalc('4')">4</button>
       <button onclick="appendCalc('5')">5</button>
       <button onclick="appendCalc('6')">6</button>
-      <button onclick="appendCalc('*')">×</button><br>
+      <button class="btn-op" onclick="appendCalc('-')">−</button>
+      <!-- Rad 4 -->
       <button onclick="appendCalc('1')">1</button>
       <button onclick="appendCalc('2')">2</button>
       <button onclick="appendCalc('3')">3</button>
-      <button onclick="appendCalc('-')">−</button><br>
+      <button class="btn-op" onclick="appendCalc('+')">+</button>
+      <!-- Rad 5 -->
       <button onclick="appendCalc('0')">0</button>
       <button onclick="appendCalc('.')">.</button>
-      <button onclick="appendCalc('+')">+</button><br>
-      <button onclick="appendCalc('%')">%</button>
-      <button onclick="calculateResult()" style="width: 70%;">=</button><br>
-      <button onclick="deleteLast()" style="width: 30%;" data-i18n="calc.del">DEL</button>
-      <button onclick="clearCalc()" style="width: 60%" data-i18n="calc.clear">C</button>
+      <button class="btn-eq span-4" onclick="calculateResult()">=</button>
+    </div>
+  </div>
+</div>
+
+<!-- Notepad (valgfritt, siden skriptet ditt inkluderer det) -->
+<div id="notepadModal" class="modal">
+  <div class="modal-innhold" id="notepadWindow">
+    <div class="notepad-header" id="notepadDragHandle">
+      <h2 style="margin:0; font-size:15px;">Notepad</h2>
+      <span class="lukk" onclick="closeNotepad()">×</span>
+    </div>
+    <div class="notepad-body">
+      <textarea id="noteArea" placeholder="Write a note..."></textarea>
+    </div>
+    <div class="notepad-actions">
+      <button class="btn btn-primary" onclick="saveNote()">Save</button>
+      <button class="btn btn-danger" onclick="clearNote()">Clear</button>
     </div>
   </div>
 </div>
@@ -482,15 +596,21 @@ button img{ width:40px; height:40px; padding-left:55px; margin-top:20px; }
 <div id="notepadModal" class="modal" style="display:none;">
   <div class="modal-innhold" id="notepadWindow">
     <div class="calculator-header" id="noteDragHandle">
-      <h2 style="margin:0; font-size:15px;" data-i18n="tools.notepad">Notepad</h2>
-      <span class="lukk" onclick="closeNotepad()" aria-label="Close">×</span>
+      <h2 style="margin:0; font-size:15px;">Notepad</h2>
+      <span class="lukk" onclick="closeNotepad()">×</span>
     </div>
     <textarea id="noteArea" style="width:100%; height:260px; margin-top:10px; border-radius:10px;"></textarea>
     <div style="margin-top:10px; display:flex; gap:8px; justify-content:center;">
-      <button onclick="saveNote()" style="padding:8px 12px;" data-i18n="btn.saveNote">Save</button>
-      <button onclick="clearNote()" style="padding:8px 12px;" data-i18n="btn.clearNote">Clear</button>
+      <button onclick="saveNote()" style="padding:8px 12px;">Save</button>
+      <button onclick="clearNote()" style="padding:8px 12px;">Clear</button>
     </div>
   </div>
+</div>
+
+<!-- Fullscreen image modal -->
+<div id="image-modal">
+  <div id="modal-overlay"></div>
+  <img id="modal-image" src="">
 </div>
 
 
@@ -708,22 +828,47 @@ function updateCategories(){
     if(name===activeCategory) btn.classList.add("active");
     btn.onclick=()=>{ activeCategory=name; showCategory(); updateCategories(); };
 
-    const delBtn = document.createElement("button");
-    delBtn.className = "delete-category-button";
-    delBtn.textContent = t("btn.delete","Delete");
-    delBtn.onclick = ()=>{
-      if(confirm(t("confirm.deleteCategory",'Do you want to delete the category "{name}"?').replace("{name}", name))){
-        lastDeletedCategory = { name, rows: data[name], index: idx };
-        delete data[name];
-        activeCategory = Object.keys(data)[0] || null;
-        save();
-        updateCategories();
-        showCategory();
-        applyTranslations(document);
-        const u = document.getElementById("undo-delete");
-        if(u) u.disabled = false;
-      }
-    };
+     const delBtn = document.createElement("button");
+delBtn.className = "delete-category-button";
+delBtn.textContent = "Del";
+
+let hoverTimer;
+let unlocked = false;
+
+delBtn.addEventListener("mouseenter", () => {
+  delBtn.classList.add("hold");
+  hoverTimer = setTimeout(() => {
+    unlocked = true;
+    delBtn.classList.remove("hold");
+    delBtn.classList.add("unlocked");
+  }, 1500); // 1.5 sek
+});
+
+delBtn.addEventListener("mouseleave", () => {
+  clearTimeout(hoverTimer);
+  unlocked = false;
+  delBtn.classList.remove("hold", "unlocked");
+});
+
+delBtn.addEventListener("click", () => {
+  if (!unlocked) {
+    return;
+  }
+  if (confirm(`Do you want to delete the category "${name}"?`)) {
+    lastDeletedCategory = { name, rows: data[name], index: idx };
+    delete data[name];
+    activeCategory = Object.keys(data)[0] || null;
+    save();
+    updateCategories();
+    showCategory();
+    const u = document.getElementById("undo-delete");
+    if (u) u.disabled = false;
+  }
+  // reset lås etter bruk
+  unlocked = false;
+  delBtn.classList.remove("unlocked");
+});
+
 
     wrapper.appendChild(btn);
     wrapper.appendChild(delBtn);
@@ -1360,7 +1505,7 @@ async function generatePDF(){
   doc.save("SeavoNautiq_Inventory.pdf");
 }
 
-/* ===== Calculator / Notepad ===== */
+/* ===== Calculator / Notepad (dine funksjoner, utvidet) ===== */
 function openCalculator(){ document.getElementById("calculatorModal").style.display="block"; }
 function closeCalculator(){ document.getElementById("calculatorModal").style.display="none"; }
 function openNotepad(){ document.getElementById("notepadModal").style.display="block"; }
@@ -1373,28 +1518,79 @@ function calculateResult(){
   const d=document.getElementById('calc-display');
   try{
     const expr=d.value.replace(/×/g,'*').replace(/÷/g,'/');
+    // gjør 12% => 0.12
     const expr2=expr.replace(/(\d+(\.\d+)?)%/g,(_,n)=>String(parseFloat(n)/100));
-    d.value=String(Function(`"use strict";return (${expr2})`)());
+    d.value=String(Function('"use strict";return ('+expr2+')')());
   }catch{ d.value='Error'; }
 }
 
-function saveNote(){ localStorage.setItem('seavo_note', document.getElementById('noteArea').value); }
-function clearNote(){ document.getElementById('noteArea').value=''; localStorage.removeItem('seavo_note'); }
+/* Notepad lagring */
+function saveNote(){
+  const v = document.getElementById('noteArea').value;
+  localStorage.setItem('seavo_note', v);
+}
+function clearNote(){
+  document.getElementById('noteArea').value='';
+  localStorage.removeItem('seavo_note');
+}
 
+/* Drag-n-drop for modal-vinduer */
 function makeDraggable(handleId, windowId){
   const handle=document.getElementById(handleId);
   const win=document.getElementById(windowId);
   if(!handle||!win) return;
   let offsetX=0, offsetY=0, dragging=false;
-  handle.addEventListener('mousedown',(e)=>{
-    dragging=true; const rect=win.getBoundingClientRect();
-    offsetX=e.clientX-rect.left; offsetY=e.clientY-rect.top; document.body.style.userSelect='none';
-  });
-  window.addEventListener('mousemove',(e)=>{
-    if(!dragging) return; win.style.left=(e.clientX-offsetX)+'px'; win.style.top=(e.clientY-offsetY)+'px';
-  });
-  window.addEventListener('mouseup',()=>{ dragging=false; document.body.style.userSelect=''; });
+
+  const startDrag = (e)=>{
+    dragging=true;
+    const rect=win.getBoundingClientRect();
+    const cx = (e.touches? e.touches[0].clientX : e.clientX);
+    const cy = (e.touches? e.touches[0].clientY : e.clientY);
+    offsetX=cx-rect.left; offsetY=cy-rect.top;
+    document.body.style.userSelect='none';
+  };
+  const moveDrag = (e)=>{
+    if(!dragging) return;
+    const cx = (e.touches? e.touches[0].clientX : e.clientX);
+    const cy = (e.touches? e.touches[0].clientY : e.clientY);
+    win.style.left=(cx-offsetX)+'px';
+    win.style.top=(cy-offsetY)+'px';
+  };
+  const endDrag = ()=>{
+    dragging=false; document.body.style.userSelect='';
+  };
+
+  handle.addEventListener('mousedown', startDrag);
+  window.addEventListener('mousemove', moveDrag);
+  window.addEventListener('mouseup', endDrag);
+
+  // touch-støtte (valgfritt)
+  handle.addEventListener('touchstart', startDrag, {passive:true});
+  window.addEventListener('touchmove', moveDrag, {passive:false});
+  window.addEventListener('touchend', endDrag);
 }
+
+/* Tastatursnarveier for kalkulator: Enter =, Esc = C, Backspace = DEL */
+(function(){
+  window.addEventListener('keydown', (e)=>{
+    const k = e.key;
+    if(document.getElementById('calculatorModal').style.display === 'block'){
+      if(/^[0-9+\-*/%.]$/.test(k)) { appendCalc(k); e.preventDefault(); }
+      else if(k === 'Enter') { calculateResult(); e.preventDefault(); }
+      else if(k === 'Backspace') { deleteLast(); e.preventDefault(); }
+      else if(k.toLowerCase() === 'c' || k === 'Escape') { clearCalc(); e.preventDefault(); }
+    }
+  });
+})();
+
+/* Init ved last: last notat, aktiver drag for begge vinduer */
+document.addEventListener('DOMContentLoaded', ()=>{
+  const saved = localStorage.getItem('seavo_note');
+  if(saved!==null) document.getElementById('noteArea').value = saved;
+
+  makeDraggable('calcDragHandle', 'calculatorWindow');
+  makeDraggable('notepadDragHandle', 'notepadWindow');
+});
 
 /* Init */
 document.addEventListener("DOMContentLoaded", ()=>{
@@ -1421,6 +1617,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   makeDraggable('calcDragHandle','calculatorWindow');
   makeDraggable('noteDragHandle','notepadWindow');
 });
+
 
 /* Popup helpers */
 function åpnePopup4(){ window.open('Help.html','popup','width=1600,height=1200'); }

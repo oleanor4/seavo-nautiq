@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Seavo Nautiq – Research</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <!-- ===== Theme / Base ===== -->
+  <style>
+   :root{
+  --bg:#0f2a4a;
+  --panel:rgba(0,0,0,.18);
+  --panel-2:rgba(255,255,255,.08);
+  --text:#ffffff;
+  --muted:#bcd3f1;
+  --accent:#62b2e7;
+  --accent-2:#1b75d1;
+  --accent-3:#0e3e86;
+  --danger:#f03747;
+  --warn:#ecc543;
+  --ok:#28e755;
+
+  --panel-w: 180px;
+  --panel-h: 32vh;
+  --handle-w: 28px;
+}
+
+*{box-sizing:border-box}
+body{
+  background-color:var(--bg);
+  font-family:Arial,sans-serif;
+  margin:0;
+  color:var(--text);
+}
+
+
+
+    body {
+        background-color: hsl(210, 100%, var(--bg-lightness));
+        transition: background-color 0.5s ease;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        overflow-x: hidden;
+    }
+
+    
+
+    body::before {
+     content: "";
+     position: fixed;
+     inset: 0;
+     pointer-events: none;
+     background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7));
+     z-index: -1;
+  }
+
+  :root {
+    --bg-lightness: 20%;
+    --text-color: hsl(0, 0%, calc(100% - var(--bg-lightness)));
+    --box-color: hsl(210, 50%, calc(var(--bg-lightness) + 5%));
+    --button-color: hsl(210, 70%, calc(var(--bg-lightness) + 10%));
+    --button-text: hsl(0, 0%, calc(100% - var(--bg-lightness)));
+  }
+
+
+  .theme-slider-container {
+    position: relative;
+    top: 12px;
+    background: rgba(0, 0, 0, 0.705);
+    padding: 8px 18px;
+    border-radius: 12px;
+    border: 2px solid #8f8248;
+    color: rgb(255, 255, 255);
+    font-family: Arial, sans-serif;
+    z-index: 1000;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    width: 150px;
+    margin-left: 0px;
+  }
+
+  .theme-slider-container input[type="range"] {
+    width: 100px;
+    cursor: pointer;
+  }
+
+    /* ====== SIDE PANEL ====== */
+    #sidePanel{
+      position:fixed; overflow:visible; top:180px; right:0; width:var(--panel-w); height:var(--panel-h);
+      background:rgba(0,0,0,.35); backdrop-filter:blur(4px); color:var(--text); display:flex; flex-direction:column; align-items:center;
+      padding:16px 10px; box-shadow:-8px 0 22px rgba(0,0,0,.45); transition:right .5s ease; z-index:999; border-radius:16px 0 0 16px; border:1px solid rgba(255,255,255,.12);
+    }
+    #sidePanel.hidden{ right:calc(-1 * (var(--panel-w) - var(--handle-w))); }
+    #togglePanelBtn{
+      position:absolute; left:0; top:50%; transform:translate(-100%, -50%); width:var(--handle-w); height:clamp(96px,50%,180px);
+      display:flex; align-items:center; justify-content:center; padding:0; background:linear-gradient(to bottom, var(--accent-2), var(--accent-3));
+      color:#fff; font-weight:bold; font-size:22px; border-radius:12px 0 0 12px; cursor:pointer; box-shadow:-8px 0 12px rgba(0,0,0,.35);
+      user-select:none; z-index:1000; border:1px solid rgba(255,255,255,.12);
+    }
+    #togglePanelBtn:hover{ filter:brightness(1.20); box-shadow:0 0 15px 3px rgba(255,255,255,.4); }
+    #bottomButtons{ margin-top:0px; width:100%; display:flex; flex-direction:column; gap:0px; }
+    #sidePanel button:not(#togglePanelBtn){
+      margin:4px 0; padding:12px 14px; width:100%; background:linear-gradient(to right,#235fdfdc,#4e1bd8c5);
+      color:#fff; font-weight:700; border-radius:10px; cursor:pointer; font-size:14px; box-shadow:0 6px 14px rgba(0,0,0,.35);
+    }
+    #sidePanel button:not(#togglePanelBtn):hover{ filter:brightness(1.20); box-shadow:0 0 15px 3px rgba(255,255,255,.2); }
+
+    /* ===== MODALER (calc/notepad + samples) ===== */
+    .modal{ position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; z-index:1500; }
+    .modal-innhold{
+      position:absolute; left:300px; top:200px; transform:translate(0,0); background:rgba(8,22,38,.9); padding:16px; width:280px;
+      border-radius:16px; box-shadow:0 14px 30px rgba(0,0,0,.6); text-align:center; z-index:1501; border:1px solid rgba(255,255,255,.12);
+    }
+    .calculator-header{ background:linear-gradient(to right,#104f68,#326fa8); color:#fff; padding:6px 10px; cursor:move; border-radius:12px 12px 0 0; display:flex; justify-content:space-between; align-items:center; }
+    .lukk{ font-weight:700; font-size:22px; cursor:pointer; }
+    #calc-buttons button{ width:46px; height:40px; font-size:18px; margin:3px; background-color: #2156a5; }
+    #calc-buttons button:hover{ filter:brightness(1.25); }
+
+    /* Header video */
+    .video-header{ position:relative; aspect-ratio:1280/99; overflow:hidden; background:#000; }
+    .video-header video{ width:100%; height:200%; object-fit:cover; display:block; }
+    .gradient-overgang{ height:10px; background:linear-gradient(to left,#62b2e7,#001125); box-shadow:6px 4px 6px rgba(0,0,0,.7); }
+
+    /* Page shell */
+    .container{ max-width:1200px; margin:24px auto; padding:0 16px; }
+    h1{ font-size:44px; margin:10px 0 26px; letter-spacing:.5px; margin-top:40px; }
+    h2{ margin:0 0 12px; }
+    .grid{ display:grid; gap:16px; }
+    .panel{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:14px;
+      padding:14px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.25);
+    }
+
+    /* Top rows */
+    .two-col{ grid-template-columns: 1.1fr .9fr; }
+    .two-col .panel{ min-height:220px; }
+    label{ font-size:13px; color:var(--muted); display:block; margin:8px 0 6px; }
+    input[type="text"], input[type="date"], input[type="number"], textarea, select{
+      width:100%; padding:10px 12px; background:rgb(250,250,250);
+      border:1px solid #000; border-radius:10px; color:#000; outline:none;
+    }
+    textarea{ min-height:84px; resize:vertical; }
+
+    .row{ display:flex; gap:12px; }
+    .row > *{ flex:1; }
+
+    .btn{
+      background:linear-gradient(to right, var(--accent-2), var(--accent-3));
+      border:none; color:#fff; padding:10px 14px; border-radius:10px; cursor:pointer;
+      font-weight:bold; box-shadow:0 4px 12px rgba(0,0,0,.3)
+    }
+    .btn.secondary{ background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.18); }
+    .btn.danger{ background:linear-gradient(to right, #d83b46, #8d1121); }
+
+    .chip{
+      display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px;
+      background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18); margin:4px 6px 0 0;
+      font-size:13px;
+    }
+    .chip button{ background:transparent; border:none; color:#fff; cursor:pointer; }
+
+    /* Samples */
+    table{ width:100%; border-collapse:collapse; }
+    th, td{ border-bottom:1px solid rgba(255,255,255,.28); padding:10px 8px; text-align:left; }
+    thead th{ position:sticky; top:0; background:rgba(10,25,55,.9); }
+    .toolbar{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+
+    /* Expand samples modal */
+    .modal.samples{ position:fixed; inset:0; display:none; place-items:center; background:rgba(0,0,0,.85); }
+    .modal.samples.open{ display:grid; }
+    .modal.samples .sheet{ width:min(1100px,92vw); height:min(80vh,90dvh); overflow:auto; padding:16px; }
+
+    /* Chart */
+    #envChart{ width:100%; height:260px; }
+
+    /* Map (Leaflet + offline fallback) */
+    #mapWrap{ position:relative; }
+    #map, #mapOffline{ width:100%; height:420px; border-radius:14px; overflow:hidden; }
+    #mapOffline{ display:none; position:relative; background:#e9eef4 url('img/world-bw.jpg') center/cover no-repeat; }
+    .offline-marker{
+      position:absolute; width:16px; height:16px; border:2px solid #000; background:#fff; border-radius:50%;
+      transform:translate(-50%, -50%); box-shadow:0 2px 6px rgba(0,0,0,.35);
+    }
+    .coords{ font-size:13px; color:var(--muted); margin-top:6px; }
+
+    /* helper for bw snapshot */
+    .grayscale{ filter:grayscale(1) contrast(1.05); }
+
+    @media (max-width:980px){ .two-col{ grid-template-columns:1fr; } }
+  </style>
+
+  <!-- Leaflet (map), Chart.js (graph), html2canvas/jsPDF (PDF) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+  <!-- Header video -->
+  <header class="video-header">
+    <video autoplay muted loop playsinline>
+      <source src="Video/Ocean-Seavo-Nautiq.mp4" type="video/mp4" />
+    </video>
+  </header>
+  <div class="gradient-overgang"></div>
+
+  <!-- Side panel -->
+  <div id="sidePanel" class="hidden">
+    <button onclick="åpnePopup4()">Help</button>
+    <button onclick="åpnePopup2()">Documents</button>
+    <button>Shared Content</button>
+    <button onclick="åpnePopup7()">Settings</button>
+    <button id="signOutBtn">Sign Out</button>
+
+    <div id="bottomButtons">
+      <button id="openCalculatorBtn">🧮 Calculator</button>
+      <button id="openNotepadBtn">📝 Notepad</button>
+    </div>
+
+    <div class="theme-slider-container">
+      <label for="themeSlider">☀️</label>
+      
+      <input type="range" min="1" max="13" value="10" id="themeSlider">
+      <label for="themeSlider">🌙</label>
+    </div>
+
+    <button id="togglePanelBtn" onclick="toggleSidePanel()">⫷</button>
+  </div>
+
+  <!-- ====== MODALS ====== -->
+  <div id="calculatorModal" class="modal" style="display:none;">
+    <div class="modal-innhold" id="calculatorWindow">
+      <div class="calculator-header" id="calcDragHandle">
+        <h2 style="margin:0; font-size:15px;">Calculator</h2>
+        <span class="lukk" onclick="closeCalculator()">×</span>
+      </div>
+      <input id="calc-display" type="text" readonly style="width: 90%; padding: 10px; font-size: 25px; text-align: right; margin-top: 10px;"><br><br>
+      <div id="calc-buttons">
+        <button onclick="appendCalc('7')">7</button><button onclick="appendCalc('8')">8</button><button onclick="appendCalc('9')">9</button><button onclick="appendCalc('/')">÷</button><br>
+        <button onclick="appendCalc('4')">4</button><button onclick="appendCalc('5')">5</button><button onclick="appendCalc('6')">6</button><button onclick="appendCalc('*')">×</button><br>
+        <button onclick="appendCalc('1')">1</button><button onclick="appendCalc('2')">2</button><button onclick="appendCalc('3')">3</button><button onclick="appendCalc('-')">−</button><br>
+        <button onclick="appendCalc('0')">0</button><button onclick="appendCalc('.')">.</button><button onclick="appendCalc('+')">+</button><br>
+        <button onclick="appendCalc('%')">%</button><button onclick="calculateResult()" style="width:70%;">=</button><br>
+        <button onclick="deleteLast()" style="width:30%;">DEL</button><button onclick="clearCalc()" style="width:60%">C</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="notepadModal" class="modal" style="display:none;">
+    <div class="modal-innhold" id="notepadWindow">
+      <div class="calculator-header" id="noteDragHandle">
+        <h2 style="margin:0; font-size:15px;">Notepad</h2>
+        <span class="lukk" onclick="closeNotepad()">×</span>
+      </div>
+      <textarea id="noteArea" style="width:100%; height:260px; margin-top:10px; border-radius:10px;"></textarea>
+      <div style="margin-top:10px; display:flex; gap:8px; justify-content:center;">
+        <button onclick="saveNote()" style="padding:8px 12px;">Save</button>
+        <button onclick="clearNote()" style="padding:8px 12px;">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1>Marine Science Tools</h1>
+
+    <!-- Row: Field Entry + Upload/Participants -->
+    <div class="grid two-col">
+      <section class="panel" id="fieldPanel">
+        <div class="row" style="align-items:center; justify-content:space-between;">
+          <h2 style="margin:0">Field Data Entry</h2>
+          <div class="toolbar">
+            <button class="btn" id="exportReportBtn">Generate Report PDF</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="date">Date</label>
+            <input id="date" type="date" />
+          </div>
+          <div>
+            <label for="position">Position (lat, lon)</label>
+            <input id="position" type="text" placeholder="Click the map or type e.g. 63.44, 10.40" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="weather">Weather</label>
+            <input id="weather" type="text" placeholder="Wind 12 kts SW, sea 1.2 m…" />
+          </div>
+          <div>
+            <label for="notes">Notes</label>
+            <input id="notes" type="text" placeholder="Short note about station / sample" />
+          </div>
+        </div>
+
+        <div style="margin-top:8px">
+          <div class="row" style="align-items:center;">
+            <label style="flex:0 0 auto; margin:0 10px 0 0;">Participants</label>
+            <button class="btn secondary" id="syncParticipantsBtn" style="flex:0 0 auto;">Sync from module</button>
+          </div>
+          <div class="row" style="margin-top:6px;">
+            <input id="participantName" type="text" placeholder="Name" />
+            <select id="participantRole">
+              <option value="Scientist">Scientist</option>
+              <option value="Deck">Deck</option>
+              <option value="Skipper">Skipper</option>
+              <option value="Observer">Observer</option>
+            </select>
+            <button class="btn" id="addParticipant">Add</button>
+          </div>
+          <div id="participantsList" style="margin-top:6px;"></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Upload photo</h2>
+        <input id="photoInput" type="file" accept="image/*" />
+        <div id="photoPreview" style="margin-top:10px; display:grid; grid-template-columns: repeat(auto-fill, minmax(120px,1fr)); gap:10px;"></div>
+      </section>
+    </div>
+
+    <!-- Row: Samples + Environmental -->
+    <div class="grid two-col" style="margin-top:16px;">
+      <section class="panel" id="samplesPanel">
+        <div class="row" style="align-items:center; justify-content:space-between;">
+          <h2 style="margin:0">Sample Management</h2>
+          <div class="toolbar">
+            <button class="btn secondary" id="addRowBtn">+ Add Row</button>
+            <button class="btn secondary" id="expandSamples">Expand</button>
+            <button class="btn" id="exportPdfBtn">Export table PDF</button>
+          </div>
+        </div>
+
+        <div class="table-wrap" id="samplesTableWrap" style="max-height:280px; overflow:auto; border-radius:10px;">
+          <table id="samplesTable">
+            <thead>
+              <tr>
+                <th style="width:70px">ID</th>
+                <th>Location</th>
+                <th style="width:110px">Depth (m)</th>
+                <th style="width:160px">Type</th>
+                <th style="width:160px">Collected by</th>
+                <th>Notes</th>
+                <th style="width:80px"></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Environmental Data &amp; Sensors</h2>
+        <p style="margin:6px 0 10px; color:var(--muted); font-size:13px">
+          No live sensors? Enter manually, import CSV or generate demo data to visualize series (e.g. temperature/salinity).
+        </p>
+        <div class="row">
+          <input id="envLabel" type="text" placeholder="Metric (e.g., Temperature °C)" />
+          <input id="envValue" type="number" step="any" placeholder="Value" />
+          <button class="btn secondary" id="addEnv">Add point</button>
+        </div>
+        <div class="row" style="margin-top:8px;">
+          <input id="csvInput" type="file" accept=".csv" />
+          <button class="btn secondary" id="demoEnv">Generate dummy data</button>
+          <button class="btn danger" id="clearEnv">Clear</button>
+        </div>
+        <canvas id="envChart"></canvas>
+      </section>
+    </div>
+
+    <!-- Map -->
+    <section class="panel" style="margin-top:16px;">
+      <h2>Global Map</h2>
+      <div id="mapWrap">
+        <div id="map"></div>
+        <div id="mapOffline">
+          <div id="offlineMarker" class="offline-marker" style="display:none;"></div>
+        </div>
+      </div>
+      <div class="coords" id="coordReadout">Click anywhere to drop a marker. Drag to adjust. Coordinates will sync with “Position”.</div>
+    </section>
+  </div>
+
+  <!-- Modal for expanded Samples -->
+  <div class="modal samples" id="samplesModal">
+    <div class="panel sheet">
+      <div class="row" style="align-items:center; justify-content:space-between;">
+        <h2 style="margin:0">Sample Management – Expanded</h2>
+        <div class="toolbar">
+          <button class="btn secondary" id="addRowBtnModal">+ Add Row</button>
+          <button class="btn" id="exportPdfBtnModal">Export table PDF</button>
+          <button class="btn danger" id="closeModal">Close</button>
+        </div>
+      </div>
+      <div class="table-wrap" style="max-height:60vh; overflow:auto; border-radius:10px; margin-top:8px;">
+        <table id="samplesTableModal">
+          <thead>
+            <tr>
+              <th style="width:70px">ID</th>
+              <th>Location</th>
+              <th style="width:110px">Depth (m)</th>
+              <th style="width:160px">Type</th>
+              <th style="width:160px">Collected by</th>
+              <th>Notes</th>
+              <th style="width:80px"></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="seavo-core.js"></script>
+
+  <script>
+/* ===== Sidepanel toggle ===== */
+function toggleSidePanel(){
+  const panel = document.getElementById("sidePanel");
+  const btn   = document.getElementById("togglePanelBtn");
+  const nowHidden = panel.classList.toggle("hidden");
+  btn.textContent = nowHidden ? "⫷" : "⫸";
+}
+
+  const themeSlider = document.getElementById('themeSlider');
+  themeSlider.addEventListener('input', () => {
+    const value = parseInt(themeSlider.value);
+    const lightness = 100 - (value * 8); // 92% til 20%
+    const textColor = lightness < 45 ? '#ffffff' : '#000000';
+    const boxColor = `hsl(210, 50%, ${Math.max(lightness - 10, 15)}%)`;
+    const buttonColor = `hsl(210, 70%, ${Math.max(lightness - 5, 20)}%)`;
+    const buttonText = lightness < 45 ? '#ffffff' : '#000000';
+
+    document.documentElement.style.setProperty('--bg-lightness', `${lightness}%`);
+    document.documentElement.style.setProperty('--text-color', textColor);
+    document.documentElement.style.setProperty('--box-color', boxColor);
+    document.documentElement.style.setProperty('--button-color', buttonColor);
+    document.documentElement.style.setProperty('--button-text', buttonText);
+  });
+
+
+/* ================= Local storage helpers ================= */
+const LS_KEYS = {
+  participants: "research.participants",
+  samples: "research.samples",
+  env: "research.envSeries",
+  map: "research.mapMarker"
+};
+const saveLS = (k,v)=>localStorage.setItem(k, JSON.stringify(v));
+const loadLS = (k,d=[])=>{ try{ return JSON.parse(localStorage.getItem(k)) ?? d; }catch{ return d; } };
+
+/* ================= Participants ================= */
+let participants = loadLS(LS_KEYS.participants, []);
+const participantsList = document.getElementById('participantsList');
+
+async function importParticipantsFromModule(){
+  // 1) seavo-core api if present
+  try{
+    if(window.SeavoCore?.getParticipants){
+      const list = await window.SeavoCore.getParticipants(); // expect [{name,role}, ...]
+      if(Array.isArray(list) && list.length){
+        mergeParticipants(list.map(p=>({name:p.name ?? p.fullName ?? p.title ?? "", role:p.role ?? p.position ?? ""})));
+        return;
+      }
+    }
+  }catch(e){}
+  // 2) known localStorage fallbacks (normalize structures)
+  const keys = ['participants.list','seavo.participants','ParticipantsData','participantsData'];
+  for(const k of keys){
+    const raw = localStorage.getItem(k);
+    if(!raw) continue;
+    try{
+      const arr = JSON.parse(raw);
+      const norm = Array.isArray(arr) ? arr : (arr?.items || []);
+      const mapped = norm.map(p=>({
+        name: p.name || p.fullName || p.title || p[0] || "",
+        role: p.role || p.position || p[1] || ""
+      })).filter(p=>p.name);
+      if(mapped.length){ mergeParticipants(mapped); return; }
+    }catch(e){}
+  }
+}
+function mergeParticipants(newList){
+  const key = (p)=> (p.name+"|"+(p.role||"")).toLowerCase();
+  const map = new Map(participants.map(p=>[key(p),p]));
+  newList.forEach(p=> map.set(key(p), p));
+  participants = Array.from(map.values());
+  saveLS(LS_KEYS.participants, participants);
+  renderParticipants(); renderParticipantOptions();
+}
+function renderParticipants(){
+  participantsList.innerHTML = "";
+  participants.forEach((p,idx)=>{
+    const div = document.createElement('span');
+    div.className = "chip";
+    div.innerHTML = `${p.name} • ${p.role||"—"} <button title="Remove">×</button>`;
+    div.querySelector('button').onclick = ()=>{ participants.splice(idx,1); saveLS(LS_KEYS.participants,participants); renderParticipants(); renderParticipantOptions(); };
+    participantsList.appendChild(div);
+  });
+}
+document.getElementById('addParticipant').onclick = ()=>{
+  const name = document.getElementById('participantName').value.trim();
+  const role = document.getElementById('participantRole').value;
+  if(!name) return;
+  mergeParticipants([{name, role}]);
+  document.getElementById('participantName').value="";
+};
+document.getElementById('syncParticipantsBtn').onclick = ()=> importParticipantsFromModule();
+
+/* ================= Photo upload with preview ================= */
+const photoInput = document.getElementById('photoInput');
+const photoPreview = document.getElementById('photoPreview');
+photoInput.addEventListener('change', (e)=>{
+  [...e.target.files].forEach(file=>{
+    const url = URL.createObjectURL(file);
+    const img = document.createElement('img');
+    img.src = url; img.style.width="100%"; img.style.height="100px"; img.style.objectFit="cover"; img.style.borderRadius="10px";
+    photoPreview.appendChild(img);
+  });
+});
+
+/* ================= Samples table ================= */
+let samples = loadLS(LS_KEYS.samples, []);
+const samplesTable = document.getElementById('samplesTable').querySelector('tbody');
+const samplesTableModal = document.getElementById('samplesTableModal').querySelector('tbody');
+
+function makeRow(row, idx){
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" value="${row.id||""}" /></td>
+    <td><input type="text" value="${row.location||""}" placeholder="Area / Lat, Lon" /></td>
+    <td><input type="number" step="any" value="${row.depth||""}" /></td>
+    <td><input type="text" value="${row.type||""}" placeholder="Plankton / Sediment …" /></td>
+    <td><select class="collectorSelect"></select></td>
+    <td><input type="text" value="${row.notes||""}" /></td>
+    <td><button class="btn danger" style="padding:6px 10px;">Delete</button></td>
+  `;
+  const inputs = tr.querySelectorAll('input,select');
+  inputs[4].classList.add('collectorSelect');
+  inputs.forEach((el,i)=>{
+    el.oninput = ()=>{
+      const map = ['id','location','depth','type','collector','notes'];
+      row[ map[i] ] = el.value;
+      saveLS(LS_KEYS.samples, samples);
+    };
+  });
+  tr.querySelector('button').onclick = ()=>{
+    samples.splice(idx,1);
+    renderSamples();
+    saveLS(LS_KEYS.samples, samples);
+  };
+  return tr;
+}
+function renderParticipantOptions(){
+  document.querySelectorAll('.collectorSelect').forEach(sel=>{
+    const keep = sel.value;
+    sel.innerHTML = '<option value="">–</option>' + participants.map(p=>`<option>${p.name}</option>`).join('');
+    if(keep) sel.value = keep;
+  });
+}
+function renderSamples(){
+  samplesTable.innerHTML = "";
+  samplesTableModal.innerHTML = "";
+  samples.forEach((row, idx)=>{
+    samplesTable.appendChild( makeRow(row, idx) );
+    samplesTableModal.appendChild( makeRow(row, idx) );
+  });
+  renderParticipantOptions();
+}
+document.getElementById('addRowBtn').onclick = ()=>{
+  samples.push({id:`S-${(samples.length+1).toString().padStart(3,'0')}`, location:"", depth:"", type:"", collector:"", notes:""});
+  saveLS(LS_KEYS.samples, samples);
+  renderSamples();
+};
+document.getElementById('addRowBtnModal').onclick = ()=>document.getElementById('addRowBtn').click();
+
+/* Expand / modal */
+const modal = document.getElementById('samplesModal');
+document.getElementById('expandSamples').onclick = ()=> modal.classList.add('open');
+document.getElementById('closeModal').onclick = ()=> modal.classList.remove('open');
+
+/* ===== PDF: table only ===== */
+async function exportTableToPDF(wrapperId, fileName){
+  const { jsPDF } = window.jspdf;
+  const area = document.getElementById(wrapperId);
+  const canvas = await html2canvas(area, {scale:2, backgroundColor:"#ffffff", useCORS:true});
+  const img = canvas.toDataURL('image/png');
+  const pdf = new jsPDF('p','mm','a4');
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  const imgProps = pdf.getImageProperties(img);
+  const ratio = imgProps.width / imgProps.height;
+  let w = pageWidth - 20, h = w/ratio;
+  if(h > pageHeight - 20){ h = pageHeight - 20; w = h*ratio; }
+  addPdfHeader(pdf, 1); // header
+  pdf.addImage(img, 'PNG', 10, 20, w, h);
+  addPdfFooter(pdf);
+  pdf.save(fileName);
+}
+document.getElementById('exportPdfBtn').onclick = ()=> exportTableToPDF('samplesTableWrap','Samples.pdf');
+document.getElementById('exportPdfBtnModal').onclick = ()=> exportTableToPDF('samplesTableModal','Samples-expanded.pdf');
+
+/* ===== Full Report PDF ===== */
+document.getElementById('exportReportBtn').onclick = generateReportPDF;
+
+async function generateReportPDF(){
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF('p','mm','a4');
+  const pageW = pdf.internal.pageSize.getWidth();
+  const pageH = pdf.internal.pageSize.getHeight();
+
+  // Page 1: header + summary info
+  addPdfHeader(pdf, 1);
+
+  pdf.setTextColor(0); pdf.setFontSize(16);
+  pdf.text("Marine Science Report", 10, 30);
+  pdf.setFontSize(10);
+  const date = document.getElementById('date').value || new Date().toISOString().slice(0,10);
+  const pos  = document.getElementById('position').value || "—";
+  const wx   = document.getElementById('weather').value || "—";
+  const note = document.getElementById('notes').value || "—";
+  pdf.text(`Date: ${date}`, 10, 38);
+  pdf.text(`Position: ${pos}`, 60, 38);
+  pdf.text(`Weather: ${wx}`, 10, 44);
+  pdf.text(`Notes: ${note}`, 10, 50);
+
+  // Participants line
+  const ppl = participants.map(p=> p.role ? `${p.name} (${p.role})` : p.name).join(", ") || "—";
+  pdf.text(`Participants: ${ppl}`, 10, 56, {maxWidth: pageW-20});
+
+  // Map snapshot (black & white)
+  const mapEl = usingOffline ? document.getElementById('mapOffline') : document.getElementById('map');
+  mapEl.classList.add('grayscale');
+  const mapCanvas = await html2canvas(mapEl, {scale:2, backgroundColor:"#ffffff", useCORS:true});
+  mapEl.classList.remove('grayscale');
+  const mapImg = mapCanvas.toDataURL('image/png');
+  const mW = pageW - 20, mH = mW * (mapCanvas.height/mapCanvas.width);
+  pdf.text("Map", 10, 66);
+  pdf.addImage(mapImg, 'PNG', 10, 70, mW, Math.min(mH, 90));
+
+  // Signature block (bottom of page 1)
+  pdf.setDrawColor(0); pdf.setLineWidth(0.2);
+  const sigY = pageH - 40;
+  pdf.line(20, sigY, 90, sigY);    pdf.text("Signature", 20, sigY+4);
+  pdf.line(120, sigY, 190, sigY);  pdf.text("Name / Role", 120, sigY+4);
+
+  addPdfFooter(pdf);
+
+  // Page 2: Samples table screenshot (in bw)
+  pdf.addPage();
+  addPdfHeader(pdf, 2);
+  const tbl = document.getElementById('samplesTableWrap');
+  tbl.classList.add('grayscale');
+  const tblCanvas = await html2canvas(tbl, {scale:2, backgroundColor:"#ffffff", useCORS:true});
+  tbl.classList.remove('grayscale');
+  const tblImg = tblCanvas.toDataURL('image/png');
+  const tRatio = tblCanvas.width / tblCanvas.height;
+  let tW = pageW - 20, tH = tW / tRatio;
+  if(tH > pageH - 30){ tH = pageH - 30; tW = tH * tRatio; }
+  pdf.text("Samples", 10, 26);
+  pdf.addImage(tblImg, 'PNG', 10, 30, tW, tH);
+  addPdfFooter(pdf);
+
+  // Page 3: Environmental chart (optional if data exists)
+  if(envSeries.data.length){
+    pdf.addPage();
+    addPdfHeader(pdf, 3);
+    const chartCanvas = await html2canvas(document.getElementById('envChart').parentElement, {scale:2, backgroundColor:"#ffffff"});
+    const chartImg = chartCanvas.toDataURL('image/png');
+    const cRatio = chartCanvas.width/chartCanvas.height;
+    let cW = pageW - 20, cH = cW / cRatio; if(cH > pageH - 30){ cH = pageH - 30; cW = cH * cRatio; }
+    pdf.text(envSeries.label || "Environmental Data", 10, 26);
+    pdf.addImage(chartImg, 'PNG', 10, 30, cW, cH);
+    addPdfFooter(pdf);
+  }
+
+  // Number pages in footer
+  const total = pdf.getNumberOfPages();
+  for(let i=1;i<=total;i++){ pdf.setPage(i); drawPageNumber(pdf, i, total); }
+
+  pdf.save(`Seavo-Research-Report_${date}.pdf`);
+}
+function addPdfHeader(pdf, pageNo){
+  const pageW = pdf.internal.pageSize.getWidth();
+  pdf.setFillColor(14,62,134); // dark blue bar
+  pdf.rect(0,0,pageW,15,'F');
+  pdf.setTextColor(255); pdf.setFontSize(12);
+  pdf.text("Seavo Nautiq", 10, 10);
+  pdf.setTextColor(0);
+}
+function addPdfFooter(pdf){
+  const pageW = pdf.internal.pageSize.getWidth();
+  const pageH = pdf.internal.pageSize.getHeight();
+  pdf.setDrawColor(200); pdf.line(10, pageH-12, pageW-10, pageH-12);
+  pdf.setFontSize(9); pdf.setTextColor(80);
+  const stamp = new Date().toLocaleString();
+  pdf.text(`Generated: ${stamp}`, 10, pageH-6);
+  pdf.setTextColor(0);
+}
+function drawPageNumber(pdf, i, total){
+  const pageW = pdf.internal.pageSize.getWidth();
+  const pageH = pdf.internal.pageSize.getHeight();
+  pdf.setFontSize(9); pdf.setTextColor(80);
+  pdf.text(`Page ${i} of ${total}`, pageW-40, pageH-6);
+  pdf.setTextColor(0);
+}
+
+/* ================= Environmental Data ================= */
+let envSeries = loadLS(LS_KEYS.env, {label:"Temperature °C", data:[]});
+const ctx = document.getElementById('envChart');
+const chart = new Chart(ctx, {
+  type:'line',
+  data:{ labels: envSeries.data.map(d=> new Date(d.t).toLocaleTimeString()), datasets:[{ label: envSeries.label, data: envSeries.data.map(d=>d.v) }] },
+  options:{ responsive:true, plugins:{ legend:{ display:true } }, scales:{ x:{ ticks:{ maxRotation:0 } }, y:{ beginAtZero:false } } }
+});
+function refreshChart(){
+  chart.data.labels = envSeries.data.map(d=> new Date(d.t).toLocaleTimeString());
+  chart.data.datasets[0].label = envSeries.label;
+  chart.data.datasets[0].data = envSeries.data.map(d=>d.v);
+  chart.update();
+  saveLS(LS_KEYS.env, envSeries);
+}
+document.getElementById('envLabel').value = envSeries.label;
+document.getElementById('addEnv').onclick = ()=>{
+  const label = document.getElementById('envLabel').value.trim() || "Metric";
+  const val = parseFloat(document.getElementById('envValue').value);
+  envSeries.label = label;
+  if(!isNaN(val)){
+    envSeries.data.push({t: Date.now(), v: val});
+    if(envSeries.data.length>120) envSeries.data.shift();
+  }
+  document.getElementById('envValue').value="";
+  refreshChart();
+};
+document.getElementById('demoEnv').onclick = ()=>{
+  const base = 10 + Math.random()*5;
+  envSeries.data = Array.from({length:30}, (_,i)=>({t: Date.now()+i*60000, v: (base + Math.sin(i/4)*1.2 + Math.random()*0.3)}));
+  refreshChart();
+};
+document.getElementById('clearEnv').onclick = ()=>{ envSeries.data = []; refreshChart(); };
+// CSV import (timestamp,value OR just value per line)
+document.getElementById('csvInput').addEventListener('change', (e)=>{
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    const rows = reader.result.split(/\r?\n/).map(r=>r.trim()).filter(Boolean);
+    const out=[]; let t=Date.now();
+    rows.forEach(r=>{
+      const parts = r.split(',').map(p=>p.trim());
+      if(parts.length>=2 && !isNaN(parseFloat(parts[1]))){
+        const ts = isNaN(Date.parse(parts[0])) ? t : Date.parse(parts[0]);
+        out.push({t: ts, v: parseFloat(parts[1])});
+      } else if(!isNaN(parseFloat(parts[0]))){
+        out.push({t: t, v: parseFloat(parts[0])});
+      }
+      t += 60000;
+    });
+    envSeries.data = out; refreshChart();
+  };
+  reader.readAsText(file);
+});
+
+/* ===== Calculator / Notepad ===== */
+function openCalculator(){ document.getElementById("calculatorModal").style.display="block"; }
+function closeCalculator(){ document.getElementById("calculatorModal").style.display="none"; }
+function openNotepad(){ document.getElementById("notepadModal").style.display="block"; }
+function closeNotepad(){ document.getElementById("notepadModal").style.display="none"; }
+function appendCalc(v){ const d=document.getElementById('calc-display'); d.value+=v; }
+function deleteLast(){ const d=document.getElementById('calc-display'); d.value=d.value.slice(0,-1); }
+function clearCalc(){ document.getElementById('calc-display').value=''; }
+function calculateResult(){
+  const d=document.getElementById('calc-display');
+  try{
+    const expr=d.value.replace(/×/g,'*').replace(/÷/g,'/');
+    const expr2=expr.replace(/(\d+(\.\d+)?)%/g,(_,n)=>String(parseFloat(n)/100));
+    d.value=String(Function(`"use strict";return (${expr2})`)());
+  }catch{ d.value='Error'; }
+}
+function saveNote(){ localStorage.setItem('seavo_note', document.getElementById('noteArea').value); }
+function clearNote(){ document.getElementById('noteArea').value=''; localStorage.removeItem('seavo_note'); }
+function makeDraggable(handleId, windowId){
+  const handle=document.getElementById(handleId);
+  const win=document.getElementById(windowId);
+  if(!handle||!win) return;
+  let offsetX=0, offsetY=0, dragging=false;
+  handle.addEventListener('mousedown',(e)=>{
+    dragging=true; const rect=win.getBoundingClientRect();
+    offsetX=e.clientX-rect.left; offsetY=e.clientY-rect.top; document.body.style.userSelect='none';
+  });
+  window.addEventListener('mousemove',(e)=>{ if(!dragging) return; win.style.left=(e.clientX-offsetX)+'px'; win.style.top=(e.clientY-offsetY)+'px'; });
+  window.addEventListener('mouseup',()=>{ dragging=false; document.body.style.userSelect=''; });
+}
+
+/* ================= Map (Leaflet + offline fallback) ================= */
+let usingOffline = false;
+const mapDiv = document.getElementById('map');
+const mapOffline = document.getElementById('mapOffline');
+const offlineMarker = document.getElementById('offlineMarker');
+
+const map = L.map('map', { zoomControl:true }).setView([63.44, 10.40], 4);
+const tile = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'&copy; OpenStreetMap' });
+tile.addTo(map);
+
+let tileErrors = 0;
+tile.on('tileerror', ()=>{ tileErrors++; if(tileErrors>8){ activateOfflineMap(); } });
+if(!navigator.onLine){ activateOfflineMap(); }
+
+let marker;
+const savedMarker = loadLS(LS_KEYS.map, null);
+if(savedMarker && !usingOffline){
+  marker = L.marker(savedMarker.latlng, {draggable:true}).addTo(map);
+  map.setView(savedMarker.latlng, savedMarker.zoom||5);
+  syncPositionInput(savedMarker.latlng.lat, savedMarker.latlng.lng);
+  marker.on('dragend', onMarkerDrag);
+}
+
+function onMarkerDrag(e){
+  const {lat,lng} = e.target.getLatLng();
+  syncPositionInput(lat,lng);
+  saveLS(LS_KEYS.map, {latlng:{lat,lng}, zoom: map.getZoom()});
+}
+map.on('click', (e)=>{ if(usingOffline) return;
+  if(!marker){ marker = L.marker(e.latlng, {draggable:true}).addTo(map); marker.on('dragend', onMarkerDrag); }
+  else { marker.setLatLng(e.latlng); }
+  syncPositionInput(e.latlng.lat, e.latlng.lng);
+  saveLS(LS_KEYS.map, {latlng:e.latlng, zoom: map.getZoom()});
+});
+map.on('zoomend', ()=>{ if(usingOffline) return; const m= loadLS(LS_KEYS.map,null); if(m){ m.zoom = map.getZoom(); saveLS(LS_KEYS.map,m);} });
+
+function syncPositionInput(lat,lng){
+  const txt = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+  document.getElementById('position').value = txt;
+  document.getElementById('coordReadout').textContent = `Selected: ${txt}`;
+}
+document.getElementById('position').addEventListener('change', ()=>{ // manual entry
+  const v = document.getElementById('position').value.trim();
+  const m = v.match(/(-?\d+(\.\d+)?)[,\s]+(-?\d+(\.\d+)?)/);
+  if(!m) return;
+  const lat = parseFloat(m[1]), lng = parseFloat(m[3]);
+  if(usingOffline){
+    placeOfflineMarker({lat,lng});
+  }else{
+    if(!marker){ marker = L.marker([lat,lng], {draggable:true}).addTo(map); marker.on('dragend', onMarkerDrag); }
+    else { marker.setLatLng([lat,lng]); }
+    map.setView([lat,lng], 6);
+  }
+  syncPositionInput(lat,lng);
+  saveLS(LS_KEYS.map, {latlng:{lat,lng}, zoom: usingOffline ? 4 : map.getZoom()});
+});
+
+function activateOfflineMap(){
+  usingOffline = true;
+  mapDiv.style.display = 'none';
+  mapOffline.style.display = 'block';
+  // click -> lat/lon via equirectangular projection
+  mapOffline.addEventListener('click', (e)=>{
+    const rect = mapOffline.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;   // 0..1
+    const y = (e.clientY - rect.top) / rect.height;   // 0..1
+    const lng = x*360 - 180;
+    const lat = 90 - y*180;
+    placeOfflineMarker({lat,lng});
+    syncPositionInput(lat,lng);
+    saveLS(LS_KEYS.map, {latlng:{lat,lng}, zoom:4});
+  });
+  // if we had a saved marker, show it:
+  const saved = loadLS(LS_KEYS.map, null);
+  if(saved?.latlng){ placeOfflineMarker(saved.latlng); syncPositionInput(saved.latlng.lat, saved.latlng.lng); }
+}
+function placeOfflineMarker(latlng){
+  offlineMarker.style.display = 'block';
+  const rect = mapOffline.getBoundingClientRect();
+  const x = (latlng.lng + 180) / 360 * rect.width;
+  const y = (90 - latlng.lat) / 180 * rect.height;
+  offlineMarker.style.left = `${x}px`; offlineMarker.style.top = `${y}px`;
+}
+
+/* ===== Init ===== */
+document.addEventListener("DOMContentLoaded", async ()=>{
+  // calc & note
+  const openCalcBtn=document.getElementById("openCalculatorBtn");
+  const openNoteBtn=document.getElementById("openNotepadBtn");
+  const calcModal=document.getElementById("calculatorModal");
+  const noteModal=document.getElementById("notepadModal");
+  openCalcBtn?.addEventListener("click", openCalculator);
+  openNoteBtn?.addEventListener("click", openNotepad);
+  const backdropClose=(e)=>{ if(e.target===calcModal) closeCalculator(); if(e.target===noteModal) closeNotepad(); };
+  calcModal?.addEventListener("click", backdropClose);
+  noteModal?.addEventListener("click", backdropClose);
+  document.addEventListener("keydown",(e)=>{ if(e.key==="Escape"){ closeCalculator(); closeNotepad(); } });
+  const saved=localStorage.getItem('seavo_note'); if(saved) document.getElementById('noteArea').value=saved;
+  makeDraggable('calcDragHandle','calculatorWindow');
+  makeDraggable('noteDragHandle','notepadWindow');
+
+  // samples demo if empty
+  if(samples.length===0){
+    samples = [
+      {id:"S-001", location:"63.44, 10.40", depth:50, type:"Plankton", collector:"", notes:""},
+      {id:"S-002", location:"63.50, 10.55", depth:120, type:"Sediment", collector:"", notes:""}
+    ];
+  }
+  renderSamples();
+
+  // import participants from module (if present)
+  await importParticipantsFromModule();
+  renderParticipants();
+
+  // Prefill date
+  document.getElementById('date').valueAsDate = new Date();
+});
+
+/* Popup helpers */
+function åpnePopup4(){ window.open('Help.html','popup','width=1600,height=1200'); }
+function åpnePopup2(){ window.open('Documents.html','popup','width=1600,height=1200'); }
+function åpnePopup7(){ window.open('Settings.html','popup','width=1600,height=1200'); }
+  </script>
+</body>
+</html>

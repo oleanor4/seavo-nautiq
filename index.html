@@ -116,7 +116,7 @@
 
  #forsidebilde {
   width: 100%;
-  max-width: 700px;
+  max-width: 400px;
   border-radius: 20px;
   box-shadow: #000000 0px 0px 10px 3px;
  
@@ -159,70 +159,15 @@
     }
 
 
-      .language-selector {
-      background-color: transparent;
-      font-family: Arial, sans-serif;
+  .language-selector{ position:relative; z-index:1100; display:inline-block; margin:10px 16px;}
+.language-button{ display:flex; align-items:center; gap:8px; padding:8px 16px; border-radius:10px; border:1px solid rgba(255,255,255,.18); background:rgba(0,0,0,.25); color:#fff; cursor:pointer;}
+.language-button:hover{ filter:brightness(1.15); }
+.flag{ width:20px; height:14px; object-fit:cover; border-radius:2px; }
+.language-dropdown{ position:absolute; top:100%; left:0; min-width:180px; background:rgba(8,22,38,.96); border:1px solid rgba(255,255,255,.12); border-radius:10px; box-shadow:0 10px 26px rgba(0,0,0,.4); display:none; padding:6px; }
+.language-dropdown.open{ display:block; }
+.language-dropdown > div{ display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; cursor:pointer; color:#fff; }
+.language-dropdown > div:hover{ background:rgba(255,255,255,.08); }
 
-      color: rgb(201, 188, 188);
-      float: right;
-      margin-right: 38px;
-      margin-top: -60px;
-    }
-
-    .language-selector {
-      position: relative;
-      display: inline-block;
-    }
-
-    .language-button {
-      background: linear-gradient(to right, #1e3a5f, #326fa8);
-      color: rgb(255, 255, 255);
-      padding: 10px 16px;
-      border-radius: 10px;
-      border: 1px solid rgb(149, 149, 180);
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .language-button:hover {
-      background: #4984dd;
-    }
-
-    .flag {
-      width: 24px;
-      height: 16px;
-      object-fit: cover;
-      border-radius: 3px;
-    }
-
-    .language-dropdown {
-      display: none;
-      position: absolute;
-      right: 170px;
-      background: linear-gradient(to right, #3a5d8a, #5799d6);
-      min-width: 160px;
-      box-shadow: 0px 4px 8px rgba(0,0,0,0.6);
-      border-radius: 6px;
-      z-index: 1;
-      top: 100px;
-    }
-
-    .language-dropdown div {
-      color: rgb(0, 0, 0);
-      padding: 8px 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-    }
-
-    .language-dropdown div:hover {
-      background-color: #e6e6e6;
-    }
 
 
 
@@ -256,7 +201,7 @@
       margin-top: 20px;
       margin-left: -20px;
       width: 250px;
-      height: 330px;
+      height: 390px;
       padding: 20px;
       background: linear-gradient(to left, #12315c77, #215db17a); 
       border-radius: 40px;
@@ -291,25 +236,25 @@
     }
 
     .activity-container {
-      width: 400px;
-      height: 500px;
+      width: 350px;
+      height: 460px;
       background: linear-gradient(to left, #12315c7c, #215db17a);
       border-radius: 40px;
       box-shadow: 6px 6px 6px rgba(0,0,0,0.6);
       padding: 20px;
       margin-top: 60px;
-      margin-left: 40px;
+      margin-left: 0px;
       opacity: 0.7;
     }
 
 
     .widget {
   background: rgba(0, 30, 70, 0.85);
-  padding: 12px 16px;
+  padding: 10px 14px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.4);
   width: 93%;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   backdrop-filter: blur(4px);
 }
 
@@ -363,7 +308,7 @@
 }
 
 .activity-list {
-  max-height: 240px;
+  max-height: 225px;
   overflow-y: auto;
   padding-right: 4px;
 }
@@ -474,13 +419,7 @@
       color: #ffffff;
     }
 
- 
 
-  @media (max-width: 768px) {
-  table, thead, tbody, th, td, tr {
-    display: block;
-  }
-}
 
 
 
@@ -508,7 +447,11 @@
   }
 }
 
-
+ @media (max-width: 768px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+}
 
     /* overlay vises */
 body.sn-locked { overflow: hidden; }
@@ -596,42 +539,34 @@ background: rgba(0,0,0,.25); color:#fff;
 <header class="video-header">
   <video autoplay muted loop playsinline>
     <source src="Video/Ocean-Seavo-Nautiq.mp4" type="video/mp4">
-    
-
  </video>
 
+
+
+
   <div id="snTrialBanner" style="display:none; background:rgba(0,0,0,.25); color:#fff; padding:6px 10px; text-align:center"></div>
+
 </header>
 
     <div class="gradient-overgang"></div>
 
 
-  <div class="language-selector">
-  <button class="language-button" onclick="toggleDropdown()">
-    <img src="https://flagcdn.com/w40/gb.png" class="flag" id="selected-flag">
-    English
+ <div class="language-selector">
+  <button class="language-button" onclick="toggleDropdown()" id="language-btn" aria-haspopup="true" aria-expanded="false">
+    <img src="https://flagcdn.com/w40/gb.png" class="flag" id="selected-flag" alt="">
+    <span id="selected-lang-label">English</span>
   </button>
-</div>
-
-
-
-
-
 
   <div class="language-dropdown" id="language-dropdown">
-    <div onclick="selectLanguage('English', 'gb')"><img src="https://flagcdn.com/w40/gb.png" class="flag"> English</div>
-    <div onclick="selectLanguage('Norsk', 'no')"><img src="https://flagcdn.com/w40/no.png" class="flag"> Norsk</div>
-    <div onclick="selectLanguage('Русский', 'ru')"><img src="https://flagcdn.com/w40/ru.png" class="flag"> Русский</div>
-    <div onclick="selectLanguage('中文', 'cn')"><img src="https://flagcdn.com/w40/cn.png" class="flag"> 中文</div>
-    <div onclick="selectLanguage('Español', 'es')"><img src="https://flagcdn.com/w40/es.png" class="flag"> Español</div>
-    <div onclick="selectLanguage('Português', 'pt')"><img src="https://flagcdn.com/w40/pt.png" class="flag"> Português</div>
+    <div onclick="selectLanguage('en','gb')"><img src="https://flagcdn.com/w40/gb.png" class="flag" alt=""> English</div>
+    <div onclick="selectLanguage('no','no')"><img src="https://flagcdn.com/w40/no.png" class="flag" alt=""> Norsk</div>
+    <div onclick="selectLanguage('ru','ru')"><img src="https://flagcdn.com/w40/ru.png" class="flag" alt=""> Русский</div>
+    <div onclick="selectLanguage('zh','cn')"><img src="https://flagcdn.com/w40/cn.png" class="flag" alt=""> 中文</div>
+    <div onclick="selectLanguage('es','es')"><img src="https://flagcdn.com/w40/es.png" class="flag" alt=""> Español</div>
+    <div onclick="selectLanguage('pt','pt')"><img src="https://flagcdn.com/w40/pt.png" class="flag" alt=""> Português</div>
   </div>
-
-    
-
- 
-
 </div>
+
 
 <div class="hoved-rad">
   <!-- Venstre container -->
@@ -653,6 +588,7 @@ background: rgba(0,0,0,.25); color:#fff;
       <button onclick="åpnePopup()"><img src="icon/Participants.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Participants</button>
       <button onclick="åpnePopup5()"><img src="icon/Voyage.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Voyages</button>
       <button onclick="åpnePopup6()"><img src="icon/Fleet.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Fleet</button>
+      <button onclick="åpnePopup12()"><img src="icon/Research.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Research</button>
     </div>
   </div>
 
@@ -876,6 +812,14 @@ background: rgba(0,0,0,.25); color:#fff;
     </div>
   </div>
 </div>
+
+
+  <script src="js/i18n.translations.js"></script>
+  <script src="js/i18n.core.js"></script>
+
+
+
+</head>
 
 
  
@@ -1216,6 +1160,14 @@ updateDigitalClock(); // første kall
                       function åpnePopup10() {
       window.open(
         'Info.html',    
+        'popup',                  
+        'width=1600,height=1200'  
+      );
+    }
+
+                          function åpnePopup12() {
+      window.open(
+        'Research.html',    
         'popup',                  
         'width=1600,height=1200'  
       );

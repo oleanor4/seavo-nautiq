@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Seavo Nautiq – Languages</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <link rel="icon" href="images/Logo Seavo Nautiq.png" />
+  <style>
+    :root{ --bg:#0f2a4a; --text:#fff; --muted:#bcd3f1; --accent:#62b2e7; --accent-2:#1b75d1; --accent-3:#0e3e86; }
+    *{box-sizing:border-box}
+    body{ background:var(--bg); color:var(--text); font-family:Arial,sans-serif; margin:0; padding:24px; }
+    .wrap{ max-width:1100px; margin:0 auto; }
+    h1{ margin:0 0 16px; }
+    .language-selector{ position:relative; display:inline-block; z-index:1500; }
+    .language-button{
+      display:flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px; cursor:pointer;
+      border:1px solid rgba(255,255,255,.15); background:rgba(0,0,0,.25); color:#fff; font-weight:700;
+      box-shadow:0 6px 16px rgba(0,0,0,.35);
+    }
+    .language-button .flag{ width:22px; height:auto; border-radius:3px; }
+    .language-dropdown{
+      position:absolute; top:110%; left:0; min-width:200px; background:rgba(8,22,38,.96);
+      border:1px solid rgba(255,255,255,.12); border-radius:12px; box-shadow:0 10px 24px rgba(0,0,0,.5);
+      display:none; padding:6px;
+    }
+    .language-dropdown.open{ display:block; }
+    .language-dropdown > div{
+      display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; cursor:pointer; color:#fff;
+    }
+    .language-dropdown > div:hover{ background:rgba(255,255,255,.08); }
+    .language-dropdown .flag{ width:22px; height:auto; border-radius:3px; }
+    .card{
+      background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
+      border-radius:14px; padding:16px; margin-top:18px; box-shadow:0 10px 24px rgba(0,0,0,.35);
+    }
+    .btn{
+      background:linear-gradient(to right,var(--accent-2),var(--accent-3)); color:#fff; border:1px solid rgba(255,255,255,.12);
+      border-radius:12px; box-shadow:0 6px 16px rgba(0,0,0,.35); padding:10px 16px; font-size:15px; font-weight:700; cursor:pointer;
+    }
+    input.demo{
+      width:280px; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.2); background:rgba(0,0,0,.25); color:#fff;
+    }
+    @media (max-width:768px){ body{padding:16px} input.demo{width:100%} }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Languages</h1>
+
+    <!-- SPRÅKVELGER -->
+    <div class="language-selector">
+      <button class="language-button" onclick="toggleDropdown()" id="language-btn" aria-haspopup="listbox" aria-expanded="false">
+        <img src="https://flagcdn.com/w40/gb.png" class="flag" id="selected-flag" alt="">
+        <span id="selected-lang-label">English</span>
+      </button>
+      <div class="language-dropdown" id="language-dropdown" role="listbox">
+        <div onclick="selectLanguage('en','gb')"><img src="https://flagcdn.com/w40/gb.png" class="flag" alt=""> English</div>
+        <div onclick="selectLanguage('no','no')"><img src="https://flagcdn.com/w40/no.png" class="flag" alt=""> Norsk</div>
+        <div onclick="selectLanguage('ru','ru')"><img src="https://flagcdn.com/w40/ru.png" class="flag" alt=""> Русский</div>
+        <div onclick="selectLanguage('zh','cn')"><img src="https://flagcdn.com/w40/cn.png" class="flag" alt=""> 中文</div>
+        <div onclick="selectLanguage('es','es')"><img src="https://flagcdn.com/w40/es.png" class="flag" alt=""> Español</div>
+        <div onclick="selectLanguage('pt','pt')"><img src="https://flagcdn.com/w40/pt.png" class="flag" alt=""> Português</div>
+      </div>
+    </div>
+
+    <!-- DEMO (kan slettes) -->
+    <div class="card">
+      <h2 data-i18n="nav.office">Office</h2>
+      <p data-i18n="global.title">Global overview of the entire office inventory</p>
+      <input class="demo" data-i18n-placeholder="search.placeholder" placeholder="Search inventory..." />
+      <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn" data-i18n="btn.globalOverview">📋 Global Overview</button>
+        <button class="btn" data-i18n="btn.pdf">📄 Generate PDF</button>
+        <button class="btn" data-i18n="btn.excel">📊 Export to Excel</button>
+        <button class="btn" data-i18n="btn.save">💾 Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAST FELLES I18N-FILER -->
+  <script src="js/i18n.translations.js"></script>
+  <script src="js/i18n.core.js"></script>
+</body>
+</html>

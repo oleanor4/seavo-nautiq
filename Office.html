@@ -2,12 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Seavo Nautiq-Office</title>
+  <title data-i18n="title.office">Seavo Nautiq — Office</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<link rel="stylesheet" href="responsive.css">
-<script defer src="responsive.js"></script>
-
+  <link rel="stylesheet" href="responsive.css">
+  <script defer src="responsive.js"></script>
 
   <style>
 /* ====== TEMA / BASE ====== */
@@ -37,70 +36,66 @@ body{
   color:var(--text);
 }
 
+body {
+  background-color: hsl(210, 100%, var(--bg-lightness));
+  transition: background-color 0.5s ease;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  overflow-x: hidden;
+}
 
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7));
+  z-index: -1;
+}
 
-    body {
-        background-color: hsl(210, 100%, var(--bg-lightness));
-        transition: background-color 0.5s ease;
-        margin: 0;
-        font-family: Arial, sans-serif;
-        overflow-x: hidden;
-    }
+:root {
+  --bg-lightness: 20%;
+  --text-color: hsl(0, 0%, calc(100% - var(--bg-lightness)));
+  --box-color: hsl(210, 50%, calc(var(--bg-lightness) + 5%));
+  --button-color: hsl(210, 70%, calc(var(--bg-lightness) + 10%));
+  --button-text: hsl(0, 0%, calc(100% - var(--bg-lightness)));
+}
 
-    
+.theme-slider-container {
+  position: relative;
+  top: 12px;
+  background: rgba(0, 0, 0, 0.705);
+  padding: 16px 18px;
+  border-radius: 12px;
+  border: 2px solid #8f8248;
+  color: rgb(255, 255, 255);
+  font-family: Arial, sans-serif;
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  width: 180px;
+  margin-left: 0px;
+}
 
-    body::before {
-     content: "";
-     position: fixed;
-     inset: 0;
-     pointer-events: none;
-     background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7));
-     z-index: -1;
-  }
-
-  :root {
-    --bg-lightness: 20%;
-    --text-color: hsl(0, 0%, calc(100% - var(--bg-lightness)));
-    --box-color: hsl(210, 50%, calc(var(--bg-lightness) + 5%));
-    --button-color: hsl(210, 70%, calc(var(--bg-lightness) + 10%));
-    --button-text: hsl(0, 0%, calc(100% - var(--bg-lightness)));
-  }
-
-
-  .theme-slider-container {
-    position: relative;
-    top: 12px;
-    background: rgba(0, 0, 0, 0.705);
-    padding: 16px 18px;
-    border-radius: 12px;
-    border: 2px solid #8f8248;
-    color: rgb(255, 255, 255);
-    font-family: Arial, sans-serif;
-    z-index: 1000;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    width: 180px;
-    margin-left: 0px;
-  }
-
-  .theme-slider-container input[type="range"] {
-    width: 82px;
-    cursor: pointer;
-  }
-
-
-
+.theme-slider-container input[type="range"] {
+  width: 82px;
+  cursor: pointer;
+}
 
 /* Header-video */
 .video-header{ position:relative; aspect-ratio:1280/99; overflow:hidden; background:#000; }
 .video-header video{ width:100%; height:200%; object-fit:cover; display:block; }
 .gradient-overgang{ height:10px; background:linear-gradient(to left,#62b2e7,#001125); box-shadow:6px 4px 6px rgba(0,0,0,.7); }
 
-/* ====== TOPP / LOGO / SØK ====== */
-.logo{
-  width:200px; height:auto; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,.45);
-  cursor:pointer; margin-left:60px; transition:transform .2s ease, box-shadow .2s ease; background:rgba(255,255,255,.04);
-}
-.logo:hover{ transform:scale(1.05); box-shadow:0 8px 28px rgba(0,0,0,.6); }
+.language-selector{ position:relative; z-index: 1100; display:inline-block; margin:10px 60px;}
+.language-button{ display:flex; align-items:center; gap:4px; padding:4px 14px; border-radius:10px; border:1px solid rgba(255, 255, 255, 0.322); background:rgba(0, 0, 0, 0.226); color:#fff; cursor:pointer;}
+.language-button:hover{ filter:brightness(1.15); }
+.flag{ width:20px; height:14px; object-fit:cover; border-radius:2px; }
+.language-dropdown{ position:absolute; top:100%; left:0; min-width:180px; background:rgba(8,22,38,.96); border:1px solid rgba(255,255,255,.12); border-radius:10px; box-shadow:0 10px 26px rgba(0,0,0,.4); display:none; padding:6px; }
+.language-dropdown.open{ display:block; }
+.language-dropdown > div{ display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; cursor:pointer; color:#ffffff; }
+.language-dropdown > div:hover{ background:rgba(255,255,255,.08); }
+
+
 
 #searchBox{
   width:260px; padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.25);
@@ -119,7 +114,7 @@ body{
 /* ====== KATEGORI-SLIDER ====== */
 .category-slider-office{
   display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.25); backdrop-filter:blur(4px);
-  padding:14px; overflow-x:auto; margin-bottom:-10px; width:90%; margin-left:60px; border-radius:14px;
+  padding:14px; overflow-x:auto; margin-bottom:-10px; width:90%; max-width: 1480px; margin:auto; border-radius:14px;
   border:1px solid rgba(255,255,255,.12); box-shadow:0 10px 26px rgba(0,0,0,.35);
 }
 .category-item{ display:flex; align-items:center; margin:0 6px; }
@@ -138,17 +133,16 @@ body{
 
 .delete-category-button {
   background: linear-gradient(to right, #f13e4e, #a31621);
-  color: #fff;
+  color: #a3162200;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 6px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
-  padding: 4px 10px;
-  font-size: 12px;
+  padding: 4px 5px;
+  font-size: 6px;
   font-weight: 700;
   cursor: pointer;
   margin: 1px 8px;
 }
-
 .delete-category-button:hover {
   filter: brightness(1.40);
   box-shadow: 0 8px 20px rgba(255, 0, 0, 0.45);
@@ -158,8 +152,8 @@ body{
   margin-left:22px; padding:6px 14px; border-radius:10px; border:1px solid rgba(255,255,255,.2);
   background:rgba(255,255,255,.08); color:#fff; cursor:pointer;
 }
-.undo-category:disabled{ opacity:.5; cursor:not-allowed; }
 
+.undo-category:disabled{ opacity:.5; cursor:not-allowed; }
 .undo-category:hover:not(:disabled){ background:rgba(255,255,255,.12); box-shadow:0 6px 16px rgba(0,0,0,.35); }
 
 
@@ -180,7 +174,6 @@ body{
 .global-overview-table th {
   background: #1466e0;
   font-size: 20px;
-
 }
 
 
@@ -189,15 +182,33 @@ body{
   background:linear-gradient(to right,var(--accent-2),var(--accent-3));
   color:#fff; border:1px solid rgba(255,255,255,.12); border-radius:12px; box-shadow:0 6px 16px rgba(0,0,0,.35);
 }
-.global-button{ padding:10px 18px; font-size:15px; font-weight:700; cursor:pointer; margin:10px 60px; margin-bottom: 10px; }
+.global-button{ padding:10px 18px; font-size:15px; font-weight:700; cursor:pointer; margin:10px 60px; margin-bottom: 10px; margin-left: 80px; }
 .global-button:hover{ filter:brightness(1.30); }
 
+
+
 /* ====== TABELL ====== */
+.table-wrapper{ overflow-x:auto; }
 table{
-  width:100%; border-collapse:collapse; background:rgba(0,0,0,.20); color:var(--text);
-  margin-bottom:20px; border:1px solid rgba(255,255,255,.12); border-radius:14px; overflow:hidden; box-shadow:0 12px 28px rgba(0,0,0,.35);
+  width:100%;
+  max-width: 1800px;
+  min-width: 1200px;           /* holder god avstand i RU m.fl. */ 
+  margin: 0 auto 0px;
+  border-collapse:collapse;
+  background:rgba(0,0,0,.20);
+  color:var(--text);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 12px 28px rgba(0,0,0,.35);
 }
-th,td{ border-bottom:1px solid rgba(255,255,255,.12); padding:0px; text-align:center; font-size:16px; }
+th,td{ 
+  border-bottom:1px solid rgba(255,255,255,.12); 
+  padding:8px 10px;            /* standard avstand i alle språk */
+  text-align:center; 
+  font-size:16px; 
+  vertical-align:middle;
+}
 th{ background:rgba(0,0,0,.28); color:var(--text); }
 
 .header-row td{
@@ -209,6 +220,7 @@ th{ background:rgba(0,0,0,.28); color:var(--text); }
 /* Mini-kolonneheader */
 .section-columns td{
   background:rgba(0,0,0,.24); color:#fff; font-weight:700; border-bottom:1px solid rgba(255,255,255,.12); padding:6px 10px;
+  word-break:break-word;      /* lange uttrykk brytes pent */
 }
 .section-columns td.muted{ color:#bcd3f1; font-weight:600; }
 
@@ -224,22 +236,19 @@ th{ background:rgba(0,0,0,.28); color:var(--text); }
 .large-bold-input:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(98,178,231,.18); }
 
 .cell-min,.cell-max{ width: 100px; min-width:100px; max-width:100px; }
-.cell-order{ width:120px; }
-.cell-move{ width:80px; }
-.cell-product{ width: 350px; }
-.cell-comment{ width: 350px; }
+.cell-order{ width:120px; min-width:120px; }
+.cell-move{ width:80px; min-width:80px; }
+.cell-product{ width: 350px; min-width:350px; }
+.cell-comment{ width: 350px; min-width:350px; }
 td.min-col input{ width:60px; }
 
 td.cell-small input{
-  max-width: 120px;     /* overstyrer inline width:90% */
-  min-width: 100px;
+  max-width: 120px;
+  min-width: 120px;
   padding: 10px;
   font-size: 16px;
+  width: 100%;
 }
-
-
-
-
 
 /* Flytteknapper */
 .cell-move button{
@@ -251,7 +260,7 @@ td.cell-small input{
 td:last-child{ width:60px; background:linear-gradient(to right, rgba(78,155,206,.25), rgba(27,56,99,.25)); }
 
 .btn-danger{
-  background:linear-gradient(to right,#f13e4e,#a31621); color:#fff; font-weight:bold; padding:6px 12px; border-radius:6px; cursor:pointer; border:none;
+  background:linear-gradient(to right,#f13e4e,#a31621); color:#fff; font-weight:bold; padding:6px 6px; border-radius:6px; cursor:pointer; border:none;
 }
 .btn-danger:hover{ background:linear-gradient(to right,#ff5a6b,#c3222d); font-style:italic; box-shadow:0 0 20px #ff0000; }
 
@@ -280,17 +289,16 @@ td:last-child{ width:60px; background:linear-gradient(to right, rgba(78,155,206,
   background:var(--chip-color, rgba(255,255,255,.15));
 }
 
-/* === POPUP OVER ALT: gjør fixed og portal-posisjonert i JS === */
+/* === POPUP OVER ALT === */
 .color-popover{
   position:fixed;
-  /* pos settes i JS ved åpning */
   display:grid; grid-template-columns:repeat(4, 18px); gap:6px;
   background:rgba(3,14,24,.95);
   padding:10px; border-radius:10px;
   border:1px solid rgba(255,255,255,.12);
   box-shadow:0 10px 26px rgba(0,0,0,.55);
-  z-index:2147483647; /* alltid foran */
-  visibility:hidden;  /* blir 'visible' i JS når posisjonert */
+  z-index:2147483647;
+  visibility:hidden;
 }
 .color-popover.hidden{ display:none; }
 .color-option{
@@ -320,19 +328,14 @@ td:last-child{ width:60px; background:linear-gradient(to right, rgba(78,155,206,
   color:#fff; font-weight:bold; font-size:22px; border-radius:12px 0 0 12px; cursor:pointer; box-shadow:-8px 0 12px rgba(0,0,0,.35);
   user-select:none; z-index:1000; border:1px solid rgba(255,255,255,.12);
 }
-
-#togglePanelBtn:hover{ filter:brightness(1.20);
-  box-shadow: 0 0 15px 3px rgba(255, 255, 255, 0.4);
-}
+#togglePanelBtn:hover{ filter:brightness(1.20); box-shadow: 0 0 15px 3px rgba(255, 255, 255, 0.4); }
 
 #bottomButtons{ margin-top: 35px; width:100%; display:flex; flex-direction:column; gap:0px; }
 #sidePanel button:not(#togglePanelBtn){
   margin:4px 0; padding:12px 14px; width:100%; background:linear-gradient(to right,#235fdfdc,#4e1bd8c5);
   color:#fff; font-weight:700; border-radius:10px; cursor:pointer; font-size:14px; box-shadow:0 6px 14px rgba(0,0,0,.35); 
 }
-#sidePanel button:not(#togglePanelBtn):hover{ filter:brightness(1.20);
-  box-shadow: 0 0 15px 3px rgba(255, 255, 255, 0.2);
-}
+#sidePanel button:not(#togglePanelBtn):hover{ filter:brightness(1.20); box-shadow: 0 0 15px 3px rgba(255, 255, 255, 0.2); }
 
 /* Markering */
 .highlight{ background:rgba(240,138,42,.8); font-weight:700; color:#09111f; border-radius:4px; padding:0 2px; }
@@ -364,91 +367,110 @@ button img{ width:40px; height:40px; padding-left:55px; margin-top:20px; }
   font-size: 12px;
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
 }
-
-.send-orders-button:hover {
-  background: linear-gradient(to right, #57d0ee, #072846);
-}
+.send-orders-button:hover { background: linear-gradient(to right, #57d0ee, #072846); }
 
 /* Print */
 @media print{
   body{ background:#fff; color:#000; }
   .video-header,.gradient-overgang,.global-button,#sidePanel,.category-slider-office,.logo,#searchBox{ display:none !important; }
-  table{ background:#fff; color:#000; box-shadow:none; border:1px solid #ccc; }
+  .table-wrapper{ overflow: visible; }
+  table{ background:#fff; color:#000; box-shadow:none; border:1px solid #ccc; min-width:auto; }
   th{ background:#f2f2f2; color:#000; }
 }
-
-
-
-
   </style>
-</head>
 
-<header class="video-header">
-  <video autoplay muted loop playsinline>
-    <source src="Video/Ocean-Seavo-Nautiq.mp4" type="video/mp4">
-  </video>
-</header>
-<div class="gradient-overgang"></div>
+  <script src="js/i18n.translations.js"></script>
+  <script src="js/i18n.core.js"></script>
+</head>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.19.3/xlsx.full.min.js"></script>
 
 <body>
-<header>
-  <h1 style="text-align:center; color: rgb(30, 182, 209); margin-top:20px; font-size:36px; font-weight:bold; text-shadow:0 1px 3px rgba(0,0,0,.6);">Office</h1>
-  <a href="index.html" class="logo-link"><img src="images/Logo Seavo Nautiq.png" alt="Logo Seavo Nautiq" class="logo"></a>
 
+<header class="video-header">
+  <video autoplay muted loop playsinline>
+    <source src="Video/Ocean-Seavo-Nautiq.mp4" type="video/mp4">
+  </video>
+</header>
+
+<div class="gradient-overgang"></div>
+
+<header>
+  <h1 style="text-align:center; color: rgb(30, 182, 209); margin-top:20px; font-size:36px; font-weight:bold; text-shadow:0 1px 3px rgba(0,0,0,.6);" data-i18n="nav.office">Office</h1>
+
+ 
+
+  <div class="language-selector">
+    <button class="language-button" onclick="toggleDropdown()" id="language-btn" aria-haspopup="true" aria-expanded="false">
+      <img src="https://flagcdn.com/w40/gb.png" class="flag" id="selected-flag" alt="">
+      <span id="selected-lang-label">English</span>
+    </button>
+
+    <div class="language-dropdown" id="language-dropdown" role="menu">
+      <div onclick="selectLanguage('en','gb')" role="menuitem"><img src="https://flagcdn.com/w40/gb.png" class="flag" alt=""><span data-i18n="lang.en">English</span></div>
+      <div onclick="selectLanguage('no','no')" role="menuitem"><img src="https://flagcdn.com/w40/no.png" class="flag" alt=""><span data-i18n="lang.no">Norwegian</span></div>
+      <div onclick="selectLanguage('ru','ru')" role="menuitem"><img src="https://flagcdn.com/w40/ru.png" class="flag" alt=""><span data-i18n="lang.ru">Russian</span></div>
+      <div onclick="selectLanguage('zh','cn')" role="menuitem"><img src="https://flagcdn.com/w40/cn.png" class="flag" alt=""><span data-i18n="lang.zh">Chinese</span></div>
+      <div onclick="selectLanguage('es','es')" role="menuitem"><img src="https://flagcdn.com/w40/es.png" class="flag" alt=""><span data-i18n="lang.es">Spanish</span></div>
+      <div onclick="selectLanguage('pt','pt')" role="menuitem"><img src="https://flagcdn.com/w40/pt.png" class="flag" alt=""><span data-i18n="lang.pt">Portuguese</span></div>
+    </div>
+  </div>
+  
   <div id="sidePanel" class="hidden">
-    <button onclick="åpnePopup4()">Help</button>
-    <button onclick="åpnePopup2()">Documents</button>
-    <button>Shared Content</button>
-    <button onclick="åpnePopup7()">Settings</button>
-    <button id="signOutBtn">Sign Out</button>
+    <button onclick="åpnePopup4()" data-i18n="nav.help">Help</button>
+    <button onclick="åpnePopup2()" data-i18n="nav.documents">Documents</button>
+    <button data-i18n="nav.shared">Shared Content</button>
+    <button onclick="åpnePopup7()" data-i18n="nav.settings">Settings</button>
+    <button id="signOutBtn" data-i18n="nav.signOut">Sign Out</button>
 
     <div id="bottomButtons">
-      <button id="openCalculatorBtn">🧮 Calculator</button>
-      <button id="openNotepadBtn">📝 Notepad</button>
+      <button id="openCalculatorBtn" data-i18n="tools.calculator">🧮 Calculator</button>
+      <button id="openNotepadBtn" data-i18n="tools.notepad">📝 Notepad</button>
     </div>
 
-      <div class="theme-slider-container">
-        <label for="themeSlider">☀️</label>
-        <input type="range" min="1" max="13" value="10" id="themeSlider">
-        <label for="themeSlider">🌙</label>
-      </div>
+    <div class="theme-slider-container">
+      <label for="themeSlider">☀️</label>
+      <input type="range" min="1" max="13" value="10" id="themeSlider">
+      <label for="themeSlider">🌙</label>
+    </div>
 
-
-    <button id="togglePanelBtn" onclick="toggleSidePanel()">⫷</button>
+    <button id="togglePanelBtn" onclick="toggleSidePanel()" data-i18n-aria="aria.togglePanel" aria-label="Toggle side panel">⫷</button>
   </div>
 </header>
 
-<input type="text" id="searchBox" placeholder="Search inventory..." oninput="searchInPage()">
+<input type="text" id="searchBox" data-i18n-placeholder="search.placeholder" placeholder="Search inventory..." oninput="searchInPage()">
 
 <div class="category-slider-office">
-  <button class="arrow" onclick="scrollSlider(-100)">←</button>
+  <button class="arrow" onclick="scrollSlider(-100)" data-i18n-aria="aria.scrollLeft" aria-label="Scroll left">←</button>
   <div id="category-container" style="display:flex; overflow-x:auto; max-width:50%; scroll-behavior:smooth;">
     <div id="categories" style="display:flex; gap:8px;"></div>
   </div>
-  <button class="arrow" onclick="scrollSlider(100)">→</button>
-  <button class="add-category" onclick="addCategory()">+ Category</button>
-  <button id="undo-delete" class="undo-category" onclick="undoCategoryDelete()" disabled>↶ Undo Del</button>
+  <button class="arrow" onclick="scrollSlider(100)" data-i18n-aria="aria.scrollRight" aria-label="Scroll right">→</button>
+  <button class="add-category" onclick="addCategory()" data-i18n="btn.addCategory">+ Category</button>
+  <button id="undo-delete" class="undo-category" onclick="undoCategoryDelete()" disabled data-i18n="btn.undoDelete">↶ Undo Del</button>
 </div>
+
+
 
 <div><img src="images/Office.PNG" alt="Office" class="office"></div>
 
 <div id="content"></div>
 
-<button id="globalToggleButton" class="global-button" onclick="toggleGlobalView()">📋 Global Overview</button>Global overview shows total inventory in a table.
-<div><button class="global-button" onclick="generatePDF()">📄 Generate PDF</button></div>
-<button class="global-button" type="button" onclick="generateExcel()">📊 Export to Excel</button>
-<div><button class="global-button" onclick="save()">💾 Save</button></div>
+<button id="globalToggleButton" class="global-button" onclick="toggleGlobalView()" data-i18n="btn.globalOverview">📋 Global Overview</button>
+<span data-i18n="global.hint">Global overview shows total inventory in a table and are more print-friendly.</span>
+
+<div><button class="global-button" onclick="generatePDF()" data-i18n="btn.pdf">📄 Generate PDF</button></div>
+<button class="global-button" type="button" onclick="generateExcel()" data-i18n="btn.excel">📊 Export to Excel</button>
+<div><button class="global-button" onclick="save()" data-i18n="btn.save">💾 Save</button></div>
 
 <!-- ====== MODALS ====== -->
 <div id="calculatorModal" class="modal" style="display:none;">
   <div class="modal-innhold" id="calculatorWindow">
     <div class="calculator-header" id="calcDragHandle">
-      <h2 style="margin: 0; font-size: 15px;">Calculator</h2>
-      <span class="lukk" onclick="closeCalculator()">×</span>
+      <h2 style="margin: 0; font-size: 15px;" data-i18n="tools.calculator">Calculator</h2>
+      <span class="lukk" onclick="closeCalculator()" aria-label="Close">×</span>
     </div>
     <input id="calc-display" type="text" readonly style="width: 90%; padding: 10px; font-size: 25px; text-align: right; margin-top: 10px;"><br><br>
     <div id="calc-buttons">
@@ -466,13 +488,11 @@ button img{ width:40px; height:40px; padding-left:55px; margin-top:20px; }
       <button onclick="appendCalc('-')">−</button><br>
       <button onclick="appendCalc('0')">0</button>
       <button onclick="appendCalc('.')">.</button>
-      
       <button onclick="appendCalc('+')">+</button><br>
       <button onclick="appendCalc('%')">%</button>
       <button onclick="calculateResult()" style="width: 70%;">=</button><br>
-      <button onclick="deleteLast()" style="width: 30%;">DEL</button>
-      
-      <button onclick="clearCalc()" style="width: 60%">C</button>
+      <button onclick="deleteLast()" style="width: 30%;" data-i18n="calc.del">DEL</button>
+      <button onclick="clearCalc()" style="width: 60%" data-i18n="calc.clear">C</button>
     </div>
   </div>
 </div>
@@ -480,19 +500,16 @@ button img{ width:40px; height:40px; padding-left:55px; margin-top:20px; }
 <div id="notepadModal" class="modal" style="display:none;">
   <div class="modal-innhold" id="notepadWindow">
     <div class="calculator-header" id="noteDragHandle">
-      <h2 style="margin:0; font-size:15px;">Notepad</h2>
-      <span class="lukk" onclick="closeNotepad()">×</span>
+      <h2 style="margin:0; font-size:15px;" data-i18n="tools.notepad">Notepad</h2>
+      <span class="lukk" onclick="closeNotepad()" aria-label="Close">×</span>
     </div>
     <textarea id="noteArea" style="width:100%; height:260px; margin-top:10px; border-radius:10px;"></textarea>
     <div style="margin-top:10px; display:flex; gap:8px; justify-content:center;">
-      <button onclick="saveNote()" style="padding:8px 12px;">Save</button>
-      <button onclick="clearNote()" style="padding:8px 12px;">Clear</button>
+      <button onclick="saveNote()" style="padding:8px 12px;" data-i18n="btn.saveNote">Save</button>
+      <button onclick="clearNote()" style="padding:8px 12px;" data-i18n="btn.clearNote">Clear</button>
     </div>
   </div>
 </div>
-
-<!-- Legg denne script-taggen nederst på hver side (før dine side-spesifikke skript) -->
-<script src="seavo-core.js"></script>
 
 
 
@@ -512,42 +529,30 @@ function loadScript(src){
 
 async function ensureXLSX(){
   if (window.XLSX?.utils) return; // allerede klar
-
   const candidates = [
     "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.19.3/xlsx.full.min.js",
     "https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js",
     "https://unpkg.com/xlsx@0.19.3/dist/xlsx.full.min.js",
-    // Lokal fallback (legg filen i prosjektet ditt om du trenger offline)
     "/libs/xlsx.full.min.js"
   ];
-
   let lastError;
   for (const url of candidates) {
-    try {
-      await loadScript(url);
-      if (window.XLSX?.utils) return;
-    } catch (e) {
-      lastError = e;
-    }
+    try { await loadScript(url); if (window.XLSX?.utils) return; }
+    catch (e) { lastError = e; }
   }
   throw lastError || new Error("Kunne ikke laste SheetJS");
 }
 
-
-
-
 /* ===== EXCEL (Seavo Office) ===== */
 /* ===== CSV fallback ===== */
 function downloadCSV(aoa, filename) {
-  // Lag CSV med semikolon-separator (Excel på norsk liker ; )
   const csvRows = aoa.map(row => row.map(cell => {
     let v = cell == null ? "" : String(cell);
-    // Escapér " og ;
     if (v.includes('"')) v = v.replace(/"/g, '""');
     if (/[;\n"]/.test(v)) v = `"${v}"`;
     return v;
   }).join(';'));
-  const csv = '\ufeff' + csvRows.join('\n'); // UTF-8 BOM for æøå
+  const csv = '\ufeff' + csvRows.join('\n');
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
@@ -557,28 +562,26 @@ function downloadCSV(aoa, filename) {
   document.body.removeChild(link);
 }
 
-/* ===== EXCEL (Seavo Office) – med lokal SheetJS + CSV fallback ===== */
+/* ===== EXCEL – med lokal SheetJS + CSV fallback ===== */
 window.generateExcel = async function(){
-  // Finn container og/eller første tabell på siden
   const container = document.getElementById("content");
   const table = container?.querySelector("table") || document.querySelector("table");
   if(!table){
     console.warn("Fant ingen <table> i #content eller på siden.");
-    alert("Fant ingen tabell å eksportere.");
+    alert(t("alert.noTable","No table found to export."));
     return;
   }
 
-  // Bygg AOA
   const aoa = [];
   const dateStr = new Date().toLocaleDateString('no-NO', { year:'numeric', month:'2-digit', day:'2-digit' });
-  aoa.push(["Seavo Office"]);
-  aoa.push(["Generated:", dateStr]);
-  aoa.push([]); // tom rad
+  aoa.push([t("pdf.headerTitle","Seavo Office")]);
+  aoa.push([t("pdf.generatedLabel","Generated:"), dateStr]);
+  aoa.push([]);
 
   const rows = Array.from(table.querySelectorAll("tr"));
   rows.forEach(tr => {
     const cells = Array.from(tr.cells).map(td => {
-      if (td.querySelector("button")) return ""; // dropp knapper
+      if (td.querySelector("button")) return "";
       const ctrl = td.querySelector("input, textarea, select");
       if (ctrl) {
         if (ctrl.tagName === "SELECT") {
@@ -590,7 +593,6 @@ window.generateExcel = async function(){
       }
       return td.textContent.trim();
     });
-    // rydd trailing tomme
     for (let i = cells.length - 1; i >= 0; i--) {
       if (cells[i] !== "") break;
       cells.pop();
@@ -598,24 +600,19 @@ window.generateExcel = async function(){
     aoa.push(cells);
   });
 
-  // Hvis SheetJS mangler => CSV fallback
   if (typeof XLSX === "undefined" || !XLSX?.utils) {
     console.warn("SheetJS ikke lastet – bruker CSV fallback.");
-    downloadCSV(aoa, "SeavoOffice.xlsx"); // navn konverteres til .csv i funksjonen
+    downloadCSV(aoa, "SeavoOffice.xlsx");
     return;
   }
 
-  // SheetJS-eksport
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.aoa_to_sheet(aoa);
-
   const colCount = Math.max(...aoa.map(r => r.length), 1);
 
-  // Slå sammen tittel
   ws['!merges'] = ws['!merges'] || [];
   ws['!merges'].push({ s:{r:0,c:0}, e:{r:0,c:colCount-1} });
 
-  // Autofilter på header-raden (index 3)
   const headerRowIndex = 3;
   if (ws['!ref']) {
     const range = XLSX.utils.decode_range(ws['!ref']);
@@ -623,11 +620,8 @@ window.generateExcel = async function(){
       ref: XLSX.utils.encode_range({ s:{ r: headerRowIndex, c: 0 }, e:{ r: range.e.r, c: range.e.c } })
     };
   }
-
-  // Frys header
   ws['!freeze'] = { ySplit: headerRowIndex, xSplit: 0, topLeftCell: XLSX.utils.encode_cell({ r: headerRowIndex, c: 0 }) };
 
-  // Kolonnebredder
   const colWidths = [];
   for (let c = 0; c < colCount; c++) {
     let maxLen = 10;
@@ -646,11 +640,9 @@ window.generateExcel = async function(){
 </script>
 
 <script src="/libs/xlsx.full.min.js"></script>
-
+<script src="seavo-core.js"></script>
 
 </body>
-
-
 
 <script>
 /* ===== Sidepanel toggle ===== */
@@ -736,15 +728,16 @@ function updateCategories(){
 
     const delBtn = document.createElement("button");
     delBtn.className = "delete-category-button";
-    delBtn.textContent = "Del";
+    delBtn.textContent = t("btn.delete","Delete");
     delBtn.onclick = ()=>{
-      if(confirm(`Do you want to delete the category "${name}"?`)){
+      if(confirm(t("confirm.deleteCategory",'Do you want to delete the category "{name}"?').replace("{name}", name))){
         lastDeletedCategory = { name, rows: data[name], index: idx };
         delete data[name];
         activeCategory = Object.keys(data)[0] || null;
         save();
         updateCategories();
         showCategory();
+        applyTranslations(document);
         const u = document.getElementById("undo-delete");
         if(u) u.disabled = false;
       }
@@ -772,6 +765,7 @@ function undoCategoryDelete(){
   save();
   updateCategories();
   showCategory();
+  applyTranslations(document);
 
   lastDeletedCategory = null;
   const u = document.getElementById("undo-delete");
@@ -779,7 +773,7 @@ function undoCategoryDelete(){
 }
 
 function addCategory(){
-  const name=prompt("New category:");
+  const name = prompt(t("prompt.newCategory","New category:"));
   if(name && !data[name]){ data[name]=[]; activeCategory=name; save(); updateCategories(); showCategory(); }
 }
 
@@ -859,7 +853,7 @@ function buildProductColorPicker(td, input, row){
 
   const chip = document.createElement('span');
   chip.className = 'color-chip';
-  chip.title = 'Pick color';
+  chip.title = t("color.pick","Pick color");
 
   if(row.productColor){
     chip.style.setProperty('--chip-color', row.productColor);
@@ -873,7 +867,7 @@ function buildProductColorPicker(td, input, row){
 
   const clear = document.createElement('div');
   clear.className = 'color-option clear';
-  clear.title = 'Clear';
+  clear.title = t("color.clear","Clear");
   clear.onclick = (e)=>{
     e.stopPropagation();
     row.productColor = null;
@@ -940,7 +934,7 @@ function buildHeaderColorPicker(hostTd, row){
 
   const chip = document.createElement('span');
   chip.className = 'header-color-chip';
-  chip.title = 'Pick header color';
+  chip.title = t("color.pickHeader","Pick header color");
   if(row.headerColor) chip.style.background = row.headerColor;
 
   const pop = document.createElement('div');
@@ -948,7 +942,7 @@ function buildHeaderColorPicker(hostTd, row){
 
   const clear = document.createElement('div');
   clear.className = 'color-option clear';
-  clear.title = 'Clear';
+  clear.title = t("color.clear","Clear");
   clear.onclick = (e)=>{
     e.stopPropagation();
     row.headerColor = null;
@@ -993,24 +987,36 @@ function buildHeaderColorPicker(hostTd, row){
 
 /* ===== Tabellbygging ===== */
 function showCategory(){
-  const content=document.getElementById("content");
-  content.innerHTML="";
+  const content = document.getElementById("content");
+  content.innerHTML = "";
+
   if(!activeCategory || !data[activeCategory]) return;
 
-  const table=document.createElement("table");
-  table.innerHTML=`
+  const wrapper = document.createElement("div");
+  wrapper.className = "table-wrapper";
+
+  const table = document.createElement("table");
+  table.innerHTML = `
     <thead>
       <tr>
-        <th>Product/Type</th><th>Start Qty</th><th>Used</th><th>End Qty</th>
-        <th>MIN🔔</th><th>MAX🔔</th><th>Comments</th><th>Order</th><th>Move</th><th>Delete</th>
+        <th>${t("table.productType","Product/Type")}</th>
+        <th>${t("table.startQty","Start Qty")}</th>
+        <th>${t("table.used","Used")}</th>
+        <th>${t("table.endQty","End Qty")}</th>
+        <th>${t("table.min","MIN🔔")}</th>
+        <th>${t("table.max","MAX🔔")}</th>
+        <th>${t("table.comments","Comments")}</th>
+        <th>${t("table.order","Order")}</th>
+        <th>${t("table.move","Move")}</th>
+        <th>${t("table.delete","Delete")}</th>
       </tr>
     </thead>
     <tbody></tbody>
   `;
-  const tbody=table.querySelector("tbody");
+  const tbody = table.querySelector("tbody");
 
   (data[activeCategory]||[]).forEach((row,i)=>{
-    const tr=document.createElement("tr");
+    const tr = document.createElement("tr");
 
     if(row.type==="header"){
       tr.className="header-row";
@@ -1018,7 +1024,7 @@ function showCategory(){
       td.colSpan=10;
       const span=document.createElement("span");
       span.contentEditable=true;
-      span.textContent=row.text||"Section / Header";
+      span.textContent=row.text || t("default.headerPlaceholder","Section / Header");
       span.oninput=()=>{ row.text=span.textContent; save(); };
       td.appendChild(span);
       tr.appendChild(td);
@@ -1030,16 +1036,16 @@ function showCategory(){
       const sub=document.createElement("tr");
       sub.className="section-columns";
       sub.innerHTML=`
-        <td>Product/Type</td>
-        <td>Start Qty</td>
-        <td>Used</td>
-        <td>End Qty</td>
-        <td>MIN🔔</td>
-        <td>MAX🔔</td>
-        <td>Comments</td>
-        <td>Order</td>
-        <td>Move</td>
-        <td><button class="btn-danger" onclick="deleteRow(${i})">Delete</button></td>
+        <td>${t("table.productType","Product/Type")}</td>
+        <td>${t("table.startQty","Start Qty")}</td>
+        <td>${t("table.used","Used")}</td>
+        <td>${t("table.endQty","End Qty")}</td>
+        <td>${t("table.min","MIN🔔")}</td>
+        <td>${t("table.max","MAX🔔")}</td>
+        <td>${t("table.comments","Comments")}</td>
+        <td>${t("table.order","Order")}</td>
+        <td>${t("table.move","Move")}</td>
+        <td><button class="btn-danger" onclick="deleteRow(${i})">${t("btn.delete","Delete")}</button></td>
       `;
       tbody.appendChild(sub);
       return;
@@ -1064,27 +1070,35 @@ function showCategory(){
       input.type=(key==='product'||key==='comment')?"text":"number";
       input.value=row[key] ?? "";
       input.style.width="90%"; input.style.padding="8px"; input.style.borderRadius="10px";
-      input.placeholder=key.charAt(0).toUpperCase()+key.slice(1);
+      const phFallback = key.charAt(0).toUpperCase()+key.slice(1);
+      const phKeyMap = {
+        product: "table.productType",
+        start: "table.startQty",
+        used: "table.used",
+        end: "table.endQty",
+        min: "table.min",
+        max: "table.max",
+        comment: "table.comments",
+        order: "table.order"
+      };
+      input.placeholder = t(phKeyMap[key] || "", phFallback);
       input.classList.add("large-bold-input");
       if(key==='end'){ input.readOnly=true; }
 
-
       input.oninput = () => {
-  if (key === 'order') {
-    // tillat komma og gjør til tall
-    const v = (input.value ?? '').toString().replace(',', '.');
-    row.order = v === '' ? 0 : (parseFloat(v) || 0);
-  } else {
-    row[key] = input.value;
-  }
-
-  const startVal = parseFloat(row.start) || 0;
-  const usedVal  = parseFloat(row.used)  || 0;
-  row.end = startVal - usedVal;
-  inputs['end'].value = row.end;
-  updateAlarms();
-  save();
-};
+        if (key === 'order') {
+          const v = (input.value ?? '').toString().replace(',', '.');
+          row.order = v === '' ? 0 : (parseFloat(v) || 0);
+        } else {
+          row[key] = input.value;
+        }
+        const startVal = parseFloat(row.start) || 0;
+        const usedVal  = parseFloat(row.used)  || 0;
+        row.end = startVal - usedVal;
+        inputs['end'].value = row.end;
+        updateAlarms();
+        save();
+      };
 
       inputs[key]=input;
       td.appendChild(input);
@@ -1118,16 +1132,15 @@ function showCategory(){
     updateAlarms();
 
     const tdMove=document.createElement("td"); tdMove.classList.add("cell-move");
-    tdMove.innerHTML=`<button onclick="moveRow(${i},-1)">⬆️</button> <button onclick="moveRow(${i},1)">⬇️</button>`;
-    const tdDel=document.createElement("td"); tdDel.innerHTML=`<button class="btn-danger" onclick="deleteRow(${i})">Delete</button>`;
+    tdMove.innerHTML=`<button onclick="moveRow(${i},-1)">${t("btn.moveUp","⬆️")}</button> <button onclick="moveRow(${i},1)">${t("btn.moveDown","⬇️")}</button>`;
+    const tdDel=document.createElement("td"); tdDel.innerHTML=`<button class="btn-danger" onclick="deleteRow(${i})">${t("btn.delete","Delete")}</button>`;
     tr.appendChild(tdMove); tr.appendChild(tdDel);
     tbody.appendChild(tr);
   });
 
-  // FOOT: knapp under "Order"
   const ths = Array.from(table.tHead.rows[0].cells);
   const cols = ths.length;
-  const orderIdx = ths.findIndex(th => /order/i.test(th.textContent.trim()));
+  const orderIdx = ths.findIndex(th => /order/i.test(th.textContent.trim()) || th.textContent.trim()===t("table.order","Order"));
   const targetIdx = orderIdx >= 0 ? orderIdx : cols - 1;
 
   const tfoot = document.createElement("tfoot");
@@ -1138,7 +1151,7 @@ function showCategory(){
       const sendBtn = document.createElement("button");
       sendBtn.className = "send-orders-button";
       sendBtn.type = "button";
-      sendBtn.textContent = "Active Category to Orders 📦";
+      sendBtn.textContent = t("btn.sendToOrders","Active Category to Orders 📦");
       sendBtn.onclick = sendActiveCategoryToOrders;
       td.appendChild(sendBtn);
     }
@@ -1147,24 +1160,29 @@ function showCategory(){
   tfoot.appendChild(footRow);
   table.appendChild(tfoot);
 
-  content.appendChild(table);
+  wrapper.appendChild(table);
+  content.appendChild(wrapper);
 
   const addLine=document.createElement("button");
-  addLine.className="global-button"; addLine.textContent="+ Add line";
+  addLine.className="global-button";
+  addLine.textContent=t("btn.addLine","+ Add line");
   addLine.onclick=()=>{ 
     (data[activeCategory] ||= []).push({type:"line", product:"", start:0, used:0, end:0, min:0, max:0, comment:"", order:0, productColor:null}); 
     save(); showCategory(); 
   };
 
   const addHeader=document.createElement("button");
-  addHeader.className="global-button"; addHeader.textContent="+ Add header/section";
+  addHeader.className="global-button";
+  addHeader.textContent=t("btn.addHeader","+ Add header/section");
   addHeader.onclick=()=>{ 
-    (data[activeCategory] ||= []).push({type:"header", text:"New Header"}); 
+    (data[activeCategory] ||= []).push({type:"header", text:t("default.headerText","New Header")}); 
     save(); showCategory(); 
   };
 
-  content.appendChild(addLine); 
+  content.appendChild(addLine);
   content.appendChild(addHeader);
+
+  applyTranslations(content);
   searchInPage();
 }
 
@@ -1185,13 +1203,11 @@ function sendActiveCategoryToOrders() {
   rows.forEach(r => {
     if (!r) return;
 
-    // ta med overskrift som egen blokk
     if (r.type === "header") {
       pendingHeader = (r.text || "").trim();
       return;
     }
 
-    // les direkte fra data (ikke DOM)
     const product = (r.product || r["Office"] || "").trim();
     const qty = Number(String(r.order ?? "").toString().replace(",", "."));
     const comment = (r.comment || "").trim();
@@ -1215,7 +1231,7 @@ function sendActiveCategoryToOrders() {
       activeCategory,
       rows: JSON.parse(JSON.stringify(rows))
     });
-    alert("Product field is empty.");
+    alert(t("alert.productEmpty","Product field is empty."));
     return;
   }
 
@@ -1223,35 +1239,50 @@ function sendActiveCategoryToOrders() {
   window.location.href = "Orders.html";
 }
 
-  const themeSlider = document.getElementById('themeSlider');
-  themeSlider.addEventListener('input', () => {
-    const value = parseInt(themeSlider.value);
-    const lightness = 100 - (value * 8); // 92% til 20%
-    const textColor = lightness < 45 ? '#ffffff' : '#000000';
-    const boxColor = `hsl(210, 50%, ${Math.max(lightness - 10, 15)}%)`;
-    const buttonColor = `hsl(210, 70%, ${Math.max(lightness - 5, 20)}%)`;
-    const buttonText = lightness < 45 ? '#ffffff' : '#000000';
+const themeSlider = document.getElementById('themeSlider');
+themeSlider.addEventListener('input', () => {
+  const value = parseInt(themeSlider.value);
+  const lightness = 100 - (value * 8);
+  const textColor = lightness < 45 ? '#ffffff' : '#000000';
+  const boxColor = `hsl(210, 50%, ${Math.max(lightness - 10, 15)}%)`;
+  const buttonColor = `hsl(210, 70%, ${Math.max(lightness - 5, 20)}%)`;
+  const buttonText = lightness < 45 ? '#ffffff' : '#000000';
 
-    document.documentElement.style.setProperty('--bg-lightness', `${lightness}%`);
-    document.documentElement.style.setProperty('--text-color', textColor);
-    document.documentElement.style.setProperty('--box-color', boxColor);
-    document.documentElement.style.setProperty('--button-color', buttonColor);
-    document.documentElement.style.setProperty('--button-text', buttonText);
-  });
+  document.documentElement.style.setProperty('--bg-lightness', `${lightness}%`);
+  document.documentElement.style.setProperty('--text-color', textColor);
+  document.documentElement.style.setProperty('--box-color', boxColor);
+  document.documentElement.style.setProperty('--button-color', buttonColor);
+  document.documentElement.style.setProperty('--button-text', buttonText);
+});
 
 /* ===== Global oversikt ===== */
 function showGlobalOverview(){
-  const content=document.getElementById("content");
-  content.innerHTML="<h2>Global overview of the entire office inventory</h2>";
-  const table=document.createElement("table");
+  const content = document.getElementById("content");
+  content.innerHTML = `<h2 data-i18n="global.title">${t("global.title","Global overview of the entire office inventory")}</h2>`;
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "table-wrapper";
+
+  const table = document.createElement("table");
   table.className = "global-overview-table";
-  table.innerHTML=`
+  table.innerHTML = `
     <thead>
-      <tr><th>Category</th><th>Product</th><th>Start</th><th>Used</th><th>End</th><th>Min</th><th>Max</th><th>Comment</th><th>Order</th></tr>
+      <tr>
+        <th>${t("table.category","Category")}</th>
+        <th>${t("table.productType","Product/Type")}</th>
+        <th>${t("table.startQty","Start Qty")}</th>
+        <th>${t("table.used","Used")}</th>
+        <th>${t("table.endQty","End Qty")}</th>
+        <th>${t("table.min","MIN🔔")}</th>
+        <th>${t("table.max","MAX🔔")}</th>
+        <th>${t("table.comments","Comments")}</th>
+        <th>${t("table.order","Order")}</th>
+      </tr>
     </thead>
     <tbody></tbody>
   `;
-  const tbody=table.querySelector("tbody");
+  const tbody = table.querySelector("tbody");
+
   Object.entries(data).forEach(([category, rows])=>{
     (rows||[]).forEach(row=>{
       if(row.type==="header") return;
@@ -1266,23 +1297,32 @@ function showGlobalOverview(){
       tbody.appendChild(tr);
     });
   });
-  content.appendChild(table);
+
+  wrapper.appendChild(table);
+  content.appendChild(wrapper);
+  applyTranslations(content);
 }
 
 if(!data[activeCategory]){ data[activeCategory]=[]; save(); }
 
 let isGlobalView=false;
 function toggleGlobalView(){
-  const button=document.getElementById("globalToggleButton");
-  if(!isGlobalView){ showGlobalOverview(); button.textContent="🔙 Back to control table"; }
-  else { showCategory(); button.textContent="📋 Global Overview"; }
-  isGlobalView=!isGlobalView;
+  const button = document.getElementById("globalToggleButton");
+  if(!isGlobalView){
+    showGlobalOverview();
+    button.textContent = t("btn.backToTable","🔙 Back to control table");
+  } else {
+    showCategory();
+    button.textContent = t("btn.globalOverview","📋 Global Overview");
+  }
+  isGlobalView = !isGlobalView;
 }
 
 updateCategories();
 showCategory();
+applyTranslations(document);
 
-/* ===== PDF (hvit bakgrunn, svart tabell, 6x font i tabell) ===== */
+/* ===== PDF (hvit bakgrunn, svart tabell) ===== */
 async function generatePDF(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF('p','mm','a4');
@@ -1290,17 +1330,15 @@ async function generatePDF(){
   const today = new Date().toLocaleDateString();
   doc.setFont("helvetica","bold");
   doc.setFontSize(22);
-  doc.text("Seavo Office", 105, 15, { align: "center" });
+  doc.text(t("pdf.headerTitle","Seavo Office"), 105, 15, { align: "center" });
   doc.setFontSize(10);
-  doc.text("Generated: " + today, 105, 22, { align: "center" });
+  doc.text(`${t("pdf.generatedLabel","Generated:")} ${today}`, 105, 22, { align: "center" });
 
   const content = document.getElementById("content");
 
-  /* Skjul knapper i skjermdumpen */
   const buttons = content.querySelectorAll("button, .btn, .delete-button");
   buttons.forEach(btn => btn.style.display = "none");
 
-  /* Midlertidig stil for PDF: hvit bakgrunn, svart tekst, 1.45x font i tabell */
   const styleTag = document.createElement("style");
   styleTag.id = "pdfStyleSeavo";
   styleTag.textContent = `
@@ -1310,18 +1348,17 @@ async function generatePDF(){
       color:#000 !important; 
       border-color:#000 !important; 
       background:transparent !important; 
-      font-size: 145% !important;     /* 1.45x */
+      font-size: 145% !important;
       line-height: 1.35 !important;
     }
     #content th { 
-      background:#e6e6e6 !important;   /* lys grå header */
+      background:#e6e6e6 !important;
       font-weight:bold !important;
     }
     #content th, #content td { padding: 8px !important; }
   `;
   document.head.appendChild(styleTag);
 
-  /* Render til canvas – lavere scale for fart, hvit bakgrunn */
   const canvas = await html2canvas(content, {
     backgroundColor:"#ffffff",
     scale: 2,
@@ -1329,16 +1366,12 @@ async function generatePDF(){
     scrollY: -window.scrollY
   });
 
-  /* Rydd opp: fjern midlertidig stil */
   styleTag.remove();
-
-  /* Vis knapper igjen */
   buttons.forEach(btn => btn.style.display = "");
 
-  /* Legg bildet inn i PDF */
   const imgData = canvas.toDataURL("image/png");
   const imgProps = doc.getImageProperties(imgData);
-  const pdfWidth = doc.internal.pageSize.getWidth() - 20; // marger
+  const pdfWidth = doc.internal.pageSize.getWidth() - 20;
   const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
   doc.addImage(imgData, "PNG", 10, 30, pdfWidth, pdfHeight);
@@ -1412,3 +1445,4 @@ function åpnePopup4(){ window.open('Help.html','popup','width=1600,height=1200'
 function åpnePopup2(){ window.open('Documents.html','popup','width=1600,height=1200'); }
 function åpnePopup7(){ window.open('Settings.html','popup','width=1600,height=1200'); }
 </script>
+</html>

@@ -97,6 +97,67 @@
       background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18); margin-left:6px
     }
     .row-received{ background:rgba(24, 184, 87, .12) }
+
+    /* Totals + standard kalkulator side-by-side */
+.panel .totals-wrap{
+  display:grid;
+  grid-template-columns: 1fr 260px; /* totals | kalkulator */
+  gap:16px;
+  align-items:start;
+}
+@media (max-width: 900px){
+  .panel .totals-wrap{ grid-template-columns: 1fr; }
+}
+
+/* Standard kalkulator */
+.calc-basic{
+  background: rgba(0,0,0,.18);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 12px;
+  padding: 10px 12px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.35);
+}
+.calc-basic h3{
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  text-align: center;
+  color: var(--muted);
+}
+.calc-display{
+  margin-bottom: 8px;
+}
+.calc-display input{
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.25);
+  background: rgba(0,0,0,.25);
+  color: #fff;
+  font-size: 18px;
+  text-align: right;
+}
+.calc-keys{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.calc-keys button{
+  padding: 12px 0;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.12);
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+}
+.calc-keys button:hover{ filter: brightness(1.12); }
+.calc-keys button.op{ background: linear-gradient(to right, var(--accent-2), var(--accent-3)); }
+.calc-keys button.equals{ background: linear-gradient(to right, #18b857, #0a7c36); }
+.calc-keys button.wide{ grid-column: span 2; }
+
+
+    
   </style>
 </head>
  <header class="video-header">
@@ -200,9 +261,12 @@
     </table>
   </div>
 
-  <!-- TOTALS -->
-  <div class="panel">
-    <h2>Totals</h2>
+ <!-- TOTALS -->
+<div class="panel">
+  <h2>Totals</h2>
+
+  <div class="totals-wrap">
+    <!-- VENSTRE: totals (uendret innhold/ID-er) -->
     <div class="totals">
       <div class="row"><div class="label">Subtotal</div><div id="tSubtotal" class="value">0.00</div></div>
       <div class="row">
@@ -221,7 +285,42 @@
       <div class="row"><div class="label">Grand total</div><div id="tGrand" class="value">0.00</div></div>
       <div class="row"><div class="label">Currency</div><div id="tCurr" class="value">GBP</div></div>
     </div>
+
+    <!-- HØYRE: standard kalkulator -->
+    <div class="calc-basic" aria-label="Calculator">
+      <h3 data-i18n="tools.calculator">Calculator</h3>
+      <div class="calc-display">
+        <input id="calcDisplay" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" aria-label="Calculator display" readonly>
+      </div>
+      <div class="calc-keys">
+        <button data-key="7">7</button>
+        <button data-key="8">8</button>
+        <button data-key="9">9</button>
+        <button class="op" data-key="÷">÷</button>
+
+        <button data-key="4">4</button>
+        <button data-key="5">5</button>
+        <button data-key="6">6</button>
+        <button class="op" data-key="×">×</button>
+
+        <button data-key="1">1</button>
+        <button data-key="2">2</button>
+        <button data-key="3">3</button>
+        <button class="op" data-key="−">−</button>
+
+        <button data-key="0">0</button>
+        <button data-key=".">.</button>
+        <button class="op" data-key="%">%</button>
+        <button class="op" data-key="+">+</button>
+
+        <button class="op" data-key="C" data-i18n="calc.clear">C</button>
+        <button class="op" data-key="DEL" data-i18n="calc.del">DEL</button>
+        <button class="equals wide" data-key="=">=</button>
+      </div>
+    </div>
   </div>
+</div>
+
 
   <script>
   /* =======================================
@@ -632,6 +731,105 @@
       saveState();
     }
     render();
+
+    // === Standard kalkulator ===
+(function setupBasicCalculator(){
+  const disp = document.getElementById('calcDisplay');
+  const panel = document.querySelector('.calc-basic');
+  if(!disp || !panel) return;
+
+  const allowed = /^[0-9+\-*/().\s]*$/;
+
+  function show(v){ disp.value = v; }
+  function get(){ return disp.value || ''; }
+
+  function normalize(expr){
+    return expr
+      .replace(/×/g, '*')
+      .replace(/÷/g, '/')
+      .replace(/−/g, '-');
+  }
+
+  // Prosent: gjør siste tall til (n/100)
+  function applyPercent(){
+    let s = get();
+    const m = s.match(/(\d+(\.\d+)?)\s*$/);
+    if(!m) return;
+    const num = m[1];
+    s = s.slice(0, s.length - m[0].length) + `(${num}/100)`;
+    show(s);
+  }
+
+  function safeEval(expr){
+    let e = normalize(expr);
+    // Støtt "10%" i uttrykk også
+    e = e.replace(/(\d+(\.\d+)?)%/g, '($1/100)');
+    if(!allowed.test(e)) throw new Error('Bad chars');
+    // Unngå ledende operatører (basic sanity)
+    e = e.replace(/^\s*[+*/]/, '');
+    // Eval
+    // eslint-disable-next-line no-new-func
+    const fn = new Function(`return (${e})`);
+    const res = fn();
+    if(!isFinite(res)) throw new Error('Math error');
+    return res;
+  }
+
+  function append(k){
+    const s = get();
+    // Hindre to påfølgende operatorer (enkelt)
+    if(/[+\-*/.]$/.test(s) && /[+\-*/.]/.test(k)){
+      show(s.slice(0, -1) + k);
+    }else{
+      show(s + k);
+    }
+  }
+
+  function handle(key){
+    if(key === 'C'){ show(''); return; }
+    if(key === 'DEL'){ show(get().slice(0,-1)); return; }
+    if(key === '='){
+      try{
+        const v = safeEval(get() || '0');
+        show(String(Number(v.toFixed(10)))); // trim flyttallsstøy
+      }catch(_e){
+        show('Error');
+        setTimeout(()=>show(''), 900);
+      }
+      return;
+    }
+    if(key === '%'){ applyPercent(); return; }
+    append(key);
+  }
+
+  // Klikk på knapper
+  panel.querySelectorAll('.calc-keys button').forEach(btn=>{
+    btn.addEventListener('click', ()=> handle(btn.getAttribute('data-key')));
+  });
+
+  // Tastaturstøtte
+  document.addEventListener('keydown', (e)=>{
+    // Hvis fokus i input/textarea annet sted – ikke stjel tastene
+    const tg = e.target || {};
+    const tag = (tg.tagName||'').toLowerCase();
+    if(tag === 'input' || tag === 'textarea') return;
+
+    const map = { 'Enter':'=', 'Backspace':'DEL', 'Delete':'C', ',':'.' };
+    let k = e.key;
+    if(map[k]) k = map[k];
+
+    if(/^[0-9]$/.test(k) || ['+','-','*','/','.'].includes(k)){
+      e.preventDefault();
+      handle(k);
+    }else if(k === '=' || k === 'DEL' || k === 'C'){
+      e.preventDefault();
+      handle(k);
+    }else if(k === '%'){
+      e.preventDefault();
+      handle('%');
+    }
+  });
+})();
 
     // Automatisk import ved last (valgfritt). Behold knappen også.
     const pending = JSON.parse(localStorage.getItem('ordersTransfer')||'[]')?.length

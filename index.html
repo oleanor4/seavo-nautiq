@@ -8,10 +8,6 @@
 
   
   <style>
-
-
-
-
     
     body {
         background-color: hsl(210, 100%, var(--bg-lightness));
@@ -159,14 +155,14 @@
     }
 
 
-  .language-selector{ position:relative; z-index:1100; display:inline-block; margin:10px 16px;}
-.language-button{ display:flex; align-items:center; gap:8px; padding:8px 16px; border-radius:10px; border:1px solid rgba(255,255,255,.18); background:rgba(0,0,0,.25); color:#fff; cursor:pointer;}
-.language-button:hover{ filter:brightness(1.15); }
-.flag{ width:20px; height:14px; object-fit:cover; border-radius:2px; }
-.language-dropdown{ position:absolute; top:100%; left:0; min-width:180px; background:rgba(8,22,38,.96); border:1px solid rgba(255,255,255,.12); border-radius:10px; box-shadow:0 10px 26px rgba(0,0,0,.4); display:none; padding:6px; }
-.language-dropdown.open{ display:block; }
-.language-dropdown > div{ display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; cursor:pointer; color:#fff; }
-.language-dropdown > div:hover{ background:rgba(255,255,255,.08); }
+   .language-selector{ position:relative; z-index:1100; margin: -56px; float:right; margin-right: 45px; }
+   .language-button{ display:flex; align-items:center; gap:8px; padding:10px 16px; border-radius:10px; border:1px solid rgba(255,255,255,.18); background:rgba(0,0,0,.25); color:#ffffff; cursor:pointer;}
+   .language-button:hover{ filter:brightness(1.15); }
+   .flag{ width:20px; height:14px; object-fit:cover; border-radius:2px; }
+   .language-dropdown{ position:absolute; top:100%; right: 5px; min-width:180px; background:rgba(8,22,38,.96); border:1px solid rgba(255,255,255,.12); border-radius:10px; box-shadow:0 10px 26px rgba(0,0,0,.4); display:none; padding:6px; }
+   .language-dropdown.open{ display:block; }
+   .language-dropdown > div{ display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; cursor:pointer; color:#fff; }
+   .language-dropdown > div:hover{ background:rgba(255,255,255,.08); }
 
 
 
@@ -334,8 +330,9 @@
       border: color(srgb 255 0 0 );
       width: 250px;
       height: 40px;
-      font-size: 24px;
+      font-size: 22px;
       font-weight: bold;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.112);
       cursor: pointer;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
       transition: background-color 0.3s ease;
@@ -383,27 +380,7 @@
   letter-spacing: 1px;
 }
 
-
-
-
-    #info-text-utenfor {
-      margin-top: 280px;
-      left: 0px;
-      right: 0px;
-      bottom: 0px;
-      overflow-y: auto;
-      padding: 30px;
-      font-size: 18px;
-    }
-
-    .text-box {
-      border: 1px solid #000000;
-      padding: 0px;
-      margin-bottom: 40px;
-      border-radius: 8px;
-      background-color: rgba(255, 255, 255, 0.05);
-      box-shadow: #000000 1px 2px 4px 1px;
-    }
+   
 
     h2, h3 {
       margin-top: 5px;
@@ -411,14 +388,6 @@
       margin-left: 10px;
       color: #7ddbf3;
     }
-
-    p {
-      margin-bottom: 14px;
-      line-height: 1.6;
-      margin-left: 10px;
-      color: #ffffff;
-    }
-
 
 
 
@@ -551,46 +520,47 @@ background: rgba(0,0,0,.25); color:#fff;
     <div class="gradient-overgang"></div>
 
 
- <div class="language-selector">
+  <div class="language-selector">
   <button class="language-button" onclick="toggleDropdown()" id="language-btn" aria-haspopup="true" aria-expanded="false">
     <img src="https://flagcdn.com/w40/gb.png" class="flag" id="selected-flag" alt="">
-    <span id="selected-lang-label">English</span>
+    <span id="selected-lang-label" data-i18n="lang.name">English</span>
   </button>
 
-  <div class="language-dropdown" id="language-dropdown">
-    <div onclick="selectLanguage('en','gb')"><img src="https://flagcdn.com/w40/gb.png" class="flag" alt=""> English</div>
-    <div onclick="selectLanguage('no','no')"><img src="https://flagcdn.com/w40/no.png" class="flag" alt=""> Norsk</div>
-    <div onclick="selectLanguage('ru','ru')"><img src="https://flagcdn.com/w40/ru.png" class="flag" alt=""> Русский</div>
-    <div onclick="selectLanguage('zh','cn')"><img src="https://flagcdn.com/w40/cn.png" class="flag" alt=""> 中文</div>
-    <div onclick="selectLanguage('es','es')"><img src="https://flagcdn.com/w40/es.png" class="flag" alt=""> Español</div>
-    <div onclick="selectLanguage('pt','pt')"><img src="https://flagcdn.com/w40/pt.png" class="flag" alt=""> Português</div>
+  <div class="language-dropdown" id="language-dropdown" role="menu">
+    <div onclick="selectLanguage('en','gb')" role="menuitem"><img src="https://flagcdn.com/w40/gb.png" class="flag" alt=""><span data-i18n="lang.en">English</span></div>
+    <div onclick="selectLanguage('no','no')" role="menuitem"><img src="https://flagcdn.com/w40/no.png" class="flag" alt=""><span data-i18n="lang.no">Norwegian</span></div>
+    <div onclick="selectLanguage('is','is')" role="menuitem"><img src="https://flagcdn.com/w40/is.png" class="flag" alt=""><span data-i18n="lang.is">Íslenska</span></div>
+    <div onclick="selectLanguage('ru','ru')" role="menuitem"><img src="https://flagcdn.com/w40/ru.png" class="flag" alt=""><span data-i18n="lang.ru">Russian</span></div>
+    <div onclick="selectLanguage('zh','cn')" role="menuitem"><img src="https://flagcdn.com/w40/cn.png" class="flag" alt=""><span data-i18n="lang.zh">Chinese</span></div>
+    <div onclick="selectLanguage('es','es')" role="menuitem"><img src="https://flagcdn.com/w40/es.png" class="flag" alt=""><span data-i18n="lang.es">Spanish</span></div>
+    <div onclick="selectLanguage('pt','pt')" role="menuitem"><img src="https://flagcdn.com/w40/pt.png" class="flag" alt=""><span data-i18n="lang.pt">Portuguese</span></div>
   </div>
 </div>
 
 
 <div class="hoved-rad">
   <!-- Venstre container -->
-  <div class="venstre-container">
-    <button onclick="window.open('office.html', '_blank')">Office</button>
-    <button onclick="window.open('equipment.html', '_blank')">Equipment</button>
-    <button onclick="window.open('Parts and tools.html', '_blank')">Parts and tools</button>
-    <button onclick="window.open('provisions.html', '_blank')">Provisions</button>
-    <button onclick="window.open('medicine.html', '_blank')">Medicine </button>
-    <button onclick="window.open('safety.html', '_blank')">Safety</button>
-    <button onclick="window.open('supplies.html', '_blank')">Supplies</button>
-    <button onclick="window.open('disposal.html', '_blank')">Disposal</button>
-    
+ <div class="venstre-container">
+  <button onclick="window.open('office.html', '_blank')"><span data-i18n="nav.office">Office</span></button>
+  <button onclick="window.open('equipment.html', '_blank')"><span data-i18n="nav.equipment">Equipment</span></button>
+  <button onclick="window.open('Parts and tools.html', '_blank')"><span data-i18n="nav.partsTools">Parts & tools</span></button>
+  <button onclick="window.open('provisions.html', '_blank')"><span data-i18n="nav.provisions">Provisions</span></button>
+  <button onclick="window.open('medicine.html', '_blank')"><span data-i18n="nav.medicine">Medicine</span></button>
+  <button onclick="window.open('safety.html', '_blank')"><span data-i18n="nav.safety">Safety</span></button>
+  <button onclick="window.open('supplies.html', '_blank')"><span data-i18n="nav.supplies">Supplies</span></button>
+  <button onclick="window.open('disposal.html', '_blank')"><span data-i18n="nav.disposal">Disposal</span></button>
 
-    <div class="ny-container">
-      <button onclick="åpnePopup9()"><img src="icon/Cargo.png" alt="info" style="height: 32px; vertical-align: middle; float: left;"> Cargo Space</button>
-      <button onclick="åpnePopup8()"><img src="icon/Maintenance.png" alt="info" style="height: 32px; vertical-align: middle; float: left;"> Maintenance</button>
-      <button onclick="åpnePopup3()"><img src="icon/Order-black.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Orders</button>
-      <button onclick="åpnePopup()"><img src="icon/Participants.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Participants</button>
-      <button onclick="åpnePopup5()"><img src="icon/Voyage.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Voyages</button>
-      <button onclick="åpnePopup6()"><img src="icon/Fleet.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Fleet</button>
-      <button onclick="åpnePopup12()"><img src="icon/Research.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Research</button>
-    </div>
+  <div class="ny-container">
+    <button onclick="åpnePopup9()"><img src="icon/Cargo.png" alt="info" style="height: 32px; vertical-align: middle; float: left;"> <span data-i18n="nav.cargo">Cargo Space</span></button>
+    <button onclick="åpnePopup8()"><img src="icon/Maintenance.png" alt="info" style="height: 32px; vertical-align: middle; float: left;"> <span data-i18n="nav.maintenance">Maintenance</span></button>
+    <button onclick="åpnePopup3()"><img src="icon/Order-black.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> <span data-i18n="nav.orders">Orders</span></button>
+    <button onclick="åpnePopup()"><img src="icon/Participants.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> <span data-i18n="nav.participants">Participants</span></button>
+    <button onclick="åpnePopup5()"><img src="icon/Voyage.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> <span data-i18n="nav.voyages">Voyages</span></button>
+    <button onclick="åpnePopup6()"><img src="icon/Fleet.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> <span data-i18n="nav.fleet">Fleet</span></button>
+    <button onclick="åpnePopup12()"><img src="icon/Research.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> <span data-i18n="nav.research">Research</span></button>
   </div>
+</div>
+
 
 
   
@@ -598,7 +568,8 @@ background: rgba(0,0,0,.25); color:#fff;
   <!-- Midtseksjon -->
   <div class="seavo-wrapper">
     <div class="seavo-left">
-      <h1>Welcome to Seavo Nautiq</h1>
+      <h1 data-i18n="index.welcomeTitle">Welcome to Seavo Nautiq</h1>
+
       <img src="images/Animasjon.gif" alt="forsidebilde" id="forsidebilde">
     </div>
 
@@ -615,45 +586,44 @@ background: rgba(0,0,0,.25); color:#fff;
 
     
   <!-- Reminders -->
-  <div class="widget" aria-label="Reminders">
-    <h3>Reminders</h3>
+<div class="widget" aria-label="Reminders" data-i18n-aria="index.remindersAria">
+  <h3 data-i18n="index.remindersTitle">Reminders</h3>
 
-    <div class="reminder-item">
-      <span class="dot yellow"></span>
-      <span class="label">Inventory expires in 9 days</span>
-      <span class="badge" id="invYellowCount">0</span>
-    </div>
-
-    <div class="reminder-item">
-      <span class="dot red"></span>
-      <span class="label">Inventory expires in 3 days</span>
-      <span class="badge" id="invRedCount">0</span>
-    </div>
-
-    <div class="reminder-item">
-      <span class="dot yellow"></span>
-      <span class="label">Tasks expire in 9 days</span>
-      <span class="badge" id="taskYellowCount">0</span>
-    </div>
-
-    <div class="reminder-item">
-      <span class="dot red"></span>
-      <span class="label">Tasks expire in 3 days</span>
-      <span class="badge" id="taskRedCount">0</span>
-    </div>
+  <div class="reminder-item">
+    <span class="dot yellow"></span>
+    <span class="label" data-i18n="index.invExp9">Inventory expires in 9 days</span>
+    <span class="badge" id="invYellowCount">0</span>
   </div>
 
-  <!-- Recent Activity -->
-  <div class="widget activity-box" aria-label="Recent Activity">
-    <h3>Recent Activity</h3>
-    <div class="subtle">Scrollable</div>
-    <div class="activity-list">
-      <!-- Fylles dynamisk -->
-    </div>
+  <div class="reminder-item">
+    <span class="dot red"></span>
+    <span class="label" data-i18n="index.invExp3">Inventory expires in 3 days</span>
+    <span class="badge" id="invRedCount">0</span>
+  </div>
+
+  <div class="reminder-item">
+    <span class="dot yellow"></span>
+    <span class="label" data-i18n="index.taskExp9">Tasks expire in 9 days</span>
+    <span class="badge" id="taskYellowCount">0</span>
+  </div>
+
+  <div class="reminder-item">
+    <span class="dot red"></span>
+    <span class="label" data-i18n="index.taskExp3">Tasks expire in 3 days</span>
+    <span class="badge" id="taskRedCount">0</span>
+  </div>
+</div>
+
+<div class="widget activity-box" aria-label="Recent Activity" data-i18n-aria="index.recentAria">
+  <h3 data-i18n="index.recentTitle">Recent Activity</h3>
+  <div class="subtle" data-i18n="index.scrollable">Scrollable</div>
+  <div class="activity-list"></div>
+</div>
+
   </div>
   </div>
     </div>
-  </div>
+  
 
 
   <!-- Høyre kolonne -->
@@ -664,26 +634,28 @@ background: rgba(0,0,0,.25); color:#fff;
         margin:12px 0; padding:10px 14px; border-radius:12px;
         background:rgba(0,0,0,.18); border:1px solid rgba(255,255,255,.12);
         color:#ffffff; font-weight:bold; display:inline-block;">
-        Vessels name and call sign
+        <span data-i18n="index.vesselBadgePlaceholder">Vessels name and call sign</span>
     </div>
     </div>
+    
 
     <div class="hoyre-container">
 
-      <button onclick="åpnePopup4()"><img src="icon/info.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;">Help</button>
-      <button onclick="åpnePopup2()"><img src="icon/Doc-black.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Documents</button>
-      <button><img src="icon/Share-black.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Shared content</button>
-      <button onclick="åpnePopup7()"><img src="icon/Settings.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"> Settings</button>
-      <button id="btnSignOut"><img src="icon/Sign out.png" style="height:32px; vertical-align:middle; float:left;"> Sign out</button>
+  <button onclick="åpnePopup4()"><img src="icon/info.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"><span data-i18n="nav.help">Help</span></button>
+  <button onclick="åpnePopup2()"><img src="icon/Doc-black.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"><span data-i18n="nav.documents">Documents</span></button>
+  <button><img src="icon/Share-black.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"><span data-i18n="nav.shared">Shared content</span></button>
+  <button onclick="åpnePopup7()"><img src="icon/Settings.png" alt="Info" style="height: 32px; vertical-align: middle; float: left;"><span data-i18n="nav.settings">Settings</span></button>
+  <button id="btnSignOut"><img src="icon/Sign out.png" style="height:32px; vertical-align:middle; float:left;"><span data-i18n="nav.signOut">Sign out</span></button>
+</div>
 
-    </div>
 
     
 
       <div class="theme-slider-container">
-        <label for="themeSlider">☀️</label>
-        <input type="range" min="1" max="13" value="10" id="themeSlider">
-        <label for="themeSlider">🌙</label>
+        <label for="themeSlider" data-i18n="index.themeLight">☀️</label>
+      <input type="range" min="1" max="13" value="10" id="themeSlider">
+      <label for="themeSlider" data-i18n="index.themeDark">🌙</label>
+
       </div>
 
     <div class="digital-clock-container">
@@ -699,39 +671,6 @@ background: rgba(0,0,0,.25); color:#fff;
   <img src="images/Picture_collection.png" class="forsidebilde2" alt="forsidebilde2">
   </div>
 
-
-  
-    
-  
-  
-
-
- <main>
-     <div id="info-text-utenfor">
-
-  <div class="text-box">
-    <h2>Efficient management of the vessel's inventory</h2>
-    <p>This platform is designed to streamline inventory management on board vessels. Originally tailored for the fishing fleet, the solution offers flexible features suitable for all vessels with large amounts of equipment on board.</p>
-  </div>
-
-  <div class="text-box">
-    <h3>Functions and use</h3>
-    <p>The platform allows you to easily register, track, and update equipment, supplies, tools, and safety items. You can quickly generate reports, export to PDF or Excel, and share them with other users or vessels.</p>
-    <p>With various user roles, structured access is ensured: For example, officers have full control over the inventory, while crew members can register consumption and updates via the <strong>Seavo Nautiq Mobile</strong> app.</p>
-  </div>
-
-  <div class="text-box">
-    <h3>Additional modules</h3>
-    <p>The system also includes modules for travel planning, order tracking, fleet overview, and integration with safety and compliance procedures.</p>
-    <p>Critical expiry dates – such as for medications, rescue equipment, and batteries – are automatically monitored to ensure compliance with regulations.</p>
-    <p>The solution works both online and offline, making it reliable even with limited internet coverage at sea.</p>
-  </div>
-
-  <div class="text-box">
-    <h3>Getting started</h3>
-    <p>If you are a new user, we recommend starting with the tabs <em>"Office"</em> or <em>"Equipment"</em> to familiarize yourself with how the categories are structured.</p>
-    <p>You can also find useful resources and guides in the help section.</p>
-  </div>
 
 </div>
 </main>
@@ -775,6 +714,7 @@ background: rgba(0,0,0,.25); color:#fff;
           <select id="snLanguage">
             <option value="English">English</option>
             <option value="Norsk">Norsk</option>
+            <option value="Íslenska">Íslenska</option>
             <option value="Español">Español</option>
             <option value="Português">Português</option>
             <option value="Русский">Русский</option>
@@ -839,19 +779,25 @@ background: rgba(0,0,0,.25); color:#fff;
     location.reload(); // overlayet vil dukke opp igjen
   });
 
-    function updateVesselBadge(){
+   function updateVesselBadge(){
     const badge = document.getElementById('vesselBadge');
     if(!badge) return;
     const v = getVessel();
-    if(!v){
-      badge.textContent = 'Vessels name and call sign';
+    if(!v || !v.vesselName){
+      badge.textContent = t('index.vesselBadgePlaceholder','Vessels name and call sign');
       return;
     }
-    // Ikke vis language – kun navn og ev. kallesignal
     const parts = [v.vesselName];
     if (v.callSign) parts.push(formatCallSign(v.callSign));
     badge.textContent = parts.join(' • ');
   }
+
+   // Kall etter applyLanguage / ved load
+  document.addEventListener('DOMContentLoaded', () => {
+    updateVesselBadge();
+    applyTranslations(document);
+  });
+  window.addEventListener('storage', (e)=>{ if(e.key==='SN_vessel') updateVesselBadge(); });
 </script>
 
 
@@ -987,12 +933,9 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 
-
 </body>
 
-
           
-
 
 </script>
 
@@ -1022,28 +965,6 @@ function endreBilde(bildefil) {
     visInfoTekst();
   };
 
-
-  function toggleDropdown() {
-    const dropdown = document.getElementById('language-dropdown');
-    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-  }
-
-  function selectLanguage(language, countryCode) {
-    document.querySelector('.language-button').innerHTML =
-      `<img src="https://flagcdn.com/w40/${countryCode}.png" class="flag" id="selected-flag"> ${language}`;
-    toggleDropdown();
-  }
-
-  
-
-  // Klikk utenfor menyen lukker dropdown
-  window.onclick = function(event) {
-    if (!event.target.closest('.language-selector')) {
-      document.getElementById('language-dropdown').style.display = 'none';
-    }
-  }
-
-  
 
 
 

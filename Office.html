@@ -86,20 +86,16 @@ body::before {
 .video-header video{ width:100%; height:200%; object-fit:cover; display:block; }
 .gradient-overgang{ height:10px; background:linear-gradient(to left,#62b2e7,#001125); box-shadow:6px 4px 6px rgba(0,0,0,.7); }
 
-.language-selector{ position:relative; z-index: 1100; display:inline-block; margin:10px 60px;}
-.language-button{ display:flex; align-items:center; gap:4px; padding:4px 14px; border-radius:10px; border:1px solid rgba(255, 255, 255, 0.322); background:rgba(0, 0, 0, 0.226); color:#fff; cursor:pointer;}
-.language-button:hover{ filter:brightness(1.15); }
-.flag{ width:20px; height:14px; object-fit:cover; border-radius:2px; }
-.language-dropdown{ position:absolute; top:100%; left:0; min-width:180px; background:rgba(8,22,38,.96); border:1px solid rgba(255,255,255,.12); border-radius:10px; box-shadow:0 10px 26px rgba(0,0,0,.4); display:none; padding:6px; }
-.language-dropdown.open{ display:block; }
-.language-dropdown > div{ display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; cursor:pointer; color:#ffffff; }
-.language-dropdown > div:hover{ background:rgba(255,255,255,.08); }
 
-
+.logo{
+  width:200px; height:auto; border-radius:10px; box-shadow:0 6px 20px rgba(0,0,0,.45);
+  cursor:pointer; margin-left:90px; transition:transform .2s ease, box-shadow .2s ease; background:rgba(255,255,255,.04);
+}
+.logo:hover{ transform:scale(1.05); box-shadow:0 8px 28px rgba(255, 255, 255, 0.144); }
 
 #searchBox{
   width:260px; padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.25);
-  background:rgba(0,0,0,.25); color:var(--text); margin-left:60px; margin-top:24px; margin-bottom:18px;
+  background:rgba(0,0,0,.25); color:var(--text); margin-left:90px; margin-top:24px; margin-bottom:18px;
   font-weight:600; box-shadow:0 6px 16px rgba(0,0,0,.35); outline:none;
 }
 #searchBox::placeholder{ color:var(--muted); }
@@ -399,24 +395,10 @@ button img{ width:40px; height:40px; padding-left:55px; margin-top:20px; }
 
 <header>
   <h1 style="text-align:center; color: rgb(30, 182, 209); margin-top:20px; font-size:36px; font-weight:bold; text-shadow:0 1px 3px rgba(0,0,0,.6);" data-i18n="nav.office">Office</h1>
-
+  <a href="index.html" class="logo-link"><img src="images/Logo Seavo Nautiq.png" alt="Logo Seavo Nautiq" class="logo"></a>
  
 
-  <div class="language-selector">
-    <button class="language-button" onclick="toggleDropdown()" id="language-btn" aria-haspopup="true" aria-expanded="false">
-      <img src="https://flagcdn.com/w40/gb.png" class="flag" id="selected-flag" alt="">
-      <span id="selected-lang-label">English</span>
-    </button>
 
-    <div class="language-dropdown" id="language-dropdown" role="menu">
-      <div onclick="selectLanguage('en','gb')" role="menuitem"><img src="https://flagcdn.com/w40/gb.png" class="flag" alt=""><span data-i18n="lang.en">English</span></div>
-      <div onclick="selectLanguage('no','no')" role="menuitem"><img src="https://flagcdn.com/w40/no.png" class="flag" alt=""><span data-i18n="lang.no">Norwegian</span></div>
-      <div onclick="selectLanguage('ru','ru')" role="menuitem"><img src="https://flagcdn.com/w40/ru.png" class="flag" alt=""><span data-i18n="lang.ru">Russian</span></div>
-      <div onclick="selectLanguage('zh','cn')" role="menuitem"><img src="https://flagcdn.com/w40/cn.png" class="flag" alt=""><span data-i18n="lang.zh">Chinese</span></div>
-      <div onclick="selectLanguage('es','es')" role="menuitem"><img src="https://flagcdn.com/w40/es.png" class="flag" alt=""><span data-i18n="lang.es">Spanish</span></div>
-      <div onclick="selectLanguage('pt','pt')" role="menuitem"><img src="https://flagcdn.com/w40/pt.png" class="flag" alt=""><span data-i18n="lang.pt">Portuguese</span></div>
-    </div>
-  </div>
   
   <div id="sidePanel" class="hidden">
     <button onclick="åpnePopup4()" data-i18n="nav.help">Help</button>

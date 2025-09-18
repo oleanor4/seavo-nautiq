@@ -35,7 +35,7 @@
     document.getElementById('language-dropdown')?.classList.toggle('open');
   };
 
-  // NB: bruk språkkoder ('en','no','ru','zh','es','pt'), ikke navn
+  // NB: bruk språkkoder ('en','no', 'is','ru','zh','es','pt'), ikke navn
   window.selectLanguage = function(langCode, flagCode){
     window.SEAVO_LANG = langCode || LANG_DEFAULT;
     localStorage.setItem(STORAGE_KEY, window.SEAVO_LANG);
@@ -84,7 +84,7 @@
     document.documentElement.lang = window.SEAVO_LANG;
 
     // Hvis siden har språkknapp, oppdater flagg/label
-    const mapFlag = { en:"gb", no:"no", ru:"ru", zh:"cn", es:"es", pt:"pt" };
+    const mapFlag = { en:"gb", no:"no", is:"is", ru:"ru", zh:"cn", es:"es", pt:"pt" };
     const code = mapFlag[window.SEAVO_LANG] || "gb";
     const img = document.getElementById('selected-flag');
     if(img) img.src = FLAG_URL(code);
@@ -116,7 +116,7 @@
       }catch(_e){}
 
       // Oppdater flagg/label hvis knappen finnes
-      const mapFlag = { en:"gb", no:"no", ru:"ru", zh:"cn", es:"es", pt:"pt" };
+      const mapFlag = { en:"gb", no:"no", is:"ic", ru:"ru", zh:"cn", es:"es", pt:"pt" };
       const code = mapFlag[window.SEAVO_LANG] || "gb";
       const img = document.getElementById('selected-flag');
       if(img) img.src = FLAG_URL(code);

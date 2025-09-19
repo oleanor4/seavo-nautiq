@@ -97,7 +97,63 @@ h3 {
   flex-wrap: wrap;
 }
 
+/* Add this CSS to your existing styles */
 
+/* GIF Container - Hidden on mobile by default */
+.gif-container {
+  display: none; /* Hidden on mobile screens */
+  position: relative; /* Or absolute/relative depending on your needs */
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  margin-left: 20px;
+}
+
+.gif-box {
+  width: 580px;
+  height: 330px;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  padding: 10px;
+  backdrop-filter: blur(5px);
+  overflow: hidden;
+}
+
+.animated-gif {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* Show only on larger screens (tablets and desktop) */
+@media screen and (min-width: 769px) {
+  .gif-container {
+    display: block;
+  }
+}
+
+/* Alternative: Show on screens larger than typical mobile */
+@media screen and (min-width: 640px) and (min-height: 640px) {
+  .gif-container {
+    display: block;
+  }
+}
+
+/* Ensure it's hidden on small mobile screens in both orientations */
+@media screen and (max-width: 768px) {
+  .gif-container {
+    display: none !important;
+  }
+}
+
+@media screen and (max-height: 640px) and (max-width: 768px) {
+  .gif-container {
+    display: none !important;
+  }
+}
 
 .seavo-wrapper {
   flex: 1;
@@ -125,13 +181,7 @@ h3 {
   font: 2em "Arial", ;
 }
 
- #forsidebilde {
-  width: 100%;
-  max-width: 400px;
-  border-radius: 20px;
-  box-shadow: #000000 0px 0px 10px 3px;
- 
-}
+
 
 
 .seavo-right {
@@ -586,12 +636,19 @@ background: rgba(0,0,0,.25); color:#fff;
     <div class="seavo-left">
       <h1 data-i18n="index.welcomeTitle">Welcome to Seavo Nautiq</h1>
 
-      <img src="images/Animasjon.gif" alt="forsidebilde" id="forsidebilde">
-    </div>
-
-
     
 
+
+
+    <div class="gif-container">
+  <div class="gif-box">
+    <video class="animated-gif" autoplay muted loop playsinline disablePictureInPicture>
+      <source src="images/Seavoani.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+</div>
+</div>
 
 
 
@@ -639,6 +696,8 @@ background: rgba(0,0,0,.25); color:#fff;
   </div>
   </div>
     </div>
+
+    
   
 
 

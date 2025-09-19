@@ -224,7 +224,7 @@ th{ background:rgba(0,0,0,.28); color:var(--text); height: 42px; }
 
 .header-row td{
   background:linear-gradient(to right, rgba(255,255,255,.06), rgba(255,255,255,.02));
-  font-weight:700; text-align:left; border-color:rgba(255,255,255,.12); border-radius:0;
+  font-weight:700; text-align:left; border-color:rgba(255,255,255,.12); border-radius:0; 
 }
 .header-row td span{ display:inline-block; width:52%; margin-left:10px; color:var(--text); vertical-align:middle; }
 
@@ -1103,7 +1103,7 @@ function showCategory(){
   table.innerHTML=`
     <thead>
       <tr>
-        <th>Equipment</th><th>Start Qty</th><th>Used</th><th>End Qty</th>
+        <th>Product</th><th>Start Qty</th><th>Used</th><th>End Qty</th>
         <th>MIN🔔</th><th>MAX🔔</th><th>Image</th><th>Comments</th><th>Order</th><th>Move</th><th>Delete</th>
       </tr>
     </thead>
@@ -1132,7 +1132,7 @@ function showCategory(){
       const sub=document.createElement("tr");
       sub.className="section-columns";
       sub.innerHTML=`
-        <td>Equipment</td>
+        <td>Product</td>
         <td>Start Qty</td>
         <td>Used</td>
         <td>End Qty</td>
@@ -1148,15 +1148,15 @@ function showCategory(){
       return;
     }
 
-    row.Equipment ??=""; row.start ??=0; row.used ??=0; row.end ??=(parseFloat(row.start)||0)-(parseFloat(row.used)||0);
+    row.product ??=""; row.start ??=0; row.used ??=0; row.end ??=(parseFloat(row.start)||0)-(parseFloat(row.used)||0);
     row.min ??=0; row.max ??=0; row.comment ??=""; row.order ??=0; row.image ??=null; row.productColor ??=null;
 
-    const fields=['Equipment','start','used','end','min','max','image','comment','order'];
+    const fields=['product','start','used','end','min','max','image','comment','order'];
     const inputs={};
 
     fields.forEach((key)=>{
       const td=document.createElement("td");
-      if(key==='Equipment') td.classList.add("cell-product");
+      if(key==='product') td.classList.add("cell-product");
       else if(key==='comment') td.classList.add("cell-comment");
       else if(key==='min') td.classList.add("cell-min");
       else if(key==='max') td.classList.add("cell-max");
@@ -1164,31 +1164,41 @@ function showCategory(){
       else td.classList.add("cell-small");
 
       if(key==='image'){
+        td.classList.add("cell-image");
         const fileInput = document.createElement("input");
         fileInput.type="file"; fileInput.accept="image/*"; fileInput.style.display="none";
         const inputId=`file-${activeCategory}-${i}`; fileInput.id=inputId;
 
-        const btn = document.createElement("button");
-        btn.className="upload-btn"; btn.textContent="📷 Upload";
-        btn.onclick=(e)=>{ e.preventDefault(); document.getElementById(inputId).click(); };
+        const customButton=document.createElement("button");
+        customButton.textContent="📷 Upload";
+        customButton.className="global-button";
+        customButton.style.padding="6px 10px";
+        customButton.onclick=(e)=>{ e.preventDefault(); document.getElementById(inputId).click(); };
 
-        const preview = document.createElement("img");
-        preview.style.display = row.image ? "block" : "none";
+        const preview=document.createElement("img");
+        preview.style.maxWidth="60px"; preview.style.maxHeight="50px";
+        preview.style.display=row.image ? "block" : "none";
         if(row.image) preview.src=row.image;
-        preview.onclick=()=>{ if(preview.src) openImageModal(preview.src); };
+        preview.style.cursor="pointer";
+        preview.onclick=()=>{ openImageModal(preview.src); };
 
         fileInput.onchange=(e)=>{
           const file=e.target.files[0];
           if(file){
             const reader=new FileReader();
-            reader.onload=(ev)=>{ row.image=ev.target.result; preview.src=row.image; preview.style.display="block"; save(); };
+            reader.onload=function(evt){
+              row.image=evt.target.result;
+              preview.src=row.image; preview.style.display="block"; save();
+            };
             reader.readAsDataURL(file);
           }
         };
 
         const wrap=document.createElement("div");
         wrap.className="image-upload-container";
-        wrap.appendChild(btn); wrap.appendChild(preview);
+        wrap.appendChild(customButton); wrap.appendChild(preview);
+
+        
 
         td.appendChild(fileInput);
         td.appendChild(wrap);
@@ -1197,7 +1207,7 @@ function showCategory(){
       }
 
       const input=document.createElement("input");
-      input.type=(key==='Equipment'||key==='comment')?"text":"number";
+      input.type=(key==='product'||key==='comment')?"text":"number";
       input.value=row[key] ?? "";
       input.style.width="90%"; input.style.padding="8px"; input.style.borderRadius="10px";
       input.placeholder=key.charAt(0).toUpperCase()+key.slice(1);
@@ -1217,7 +1227,7 @@ function showCategory(){
       inputs[key]=input;
       td.appendChild(input);
 
-      if(key==='Equipment'){
+      if(key==='product'){
         if(row.productColor){
           input.classList.add('product-input');
           input.style.setProperty('--col-rgb', toRgbStr(row.productColor));
@@ -1273,7 +1283,7 @@ function showCategory(){
 
   const addLine=document.createElement("button");
   addLine.className="global-button"; addLine.textContent="+ Add line";
-  addLine.onclick=()=>{ data[activeCategory].push({type:"line", Equipment:"", start:0, used:0, end:0, min:0, max:0, image:null, comment:"", order:0, productColor:null}); save(); showCategory(); };
+  addLine.onclick=()=>{ data[activeCategory].push({type:"line", product:"", start:0, used:0, end:0, min:0, max:0, image:null, comment:"", order:0, productColor:null}); save(); showCategory(); };
 
   const addHeader=document.createElement("button");
   addHeader.className="global-button"; addHeader.textContent="+ Add header/section";
@@ -1298,7 +1308,7 @@ function sendToOrders(){
     (rows || []).forEach(r=>{
       if (r && r.type !== "header") {
         const qty  = Number(r.order) || 0;
-        const prod = (r.Equipment || "").trim();
+        const prod = (r.product || "").trim();
         if (prod && qty > 0) {
           payload.push({ product: prod, quantity: qty, category });
         }
@@ -1317,7 +1327,7 @@ function showGlobalOverview(){
   table.className = "global-overview-table";
   table.innerHTML=`
     <thead>
-      <tr><th>Category</th><th>Equipment</th><th>Start</th><th>Used</th><th>End</th><th>Min</th><th>Max</th><th>Comment</th><th>Order</th></tr>
+      <tr><th>Category</th><th>product</th><th>Start</th><th>Used</th><th>End</th><th>Min</th><th>Max</th><th>Comment</th><th>Order</th></tr>
     </thead>
     <tbody></tbody>
   `;
@@ -1331,7 +1341,7 @@ function showGlobalOverview(){
       const end  = (typeof row.end!=="undefined") ? row.end : (start-used);
       const min  = parseFloat(row.min)||0;
       const max  = parseFloat(row.max)||0;
-      const values=[category, row.Equipment||"", start, used, end, min, max, row.comment||"", row.order||""];
+      const values=[category, row.product||"", start, used, end, min, max, row.comment||"", row.order||""];
       values.forEach(val=>{ const td=document.createElement("td"); td.textContent=val; tr.appendChild(td); });
       tbody.appendChild(tr);
     });
@@ -1427,6 +1437,19 @@ themeSlider.addEventListener('input', () => {
   document.documentElement.style.setProperty('--button-color', buttonColor);
   document.documentElement.style.setProperty('--button-text', buttonText);
 });
+
+/* ===== Image modal ===== */
+function openImageModal(src){
+  let modal = document.getElementById("image-modal");
+  if(!modal){
+    modal = document.createElement('div'); modal.id="image-modal"; modal.style.cssText="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7);z-index:2000;";
+    const img = document.createElement('img'); img.id="modal-image"; img.style.maxWidth="90%"; img.style.maxHeight="90%"; img.style.borderRadius="8px"; img.style.boxShadow="0 0 15px rgba(0,0,0,.8)";
+    modal.appendChild(img); document.body.appendChild(modal);
+    modal.addEventListener('click', ()=> modal.style.display='none');
+  }
+  document.getElementById("modal-image").src = src;
+  modal.style.display = "flex";
+}
 
 /* ===== Calculator / Notepad (dine funksjoner, utvidet) ===== */
 function openCalculator(){ document.getElementById("calculatorModal").style.display="block"; }

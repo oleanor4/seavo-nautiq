@@ -13,11 +13,26 @@
         background-color: hsl(210, 100%, var(--bg-lightness));
         transition: background-color 0.5s ease;
         margin: 0;
-        font-family: Arial, sans-serif;
+        font-family: 'Merriweather Sans', sans-serif;
         overflow-x: hidden;
     }
 
-    
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Merriweather+Sans&display=swap');
+
+h1 {
+  font-family: 'Cinzel', serif;
+  letter-spacing: 1px;
+}
+
+h2 {
+  font-family: 'merriweather sans', sans-serif;
+  letter-spacing: 1px;
+}
+
+h3 {
+  font-family: 'merriweather sans', sans-serif;
+  letter-spacing: 1px;
+}
 
     body::before {
      content: "";
@@ -324,15 +339,16 @@
 
     .venstre-container button,
     .hoyre-container button {
-      background: linear-gradient(to left, #7396c7, #14386b);
+     background: linear-gradient(to left, #688fc5d5, #133a70c7);
       color: #000000;
       border-radius: 12px;
       border: color(srgb 255 0 0 );
       width: 250px;
       height: 40px;
+      font-family: 'Arial', sans-serif;
       font-size: 22px;
       font-weight: bold;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.112);
+      
       cursor: pointer;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
       transition: background-color 0.3s ease;

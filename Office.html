@@ -212,8 +212,9 @@ body::before {
 table{
   width:100%;
   max-width: 1800px;
-  min-width: 1200px;           /* holder god avstand i RU m.fl. */ 
-  margin: 0 auto 0px;
+  min-width: 620px;           /* holder god avstand i RU m.fl. */ 
+  margin: auto;
+  margin-bottom: 0px;
   border-collapse:collapse;
   background:rgba(0,0,0,.20);
   color:var(--text);
@@ -222,14 +223,24 @@ table{
   overflow:hidden;
   box-shadow:0 12px 28px rgba(0,0,0,.35);
 }
-th,td{ 
+th, td { 
   border-bottom:1px solid rgba(255,255,255,.12); 
-  padding:8px 10px;            /* standard avstand i alle språk */
+  padding: var(--cell-padding, 0px);  /* fallback 0px */
   text-align:center; 
   font-size:16px; 
   vertical-align:middle;
 }
 th{ background:rgba(0,0,0,.28); color:var(--text); }
+
+/* Slider-stil */
+#padding-slider {
+  width: 200px;
+  margin: 16px auto;
+  display: block;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+th{ background:rgba(0, 0, 0, 0.315); color:var(--text); height: 42px; }
 
 .header-row td{
   background:linear-gradient(to right, rgba(255,255,255,.06), rgba(255,255,255,.02));
@@ -239,7 +250,7 @@ th{ background:rgba(0,0,0,.28); color:var(--text); }
 
 /* Mini-kolonneheader */
 .section-columns td{
-  background:rgba(0,0,0,.24); color:#fff; font-weight:700; border-bottom:1px solid rgba(255,255,255,.12); padding:6px 10px;
+  background:rgba(0,0,0,.24); color:#ffffffc0; font-weight:400; border-bottom:1px solid rgba(255,255,255,.12); padding:2px 10px;
   word-break:break-word;      /* lange uttrykk brytes pent */
 }
 .section-columns td.muted{ color:#bcd3f1; font-weight:600; }
@@ -277,7 +288,7 @@ td.cell-small input{
 }
 .cell-move button:hover{ filter:brightness(1.15); }
 
-td:last-child{ width:60px; background:linear-gradient(to right, rgba(78,155,206,.25), rgba(27,56,99,.25)); }
+td:last-child{ width:75px; background:linear-gradient(to right, rgba(78,155,206,.25), rgba(27,56,99,.25)); }
 
 .btn-danger{
   background:linear-gradient(to right,#f13e4e,#a31621); color:#fff; font-weight:bold; padding:6px 6px; border-radius:6px; cursor:pointer; border:none;
@@ -521,6 +532,12 @@ button img{ width:40px; height:40px; padding-left:55px; margin-top:20px; }
   <button class="add-category" onclick="addCategory()" data-i18n="btn.addCategory">+ Category</button>
   <button id="undo-delete" class="undo-category" onclick="undoCategoryDelete()" disabled data-i18n="btn.undoDelete">↶ Undo Del</button>
 </div>
+
+<label for="padding-slider" style="display:block;text-align:center;margin:14px 0;color:rgba(2, 196, 255, 0.767);">
+Padding between cells
+</label>
+<input id="padding-slider" type="range" min="0" max="12" value="0" />
+
 
 
 
@@ -1380,6 +1397,22 @@ themeSlider.addEventListener('input', () => {
   document.documentElement.style.setProperty('--box-color', boxColor);
   document.documentElement.style.setProperty('--button-color', buttonColor);
   document.documentElement.style.setProperty('--button-text', buttonText);
+});
+
+
+const slider = document.getElementById("padding-slider");
+const STORAGE_KEY = "tableCellPadding";
+
+// Hent lagret verdi (eller 0 som standard)
+const savedPadding = localStorage.getItem(STORAGE_KEY) || 0;
+slider.value = savedPadding;
+document.documentElement.style.setProperty("--cell-padding", savedPadding + "px");
+
+// Oppdater når slideren endres
+slider.addEventListener("input", e=>{
+  const value = e.target.value;
+  document.documentElement.style.setProperty("--cell-padding", value  + "px");
+  localStorage.setItem(STORAGE_KEY, value);
 });
 
 /* ===== Global oversikt ===== */

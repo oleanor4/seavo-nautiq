@@ -223,6 +223,7 @@ table{
   overflow:hidden;
   box-shadow:0 12px 28px rgba(0,0,0,.35);
 }
+
 th, td { 
   border-bottom:1px solid rgba(255,255,255,.12); 
   padding: var(--cell-padding, 0px);  /* fallback 0px */
@@ -230,7 +231,7 @@ th, td {
   font-size:16px; 
   vertical-align:middle;
 }
-th{ background:rgba(0,0,0,.28); color:var(--text); }
+
 
 /* Slider-stil */
 #padding-slider {
@@ -261,16 +262,57 @@ th{ background:rgba(0, 0, 0, 0.315); color:var(--text); height: 42px; }
   cursor:pointer; margin-left:4px; background:rgba(255,255,255,.15); display:inline-block; opacity:.9;
 }
 
+td.cell-small input{
+  max-width: calc(120px + var(--cell-padding, 0px) * 2);  /* Compensate for left+right padding */
+  min-width: calc(70px + var(--cell-padding, 0px) * 2);
+  padding: 10px;
+  font-size: 16px;
+  width: 100%;  /* Changed from 90% to 100% */
+}
+
+
+
+/* Update specific cell widths to compensate for padding */
+.cell-min,.cell-max{ 
+  width: calc(90px + var(--cell-padding, 0px) * 2); 
+  min-width: calc(60px + var(--cell-padding, 0px) * 2); 
+  max-width: calc(100px + var(--cell-padding, 0px) * 2); 
+}
+
+.cell-order{ 
+  width: calc(120px + var(--cell-padding, 0px) * 2); 
+  min-width: calc(70px + var(--cell-padding, 0px) * 2); 
+}
+
+.cell-product{ 
+  width: calc(350px + var(--cell-padding, 0px) * 2); 
+  min-width: calc(200px + var(--cell-padding, 0px) * 2); 
+}
+
+.cell-comment{ 
+  width: calc(350px + var(--cell-padding, 0px) * 2); 
+  min-width: calc(200px + var(--cell-padding, 0px) * 2); 
+}
+
 /* Celler / inputs */
-.large-bold-input{ font-weight:700; font-size:14px; color:var(--text); background:rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.18); }
+.large-bold-input{ 
+  font-weight:700; 
+  font-size:14px; 
+  color:var(--text); 
+  background:rgba(0,0,0,.25); 
+  border:1px solid rgba(255,255,255,.18);
+  width: 100%;  /* Changed from 90% to 100% to use full cell width */
+  padding: 8px; 
+  border-radius: 10px;
+}
 .large-bold-input::placeholder{ color:var(--muted); }
 .large-bold-input:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(98,178,231,.18); }
 
-.cell-min,.cell-max{ width: 90px; min-width:60px; max-width:100px; }
-.cell-order{ width:120px; min-width:70px; }
+
+
 .cell-move{ width:80px; min-width:80px; }
-.cell-product{ width: 350px; min-width:200px; }
-.cell-comment{ width: 350px; min-width:200px; }
+
+
 td.min-col input{ width:60px; }
 
 td.cell-small input{
@@ -485,7 +527,7 @@ button img{ width:40px; height:40px; padding-left:55px; margin-top:20px; }
 <body>
 
 <header class="video-header">
-  <video autoplay muted loop playsinline>
+  <video autoplay muted loop playsinline disablePictureInPicture>
     <source src="Video/Ocean-Seavo-Nautiq.mp4" type="video/mp4">
   </video>
 </header>
@@ -534,7 +576,7 @@ button img{ width:40px; height:40px; padding-left:55px; margin-top:20px; }
 </div>
 
 <label for="padding-slider" style="display:block;text-align:center;margin:14px 0;color:rgba(2, 196, 255, 0.767);">
-Padding between cells
+Table Cell Padding
 </label>
 <input id="padding-slider" type="range" min="0" max="12" value="0" />
 

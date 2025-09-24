@@ -101,6 +101,7 @@ window.I18N_DICTIONARIES = {
     "btn.sendToOrders": "Active Category to Orders 📦",
     "btn.saveNote": "Save",
     "btn.clearNote": "Clear",
+    "btn.load": "📂 Load",
 
     "table.category": "Category",
     "table.productType": "Product/Type",
@@ -253,6 +254,7 @@ window.I18N_DICTIONARIES = {
     "btn.sendToOrders": "Aktiv kategori til Orders 📦",
     "btn.saveNote": "Lagre",
     "btn.clearNote": "Tøm",
+    "btn.load": "📂 Last inn",
 
     "table.category": "Kategori",
     "table.productType": "Produkt/Type",
@@ -553,6 +555,7 @@ is: {
     "btn.sendToOrders": "Активная категория в Orders 📦",
     "btn.saveNote":"Сохранить",
     "btn.clearNote":"Очистить",
+    "btn.load": "📂 Загрузить",
 
     "table.category": "Категория",
     "table.productType": "Продукт/Тип",
@@ -702,6 +705,7 @@ is: {
     "btn.sendToOrders":"当前分类发送至 Orders 📦",
     "btn.saveNote":"保存",
     "btn.clearNote":"清除",
+    "btn.load": "📂 加载",
 
     "table.category":"类别",
     "table.productType":"产品/类型",
@@ -851,6 +855,7 @@ is: {
     "btn.sendToOrders":"Categoría activa a Orders 📦",
     "btn.saveNote":"Guardar",
     "btn.clearNote":"Limpiar",
+    "btn.load": "📂 Cargar",
 
     "table.category": "Categoría",
     "table.productType": "Producto/Tipo",
@@ -1000,6 +1005,7 @@ is: {
     "btn.sendToOrders":"Categoria ativa para Orders 📦",
     "btn.saveNote":"Guardar",
     "btn.clearNote":"Limpar",
+    "btn.load": "📂 Carregar",
 
     "table.category": "Categoria",
     "table.productType": "Produto/Tipo",

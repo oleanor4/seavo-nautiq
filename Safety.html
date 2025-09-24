@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Safety – Seavo Nautiq</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 
   <!-- Core (én gang, med defer) -->
   <script src="./js/seavo-core.js" defer></script>
@@ -77,7 +77,28 @@
     @keyframes blink{ 50%{ opacity:.25 } }
 
     .header-row td{ background:rgba(255,255,255,.06); font-weight:800; letter-spacing:.3px }
-    .section-title{ width:100%; font-weight:bold }
+
+    /* Add to your style section: */
+button, input[type="button"] {
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+input[type="text"], input[type="number"], input[type="date"] {
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+
+/* Prevent zoom on input focus for iOS */
+@media screen and (max-width: 768px) {
+  input[type="text"], input[type="number"], input[type="date"] {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
   </style>
 </head>
 <header class="video-header">
@@ -117,6 +138,7 @@
       <button class="btn" id="btnAddHeader">+ Add Header Section</button>
       <button class="btn btn-pdf" id="btnPdf">🖨️ Export PDF (B/W)</button>
     </div>
+    
 
     <p style="opacity:.8; margin:8px 2px 0">
       Notice❗ This list is not meant as guidance on routine checks or function tests.
@@ -124,11 +146,22 @@
     </p>
   </div>
 
+  
+
   <!-- jsPDF + AutoTable -->
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
 
   <script>
+
+  window.seavo = window.seavo || {
+  logActivity: function(data) { 
+    console.log('Safety Activity:', data); 
+  },
+  syncInventory: function(type, items) { 
+    console.log('Safety Sync:', type, items); 
+  }
+};
   /* =========================
      LOCAL STORAGE + CORE SYNC
      ========================= */
@@ -307,8 +340,27 @@
     }
 
     // number controls
-    btnMinus.addEventListener('click', ()=>{ num.value = Math.max(0, (parseInt(num.value)||0)-1); persistAndSync(); });
-    btnPlus .addEventListener('click', ()=>{ num.value = (parseInt(num.value)||0)+1; persistAndSync(); });
+    btnMinus.addEventListener('touchstart', (e)=>{ 
+      e.preventDefault(); 
+      num.value = Math.max(0, (parseInt(num.value)||0)-1); 
+      persistAndSync(); 
+    });
+    btnMinus.addEventListener('click', (e)=>{ 
+      e.preventDefault(); 
+      num.value = Math.max(0, (parseInt(num.value)||0)-1); 
+      persistAndSync(); 
+    });
+
+    btnPlus.addEventListener('touchstart', (e)=>{ 
+      e.preventDefault(); 
+      num.value = (parseInt(num.value)||0)+1; 
+      persistAndSync(); 
+    });
+    btnPlus.addEventListener('click', (e)=>{ 
+      e.preventDefault(); 
+      num.value = (parseInt(num.value)||0)+1; 
+      persistAndSync(); 
+    });
     minusO  .addEventListener('click', ()=>{ order.value = Math.max(0, (parseInt(order.value)||0)-1); persistAndSync(); });
     plusO   .addEventListener('click', ()=>{ order.value = (parseInt(order.value)||0)+1; persistAndSync(); });
 
@@ -369,7 +421,11 @@
   function addRow(data = {}){ 
     const tbody = document.querySelector('#safetyTable tbody');
     tbody.appendChild(createDataRow(data));
-    seavo.logActivity({ text:'Added new safety line', source:'Safety', type:'action' });
+    try {
+      seavo.logActivity({ text: 'Added new safety line', source: 'Safety', type: 'action' });
+    } catch (e) {
+      console.warn('Failed to log activity:', e);
+    }
     persistAndSync();
   }
 
@@ -441,22 +497,55 @@
      Init
      ============== */
   document.addEventListener('DOMContentLoaded', ()=>{
-    const state = loadState();
-    if(!state.rows || state.rows.length===0){
-      // Start med én blank linje
+  const state = loadState();
+  if(!state.rows || state.rows.length===0){
+    addRow({});
+  }else{
+    render(state);
+  }
+
+  // Enhanced button handlers for iOS
+  const btnAddRow = document.getElementById('btnAddRow');
+  const btnAddHeader = document.getElementById('btnAddHeader');
+  const btnPdf = document.getElementById('btnPdf');
+
+  if(btnAddRow) {
+    btnAddRow.addEventListener('touchstart', (e) => {
+      e.preventDefault();
       addRow({});
-    }else{
-      render(state);
-    }
+    });
+    btnAddRow.addEventListener('click', (e) => {
+      e.preventDefault();
+      addRow({});
+    });
+  }
 
-    // knapper
-    document.getElementById('btnAddRow').addEventListener('click', ()=>addRow({}));
-    document.getElementById('btnAddHeader').addEventListener('click', ()=>addHeader(''));
-    document.getElementById('btnPdf').addEventListener('click', exportPDF_BW);
+  if(btnAddHeader) {
+    btnAddHeader.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      addHeader('');
+    });
+    btnAddHeader.addEventListener('click', (e) => {
+      e.preventDefault();
+      addHeader('');
+    });
+  }
 
-    // sikkerhetsnett: oppdater headerikon på første last
-    updateExpiryHeaderIcon();
-  });
+  if(btnPdf) {
+    btnPdf.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      exportPDF_BW();
+    });
+    btnPdf.addEventListener('click', (e) => {
+      e.preventDefault();
+      exportPDF_BW();
+    });
+  }
+
+  updateExpiryHeaderIcon();
+});
+
+
   </script>
 </body>
 </html>

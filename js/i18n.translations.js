@@ -251,8 +251,8 @@ window.I18N_DICTIONARIES = {
     "btn.moveUp": "⬆️",
     "btn.moveDown": "⬇️",
     "btn.sendToOrders": "Aktiv kategori til Orders 📦",
-    "btn.saveNote":"Lagre",
-    "btn.clearNote":"Tøm",
+    "btn.saveNote": "Lagre",
+    "btn.clearNote": "Tøm",
 
     "table.category": "Kategori",
     "table.productType": "Produkt/Type",
@@ -726,8 +726,8 @@ is: {
     "alert.noTable":"未找到可导出的表格。",
     "alert.productEmpty":"产品字段为空。",
 
-    "default.headerText":"新标题",
-    "default.headerPlaceholder":"分区 / 标题",
+    "default.headerText": "新标题",
+    "default.headerPlaceholder": "分区 / 标题",
 
     "global.title":"整个办公库存的全局概览",
     "global.hint":"全局概览以结构化表格格式呈现所有库存，优化PDF生成和打印。",

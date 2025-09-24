@@ -78,6 +78,7 @@ window.I18N_DICTIONARIES = {
 
     "lang.en": "English",
     "lang.no": "Norwegian",
+    "lang.is": "Icelandic",
     "lang.ru": "Russian",
     "lang.zh": "Chinese",
     "lang.es": "Spanish",
@@ -129,6 +130,10 @@ window.I18N_DICTIONARIES = {
 
     "global.title": "Global overview of the entire office inventory",
     "global.hint": "The Global Overview presents all inventory in a structured table format, optimized for PDF generating and printing.",
+    "btn.pdfDesc": "Generate a PDF document of the current inventory view.",
+    "btn.excelDesc": "Export the current inventory view to an Excel file.",
+    "btn.saveDesc": "Save the active category and its contents, which can be accessed later in the sidepanel - documents.",
+    "btn.loadDesc": "Load a selected category and its contents.",
 
     "pdf.headerTitle":"Seavo Office",
     "pdf.generatedLabel":"Generated:",
@@ -140,7 +145,9 @@ window.I18N_DICTIONARIES = {
     "aria.home":"Home",
     "aria.togglePanel":"Toggle side panel",
     "aria.scrollLeft":"Scroll left",
-    "aria.scrollRight":"Scroll right"
+    "aria.scrollRight":"Scroll right",
+
+    "spacing.tableRowSpacing": "Table Row Spacing"
   },
 
 
@@ -223,6 +230,7 @@ window.I18N_DICTIONARIES = {
 
     "lang.en": "Engelsk",
     "lang.no": "Norsk",
+    "lang.is": "Islandsk",
     "lang.ru": "Russisk",
     "lang.zh": "Kinesisk",
     "lang.es": "Spansk",
@@ -273,7 +281,11 @@ window.I18N_DICTIONARIES = {
     "default.headerPlaceholder":"Seksjon / Overskrift",
 
     "global.title": "Global oversikt over hele kontorlageret",
-    "global.hint": "Den globale oversikten viser hele inventaret i et strukturert tabellformat, optimalisert for PDF-generering og utskrift.",
+    "global.hint": "Globaloversikten presenterer alt lager i et strukturert tabellformat, optimalisert for PDF-generering og utskrift.",
+    "btn.pdfDesc": "Generer et PDF-dokument av gjeldende lagervisning.",
+"btn.excelDesc": "Eksporter gjeldende lagervisning til en Excel-fil.",
+"btn.saveDesc": "Lagre den aktive kategorien og dens innhold, som kan nås senere i sidepanelet - dokumenter.",
+"btn.loadDesc": "Last inn en valgt kategori og dens innhold.",
 
     "pdf.headerTitle":"Seavo Kontor",
     "pdf.generatedLabel":"Generert:",
@@ -285,14 +297,73 @@ window.I18N_DICTIONARIES = {
     "aria.home":"Hjem",
     "aria.togglePanel":"Slå sidepanel av/på",
     "aria.scrollLeft":"Rull til venstre",
-    "aria.scrollRight":"Rull til høyre"
+    "aria.scrollRight":"Rull til høyre",
+
+    "spacing.tableRowSpacing": "Tabellradavstand"
   },
 
-  // ====================== IS (Íslenska) ======================
+// ====================== IS (Íslenska) ======================
 is: {
   "lang.name": "Íslenska",
 
-  /* ----- Office ----- */
+  // ========= IS: Registration section (missing) ==========
+  "reg.whatIs": "Hvað er Seavo Nautiq?",
+  "reg.title": "Skrá Seavo Nautiq notanda",
+  "reg.subtitle": "Sláðu inn persónuupplýsingar þínar og upplýsingar um skip. Njóttu 1 mánaðar ókeypis prufutímabils—síðan byrjar valin áætlun.",
+
+  "reg.fullName": "Fullt nafn *",
+  "reg.email": "Netfang *",
+  "reg.phoneOpt": "Sími (valfrjálst)",
+  "reg.vesselName": "Nafn skips *",
+  "reg.callSignOpt": "Kallmerki (valfrjálst)",
+  "reg.language": "Tungumál *",
+  "reg.subscription": "Áskrift *",
+
+  "reg.plan.monthly": "Mánaðarlega (1 mánuður ókeypis, verð {price})",
+  "reg.plan.annual": "Árlega (1 mánuður ókeypis, verð {price})",
+  "reg.plan.discount": "10% afsláttur fyrir árlega áskrift",
+
+  "reg.terms.label": "Ég samþykki notkunarskilmála og persónuverndarstefnu.",
+  "reg.cancel": "Hætta við",
+  "reg.startTrial": "Byrja ókeypis prufu",
+
+  "reg.alert.fullName": "Fullt nafn er krafist.",
+  "reg.alert.email": "Gilt netfang er krafist.",
+  "reg.alert.vesselName": "Nafn skips er krafist.",
+  "reg.alert.terms": "Þú verður að samþykkja skilmálana.",
+
+  "reg.saved": "Skráning vistuð. Ókeypis prufa þín er hafin.",
+  "trial.banner": "Ókeypis prufa virk – {days} dag(a) eftir (lýkur {date})",
+
+  // ========= IS: Index section ==========
+  "title.index": "Seavo Nautiq — Heim",
+  "index.welcomeTitle": "Velkomin í Seavo Nautiq",
+  "index.remindersTitle": "Áminningar",
+  "index.remindersAria": "Áminningar",
+  "index.recentTitle": "Nýleg virkni",
+  "index.recentAria": "Listi yfir nýlega virkni",
+  "index.scrollable": "Skrollanlegt",
+  "index.invExp9": "Birgðir renna út eftir 9 daga",
+  "index.invExp3": "Birgðir renna út eftir 3 daga",
+  "index.taskExp9": "Verk renna út eftir 9 daga",
+  "index.taskExp3": "Verk renna út eftir 3 daga",
+  "index.vesselBadgePlaceholder": "Heiti skips og kallmerki",
+  "index.themeLight": "☀️",
+  "index.themeDark": "🌙",
+
+  // ========= IS: Navigation ==========
+  "nav.equipment": "Búnaður",
+  "nav.partsTools": "Varahlutir og verkfæri",
+  "nav.provisions": "Vistir",
+  "nav.medicine": "Lyf",
+  "nav.orders": "Pantanir",
+  "nav.participants": "Þátttakendur",
+  "nav.voyages": "Siglingar",
+  "nav.fleet": "Floti",
+  "nav.cargo": "Farmrými",
+  "nav.research": "Rannsóknir",
+
+  // ========= IS: Office section ==========
   "title.office": "Seavo Nautiq — Skrifstofa",
 
   "nav.office": "Skrifstofa",
@@ -308,6 +379,7 @@ is: {
 
   "lang.en": "Enska",
   "lang.no": "Norska",
+  "lang.is": "Íslenska",
   "lang.ru": "Rússneska",
   "lang.zh": "Kínverska",
   "lang.es": "Spænska",
@@ -330,6 +402,7 @@ is: {
   "btn.sendToOrders": "Virkur flokkur í Pantanir 📦",
   "btn.saveNote": "Vista",
   "btn.clearNote": "Hreinsa",
+  "btn.load": "📂 Hlaða",
 
   "table.category": "Flokkur",
   "table.productType": "Vara/Tegund",
@@ -350,7 +423,7 @@ is: {
   "calc.clear": "C",
 
   "prompt.newCategory": "Nýr flokkur:",
-  "confirm.deleteCategory": "Viltu eyða flokknum „{name}“?",
+  "confirm.deleteCategory": "Viltu eyða flokknum „{name}\"?",
   "alert.noTable": "Engin tafla fannst til útflutnings.",
   "alert.productEmpty": "Vörusvæði er tómt.",
 
@@ -358,52 +431,25 @@ is: {
   "default.headerPlaceholder": "Kafli / Fyrirsögn",
 
   "global.title": "Heildaryfirlit yfir allan skrifstofulagerinn",
-  "global.hint": "Yfirlitið sýnir allt birgðahald í skipulögðu töfluformi, hannað fyrir PDF-gerð og prentun.",
+  "global.hint": "Heildaryfirlit sýnir allar birgðir í skipulögðu töfluformi, fínstillt fyrir PDF-gerð og prentun.",
+  "btn.pdfDesc": "Búa til PDF skjal af núverandi birgðayfirliti.",
+  "btn.excelDesc": "Flytja út núverandi birgðayfirlit í Excel skrá.",
+  "btn.saveDesc": "Vista virkan flokk og innihald hans, sem hægt er að nálgast síðar í hliðarspjaldi - skjöl.",
+  "btn.loadDesc": "Hlaða inn völdum flokki og innihaldi hans.",
 
   "pdf.headerTitle": "Seavo Skrifstofa",
-  "pdf.generatedLabel": "Útbúið:",
+  "pdf.generatedLabel": "Búið til:",
 
   "color.pick": "Velja lit",
   "color.pickHeader": "Velja fyrirsagnarlit",
   "color.clear": "Hreinsa",
 
   "aria.home": "Heim",
-  "aria.togglePanel": "Víxla hliðarspjaldi",
+  "aria.togglePanel": "Skipta á hliðarspjald",
   "aria.scrollLeft": "Skruna til vinstri",
   "aria.scrollRight": "Skruna til hægri",
 
-  /* ----- Index ----- */
-  "title.index": "Seavo Nautiq — Heim",
-  "index.welcomeTitle": "Velkomin í Seavo Nautiq",
-  "index.remindersTitle": "Áminningar",
-  "index.remindersAria": "Áminningar",
-  "index.recentTitle": "Nýleg virkni",
-  "index.recentAria": "Listi yfir nýlega virkni",
-  "index.scrollable": "Skrollanlegt",
-  "index.invExp9": "Birgðir renna út eftir 9 daga",
-  "index.invExp3": "Birgðir renna út eftir 3 daga",
-  "index.taskExp9": "Verk renna út eftir 9 daga",
-  "index.taskExp3": "Verk renna út eftir 3 daga",
-  "index.vesselBadgePlaceholder": "Heiti skips og kallmerki",
-  "index.themeLight": "☀️",
-  "index.themeDark": "🌙",
-
-  /* Nav-punktar sem aðeins eru á Index */
-  "nav.equipment": "Búnaður",
-  "nav.partsTools": "Varahlutir og verkfæri",
-  "nav.provisions": "Vistir",
-  "nav.medicine": "Lyf",
-  "nav.orders": "Pantanir",
-  "nav.participants": "Þátttakendur",
-  "nav.voyages": "Siglingar",
-  "nav.fleet": "Floti",
-  "nav.cargo": "Farmrými",
-  "nav.research": "Rannsóknir",
-
-
-
-  /* ----- Registrerings-banner ----- */
-  "trial.banner": "Ókeypis prufa virk – {days} dag(a) eftir (endar {date})"
+  "spacing.tableRowSpacing": "Töflulínubil"
 },
 
 
@@ -485,6 +531,7 @@ is: {
 
     "lang.en": "Английский",
     "lang.no": "Норвежский",
+    "lang.is": "Исландский",
     "lang.ru": "Русский",
     "lang.zh": "Китайский",
     "lang.es": "Испанский",
@@ -534,7 +581,11 @@ is: {
     "default.headerPlaceholder":"Раздел / Заголовок",
 
     "global.title": "Глобальный обзор всего офисного инвентаря",
-    "global.hint": "Глобальный обзор отображает все запасы в структурированном табличном формате, оптимизированном для генерации PDF и печати.",
+    "global.hint": "Глобальный обзор представляет все запасы в структурированном табличном формате, оптимизированном для генерации PDF и печати.",
+    "btn.pdfDesc": "Создать PDF документ текущего вида инвентаря.",
+"btn.excelDesc": "Экспортировать текущий вид инвентаря в файл Excel.",
+"btn.saveDesc": "Сохранить активную категорию и её содержимое, к которому можно получить доступ позже в боковой панели - документы.",
+"btn.loadDesc": "Загрузить выбранную категорию и её содержимое.",
 
     "pdf.headerTitle":"Seavo Офис",
     "pdf.generatedLabel":"Создано:",
@@ -546,7 +597,9 @@ is: {
     "aria.home":"Домой",
     "aria.togglePanel":"Показать/скрыть боковую панель",
     "aria.scrollLeft":"Прокрутить влево",
-    "aria.scrollRight":"Прокрутить вправо"
+    "aria.scrollRight":"Прокрутить вправо",
+
+    "spacing.tableRowSpacing": "Расстояние между строками"
   },
 
   zh: {
@@ -627,6 +680,7 @@ is: {
 
     "lang.en": "英语",
     "lang.no": "挪威语",
+    "lang.is": "冰岛语",
     "lang.ru": "俄语",
     "lang.zh": "中文",
     "lang.es": "西班牙语",
@@ -676,7 +730,11 @@ is: {
     "default.headerPlaceholder":"分区 / 标题",
 
     "global.title":"整个办公库存的全局概览",
-    "global.hint":"全局概览以结构化表格格式展示所有库存，并针对 PDF 生成和打印进行了优化",
+    "global.hint":"全局概览以结构化表格格式呈现所有库存，优化PDF生成和打印。",
+    "btn.pdfDesc": "生成当前库存视图的PDF文档。",
+"btn.excelDesc": "将当前库存视图导出到Excel文件。",
+"btn.saveDesc": "保存活动类别及其内容，稍后可在侧面板-文档中访问。",
+"btn.loadDesc": "加载选定的类别及其内容。",
 
     "pdf.headerTitle":"Seavo 办公",
     "pdf.generatedLabel":"生成时间：",
@@ -688,7 +746,9 @@ is: {
     "aria.home":"主页",
     "aria.togglePanel":"切换侧边栏",
     "aria.scrollLeft":"向左滚动",
-    "aria.scrollRight":"向右滚动"
+    "aria.scrollRight":"向右滚动",
+
+    "spacing.tableRowSpacing": "表格行间距"
   },
 
   es: {
@@ -769,6 +829,7 @@ is: {
 
     "lang.en": "Inglés",
     "lang.no": "Noruego",
+    "lang.is": "Islandés",
     "lang.ru": "Ruso",
     "lang.zh": "Chino",
     "lang.es": "Español",
@@ -818,7 +879,11 @@ is: {
     "default.headerPlaceholder":"Sección / Encabezado",
 
     "global.title":"Vista global de todo el inventario de oficina",
-    "global.hint":"La visión global presenta todo el inventario en un formato de tabla estructurado, optimizado para la generación de PDF e impresión.",
+    "global.hint":"La Vista General presenta todo el inventario en formato de tabla estructurada, optimizada para generar PDF e imprimir.",
+    "btn.pdfDesc": "Generar un documento PDF de la vista actual del inventario.",
+"btn.excelDesc": "Exportar la vista actual del inventario a un archivo Excel.",
+"btn.saveDesc": "Guardar la categoría activa y su contenido, al cual se puede acceder más tarde en el panel lateral - documentos.",
+"btn.loadDesc": "Cargar una categoría seleccionada y su contenido.",
 
     "pdf.headerTitle":"Seavo Oficina",
     "pdf.generatedLabel":"Generado:",
@@ -830,7 +895,9 @@ is: {
     "aria.home":"Inicio",
     "aria.togglePanel":"Alternar panel lateral",
     "aria.scrollLeft":"Desplazamiento a la izquierda",
-    "aria.scrollRight":"Desplazamiento a la derecha"
+    "aria.scrollRight":"Desplazamiento a la derecha",
+
+    "spacing.tableRowSpacing": "Espaciado de filas"
   },
 
   pt: {
@@ -911,6 +978,7 @@ is: {
 
     "lang.en": "Inglês",
     "lang.no": "Norueguês",
+    "lang.is": "Islandês",
     "lang.ru": "Russo",
     "lang.zh": "Chinês",
     "lang.es": "Espanhol",
@@ -960,7 +1028,11 @@ is: {
     "default.headerPlaceholder":"Secção / Cabeçalho",
 
     "global.title":"Visão global de todo o inventário do escritório",
-    "global.hint":"A visão global apresenta todo o inventário em um formato de tabela estruturado, otimizado para geração de PDF e impressão.",
+    "global.hint":"A Visão Global apresenta todo o inventário em formato de tabela estruturada, otimizada para geração de PDF e impressão.",
+    "btn.pdfDesc": "Gerar um documento PDF da visualização atual do inventário.",
+"btn.excelDesc": "Exportar a visualização atual do inventário para um arquivo Excel.",
+"btn.saveDesc": "Salvar a categoria ativa e seu conteúdo, que pode ser acessado posteriormente no painel lateral - documentos.",
+"btn.loadDesc": "Carregar uma categoria selecionada e seu conteúdo.",
 
     "pdf.headerTitle":"Seavo Escritório",
     "pdf.generatedLabel":"Gerado:",
@@ -972,6 +1044,8 @@ is: {
     "aria.home":"Início",
     "aria.togglePanel":"Alternar painel lateral",
     "aria.scrollLeft":"Deslocar para a esquerda",
-    "aria.scrollRight":"Deslocar para a direita"
+    "aria.scrollRight":"Deslocar para a direita",
+
+    "spacing.tableRowSpacing": "Espaçamento de linhas"
   }
 };

@@ -248,7 +248,7 @@ th{ background:rgba(0, 0, 0, 0.315); color:var(--text); height: 42px; }
   background:linear-gradient(to right, rgba(255,255,255,.06), rgba(255,255,255,.02));
   font-weight:700; text-align:left; padding: 6px 8px; border-color:rgba(255,255,255,.12); border-radius:0;
 }
-.header-row td span{ display:inline-block; width:95%; margin-left:10px; color:var(--text); vertical-align:middle; }
+.header-row td span{ display:inline-block; width:58%; margin-left:10px; color:var(--text); vertical-align:middle; }
 
 /* Mini-kolonneheader */
 .section-columns td{
@@ -263,6 +263,8 @@ th{ background:rgba(0, 0, 0, 0.315); color:var(--text); height: 42px; }
   cursor:pointer; margin-left:4px; background:rgba(255,255,255,.15); display:inline-block; opacity:.9;
 }
 
+
+
 /* Add border between End Qty and MIN columns */
 th:nth-child(5), 
 td:nth-child(5) {
@@ -273,6 +275,8 @@ td:nth-child(5) {
 .section-columns td:nth-child(5) {
   border-left: 2px solid rgba(141, 139, 139, 0.3) !important;
 }
+
+
 
 td.cell-small input{
   max-width: calc(120px);  
@@ -303,7 +307,7 @@ td.cell-small input{
 
 .cell-comment { 
   width: 300px; 
-  min-width: 170px; 
+  min-width: 150px; 
 }
 
 /* Celler / inputs */
@@ -337,7 +341,7 @@ td.cell-small input {
 
 /* Flytteknapper */
 .cell-move button{
-  width:42px; height:30px; background:linear-gradient(to right,var(--accent-2),var(--accent-3));
+  width:42px; height:28px; background:linear-gradient(to right,var(--accent-2),var(--accent-3));
   color:#fff; border-radius:10px; cursor:pointer; font-size:16px; border:1px solid rgba(255,255,255,.12);
 }
 .cell-move button:hover{ filter:brightness(1.15); }
@@ -345,7 +349,7 @@ td.cell-small input {
 td:last-child{ width:75px; min-width: 75px; background:linear-gradient(to right, rgba(78,155,206,.25), rgba(27,56,99,.25)); }
 
 .btn-danger{
-  background:linear-gradient(to right,#f13e4e,#a31621); color:#fff; font-weight:bold; padding:6px 6px; border-radius:6px; cursor:pointer; border:none;
+  background:linear-gradient(to right,#f13e4e,#a31621); color:#ffffff; font-weight:bold; padding:6px 0px; border-radius:6px; cursor:pointer; border:none;
 }
 .btn-danger:hover{ background:linear-gradient(to right,#ff5a6b,#c3222d); font-style:italic; box-shadow:0 0 20px #ff0000; }
 
@@ -649,7 +653,7 @@ button img{ width:40px; height:40px; padding-left:55px; margin-top:20px; }
 /* Storage meter styles */
 .storage-meter {
   width: 100%;
-  height: 35px;
+  height: 32px;
   background: rgba(0,0,0,.3);
   border: 1px solid rgba(255,255,255,.25);
   border-radius: 6px;
@@ -747,10 +751,10 @@ button img{ width:40px; height:40px; padding-left:55px; margin-top:20px; }
   <button id="undo-delete" class="undo-category" onclick="undoCategoryDelete()" disabled data-i18n="btn.undoDelete">↶ Undo Del</button>
 </div>
 
-<label for="padding-slider" style="display:block;text-align:center;margin:14px 0;color:rgba(2, 196, 255, 0.767);">
+<label for="padding-slider" style="display:block;text-align:center;margin:14px 0;color:rgba(2, 196, 255, 0.767);" data-i18n="spacing.tableRowSpacing">
 Table Row Spacing
 </label>
-<input id="padding-slider" type="range" min="0" max="16" value="0" />
+<input id="padding-slider" type="range" min="0" max="25" value="0" />
 
 
 
@@ -760,12 +764,12 @@ Table Row Spacing
 <div id="content"></div>
 
 <button id="globalToggleButton" class="global-button" onclick="toggleGlobalView()" data-i18n="btn.globalOverview">📋 Global Overview</button>
-<span data-i18n="global.hint">“The Global Overview presents all inventory in a structured table format, optimized for PDF generating and printing.”</span>
+<span data-i18n="global.hint">The Global Overview presents all inventory in a structured table format, optimized for PDF generating and printing.</span>
 
-<div><button class="global-button" onclick="generatePDF()" data-i18n="btn.pdf">📄 Generate PDF</button>"Generate a PDF document of the current inventory view."</div>
-<button class="global-button" type="button" onclick="generateExcel()" data-i18n="btn.excel">📊 Export to Excel</button> "Export the current inventory view to an Excel file."
-<div><button class="global-button" onclick="save()" data-i18n="btn.save">💾 Save</button> "Save the active category and its contents, which can be accessed later in the sidepanel - documents."</div>
-<div><button class="global-button" onclick="load()" data-i18n="btn.load">📂 Load</button> "Load a selected category and its contents."</div>
+<div><button class="global-button" onclick="generatePDF()" data-i18n="btn.pdf">📄 Generate PDF</button><span data-i18n="btn.pdfDesc">Generate a PDF document of the current inventory view.</span></div>
+<button class="global-button" type="button" onclick="generateExcel()" data-i18n="btn.excel">📊 Export to Excel</button> <span data-i18n="btn.excelDesc">Export the current inventory view to an Excel file.</span>
+<div><button class="global-button" onclick="save()" data-i18n="btn.save">💾 Save</button> <span data-i18n="btn.saveDesc">Save the active category and its contents, which can be accessed later in the sidepanel - documents.</span></div>
+<div><button class="global-button" onclick="load()" data-i18n="btn.load">📂 Load</button> <span data-i18n="btn.loadDesc">Load a selected category and its contents.</span></div>
 
 <!-- ====== MODALS ====== -->
 <!-- Kalkulator -->
@@ -1395,18 +1399,18 @@ function showCategory(){
 
       const sub=document.createElement("tr");
       sub.className="section-columns";
-      sub.innerHTML=`
-        <td>${t("table.productType","Product/Type")}</td>
-        <td>${t("table.startQty","Start Qty")}</td>
-        <td>${t("table.used","Used")}</td>
-        <td>${t("table.endQty","End Qty")}</td>
-        <td>${t("table.min","MIN🔔")}</td>
-        <td>${t("table.max","MAX🔔")}</td>
-        <td>${t("table.commentsHeader","Comm/Space")}</td>  <!-- Changed from table.comments -->
-        <td>${t("table.order","Order")}</td>
-        <td>${t("table.move","Move")}</td>
-        <td><button class="btn-danger" onclick="deleteRow(${i})">${t("btn.delete","Delete")}</button></td>
-      `;
+   sub.innerHTML=`
+  <td>${t("table.productType","Product/Type")}</td>
+  <td>${t("table.startQty","Start Qty")}</td>
+  <td>${t("table.used","Used")}</td>
+  <td>${t("table.endQty","End Qty")}</td>
+  <td>MIN</td>
+  <td>MAX</td>
+  <td>${t("table.commentsHeader","Comm/Space")}</td>
+  <td>${t("table.order","Order")}</td>
+  <td>${t("table.move","Move")}</td>
+  <td><button class="btn-danger" onclick="deleteRow(${i})">${t("btn.delete","Delete")}</button></td>
+`;
       tbody.appendChild(sub);
       return;
     }

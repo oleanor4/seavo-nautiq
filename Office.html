@@ -209,27 +209,28 @@ body::before {
 
 /* ====== TABELL ====== */
 .table-wrapper{ overflow-x:auto; }
-table{
-  width:100%;
+table {
+  width: 100%;
   max-width: 1800px;
-  min-width: 620px;           /* holder god avstand i RU m.fl. */ 
+  min-width: 620px;
   margin: auto;
   margin-bottom: 0px;
-  border-collapse:collapse;
-  background:rgba(0,0,0,.20);
-  color:var(--text);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:14px;
-  overflow:hidden;
-  box-shadow:0 12px 28px rgba(0,0,0,.35);
+  border-collapse: separate; /* Changed from collapse to separate */
+  border-spacing: 0 var(--cell-spacing, 0px); /* Only vertical spacing */
+  background: rgba(0,0,0,.20);
+  color: var(--text);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 12px 28px rgba(0,0,0,.35);
 }
 
 th, td { 
-  border-bottom:1px solid rgba(255,255,255,.12); 
-  padding: var(--cell-padding, 0px);  /* fallback 0px */
-  text-align:center; 
-  font-size:16px; 
-  vertical-align:middle;
+  border-bottom: 1px solid rgba(255,255,255,.12); 
+  padding: 0px; 
+  text-align: center; 
+  font-size: 16px; 
+  vertical-align: middle;
 }
 
 
@@ -245,9 +246,9 @@ th{ background:rgba(0, 0, 0, 0.315); color:var(--text); height: 42px; }
 
 .header-row td{
   background:linear-gradient(to right, rgba(255,255,255,.06), rgba(255,255,255,.02));
-  font-weight:700; text-align:left; border-color:rgba(255,255,255,.12); border-radius:0;
+  font-weight:700; text-align:left; padding: 6px 8px; border-color:rgba(255,255,255,.12); border-radius:0;
 }
-.header-row td span{ display:inline-block; width:52%; margin-left:10px; color:var(--text); vertical-align:middle; }
+.header-row td span{ display:inline-block; width:95%; margin-left:10px; color:var(--text); vertical-align:middle; }
 
 /* Mini-kolonneheader */
 .section-columns td{
@@ -262,9 +263,20 @@ th{ background:rgba(0, 0, 0, 0.315); color:var(--text); height: 42px; }
   cursor:pointer; margin-left:4px; background:rgba(255,255,255,.15); display:inline-block; opacity:.9;
 }
 
+/* Add border between End Qty and MIN columns */
+th:nth-child(5), 
+td:nth-child(5) {
+  border-left: 2px solid rgba(131, 130, 130, 0.3) !important;
+}
+
+/* Also add border for section column headers */
+.section-columns td:nth-child(5) {
+  border-left: 2px solid rgba(141, 139, 139, 0.3) !important;
+}
+
 td.cell-small input{
-  max-width: calc(120px + var(--cell-padding, 0px) * 2);  /* Compensate for left+right padding */
-  min-width: calc(70px + var(--cell-padding, 0px) * 2);
+  max-width: calc(120px);  
+  min-width: calc(70px);
   padding: 10px;
   font-size: 16px;
   width: 100%;  /* Changed from 90% to 100% */
@@ -272,26 +284,26 @@ td.cell-small input{
 
 
 
-/* Update specific cell widths to compensate for padding */
-.cell-min,.cell-max{ 
-  width: calc(90px + var(--cell-padding, 0px) * 2); 
-  min-width: calc(60px + var(--cell-padding, 0px) * 2); 
-  max-width: calc(100px + var(--cell-padding, 0px) * 2); 
+.cell-min, .cell-max { 
+  width: 90px; 
+  min-width: 60px; 
+  max-width: 100px; 
 }
 
-.cell-order{ 
-  width: calc(120px + var(--cell-padding, 0px) * 2); 
-  min-width: calc(70px + var(--cell-padding, 0px) * 2); 
+.cell-order { 
+  width: 100px; 
+  min-width: 50px; 
 }
 
-.cell-product{ 
-  width: calc(350px + var(--cell-padding, 0px) * 2); 
-  min-width: calc(200px + var(--cell-padding, 0px) * 2); 
+.cell-product { 
+  width: 360px; 
+  min-width: 180px;
+  padding-left: 12px !important;
 }
 
-.cell-comment{ 
-  width: calc(350px + var(--cell-padding, 0px) * 2); 
-  min-width: calc(200px + var(--cell-padding, 0px) * 2); 
+.cell-comment { 
+  width: 300px; 
+  min-width: 170px; 
 }
 
 /* Celler / inputs */
@@ -302,7 +314,7 @@ td.cell-small input{
   background:rgba(0,0,0,.25); 
   border:1px solid rgba(255,255,255,.18);
   width: 100%;  /* Changed from 90% to 100% to use full cell width */
-  padding: 8px; 
+  padding: 10px; 
   border-radius: 10px;
 }
 .large-bold-input::placeholder{ color:var(--muted); }
@@ -310,12 +322,12 @@ td.cell-small input{
 
 
 
-.cell-move{ width:80px; min-width:80px; }
+.cell-move{ width:80px; min-width:70px; }
 
 
 td.min-col input{ width:60px; }
 
-td.cell-small input{
+td.cell-small input {
   max-width: 120px;
   min-width: 70px;
   padding: 10px;
@@ -325,12 +337,12 @@ td.cell-small input{
 
 /* Flytteknapper */
 .cell-move button{
-  width:42px; height:35px; background:linear-gradient(to right,var(--accent-2),var(--accent-3));
+  width:42px; height:30px; background:linear-gradient(to right,var(--accent-2),var(--accent-3));
   color:#fff; border-radius:10px; cursor:pointer; font-size:16px; border:1px solid rgba(255,255,255,.12);
 }
 .cell-move button:hover{ filter:brightness(1.15); }
 
-td:last-child{ width:75px; background:linear-gradient(to right, rgba(78,155,206,.25), rgba(27,56,99,.25)); }
+td:last-child{ width:75px; min-width: 75px; background:linear-gradient(to right, rgba(78,155,206,.25), rgba(27,56,99,.25)); }
 
 .btn-danger{
   background:linear-gradient(to right,#f13e4e,#a31621); color:#fff; font-weight:bold; padding:6px 6px; border-radius:6px; cursor:pointer; border:none;
@@ -496,7 +508,7 @@ button img{ width:40px; height:40px; padding-left:55px; margin-top:20px; }
 .send-orders-button {
   background: linear-gradient(to right, #5092e7, #3a0580);
   color: rgb(255, 255, 255);
-  padding: 8px 6px;
+  padding: 2px 6px;
   margin: 5px;
   border-radius: 24px;
   cursor: pointer;
@@ -513,6 +525,166 @@ button img{ width:40px; height:40px; padding-left:55px; margin-top:20px; }
   .table-wrapper{ overflow: visible; }
   table{ background:#fff; color:#000; box-shadow:none; border:1px solid #ccc; min-width:auto; }
   th{ background:#f2f2f2; color:#000; }
+}
+
+
+
+/* Add to your existing styles */
+
+/* Compact MIN/MAX inputs */
+.compact-input-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.compact-input {
+  width: 50px !important;
+  height: 32px;
+  font-size: 11px;
+  text-align: center;
+  padding: 4px !important;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,.25);
+  background: rgba(0,0,0,.35);
+  color: var(--text);
+  border-radius: 6px;
+}
+
+.compact-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(98,178,231,.25);
+}
+
+/* Compact input popup */
+.compact-popup {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: rgba(8,22,38,.95);
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.6);
+  display: none;
+  backdrop-filter: blur(6px);
+  min-width: 160px;
+}
+
+.compact-popup.show {
+  display: block;
+}
+
+.compact-popup input {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid rgba(255,255,255,.3);
+  background: rgba(255,255,255,.1);
+  color: white;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.compact-popup-buttons {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.compact-popup-btn {
+  flex: 1;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.compact-popup-btn.confirm {
+  background: var(--accent);
+  color: white;
+}
+
+.compact-popup-btn.cancel {
+  background: rgba(255,255,255,.2);
+  color: white;
+}
+
+
+/* Add to your existing styles */
+
+/* Comments toggle container */
+.comment-toggle-container {
+  position: relative;
+  width: 100%;
+}
+
+.comment-mode-toggle {
+  position: absolute;
+  top: -2px;
+  right: 2px;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: rgba(98,178,231,.7);
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 10px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.comment-mode-toggle:hover {
+  background: var(--accent);
+}
+
+/* Storage meter styles */
+.storage-meter {
+  width: 100%;
+  height: 35px;
+  background: rgba(0,0,0,.3);
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.meter-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  transition: width 0.3s ease;
+  border-radius: 5px 0 0 5px;
+}
+
+.meter-text {
+  position: relative;
+  z-index: 2;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0,0,0,.8);
+}
+
+/* Hide meter when not in meter mode */
+.comment-field[data-mode="comment"] .storage-meter {
+  display: none;
+}
+
+.comment-field[data-mode="meter"] .large-bold-input {
+  display: none;
 }
   </style>
 
@@ -576,9 +748,9 @@ button img{ width:40px; height:40px; padding-left:55px; margin-top:20px; }
 </div>
 
 <label for="padding-slider" style="display:block;text-align:center;margin:14px 0;color:rgba(2, 196, 255, 0.767);">
-Table Cell Padding
+Table Row Spacing
 </label>
-<input id="padding-slider" type="range" min="0" max="12" value="0" />
+<input id="padding-slider" type="range" min="0" max="16" value="0" />
 
 
 
@@ -963,6 +1135,8 @@ function addCategory(){
   if(name && !data[name]){ data[name]=[]; activeCategory=name; save(); updateCategories(); showCategory(); }
 }
 
+
+
 /* Palett */
 const PRODUCT_COLORS = [
   "#36d131","#ffd036","#40e0d0","#ffffff",
@@ -1191,7 +1365,7 @@ function showCategory(){
         <th>${t("table.endQty","End Qty")}</th>
         <th>${t("table.min","MIN🔔")}</th>
         <th>${t("table.max","MAX🔔")}</th>
-        <th>${t("table.comments","Comments")}</th>
+        <th>${t("table.commentsHeader","Comm/Space")}</th>  <!-- Changed from table.comments -->
         <th>${t("table.order","Order")}</th>
         <th>${t("table.move","Move")}</th>
         <th>${t("table.delete","Delete")}</th>
@@ -1228,7 +1402,7 @@ function showCategory(){
         <td>${t("table.endQty","End Qty")}</td>
         <td>${t("table.min","MIN🔔")}</td>
         <td>${t("table.max","MAX🔔")}</td>
-        <td>${t("table.comments","Comments")}</td>
+        <td>${t("table.commentsHeader","Comm/Space")}</td>  <!-- Changed from table.comments -->
         <td>${t("table.order","Order")}</td>
         <td>${t("table.move","Move")}</td>
         <td><button class="btn-danger" onclick="deleteRow(${i})">${t("btn.delete","Delete")}</button></td>
@@ -1243,63 +1417,94 @@ function showCategory(){
     const fields=['product','start','used','end','min','max','comment','order'];
     const inputs={};
 
-    fields.forEach((key)=>{
-      const td=document.createElement("td");
-      if(key==='product') td.classList.add("cell-product");
-      else if(key==='comment') td.classList.add("cell-comment");
-      else if(key==='min') td.classList.add("cell-min");
-      else if(key==='max') td.classList.add("cell-max");
-      else if(key==='order') td.classList.add("cell-order");
-      else td.classList.add("cell-small");
+    // In showCategory() function, replace the fields.forEach section with:
 
-      const input=document.createElement("input");
-      input.type=(key==='product'||key==='comment')?"text":"number";
-      input.value=row[key] ?? "";
-      input.style.width="90%"; input.style.padding="8px"; input.style.borderRadius="10px";
-      const phFallback = key.charAt(0).toUpperCase()+key.slice(1);
-      const phKeyMap = {
-        product: "table.productType",
-        start: "table.startQty",
-        used: "table.used",
-        end: "table.endQty",
-        min: "table.min",
-        max: "table.max",
-        comment: "table.comments",
-        order: "table.order"
-      };
-      input.placeholder = t(phKeyMap[key] || "", phFallback);
-      input.classList.add("large-bold-input");
-      if(key==='end'){ input.readOnly=true; }
+fields.forEach((key)=>{
+  const td=document.createElement("td");
+  if(key==='product') td.classList.add("cell-product");
+  else if(key==='comment') td.classList.add("cell-comment");
+  else if(key==='min') td.classList.add("cell-min");
+  else if(key==='max') td.classList.add("cell-max");
+  else if(key==='order') td.classList.add("cell-order");
+  else td.classList.add("cell-small");
 
-      input.oninput = () => {
-        if (key === 'order') {
-          const v = (input.value ?? '').toString().replace(',', '.');
-          row.order = v === '' ? 0 : (parseFloat(v) || 0);
-        } else {
-          row[key] = input.value;
-        }
-        const startVal = parseFloat(row.start) || 0;
-        const usedVal  = parseFloat(row.used)  || 0;
-        row.end = startVal - usedVal;
-        inputs['end'].value = row.end;
-        updateAlarms();
-        save();
-      };
+  // Handle MIN and MAX with compact inputs
+  if(key === 'min' || key === 'max') {
+    const compactInput = createCompactInput(row[key], key, row, updateAlarms);
+    td.appendChild(compactInput);
+    inputs[key] = compactInput.querySelector('.compact-input');
+    tr.appendChild(td);
+    return;
+  }
+  
+  // Handle Comment field with meter toggle
+  if(key === 'comment') {
+    const endValue = (parseFloat(row.start)||0)-(parseFloat(row.used)||0);
+    const maxValue = parseFloat(row.max)||0;
+    const { container, updateMeter } = createCommentField(row, endValue, maxValue);
+    td.appendChild(container);
+    
+    // Store reference for updates
+    inputs[key] = container.querySelector('.large-bold-input');
+    inputs.commentMeter = updateMeter;
+    
+    tr.appendChild(td);
+    return;
+  }
 
-      inputs[key]=input;
-      td.appendChild(input);
+  // Regular inputs for other fields
+  const input=document.createElement("input");
+  input.type=(key==='product')?"text":"number";
+  input.value=row[key] ?? "";
+  input.style.width="90%"; input.style.padding="8px"; input.style.borderRadius="10px";
+  const phFallback = key.charAt(0).toUpperCase()+key.slice(1);
+  const phKeyMap = {
+    product: "table.productType",
+    start: "table.startQty",
+    used: "table.used",
+    end: "table.endQty",
+    order: "table.order"
+  };
+  input.placeholder = t(phKeyMap[key] || "", phFallback);
+  input.classList.add("large-bold-input");
+  if(key==='end'){ input.readOnly=true; }
 
-      if(key==='product'){
-        if(row.productColor){
-          input.classList.add('product-input');
-          input.style.setProperty('--col-rgb', toRgbStr(row.productColor));
-          input.style.color = bestTextColor(row.productColor);
-        }
-        buildProductColorPicker(td, input, row);
-      }
+ // Update the regular input oninput handler in showCategory()
+  input.oninput = () => {
+  if (key === 'order') {
+    const v = (input.value ?? '').toString().replace(',', '.');
+    row.order = v === '' ? 0 : (parseFloat(v) || 0);
+  } else {
+    row[key] = input.value;
+  }
+  
+  // Recalculate end value
+  const startVal = parseFloat(row.start) || 0;
+  const usedVal  = parseFloat(row.used)  || 0;
+  row.end = startVal - usedVal;
+  inputs['end'].value = row.end;
+  
+  // Update all meters immediately
+  updateAllMetersInCurrentRow();
+  
+  updateAlarms();
+  save();
+};
 
-      tr.appendChild(td);
-    });
+  inputs[key]=input;
+  td.appendChild(input);
+
+  if(key==='product'){
+    if(row.productColor){
+      input.classList.add('product-input');
+      input.style.setProperty('--col-rgb', toRgbStr(row.productColor));
+      input.style.color = bestTextColor(row.productColor);
+    }
+    buildProductColorPicker(td, input, row);
+  }
+
+  tr.appendChild(td);
+});
 
     function updateAlarms(){
       const startVal=parseFloat(inputs['start'].value);
@@ -1380,6 +1585,211 @@ function moveRow(index, direction){
   save(); showCategory();
 }
 
+
+// Update the createCompactInput function
+function createCompactInput(value, field, row, updateCallback) {
+  const container = document.createElement('div');
+  container.className = 'compact-input-container';
+  
+  const input = document.createElement('input');
+  input.className = 'compact-input';
+  input.type = 'text';
+  input.value = value || '0';
+  input.readOnly = true;
+  
+  const popup = document.createElement('div');
+  popup.className = 'compact-popup';
+  
+  const popupInput = document.createElement('input');
+  popupInput.type = 'number';
+  popupInput.value = value || '0';
+  popupInput.min = '0';
+  popupInput.step = '1';
+  
+  const buttonContainer = document.createElement('div');
+  buttonContainer.className = 'compact-popup-buttons';
+  
+  const confirmBtn = document.createElement('button');
+  confirmBtn.className = 'compact-popup-btn confirm';
+  confirmBtn.textContent = '✓';
+  
+  const cancelBtn = document.createElement('button');
+  cancelBtn.className = 'compact-popup-btn cancel';
+  cancelBtn.textContent = '✕';
+  
+  buttonContainer.appendChild(confirmBtn);
+  buttonContainer.appendChild(cancelBtn);
+  popup.appendChild(popupInput);
+  popup.appendChild(buttonContainer);
+  
+  container.appendChild(input);
+  container.appendChild(popup);
+  
+  // Event handlers
+  input.addEventListener('click', () => {
+    popup.classList.add('show');
+    popupInput.focus();
+    popupInput.select();
+  });
+  
+  confirmBtn.addEventListener('click', () => {
+    const newValue = parseInt(popupInput.value) || 0;
+    input.value = newValue;
+    row[field] = newValue;
+    popup.classList.remove('show');
+    
+    // Trigger updates immediately
+    updateCallback();
+    
+    // Find and update any meter in the same row
+    updateAllMetersInCurrentRow();
+    
+    save();
+  });
+  
+  cancelBtn.addEventListener('click', () => {
+    popupInput.value = input.value;
+    popup.classList.remove('show');
+  });
+  
+  popupInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      confirmBtn.click();
+    } else if (e.key === 'Escape') {
+      cancelBtn.click();
+    }
+  });
+  
+  // Real-time updates while typing in popup
+  popupInput.addEventListener('input', () => {
+    const newValue = parseInt(popupInput.value) || 0;
+    input.value = newValue;
+    row[field] = newValue;
+    
+    // Trigger updates immediately
+    updateCallback();
+    updateAllMetersInCurrentRow();
+  });
+  
+  // Close popup when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!container.contains(e.target) && popup.classList.contains('show')) {
+      cancelBtn.click();
+    }
+  });
+  
+  return container;
+}
+
+// Update the createCommentField function
+function createCommentField(row, endValue, maxValue) {
+  const container = document.createElement('div');
+  container.className = 'comment-toggle-container';
+  
+  const fieldContainer = document.createElement('div');
+  fieldContainer.className = 'comment-field';
+  fieldContainer.setAttribute('data-mode', row.commentMode || 'comment');
+  
+  // Toggle button
+  const toggleBtn = document.createElement('button');
+  toggleBtn.className = 'comment-mode-toggle';
+  toggleBtn.innerHTML = (row.commentMode === 'meter') ? '📊' : '💬';
+  toggleBtn.title = 'Toggle between comment and storage meter';
+  
+  // Comment input
+  const commentInput = document.createElement('input');
+  commentInput.className = 'large-bold-input';
+  commentInput.type = 'text';
+  commentInput.value = row.comment || '';
+  commentInput.placeholder = t("table.comments", "Comments");
+  
+  // Storage meter
+  const meterContainer = document.createElement('div');
+  meterContainer.className = 'storage-meter';
+  
+  const meterFill = document.createElement('div');
+  meterFill.className = 'meter-fill';
+  
+  const meterText = document.createElement('div');
+  meterText.className = 'meter-text';
+  
+   
+  meterContainer.appendChild(meterFill);
+  meterContainer.appendChild(meterText);
+  
+  // Update meter display function - now gets fresh values
+  function updateMeter() {
+    // Get fresh calculated values from the row
+    const current = parseFloat(row.end) || 0;
+    const max = parseFloat(row.max) || 1;
+    const percentage = Math.min(100, Math.max(0, (current / max) * 100));
+    
+    meterFill.style.width = percentage + '%';
+    meterText.textContent = `${current}/${max} (${Math.round(percentage)}%)`;
+
+// Color coding based on percentage with transparency
+if (percentage <= 25) {
+  meterFill.style.background = 'rgba(240, 55, 71, 0.3)';  // Red with 30% opacity
+} else if (percentage <= 50) {
+  meterFill.style.background = 'rgba(236, 197, 67, 0.3)'; // Yellow with 30% opacity
+} else {
+  meterFill.style.background = 'rgba(40, 231, 85, 0.3)';  // Green with 30% opacity
+}
+    
+  }
+  
+  // Toggle event
+  toggleBtn.addEventListener('click', () => {
+    const currentMode = fieldContainer.getAttribute('data-mode');
+    const newMode = currentMode === 'comment' ? 'meter' : 'comment';
+    
+    fieldContainer.setAttribute('data-mode', newMode);
+    toggleBtn.innerHTML = newMode === 'meter' ? '📊' : '💬';
+    row.commentMode = newMode;
+    
+    if (newMode === 'meter') {
+      updateMeter();
+    }
+    
+    save();
+  });
+  
+  // Comment input event
+  commentInput.addEventListener('input', () => {
+    row.comment = commentInput.value;
+    save();
+  });
+  
+  fieldContainer.appendChild(commentInput);
+  fieldContainer.appendChild(meterContainer);
+  container.appendChild(fieldContainer);
+  container.appendChild(toggleBtn);
+  
+  // Store reference to this meter for global updates
+  container.updateMeter = updateMeter;
+  
+  // Initial meter update
+  if (row.commentMode === 'meter') {
+    updateMeter();
+  }
+  
+  return { container, updateMeter };
+}
+
+// Add this helper function to update all meters in current table
+function updateAllMetersInCurrentRow() {
+  // Find all comment containers with meters
+  document.querySelectorAll('.comment-toggle-container').forEach(container => {
+    if (container.updateMeter && typeof container.updateMeter === 'function') {
+      // Only update if in meter mode
+      const fieldContainer = container.querySelector('.comment-field');
+      if (fieldContainer && fieldContainer.getAttribute('data-mode') === 'meter') {
+        container.updateMeter();
+      }
+    }
+  });
+}
+
 /* ===== SEND: aktiv kategori -> Orders.html ===== */
 function sendActiveCategoryToOrders() {
   const rows = data[activeCategory] || [];
@@ -1442,18 +1852,19 @@ themeSlider.addEventListener('input', () => {
 });
 
 
+// Update the slider JavaScript
 const slider = document.getElementById("padding-slider");
-const STORAGE_KEY = "tableCellPadding";
+const STORAGE_KEY = "tableVerticalSpacing";
 
-// Hent lagret verdi (eller 0 som standard)
-const savedPadding = localStorage.getItem(STORAGE_KEY) || 0;
-slider.value = savedPadding;
-document.documentElement.style.setProperty("--cell-padding", savedPadding + "px");
+// Get saved value (or 0 as default)
+const savedSpacing = localStorage.getItem(STORAGE_KEY) || 0;
+slider.value = savedSpacing;
+document.documentElement.style.setProperty("--cell-spacing", savedSpacing + "px");
 
-// Oppdater når slideren endres
-slider.addEventListener("input", e=>{
+// Update when slider changes
+slider.addEventListener("input", e => {
   const value = e.target.value;
-  document.documentElement.style.setProperty("--cell-padding", value  + "px");
+  document.documentElement.style.setProperty("--cell-spacing", value + "px");
   localStorage.setItem(STORAGE_KEY, value);
 });
 
@@ -1477,7 +1888,7 @@ function showGlobalOverview(){
         <th>${t("table.endQty","End Qty")}</th>
         <th>${t("table.min","MIN🔔")}</th>
         <th>${t("table.max","MAX🔔")}</th>
-        <th>${t("table.comments","Comments")}</th>
+        <th>${t("table.comments","Comment")}</th>
         <th>${t("table.order","Order")}</th>
       </tr>
     </thead>

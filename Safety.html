@@ -22,7 +22,14 @@
       border:1px solid rgba(255,255,255,.12); box-shadow:0 12px 28px rgba(0,0,0,.35);
     }
     h1{ text-align:center; margin:18px 0; color:#1eb6d1; text-shadow:0 1px 3px rgba(0,0,0,.6) }
+
     h2{ margin:6px 0 12px }
+
+    /* Header-video */
+    .video-header{ position:relative; aspect-ratio:1280/99; overflow:hidden; background:#000; }
+    .video-header video{ width:100%; height:200%; object-fit:cover; display:block; }
+    .gradient-overgang{ height:10px; background:linear-gradient(to left,#62b2e7,#001125); box-shadow:6px 4px 6px rgba(0,0,0,.7); }
+
 
     table{ width:100%; border-collapse:collapse; background:rgba(0,0,0,.20); color:var(--text);
            border:1px solid rgba(255,255,255,.12); border-radius:14px; overflow:hidden;
@@ -73,6 +80,13 @@
     .section-title{ width:100%; font-weight:bold }
   </style>
 </head>
+<header class="video-header">
+  <video autoplay muted loop playsinline disablePictureInPicture>
+    <source src="Video/Ocean-Seavo-Nautiq.mp4" type="video/mp4">
+  </video>
+</header>
+
+<div class="gradient-overgang"></div>
 <body>
 
   <h1>Safety</h1>

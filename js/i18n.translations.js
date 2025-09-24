@@ -51,7 +51,7 @@ window.I18N_DICTIONARIES = {
 "index.themeDark": "🌙",
 
 "nav.equipment": "Equipment",
-"nav.partsTools": "Parts and tools",
+"nav.partsTools": "Parts & tools",
 "nav.provisions": "Provisions",
 "nav.medicine": "Medicine",
 "nav.orders": "Orders",
@@ -129,7 +129,7 @@ window.I18N_DICTIONARIES = {
     "default.headerText":"New Header",
     "default.headerPlaceholder":"Section / Header",
 
-    "global.title": "Global overview of the entire office inventory",
+    "global.title": "Global overview of the entire inventory",
     "global.hint": "The Global Overview presents all inventory in a structured table format, optimized for PDF generating and printing.",
     "btn.pdfDesc": "Generate a PDF document of the current inventory view.",
     "btn.excelDesc": "Export the current inventory view to an Excel file.",
@@ -282,7 +282,7 @@ window.I18N_DICTIONARIES = {
     "default.headerText":"Ny overskrift",
     "default.headerPlaceholder":"Seksjon / Overskrift",
 
-    "global.title": "Global oversikt over hele kontorlageret",
+    "global.title": "Global oversikt over hele lageret",
     "global.hint": "Globaloversikten presenterer alt lager i et strukturert tabellformat, optimalisert for PDF-generering og utskrift.",
     "btn.pdfDesc": "Generer et PDF-dokument av gjeldende lagervisning.",
 "btn.excelDesc": "Eksporter gjeldende lagervisning til en Excel-fil.",
@@ -432,7 +432,7 @@ is: {
   "default.headerText": "Ný fyrirsögn",
   "default.headerPlaceholder": "Kafli / Fyrirsögn",
 
-  "global.title": "Heildaryfirlit yfir allan skrifstofulagerinn",
+  "global.title": "Heildaryfirlit yfir allan lagerinn",
   "global.hint": "Heildaryfirlit sýnir allar birgðir í skipulögðu töfluformi, fínstillt fyrir PDF-gerð og prentun.",
   "btn.pdfDesc": "Búa til PDF skjal af núverandi birgðayfirliti.",
   "btn.excelDesc": "Flytja út núverandi birgðayfirlit í Excel skrá.",
@@ -583,7 +583,7 @@ is: {
     "default.headerText":"Новый заголовок",
     "default.headerPlaceholder":"Раздел / Заголовок",
 
-    "global.title": "Глобальный обзор всего офисного инвентаря",
+    "global.title": "Глобальный обзор всего склада",
     "global.hint": "Глобальный обзор представляет все запасы в структурированном табличном формате, оптимизированном для генерации PDF и печати.",
     "btn.pdfDesc": "Создать PDF документ текущего вида инвентаря.",
 "btn.excelDesc": "Экспортировать текущий вид инвентаря в файл Excel.",
@@ -733,7 +733,7 @@ is: {
     "default.headerText": "新标题",
     "default.headerPlaceholder": "分区 / 标题",
 
-    "global.title":"整个办公库存的全局概览",
+    "global.title":"整个库存的全局概览",
     "global.hint":"全局概览以结构化表格格式呈现所有库存，优化PDF生成和打印。",
     "btn.pdfDesc": "生成当前库存视图的PDF文档。",
 "btn.excelDesc": "将当前库存视图导出到Excel文件。",
@@ -883,7 +883,7 @@ is: {
     "default.headerText":"Nuevo encabezado",
     "default.headerPlaceholder":"Sección / Encabezado",
 
-    "global.title":"Vista global de todo el inventario de oficina",
+    "global.title":"Visión general global de todo el inventario",
     "global.hint":"La Vista General presenta todo el inventario en formato de tabla estructurada, optimizada para generar PDF e imprimir.",
     "btn.pdfDesc": "Generar un documento PDF de la vista actual del inventario.",
 "btn.excelDesc": "Exportar la vista actual del inventario a un archivo Excel.",
@@ -1033,7 +1033,7 @@ is: {
     "default.headerText":"Novo cabeçalho",
     "default.headerPlaceholder":"Secção / Cabeçalho",
 
-    "global.title":"Visão global de todo o inventário do escritório",
+    "global.title":"Visão geral global de todo o inventário",
     "global.hint":"A Visão Global apresenta todo o inventário em formato de tabela estruturada, otimizada para geração de PDF e impressão.",
     "btn.pdfDesc": "Gerar um documento PDF da visualização atual do inventário.",
 "btn.excelDesc": "Exportar a visualização atual do inventário para um arquivo Excel.",

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Parts and tools – Seavo Nautiq</title>
+  <title>Parts & tools – Seavo Nautiq</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <link rel="stylesheet" href="responsive.css">
@@ -322,7 +322,7 @@ td:last-child{ width:60px; background:linear-gradient(to right, rgba(78,155,206,
 
 <body>
 <header>
-  <h1 style="text-align:center; color: rgb(30, 182, 209); margin-top:20px; font-size:36px; font-weight:bold; text-shadow:0 1px 3px rgba(0,0,0,.6);">Parts and tools</h1>
+  <h1 style="text-align:center; color: rgb(30, 182, 209); margin-top:20px; font-size:36px; font-weight:bold; text-shadow:0 1px 3px rgba(0,0,0,.6);">Parts & tools</h1>
   <a href="index.html" class="logo-link"><img src="images/Logo Seavo Nautiq.png" alt="Logo Seavo Nautiq" class="logo"></a>
 
   <div id="sidePanel" class="hidden">
@@ -353,7 +353,7 @@ td:last-child{ width:60px; background:linear-gradient(to right, rgba(78,155,206,
   <button id="undo-delete" class="undo-category" onclick="undoCategoryDelete()" disabled>↶ Undo Del</button>
 </div>
 
-<div><img src="images/Parts and tools.PNG" alt="parts-and-tools" class="parts-and-tools"></div>
+<div><img src="images/Parts&tools.PNG" alt="parts-and-tools" class="parts-&-tools"></div>
 
 <div id="content"></div>
 
@@ -1078,7 +1078,7 @@ function sendActiveCategoryToOrders() {
     }
 
     // les direkte fra data (ikke DOM)
-    const product = (r.product || r["Parts and tools"] || "").trim();
+    const product = (r.product || r["Parts & tools"] || "").trim();
     const qty = Number(String(r.order ?? "").toString().replace(",", "."));
     const comment = (r.comment || "").trim();
 

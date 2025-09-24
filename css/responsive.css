@@ -1,0 +1,22 @@
+/* Basic responsive styles */
+@media (max-width: 768px) {
+  .category-slider-office {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .global-button {
+    margin: 5px;
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+  
+  table {
+    font-size: 12px;
+  }
+  
+  .large-bold-input {
+    padding: 6px;
+    font-size: 12px;
+  }
+}

@@ -2,160 +2,244 @@
 <html lang="no">
 <head>
   <meta charset="UTF-8">
-  <title>List of participants</title>
+  <title>Seavo Nautiq – Participants</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
   <style>
-    body { background-color:#0b2d5e; font-family:Arial,sans-serif; margin:30px; color:#fff; font-weight:bold; }
-    table { width:100%; border-collapse:collapse; margin-bottom:30px; background-color:rgba(8, 32, 58, 0.959); }
-    th, td { border:1px solid #ddd; padding:12px; text-align:left; }
-    th { background-color:#212224; color:#fff; margin-bottom:10px; }
-    input[type="text"], input[type="email"], input[type="tel"], select, input[list] {
-      width:100%; padding:8px; box-sizing:border-box; border-radius:5px;
-    }
-    .status-valid { background-color:#28e755; color:#000; }
-    .status-warning { background-color:#ecc543; color:#000; }
-    .status-expired { background-color:#f03747; color:#fff; }
+    :root{
+      --bg:#0f2a4a;
+      --panel:rgba(0,0,0,.18);
+      --panel-2:rgba(255,255,255,.08);
+      --text:#ffffff;
+      --muted:#bcd3f1;
+      --accent:#62b2e7;
+      --accent-2:#1b75d1;
+      --accent-3:#0e3e86;
+      --ok:#28e755; --warn:#ecc543; --danger:#f03747; --na:#2e6fb3;
+      --shadow:0 12px 28px rgba(0,0,0,.35);
+      --radius:14px;
 
-    .add-btn {
-      padding:10px 20px; font-size:16px; background:linear-gradient(to right,#007bff,#0056b3);
-      color:#fff; border:none; border-radius:6px; cursor:pointer; box-shadow:0 2px 4px rgba(0,0,0,.4);
+      --select-bg:#0b2e5e;
+      --select-border: rgba(255,255,255,.18);
+      --select-text:#ffffff;
+      --content-max: 1460px;
     }
-    .add-btn:hover { background:#598fc9; }
-    .delete-row-btn { background:#d9534f; color:#fff; border:none; border-radius:5px; padding:6px 10px; cursor:pointer; }
-    .delete-row-btn:hover { opacity:.9; }
+    *{box-sizing:border-box}
+    body{
+      margin:0; color:var(--text); font-family:Arial,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      background: radial-gradient(1200px 600px at 10% -10%, rgba(98,178,231,.12), transparent 60%) , var(--bg);
+    }
 
-    /* Picker bar */
-    .picker-bar {
-      display:none;
-      background:linear-gradient(to right,#1b75d1,#0e3e86);
-      padding:12px;
-      border-radius:8px;
-      margin:10px 0 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,.25);
+    /* Header-video */
+    .video-header{ position:relative; aspect-ratio:1280/99; overflow:hidden; background:#000; }
+    .video-header video{ width:100%; height:200%; object-fit:cover; display:block; }
+    .gradient-overgang{ height:10px; background:linear-gradient(to left,#62b2e7,#001125); box-shadow:6px 4px 6px rgba(0,0,0,.7); }
+
+    .page-header{ padding:20px 16px 0; text-align:center; }
+    .title{ font-size:32px; font-weight:800; letter-spacing:.4px; text-shadow:0 1px 3px rgba(0,0,0,.6); margin:12px 0 6px; }
+    .subtitle{ color:var(--muted); font-weight:600; margin:10 0 16px; }
+
+    .panel{
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:16px;
+      margin:40px auto;                        /* center */
+      width: clamp(320px, 96vw, var(--content-max));
     }
-    .picker-bar.active { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
-    .picker-info { font-weight:600; }
-    .picker-actions { display:flex; gap:10px; flex-wrap:wrap; }
-    .btn {
-      padding:10px 14px; font-size:14px; border:none; border-radius:8px; cursor:pointer; color:#fff;
-      background:linear-gradient(to right,#62b2e7,#1b4f8f);
-      box-shadow:0 2px 6px rgba(0,0,0,.35);
+    .panel h2{ margin:4px 0 0px; font-size:20px; }
+
+    .statsbar{ display:flex; flex-wrap:wrap; gap:10px; color:var(--muted); font-weight:700; margin:6px 0 12px; }
+    .statsbar .chip{ background:rgba(0,0,0,.28); border:1px solid rgba(255,255,255,.295); padding:6px 10px; border-radius:999px; color:#e8f2ff; font-weight:700; font-size:12px; }
+
+    .table-wrapper{ overflow-x:auto; }
+    table{
+      width:100%; min-width:900px; border-collapse:collapse; background:rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.12); border-radius:12px; overflow:hidden;
     }
-    .btn:hover { filter: brightness(1.05); }
-    .btn-ghost { background:rgba(0,0,0,.25); }
+    thead th{ background:linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.05)); color:#fff; text-align:left; padding:12px; font-weight:700; }
+    tbody td{ border-top:1px solid rgba(255,255,255,.10); padding:10px; vertical-align:middle; }
+    tbody tr:hover{ background:rgba(255,255,255,.03); }
+
+    input[type="text"], input[type="email"], input[type="tel"]{
+      width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.14);
+      background:#0b2e5e9c; color:var(--text); outline:none;
+    }
+    input::placeholder{ color:#d6e6f8aa; }
+
+    select{
+      width:100%; padding:10px 12px; border-radius:10px;
+      border:1px solid var(--select-border);
+      background:var(--select-bg); color:var(--select-text);
+      outline:none; appearance:auto;
+    }
+    select:focus{ box-shadow:0 0 0 2px rgba(98,178,231,.35); }
+    option{ background:var(--select-bg); color:var(--select-text); }
+
+    .chip{ display:inline-block; padding:6px 10px; border-radius:999px; font-weight:700; font-size:12px; border:1px solid rgba(255,255,255,.16); }
+    .status-valid{ background:var(--ok); color:#072; }
+    .status-warning{ background:var(--warn); color:#221; }
+    .status-expired{ background:var(--danger); color:#fff; }
+    .status-na{ background:var(--na); color:#eaf3ff; }
+
+    .btn{ padding:10px 14px; font-size:14px; border:none; border-radius:10px; cursor:pointer; color:#fff;
+      background:linear-gradient(90deg, var(--accent), var(--accent-2)); box-shadow:0 2px 6px rgba(0,0,0,.35); }
+    .btn:hover{ filter:brightness(1.06); }
+    .btn-ghost{ background:rgba(0,0,0,.35); }
+    .btn-danger{ background:linear-gradient(90deg, #e24a53, #b31a23); }
+    .btn-warning{ background:linear-gradient(90deg, #f0c34a, #c79b16); color:#000; }
+    .actionbar{ display:flex; gap:8px; align-items:center; }
+    .add-btn{ margin-top:10px; font-weight:700; }
+
+    .picker-bar{ display:none; background:linear-gradient(90deg, var(--accent-2), var(--accent-3));
+      padding:12px; border-radius:12px; margin:16px; box-shadow:var(--shadow); align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+    .picker-bar.active{ display:flex; }
+    .picker-info{ font-weight:700; }
+
+    .toast{ position:fixed; left:50%; transform:translateX(-50%); bottom:18px; background:rgba(10,24,40,.92);
+      color:#fff; padding:12px 16px; border-radius:12px; border:1px solid rgba(255,255,255,.15); box-shadow:var(--shadow); z-index:2000; display:none; }
+    .toast.show{ display:block; }
+
+    .checkbox-cell{ width:56px; text-align:center; }
+    .pickbox{ width:22px; height:22px; cursor:pointer; accent-color: var(--accent-2); inline-size:22px; block-size:22px; }
+    .actions-cell{ white-space:nowrap; width:1%; }
   </style>
 </head>
 <body>
 
-  <h1 style="text-align:center; margin-top:20px; font-size:36px; font-weight:bold; text-shadow:0 1px 3px rgba(0,0,0,.6);">
-    List of participants
-  </h1>
+  <header class="video-header">
+    <video autoplay muted loop playsinline disablePictureInPicture>
+      <source src="Video/Ocean-Seavo-Nautiq.mp4" type="video/mp4">
+    </video>
+  </header>
 
-  <!-- Vises kun i pick=1 modus -->
+  <div class="gradient-overgang"></div>
+
+  <header class="page-header">
+    <div class="title">Participants / Crew</div>
+    <p class="subtitle">Register, edit and pick participants for Supplies or Maintenance</p>
+  </header>
+
+  <!-- Picker mode -->
   <div id="pickerBar" class="picker-bar">
     <div class="picker-info">Picker mode: Select participants and send to Supplies or Maintenance.</div>
-    <div class="picker-actions">
+    <div class="actionbar">
       <button id="sendPicked" class="btn">Send to Supplies</button>
       <button id="sendPicked2" class="btn">Send to Maintenance</button>
       <button id="cancelPicked" class="btn btn-ghost">Cancel</button>
     </div>
   </div>
 
-  <h2>Registered Participants</h2>
+  <!-- Register New (øverst) -->
+  <section class="panel">
+    <h2>Register New</h2>
+    <form id="crewForm" onsubmit="return false;">
+      <div class="table-wrapper">
+        <table>
+          <tbody>
+            <tr>
+              <td><label for="name">Full name *</label></td>
+              <td><input type="text" id="name" placeholder="Full name" required></td>
+            </tr>
+            <tr>
+              <td><label for="nationality">Nationality *</label></td>
+              <td><input type="text" id="nationality" placeholder="Nationality" required></td>
+            </tr>
+            <tr>
+              <td><label for="email">E-mail *</label></td>
+              <td><input type="email" id="email" placeholder="name@domain.com" required></td>
+            </tr>
+            <tr>
+              <td><label for="position">Job position *</label></td>
+              <td>
+                <!-- Fylles dynamisk fra POSITIONS -->
+                <select id="position" required></select>
+              </td>
+            </tr>
+            <tr>
+              <td><label for="status">Status of documents *</label></td>
+              <td>
+                <select id="status" required>
+                  <option value="valid">✅ All valid</option>
+                  <option value="soon">⚠️ One or more expires soon</option>
+                  <option value="expired">❌ One or more expired</option>
+                  <option value="nr">🔄 Not required</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td><label for="personId">Id/Pn (optional)</label></td>
+              <td><input type="text" id="personId" placeholder="Person ID / Passport no. (optional)"></td>
+            </tr>
+            <tr>
+              <td><label for="phone">Phone (optional)</label></td>
+              <td><input type="tel" id="phone" placeholder="+47 … (optional)"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-  <table id="crewTable">
-    <thead>
-      <tr>
-        <th>✔️</th>
-        <th>Participant / Crew</th>
-        <th>Nationality</th>
-        <th>Id/Pn</th>
-        <th>Phone number</th>
-        <th>E-mail</th>
-        <th>Status of documents</th>
-        <th>Job position</th>
-        <th>Delete</th>
-      </tr>
-    </thead>
-    <tbody id="crewBody"></tbody>
-  </table>
+      <button type="button" class="btn add-btn" onclick="addParticipant()">Add Participant/Crew</button>
+    </form>
+  </section>
 
-  <h2>Register New</h2>
-  <form id="crewForm" onsubmit="return false;">
-    <table>
-      <tr>
-        <td><label for="name">Full name:</label></td>
-        <td><input type="text" id="name" placeholder="Full name" required></td>
-      </tr>
-      <tr>
-        <td><label for="nationality">Nationality:</label></td>
-        <td><input type="text" id="nationality" placeholder="Nationality" required></td>
-      </tr>
-      <tr>
-        <td><label for="personId">Id/Pn:</label></td>
-        <td><input type="text" id="personId" placeholder="PersonId" required></td>
-      </tr>
-      <tr>
-        <td><label for="phone">Telephone number:</label></td>
-        <td><input type="tel" id="phone" placeholder="Telephone number" required></td>
-      </tr>
-      <tr>
-        <td><label for="email">E-mail:</label></td>
-        <td><input type="email" id="email" placeholder="E-mail" required></td>
-      </tr>
-      <tr>
-        <td><label for="position">Job position:</label></td>
-        <td>
-          <input type="text" id="position" list="positions" placeholder="Type Job Position" required>
-          <datalist id="positions">
-            <option value="Captain"></option>
-            <option value="Chief Officer"></option>
-            <option value="Second Officer"></option>
-            <option value="Third Officer"></option>
-            <option value="Deck Cadet"></option>
-            <option value="Chief Engineer"></option>
-            <option value="First Engineer"></option>
-            <option value="Second Engineer"></option>
-            <option value="Third Engineer"></option>
-            <option value="Chief Steward"></option>
-            <option value="Cook"></option>
-            <option value="Stuard"></option>
-            <option value="Fisherman"></option>
-            <option value="Sailor"></option>
-            <option value="Apprentice"></option>
-          </datalist>
-        </td>
-      </tr>
-      <tr>
-        <td><label for="status">Status of documents:</label></td>
-        <td>
-          <select id="status" required>
-            <option value="valid" class="status-valid">✅ All valid</option>
-            <option value="soon" class="status-warning">⚠️ One or more expires soon</option>
-            <option value="expired" class="status-expired">❌ One or more expired</option>
-          </select>
-        </td>
-      </tr>
-    </table>
+  <!-- Registered Participants (nederst) -->
+  <section class="panel">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+      <h2 style="margin:0;">Registered Participants</h2>
 
-    <button type="button" class="add-btn" onclick="addParticipant()">Add Participant/Crew</button>
-  </form>
+      <!-- PDF knapp (kun dette panelet) -->
+      <div class="actionbar" style="margin-left:auto;">
+        <button class="btn" id="exportPdfBtn" onclick="exportParticipantsPDF()">Export PDF</button>
+      </div>
+    </div>
 
-  <!-- Legg denne script-taggen nederst på hver side (før dine side-spesifikke skript) -->
-<script src="seavo-core.js"></script>
+    <div id="statsBar" class="statsbar" aria-live="polite"></div>
 
+    <div class="table-wrapper">
+      <table id="crewTable" aria-label="Registered Participants">
+        <thead>
+          <tr>
+            <th class="checkbox-cell">✔️</th>
+            <th>Participant / Crew *</th>
+            <th>Nationality *</th>
+            <th>Id/Pn</th>
+            <th>Phone</th>
+            <th>E-mail *</th>
+            <th>Status *</th>
+            <th>Job position *</th>
+            <th class="actions-cell">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="crewBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="seavo-core.js"></script>
 
   <script>
+    /* ==== English positions used both in Register form and Edit-mode ==== */
+    const POSITIONS = [
+      "General Manager","Managing Director","Operations Manager","Chief Financial Officer (CFO)","HR Manager",
+      "Office Manager","Administrator","Project Manager","Procurement Manager","Quality / HSEQ Manager",
+      "Operations Supervisor","Technical Manager","Fleet Manager","Maintenance Manager","Safety Manager",
+      "IT Manager","Logistics Manager","Legal Counsel","Sales & Marketing Manager",
+      "Captain","Chief Officer","Second Officer","Third Officer",
+      "Chief Engineer","First Engineer","Second Engineer","Third Engineer",
+      "Bosun","Able Seaman (AB)","Fisherman","Deck Cadet","Engine Cadet",
+      "Chief Steward","Cook","Sailor","Apprentice","Coordinator","Planner","Superintendent", "Other job position"
+    ];
+
     const PKEY = 'participants_v1';
     const PICKKEY = 'selected_for_supplies';
     const PICKKEY2 = 'selected_for_maintenance';
 
     const $ = id => document.getElementById(id);
-
-    function getQueryParam(name) {
-      const url = new URL(window.location.href);
-      return url.searchParams.get(name);
-    }
-    const isPicker = getQueryParam('pick') === '1';
+    const isPicker = new URL(location.href).searchParams.get('pick') === '1';
 
     const loadParticipants = () => {
       try { return JSON.parse(localStorage.getItem(PKEY)) || []; }
@@ -165,119 +249,327 @@
 
     let participants = loadParticipants();
 
-    function renderTable() {
+    function escapeHtml(str){
+      return String(str ?? '')
+        .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+    }
+
+    function statusText(s){
+      return s === 'valid' ? '✅ Valid'
+           : s === 'soon'  ? '⚠️ Soon to expire'
+           : s === 'expired' ? '❌ Expired'
+           : '🔄 Not required';
+    }
+    function statusClass(s){
+      return s === 'valid' ? 'status-valid'
+           : s === 'soon'  ? 'status-warning'
+           : s === 'expired' ? 'status-expired'
+           : 'status-na';
+    }
+
+    function showToast(msg){
+      const t = $('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(()=> t.classList.remove('show'), 2800);
+    }
+
+    /* Build options from POSITIONS */
+    function positionOptions(selected){
+      return ['<option value="">Choose position…</option>']
+        .concat(POSITIONS.map(v=>`<option${v===selected?' selected':''}>${escapeHtml(v)}</option>`))
+        .join('');
+    }
+    function fillPositionSelect(selectEl, selected=''){
+      if(!selectEl) return;
+      selectEl.innerHTML = positionOptions(selected);
+    }
+
+    function renderTable(){
       const body = $('crewBody');
       body.innerHTML = '';
-      participants.forEach(p => {
+      participants.forEach(p=>{
         const tr = document.createElement('tr');
+        tr.dataset.uid = p.uid;
+
         tr.innerHTML = `
-          <td><input type="checkbox" class="pickbox" data-uid="${p.uid}"></td>
-          <td>${escapeHtml(p.name)}</td>
-          <td>${escapeHtml(p.nationality)}</td>
-          <td>${escapeHtml(p.personId)}</td>
-          <td>${escapeHtml(p.phone)}</td>
-          <td>${escapeHtml(p.email)}</td>
-          <td class="${statusClass(p.status)}">${statusText(p.status)}</td>
-          <td>${escapeHtml(p.position)}</td>
-          <td><button class="delete-row-btn" onclick="deleteRow('${p.uid}')">Delete</button></td>
+          <td class="checkbox-cell">
+            <input type="checkbox" class="pickbox" data-uid="${p.uid}">
+          </td>
+          <td class="name-cell">${escapeHtml(p.name)}</td>
+          <td class="nat-cell">${escapeHtml(p.nationality)}</td>
+          <td class="pid-cell">${escapeHtml(p.personId||'')}</td>
+          <td class="phone-cell">${escapeHtml(p.phone||'')}</td>
+          <td class="mail-cell">${escapeHtml(p.email)}</td>
+          <td class="status-cell"><span class="chip ${statusClass(p.status)}">${statusText(p.status)}</span></td>
+          <td class="pos-cell">${escapeHtml(p.position)}</td>
+          <td class="actions-cell">
+            <div class="actionbar">
+              <button class="btn btn-ghost" onclick="enterEdit('${p.uid}')">Edit</button>
+              <button class="btn btn-danger" onclick="confirmDelete('${p.uid}')">Delete</button>
+            </div>
+          </td>
         `;
         body.appendChild(tr);
       });
+
+      updateStatsBar();
     }
 
-    function statusText(s) {
-      return s === 'valid' ? '✅ Valid'
-           : s === 'soon' ? '⚠️ Soon to expire'
-           : '❌ Expired';
-    }
-    function statusClass(s) {
-      return s === 'valid' ? 'status-valid'
-           : s === 'soon' ? 'status-warning'
-           : 'status-expired';
+    function enterEdit(uid){
+      const p = participants.find(x=>x.uid===uid); if(!p) return;
+      const tr = document.querySelector(`tr[data-uid="${uid}"]`);
+      tr.innerHTML = `
+        <td class="checkbox-cell">
+          <input type="checkbox" class="pickbox" data-uid="${p.uid}" disabled>
+        </td>
+        <td><input type="text" id="e_name_${uid}" value="${escapeHtml(p.name)}" /></td>
+        <td><input type="text" id="e_nat_${uid}" value="${escapeHtml(p.nationality)}" /></td>
+        <td><input type="text" id="e_pid_${uid}" value="${escapeHtml(p.personId||'')}" placeholder="Optional" /></td>
+        <td><input type="tel"  id="e_phone_${uid}" value="${escapeHtml(p.phone||'')}" placeholder="Optional" /></td>
+        <td><input type="email" id="e_mail_${uid}" value="${escapeHtml(p.email)}" /></td>
+        <td>
+          <select id="e_status_${uid}">
+            <option value="valid"${p.status==='valid'?' selected':''}>✅ All valid</option>
+            <option value="soon"${p.status==='soon'?' selected':''}>⚠️ One or more expires soon</option>
+            <option value="expired"${p.status==='expired'?' selected':''}>❌ One or more expired</option>
+            <option value="nr"${p.status==='nr'?' selected':''}>🔄 Not required</option>
+          </select>
+        </td>
+        <td>
+          <select id="e_pos_${uid}"></select>
+        </td>
+        <td class="actions-cell">
+          <div class="actionbar">
+            <button class="btn" onclick="saveEdit('${uid}')">Save</button>
+            <button class="btn btn-warning" onclick="cancelEdit()">Cancel</button>
+          </div>
+        </td>
+      `;
+      // fyll posisjoner i edit select
+      fillPositionSelect($(`e_pos_${uid}`), p.position);
     }
 
-    function addParticipant() {
-      const name = $('name').value.trim();
-      const nationality = $('nationality').value.trim();
-      const personId = $('personId').value.trim();
-      const phone = $('phone').value.trim();
-      const email = $('email').value.trim();
-      const position = $('position').value.trim();
-      const status = $('status').value;
+    function cancelEdit(){ renderTable(); }
 
-      if (!name || !nationality || !personId || !phone || !email || !position || !status) {
-        alert('Vennligst fyll ut alle felt.');
+    function saveEdit(uid){
+      const p = participants.find(x=>x.uid===uid); if(!p) return;
+
+      const name = $(`e_name_${uid}`).value.trim();
+      const nationality = $(`e_nat_${uid}`).value.trim();
+      const email = $(`e_mail_${uid}`).value.trim();
+      const position = $(`e_pos_${uid}`).value;
+      const status = $(`e_status_${uid}`).value;
+
+      const personId = $(`e_pid_${uid}`).value.trim();
+      const phone = $(`e_phone_${uid}`).value.trim();
+
+      if(!name || !nationality || !email || !position || !status){
+        alert('Fyll ut alle påkrevde felt (*).');
         return;
       }
 
-      if (participants.some(p => p.personId === personId)) {
-        if (!confirm('En deltaker med samme Id/Pn finnes allerede. Legg til likevel?')) return;
+      Object.assign(p, { name, nationality, email, position, status, personId, phone });
+      saveParticipants(participants);
+      renderTable();
+      showToast('Participant updated.');
+    }
+
+    function confirmDelete(uid){
+      const p = participants.find(x=>x.uid===uid);
+      const label = p ? ` "${p.name}"` : '';
+      if(!confirm(`Slette${label}? Dette kan ikke angres.`)) return;
+      deleteRow(uid);
+    }
+
+    function deleteRow(uid){
+      participants = participants.filter(p => p.uid !== uid);
+      saveParticipants(participants);
+      renderTable();
+      showToast('Participant deleted.');
+    }
+
+    function addParticipant(){
+      const name = $('name').value.trim();
+      const nationality = $('nationality').value.trim();
+      const email = $('email').value.trim();
+      const position = $('position').value;
+      const status = $('status').value;
+
+      const personId = $('personId').value.trim(); // optional
+      const phone = $('phone').value.trim();       // optional
+
+      if(!name || !nationality || !email || !position || !status){
+        alert('Fyll ut feltene med * (obligatorisk).');
+        return;
       }
 
       participants.push({
         uid: (crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2,10)),
-        personId, name, nationality, phone, email, position, status
+        name, nationality, email, position, status,
+        personId, phone
       });
       saveParticipants(participants);
       renderTable();
-
       $('crewForm').reset();
+      // fyll select på nytt (safari kan miste valgt "placeholder")
+      fillPositionSelect($('position'), '');
       $('name').focus();
+      showToast('Participant added.');
     }
 
-    function deleteRow(uid) {
-      participants = participants.filter(p => p.uid !== uid);
-      saveParticipants(participants);
-      renderTable();
+    function updateStatsBar(){
+      const wrap = $('statsBar');
+      const total = participants.length;
+      const counts = { valid:0, soon:0, expired:0, nr:0 };
+      participants.forEach(p=>{ if(p.status in counts) counts[p.status]++; });
+
+      wrap.innerHTML = `
+        <span class="chip">Total registered: ${total}</span>
+        <span class="chip">✅ Valid: ${counts.valid}</span>
+        <span class="chip">⚠️ Soon: ${counts.soon}</span>
+        <span class="chip">❌ Expired: ${counts.expired}</span>
+        <span class="chip">🔄 Not required: ${counts.nr}</span>
+      `;
     }
 
-    function escapeHtml(str) {
-      return String(str)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    // Picker mode UI
-    function initPickerBar() {
+    function initPickerBar(){
       const bar = $('pickerBar');
-      if (isPicker) {
+      if(isPicker){
         bar.classList.add('active');
         $('sendPicked').onclick = () => sendSelected('supplies');
         $('sendPicked2').onclick = () => sendSelected('maintenance');
         $('cancelPicked').onclick = () => window.close();
       }
     }
-
-    function getPickedArray() {
+    function getPickedArray(){
       const checks = Array.from(document.querySelectorAll('.pickbox:checked'));
-      if (!checks.length) return [];
-      const selectedUids = checks.map(c => c.getAttribute('data-uid'));
-      return participants
-        .filter(p => selectedUids.includes(p.uid))
-        .map(p => ({ uid: p.uid, name: p.name }));
+      if(!checks.length) return [];
+      const sel = checks.map(c=>c.getAttribute('data-uid'));
+      return participants.filter(p=>sel.includes(p.uid)).map(p=>({ uid:p.uid, name:p.name }));
     }
-
     function sendSelected(target){
       const picked = getPickedArray();
-      if (!picked.length) {
-        alert('Select at least one participant.');
+      if(!picked.length){ alert('Select at least one participant.'); return; }
+      if(target==='supplies'){ localStorage.setItem(PICKKEY, JSON.stringify(picked)); }
+      else{ localStorage.setItem(PICKKEY2, JSON.stringify(picked)); }
+      window.close();
+    }
+
+    // ===== PDF: kun Registered Participants (uten Actions) =====
+    function loadScript(src){
+      return new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = src;
+        s.async = true;
+        s.referrerPolicy = 'no-referrer';
+        s.onload = resolve;
+        s.onerror = () => reject(new Error('Feil ved lasting: ' + src));
+        document.head.appendChild(s);
+      });
+    }
+
+    async function ensureJsPDF(){
+      // jsPDF UMD + AutoTable
+      if (window.jspdf?.jsPDF && window.jspdf?.autoTable) return;
+      if (!window.jspdf?.jsPDF) {
+        await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+      }
+      if (!window.jspdf?.autoTable) {
+        await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js");
+      }
+    }
+
+    async function exportParticipantsPDF(){
+      if(!participants || participants.length === 0){
+        alert("Ingen registrerte deltakere å eksportere.");
         return;
       }
-      if(target==='supplies'){
-        localStorage.setItem(PICKKEY, JSON.stringify(picked));
-      } else {
-        localStorage.setItem(PICKKEY2, JSON.stringify(picked));
+      try{
+        await ensureJsPDF();
+        const { jsPDF } = window.jspdf;
+
+        const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'A4' });
+
+        // Header
+        const title = "Registered Participants";
+        const now = new Date();
+        const dateStr = now.toLocaleDateString();
+        const timeStr = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+
+        // Stat-oversikt
+        const counts = { valid:0, soon:0, expired:0, nr:0 };
+        participants.forEach(p => { if (counts[p.status] !== undefined) counts[p.status]++; });
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(16);
+        doc.text(title, 36, 40);
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(11);
+        doc.text(`Generated: ${dateStr} ${timeStr}`, 36, 60);
+
+        doc.setFontSize(10);
+        doc.text(`Total: ${participants.length}   ✅ Valid: ${counts.valid}   ⚠️ Soon: ${counts.soon}   ❌ Expired: ${counts.expired}   🔄 Not required: ${counts.nr}`, 36, 78);
+
+        // Tabell (uten checkbox + uten Actions)
+        const head = [[
+          'Participant / Crew', 'Nationality', 'Id/Pn', 'Phone', 'E-mail', 'Status', 'Job position'
+        ]];
+
+        const body = participants.map(p => ([
+          p.name || '',
+          p.nationality || '',
+          p.personId || '',
+          p.phone || '',
+          p.email || '',
+          (p.status ? (p.status==='valid'?'Valid': p.status==='soon'?'Soon to expire': p.status==='expired'?'Expired':'Not required') : ''),
+          p.position || ''
+        ]));
+
+        doc.autoTable({
+          head,
+          body,
+          startY: 92,
+          styles: { fontSize: 10, cellPadding: 6, overflow: 'linebreak' },
+          headStyles: { fillColor: [14, 62, 134], textColor: 255 },
+          alternateRowStyles: { fillColor: [245,245,245] },
+          margin: { left: 36, right: 36, top: 92, bottom: 36 },
+          tableWidth: 'auto',
+          didDrawPage: (data) => {
+            // Footer
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            doc.setFontSize(9);
+            doc.setTextColor(120);
+            doc.text(`Seavo Nautiq • Participants`, 36, pageHeight - 18);
+            doc.text(`Page ${doc.internal.getNumberOfPages()}`, pageWidth - 72, pageHeight - 18, { align: 'right' });
+          },
+          columnStyles: {
+            0: { cellWidth: 160 }, // Name
+            1: { cellWidth: 80 }, // Nationality
+            2: { cellWidth: 90 },  // Id/Pn
+            3: { cellWidth: 100 }, // Phone
+            4: { cellWidth: 155 }, // Email
+            5: { cellWidth: 100 }, // Status
+            6: { cellWidth: 160 }  // Position
+          }
+        });
+
+        const ymd = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+        doc.save(`Registered-Participants_${ymd}.pdf`);
+      }catch(err){
+        console.error(err);
+        alert("Kunne ikke generere PDF. Sjekk nettverk eller prøv igjen.");
       }
-      window.close();
     }
 
     // Init
     renderTable();
     initPickerBar();
+    // fyll registrerings-select med engelsk liste
+    fillPositionSelect($('position'), '');
   </script>
-
 </body>
 </html>

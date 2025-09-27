@@ -101,7 +101,7 @@ async function joinFleetByPin(pin){
   const fleets = getFleets();
   const { userId } = getSession();
   const v = getVessel();
-  if(!v) throw new Error('Vessel must be registered first.');
+  if(!v) throw new Error('Vessel / Shipping company or User name is required.');
   // Registrer fartøyet under denne brukeren
   fleets[fleet.fleetId].vessels[userId] = { ...v };
   fleets[fleet.fleetId].voyages[userId] = fleets[fleet.fleetId].voyages[userId] || [];
@@ -110,26 +110,36 @@ async function joinFleetByPin(pin){
   return fleets[fleet.fleetId];
 }
 
-// ===== Vessel API =====
-function registerVessel({ vesselName, callSign, language }){
-  if(!vesselName) throw new Error('Vessel name is required.');
+// ===== Vessel (Generic entity) API =====
+function registerVessel({ regName, callSign, language, entityType = 'unspecified' }){
+  // Støtt både gammel og ny parameter (back-compat)
+  const name = (regName ?? arguments[0]?.vesselName ?? '').trim();
+  if (!name) throw new Error('Vessel / Shipping company or User name is required.');
+
   const v = {
-    vesselName: vesselName.trim(),
+    // behold eksisterende nøkkel for kompatibilitet
+    vesselName: name,
+    // nye felt for fleksibel visning/filtrering
+    displayName: name,
+    entityType, // 'vessel' | 'company' | 'user' | 'unspecified'
     callSign: (callSign || '').trim().toUpperCase() || undefined,
     language: language || 'English'
   };
+
   setVessel(v);
+
   // Sync til valgt fleet (om medlem)
   const { fleetId, userId } = getSession();
-  if(fleetId){
+  if (fleetId){
     const fleets = getFleets();
-    if(fleets[fleetId]){
+    if (fleets[fleetId]){
       fleets[fleetId].vessels[userId] = { ...v };
       setFleets(fleets);
     }
   }
   return v;
 }
+
 
 // ===== Voyages API =====
 function sendVoyageToFleet(voyage){

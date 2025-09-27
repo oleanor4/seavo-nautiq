@@ -304,7 +304,7 @@ h3 {
       box-shadow: 6px 6px 6px rgba(0,0,0,0.6);
       padding: 20px;
       margin-top: 60px;
-      margin-left: 0px;
+      margin-left: 100px;
       opacity: 0.7;
     }
 
@@ -777,8 +777,9 @@ background: rgba(0,0,0,.25); color:#fff;
 
       <div class="sn-row">
         <div class="sn-field">
-          <label>Vessel name *</label>
-          <input id="snVesselName" placeholder="M/V Seavo Nautiq" />
+          <label for="snVesselName">Vessel / Shipping company or User name <span aria-hidden="true">*</span></label>
+          <input id="snVesselName" type="text" placeholder="Enter vessel, company, or your name" required>
+
         </div>
         <div class="sn-field">
           <label>Call sign (optional)</label>
@@ -854,25 +855,23 @@ background: rgba(0,0,0,.25); color:#fff;
     location.reload(); // overlayet vil dukke opp igjen
   });
 
-   function updateVesselBadge(){
-    const badge = document.getElementById('vesselBadge');
-    if(!badge) return;
-    const v = getVessel();
-    if(!v || !v.vesselName){
-      badge.textContent = t('index.vesselBadgePlaceholder','Vessels name and call sign');
-      return;
-    }
-    const parts = [v.vesselName];
-    if (v.callSign) parts.push(formatCallSign(v.callSign));
-    badge.textContent = parts.join(' • ');
+  function updateVesselBadge(){
+  const badge = document.getElementById('vesselBadge');
+  if(!badge) return;
+  const v = getVessel();
+  if(!v || !v.vesselName){
+    badge.textContent = 'Vessel / Shipping company or User';
+    return;
   }
+  const parts = [v.vesselName]; // bruker displayName=vesselName
+  if (v.callSign) parts.push(formatCallSign(v.callSign));
+  badge.textContent = parts.join(' • ');
+}
 
-   // Kall etter applyLanguage / ved load
-  document.addEventListener('DOMContentLoaded', () => {
-    updateVesselBadge();
-    applyTranslations(document);
-  });
-  window.addEventListener('storage', (e)=>{ if(e.key==='SN_vessel') updateVesselBadge(); });
+// Init på load og ved storage-endring (andre faner)
+document.addEventListener('DOMContentLoaded', updateVesselBadge);
+window.addEventListener('storage', (e)=>{ if(e.key==='SN_vessel') updateVesselBadge(); });
+
 </script>
 
 
@@ -1287,12 +1286,13 @@ function currentPlan(){ return (document.querySelector('input[name="snPlan"]:che
 
 
 function validate(){
-if(!fName.value.trim()) return alert('Full name is required'), false;
-if(!/.+@.+\..+/.test(email.value.trim())) return alert('Valid email required'), false;
-if(!vName.value.trim()) return alert('Vessel name is required'), false;
-if(!terms.checked) return alert('You must accept the terms.'), false;
-return true;
+  if(!fName.value.trim()) return alert('Full name is required'), false;
+  if(!/.+@.+\..+/.test(email.value.trim())) return alert('Valid email required'), false;
+  if(!vName.value.trim()) return alert('Vessel / Shipping company or User name is required'), false;
+  if(!terms.checked) return alert('You must accept the terms.'), false;
+  return true;
 }
+
 
 
 // Gate på load
@@ -1309,60 +1309,34 @@ document.getElementById('snCancelReg').addEventListener('click', ()=>{ if(confir
 
 
 document.getElementById('snSubmitReg').addEventListener('click', ()=>{
-if(!validate()) return;
+  if(!validate()) return;
 
+  const u = {
+    fullName: fName.value.trim(),
+    email: email.value.trim(),
+    phone: phone.value.trim()||undefined,
+    language: lang.value,
+    createdAtISO: new Date().toISOString()
+  };
+  setUser(u);
 
-const u = {
-fullName: fName.value.trim(),
-email: email.value.trim(),
-phone: phone.value.trim()||undefined,
-language: lang.value,
-createdAtISO: new Date().toISOString()
-};
-setUser(u);
+  // Ingen separat felt for type enda – sett 'unspecified' (kan senere styres via dropdown)
+  registerVessel({
+    regName: vName.value.trim(),
+    callSign: cSign.value.trim(),
+    language: lang.value,
+    entityType: 'unspecified'
+  });
 
+  if(!getSub()) setSub({ plan: currentPlan(), trialStartISO: new Date().toISOString() });
+  else setSub({ ...getSub(), plan: currentPlan(), trialStartISO: getSub().trialStartISO || new Date().toISOString() });
 
-registerVessel({
-vesselName: vName.value.trim(),
-callSign: cSign.value.trim(),
-language: lang.value
+  applyLanguage(lang.value);
+  updateVesselBadge();   // oppdater visning
+  hide();
+  alert('Registration saved. Your free trial has started.');
 });
 
-
-// Start gratis prøve hvis ikke satt
-if(!getSub()) setSub({ plan: currentPlan(), trialStartISO: new Date().toISOString() });
-else setSub({ ...getSub(), plan: currentPlan(), trialStartISO: getSub().trialStartISO || new Date().toISOString() });
-
-
-applyLanguage(lang.value);
-
-
-// Oppdater badge hvis finnes
-
-  function updateVesselBadge(){
-    const badge = document.getElementById('vesselBadge');
-    if(!badge) return;
-    const v = getVessel();
-    if(!v || !v.vesselName){
-      badge.textContent = 'Vessels name and call sign';
-      return;
-    }
-    const parts = [v.vesselName];
-    if (v.callSign) parts.push(formatCallSign(v.callSign));
-    badge.textContent = parts.join(' • '); // <-- no language here
-  }
-
-  // Initialize on load and when SN_vessel changes (other tabs/windows)
-  document.addEventListener('DOMContentLoaded', updateVesselBadge);
-  window.addEventListener('storage', (e)=>{ if(e.key==='SN_vessel') updateVesselBadge(); });
-
-
-
-
-
-hide();
-alert('Registration saved. Your free trial has started.');
-});
 })();
 
 
